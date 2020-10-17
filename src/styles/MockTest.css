@@ -1,0 +1,58 @@
+#mocktest{
+    background:url("../assets/images/subjectwisebg.png");
+    margin-top:66px;
+    padding-top:40px;
+}
+.section-heading{
+    font-size:2.4em;
+    text-align:center;
+    margin:10px 0px;
+    font-weight:800;
+    letter-spacing:5px;
+    word-spacing:15px;
+    color:#3F7B94;
+    padding:15px 0px;
+}
+@media(max-width:500px){
+    .section-heading{
+        font-size:1.5em;
+        letter-spacing:0px;
+        word-spacing:0px;
+        padding:0px;
+    }
+}
+#mocktest-heading{
+    display:flex;
+    height:80px;
+    width:100%;
+    background:#428297;
+    justify-content:center;
+    align-items:center;
+}
+#mocktesticon{
+    height:60px;
+    margin-left:-40px;
+    margin-right:60px;
+}
+.mocktestcardsection{
+    padding:50px 100px;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:flex-start;
+
+}
+@media(max-width:700px){
+    #mocktest-heading div{
+        font-size:22px !important;
+        word-spacing:0px !important;
+    }
+    #mocktesticon{
+        margin-left:10px;
+        margin-right:10px;
+    }
+    .mocktestcardsection{
+        padding:0px;
+        align-items:center;
+        justify-content:center;
+    }
+}

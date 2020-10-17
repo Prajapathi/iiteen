@@ -1,0 +1,11 @@
+#question-screen{
+    color:black;
+    display:flex;
+}
+
+.ques{
+    width:40%;
+}
+.choice{
+    width:60%;
+}

@@ -1,0 +1,14 @@
+#subjectwise{
+    background:url(../assets/images/subjectwisebg.png);
+    margin-top:70px;
+    margin-bottom:0px;
+}
+#phy{
+    background-image:url(../assets/images/ChemistryIcons/1.png),url(../assets/images/ChemistryIcons/2.png),
+                        url(../assets/images/ChemistryIcons/3.png),url(../assets/images/ChemistryIcons/4.png),
+                        url(../assets/images/ChemistryIcons/5.png),url(../assets/images/ChemistryIcons/6.png);
+    background-size:75px,85px,85px,50px,95px,65px;
+    background-position: 10px 60px,310px 320px,590px 60px,870px 200px,1110px 300px,1420px 50px;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+}

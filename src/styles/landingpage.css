@@ -1,0 +1,52 @@
+#landingpage{
+    background:#F5F5F5;
+    color:#498E9C;
+    font-family:'Roboto',sans-serif;
+}
+#section1{
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+#section1 img{
+    height:500px;
+    margin-right:45px;
+    margin-left:-100px;
+}
+#section1-text{
+    width:40%;
+}
+#section1-text div{
+    margin-top:10%;
+    width:60%;
+    display:flex;
+    justify-content:space-around;
+}
+#section1-text div button{
+    margin-left:60px;
+    background:white;
+    width:150px;
+    padding:5px;
+    border:1px solid rgba(0,0,0,0.2);
+    box-shadow:0px 1px 4px 1px rgba(0,0,0,0.2);
+    border-radius:6px;
+    color:#498E9C;
+}
+#section1-text div button:hover{
+    background:rgba(0,0,0,0.1);
+}
+#section1-text div button:active{
+    background:rgba(0,0,0,0.1);
+    box-shadow:1px 0px 4px 1px rgba(0,0,0,0.1);
+}
+#section1-text div button:focus{
+    outline:none;
+}
+#section2{
+    text-align:center;
+}
+#section2 img{
+    width:80%;
+    margin:3% 0%;
+}

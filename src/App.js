@@ -1,25 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {BrowserRouter} from "react-router-dom";
+import Routing from './Routing'
+import Landing from './components/Landing'
+import Footer from './components/Footer'
+import LeftMenu from './components/LeftMenu'
+import Question from './components/screens/Question'
+import HomeCarousel from './components/elements/HomeCarousel'
 
 function App() {
+  let login=true;
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <BrowserRouter>
+    {login?
+      <><LeftMenu/><Routing/><Footer/></>
+      :<HomeCarousel/>
+    }
+    </BrowserRouter>
+    </>
   );
 }
 
