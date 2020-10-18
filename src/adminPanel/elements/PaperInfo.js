@@ -1,0 +1,115 @@
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: 'flex',
+    flexWrap:'wrap',
+    margin:'50px auto',
+    justifyContent:'flex-start',
+    border:'2px solid black',
+    width:'80%'
+  },
+  textField: {
+    marginLeft: theme.spacing(10),
+    marginRight: theme.spacing(10),
+    minWidth: 200,
+  },
+}));
+
+export default function PaperInfo() {
+    const classes = useStyles();
+    const [typeValue, settypeValue] = React.useState('mains');
+    const [dateAndTime,setdateAndTime]=React.useState('2017-05-24T10:30');
+    const [level,setLevel]=React.useState('');
+    const [marks,setMarks]=React.useState();
+    const [duration,setDuration]=React.useState();
+    const [noOfQuestions,setNoOfQuestions]=React.useState();
+
+    const handleChange = (event) => {
+        settypeValue(event.target.value);
+    };
+    let data={
+        date:dateAndTime,
+        type:typeValue,
+        marks:marks,
+        questions:noOfQuestions,
+        duration:duration,
+        level:level
+    }
+    console.log(data)
+
+    return (
+        <form className={classes.container} noValidate >
+            <div style={{display:'flex',alignItems:'center',margin:'20px auto'}}>
+                <TextField
+                    id="datetime-local"
+                    label="Date and time for test"
+                    type="datetime-local"
+                    defaultValue="2017-05-24T10:30"
+                    className={classes.textField}
+                    InputLabelProps={{
+                    shrink: true,
+                    }}
+                    value={dateAndTime}
+                    onChange={(event) =>setdateAndTime(event.target.value)}
+                />
+                
+                <FormLabel component="legend">Paper Type</FormLabel>
+                <RadioGroup aria-label="gender" name="gender1" value={typeValue} onChange={handleChange}>
+                    <div style={{display:'flex'}}>
+                        <FormControlLabel value="mains" control={<Radio />} label="Mains" />
+                        <FormControlLabel value="advance" control={<Radio />} label="Advance" />
+                    </div> 
+                </RadioGroup>
+                <TextField
+                  id="standard-number"
+                  type="number"
+                  label="Total Duration (in mins)"
+                  className={classes.textField}
+                  value={duration}
+                  onChange={(event) =>setDuration(event.target.value)}
+                />
+            </div>
+            <div style={{display:'flex',margin:'20px auto'}}>
+                <TextField
+                  id="standard-number"
+                  type="number"
+                  label="Total Marks"
+                  className={classes.textField}
+                  value={marks}
+                  onChange={(event) =>setMarks(event.target.value)}
+                />
+                <TextField
+                  id="standard-number"
+                  type="number"
+                  label="Number of questions"
+                  className={classes.textField}
+                  value={noOfQuestions}
+                  onChange={(event) =>setNoOfQuestions(event.target.value)}
+                />
+                <TextField
+                  id="standard-select-currency"
+                  select
+                  label="Select"
+                  value={level}
+                  onChange={(event) =>setLevel(event.target.value)}
+                  helperText="Level for subjectwise Paper"
+                  className={classes.textField}
+                >
+                    <MenuItem value="1"> 1</MenuItem>
+                    <MenuItem value="2"> 2</MenuItem>
+                    <MenuItem value="3"> 3</MenuItem>
+                </TextField>
+            </div>
+        </form>
+    );
+}
