@@ -2,7 +2,7 @@ import React,{useEffect} from 'react'
 import InstructionField from './InstructionField'
 import InstructionPreview from './InstructionPreview'
 
-export default function InstructionInfo() {
+export default function QuestionInfo() {
     const [instructions,setInstructions]=React.useState(['']);
     const deleteInstruction = (index) => {
         const values=[...instructions];

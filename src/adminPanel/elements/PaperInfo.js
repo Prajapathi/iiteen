@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme) => ({
     width:'80%'
   },
   textField: {
-    marginLeft: theme.spacing(10),
-    marginRight: theme.spacing(10),
+    marginLeft: theme.spacing(5),
+    marginRight: theme.spacing(2),
     minWidth: 200,
   },
 }));
@@ -28,7 +28,8 @@ const useStyles = makeStyles((theme) => ({
 export default function PaperInfo() {
     const classes = useStyles();
     const [typeValue, settypeValue] = React.useState('mains');
-    const [dateAndTime,setdateAndTime]=React.useState('2017-05-24T10:30');
+    const [date,setDate]=React.useState('2017-05-24');
+    const [time,setTime]=React.useState('10:30');
     const [level,setLevel]=React.useState('');
     const [marks,setMarks]=React.useState();
     const [duration,setDuration]=React.useState();
@@ -37,8 +38,10 @@ export default function PaperInfo() {
     const handleChange = (event) => {
         settypeValue(event.target.value);
     };
+
     let data={
-        date:dateAndTime,
+        date:date,
+        time:time,
         type:typeValue,
         marks:marks,
         questions:noOfQuestions,
@@ -51,19 +54,33 @@ export default function PaperInfo() {
         <form className={classes.container} noValidate >
             <div style={{display:'flex',alignItems:'center',margin:'20px auto'}}>
                 <TextField
-                    id="datetime-local"
-                    label="Date and time for test"
-                    type="datetime-local"
-                    defaultValue="2017-05-24T10:30"
-                    className={classes.textField}
-                    InputLabelProps={{
+                  id="date"
+                  label="Date"
+                  type="date"
+                  defaultValue="2017-05-24"
+                  className={classes.textField}
+                  InputLabelProps={{
                     shrink: true,
-                    }}
-                    value={dateAndTime}
-                    onChange={(event) =>setdateAndTime(event.target.value)}
+                  }}
+                  value={date}
+                  onChange={(e)=>setDate(e.target.value)}
                 />
-                
-                <FormLabel component="legend">Paper Type</FormLabel>
+                <TextField
+                  id="time"
+                  label="Time"
+                  type="time"
+                  defaultValue="07:30"
+                  className={classes.textField}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    step: 300, 
+                  }}
+                  value={time}
+                  onChange={(e)=>setTime(e.target.value)}
+                />
+                <FormLabel component="legend" style={{marginRight:'15px'}}>Paper Type</FormLabel>
                 <RadioGroup aria-label="gender" name="gender1" value={typeValue} onChange={handleChange}>
                     <div style={{display:'flex'}}>
                         <FormControlLabel value="mains" control={<Radio />} label="Mains" />
