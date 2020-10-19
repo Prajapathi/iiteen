@@ -12,9 +12,10 @@ export default function InstructionInfo() {
     const addInstruction = () => {
         setInstructions([...instructions,''])
     };
+    console.log(instructions)
     return (
         <>
-        <div style={{padding:'3%',display:'flex'}}>
+        <div style={{padding:'0px 3% 3%',display:'flex'}}>
             <div style={{width:'35%'}}>
                 {instructions.map((key,index)=>
                     <div style={{border:'1px dashed grey'}}>

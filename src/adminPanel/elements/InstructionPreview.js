@@ -9,7 +9,7 @@ export default function InstructionPreview(props) {
                 <p>{props.instructions[index].data}</p>
                 <ul>
                 { props.instructions[index].subpoints?props.instructions[index].subpoints.map((key,ind)=>
-                    props.instructions[index].subpoints[ind]==""?null:<li key={index}>{props.instructions[index].subpoints[ind]}</li>
+                    props.instructions[index].subpoints[ind]==""?null:<li key={ind}>{props.instructions[index].subpoints[ind]}</li>
                     ):null
                     }
                 </ul>
