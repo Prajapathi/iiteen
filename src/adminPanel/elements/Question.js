@@ -1,10 +1,10 @@
 import React,{useEffect} from 'react'
 import { makeStyles } from '@material-ui/core/styles';
-import QuestionPreview from './QuestionPreview'
+import TextTyper from './TextTyper'
+import Preview from './Preview'
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormLabel from '@material-ui/core/FormLabel';
-
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
@@ -22,16 +22,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function QuestionInfo() {
-    // const [instructions,setInstructions]=React.useState(['']);
-    // const deleteInstruction = (index) => {
-    //     const values=[...instructions];
-    //     values.splice(index, 1);
-    //     setInstructions(values)
-    // };
-    // const addInstruction = () => {
-    //     setInstructions([...instructions,''])
-    // };
-    
     const classes = useStyles();
     const [number,setNumber]=React.useState();
     const [subject,setSubject]=React.useState();
@@ -42,6 +32,9 @@ export default function QuestionInfo() {
     const [question,setQuestion]=React.useState(['']);
     const [answerType,setAnswerType]=React.useState();
     const [answer,setAnswer]=React.useState([]);
+    const [hint,setHint]=React.useState([]);
+    const [solution,setSolution]=React.useState([]);
+    const [option,setOption]=React.useState([]);
 
     const setAnswerLower=(event)=>{
         const ans=[];
@@ -53,12 +46,10 @@ export default function QuestionInfo() {
         ans[1]=event.target.value;
         setAnswer(ans);
     }
-
-    console.log(answer)
     return (
         <>
         <div style={{padding:'3%',display:'flex'}}>
-            <div style={{width:'40%'}}>
+            <div style={{width:'40%',border:'2px solid black'}}>
                 <form>
                     <TextField
                     id="standard-number"
@@ -125,36 +116,12 @@ export default function QuestionInfo() {
                     value={negative}
                     onChange={(event) =>setNegative(event.target.value)}
                     />
+                    
+                    <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
+                    <FormLabel component="legend" style={{color:'black'}}>Set Question</FormLabel>
+                    <TextTyper sendInfo={setQuestion}/>
+                    </div>
 
-                    {/* <FormLabel component="legend" style={{color:'black',marginTop:'15px',marginBottom:'-0px'}}>Question</FormLabel> */}
-                    {/*question.map((key,index)=>
-                            <div style={{display:'flex',alignItems:'center'}}>
-                                <TextField
-                                id="standard-select-currency"
-                                select
-                                label="Type"
-                                size="small"
-                                // value={section}
-                                // onChange={(event) =>setSection(event.target.value)}
-                                >
-                                    <MenuItem value="0"> 0</MenuItem>
-                                    <MenuItem value="1"> 1</MenuItem>
-                                    <MenuItem value="2"> 2</MenuItem>
-                                    <MenuItem value="3"> 3</MenuItem>
-                                </TextField>
-                                <TextField
-                                id="standard-number"
-                                //label={ index+1 +". Sub-point"}
-                                multiline
-                                className={classes.textField}
-                                //value={subpoints[index]}
-                                //onChange={(event)=>changeSubPoint(index,event)}
-                                size="small"
-                                /> 
-                                <div onClick={(event)=>addSubpoint(event)} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>+</div>
-                                <div onClick={subpoints.length!=1?()=>deleteSubpoint(index):null} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>-</div>
-                             </div>
-                    )*/}
                     <TextField
                     id="standard-select-currency"
                     select
@@ -169,8 +136,18 @@ export default function QuestionInfo() {
                         <MenuItem value="3"> Numerical</MenuItem>
                     </TextField>
 
-                    {answerType=="0"?<h1>4 options</h1>
-                                    :(answerType=="1"?<h1>5options</h1>
+                    {answerType=="0"?[0,1,2,3].map((key,index)=>
+                                        <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
+                                        <FormLabel component="legend" style={{color:'black'}}>Option {index+1}</FormLabel>
+                                        <TextTyper sendInfo={setOption} index={index} info={option}/>
+                                        </div>
+                                    )
+                                    :(answerType=="1"?[0,1,2,3,4].map((key,index)=>
+                                                        <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
+                                                        <FormLabel component="legend" style={{color:'black'}}>Option {index+1}</FormLabel>
+                                                        <TextTyper sendInfo={setOption} index={index} info={option}/>
+                                                        </div>
+                                                    )
                                                     :null)
                     }
 
@@ -200,14 +177,14 @@ export default function QuestionInfo() {
                                                                                         <TextField
                                                                                             id="standard-number"
                                                                                             type="number"
-                                                                                            label="Enter Answer"
+                                                                                            label="Lower Limit"
                                                                                             className={classes.textField}
                                                                                             onChange={(event) =>setAnswerLower(event)}
                                                                                             />
                                                                                             <TextField
                                                                                             id="standard-number"
                                                                                             type="number"
-                                                                                            label="Enter Answer"
+                                                                                            label="Upper Limit"
                                                                                             className={classes.textField}
                                                                                             onChange={(event) =>setAnswerUpper(event)}
                                                                                             />
@@ -216,9 +193,30 @@ export default function QuestionInfo() {
                                                     )
                                     )
                     }
+                    <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
+                    <FormLabel component="legend" style={{color:'black'}}>Hint</FormLabel>
+                    <TextTyper sendInfo={setHint}/>
+                    </div>
+                    <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
+                    <FormLabel component="legend" style={{color:'black'}}>Solution</FormLabel>
+                    <TextTyper sendInfo={setSolution}/>
+                    </div>
                 </form>
             </div>
-            <QuestionPreview/>
+            <div style={{width:'40%',marginLeft:'25px'}}>
+                <h3>Question</h3>
+                <Preview data={question}/>
+                {answerType=="0"?[1,2,3,4].map((item,index)=><>
+                                                                <h6>Option {index+1}</h6>
+                                                                <Preview data={option[index]}/>
+                                                            </>):(answerType=="1"?[1,2,3,4,5].map((item,index)=><>
+                                                                                                            <h6>Option {index+1}</h6>
+                                                                                                            <Preview data={option[index]}/>
+                                                                                                        </>):null)
+                }
+                <h3>Solution</h3>
+                <Preview data={solution}/>
+            </div>
         </div>
         <button>Continue</button>
         </>
