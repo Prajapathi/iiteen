@@ -15,7 +15,7 @@ export default function Preview(props) {
                 {item.type==0?<br/>:(item.type==1
                                     ?<>{item.data}</>
                                     :(item.type==2
-                                                ?<p><InlineMath>{item.data}</InlineMath> </p>
+                                                ?<InlineMath>{item.data}</InlineMath>
                                                 :null
                                      )
                                     )
