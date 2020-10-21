@@ -7,12 +7,16 @@ import SubjectWise from './components/screens/sections/Subjectwise'
 import AITS from './components/screens/sections/AITS'
 import MockTest from './components/screens/sections/MockTest'
 import PreviousYear from './components/screens/sections/PreviousYear'
+import RoutingAdmin from './adminPanel/Routing'
 
 export default function Routing() {
     return (
         <Switch>
             <Route exact path="/">
             <Home/>
+            </Route>
+            <Route>
+            <RoutingAdmin/>
             </Route>
             <Route path="/MockTest">
             <MockTest/>

@@ -1,0 +1,17 @@
+#addPaper{
+    width:50%;
+    border:1px solid black;
+    padding:30px;
+    margin:100px auto;
+    display:flex;
+    align-items:center;
+}
+#addPaper h1{
+    margin-left:30px;
+}
+#addButton{
+    width:10%;
+    border:1px dashed black;
+    font-size:54px;
+    padding:0px 15px;
+}

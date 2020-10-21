@@ -1,4 +1,5 @@
 import React,{useEffect} from 'react'
+import {Link} from "react-router-dom";
 import InstructionField from './InstructionField'
 import InstructionPreview from './InstructionPreview'
 
@@ -15,8 +16,8 @@ export default function InstructionInfo() {
     console.log(instructions)
     return (
         <>
-        <div style={{padding:'0px 3% 3%',display:'flex'}}>
-            <div style={{width:'35%'}}>
+        <div style={{padding:'0px 3% 3%',display:'flex',width:'90%',margin:'auto'}}>
+            <div style={{width:'50%'}}>
                 {instructions.map((key,index)=>
                     <div style={{border:'1px dashed grey'}}>
                         <div style={{margin:'5px 20px'}}>{index+1}</div>
@@ -28,7 +29,9 @@ export default function InstructionInfo() {
             </div>
             <InstructionPreview instructions={instructions}/>
         </div>
-        <button>Continue</button>
+        <Link to="/Question">
+            <button style={{width:'60%',margin:'0px 20% 20px 20%'}}>Continue</button>
+        </Link>
         </>
     )
 }

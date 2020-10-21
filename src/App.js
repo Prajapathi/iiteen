@@ -6,8 +6,11 @@ import Footer from './components/Footer'
 import LeftMenu from './components/LeftMenu'
 import Question from './components/screens/Question'
 import HomeCarousel from './components/elements/HomeCarousel'
-import PaperInfo from './adminPanel/elements/PaperInfo'
+import Paper from './adminPanel/Paper'
+import AddPaper from './adminPanel/AddPaper'
 import QuestionAdmin from './adminPanel/elements/Question'
+import RoutingAdmin from './adminPanel/Routing'
+
 function App() {
   let login=false;
   return (
@@ -15,7 +18,7 @@ function App() {
     <BrowserRouter>
     {login?
       <><LeftMenu/><Routing/><Footer/></>
-      :<QuestionAdmin/>
+      :<RoutingAdmin/>
     }
     </BrowserRouter>
     </>

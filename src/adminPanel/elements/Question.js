@@ -48,7 +48,9 @@ export default function QuestionInfo() {
     }
     return (
         <>
+        <h1 style={{margin:'20px 0px -20px 50px'}}>Question 1</h1>
         <div style={{padding:'3%',display:'flex'}}>
+        
             <div style={{width:'40%',border:'2px solid black'}}>
                 <form>
                     <TextField
@@ -218,7 +220,7 @@ export default function QuestionInfo() {
                 <Preview data={solution}/>
             </div>
         </div>
-        <button>Continue</button>
+        <button style={{width:'60%',margin:'0px 20% 20px 20%'}}>Continue</button>
         </>
     )
 }

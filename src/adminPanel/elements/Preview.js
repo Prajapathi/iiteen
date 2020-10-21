@@ -1,7 +1,6 @@
 import React from 'react'
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
-import Latex from './Latex'
 
 export default function Preview(props) {
     

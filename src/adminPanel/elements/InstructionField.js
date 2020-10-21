@@ -28,7 +28,7 @@ export default function InstructionField(props) {
     const [heading,setHeading]=React.useState('')
     const [data,setData]=React.useState('')
     const [section,setSection]=React.useState('')
-    const [subpoints,setSubpoints]=React.useState(['']);
+    const [subpoints,setSubpoints]=React.useState([{data:'',color:''}]);
     const [linebreak,setLinebreak]=React.useState("false")
     const [Info,setInfo]=React.useState([''])
 
@@ -37,16 +37,25 @@ export default function InstructionField(props) {
     };
 
     const addSubpoint = (event) => {
-        setSubpoints([...subpoints,''])
+        setSubpoints([...subpoints,{data:'',color:''}])
     };
     const deleteSubpoint = (index) => {
         const values=[...subpoints];
         values.splice(index, 1);
         setSubpoints(values)
     };
-    const changeSubPoint=(index,event)=>{
+    const changeSubPointData=(index,event)=>{
         const values=[...subpoints]
-        values[index]=event.target.value;
+        values[index].data=event.target.value;
+        setSubpoints(values);
+    }
+    const changeSubPointColor=(index,event)=>{
+        
+        const values=[...subpoints]
+        if(event.target.value==4){
+            values[index].color='';
+        }
+        else values[index].color=event.target.value;
         setSubpoints(values);
     }
 
@@ -101,12 +110,25 @@ export default function InstructionField(props) {
                     {subpoints.map((key,index)=>
                             <div style={{display:'flex',alignItems:'center'}}>
                                 <TextField
+                                id="standard-select-currency"
+                                select
+                                style={{width:'100px',marginRight:'20px'}}
+                                label="Colour"
+                                value={subpoints[index].color}
+                                onChange={(event)=>changeSubPointColor(index,event)}
+                                >
+                                    <MenuItem value="1"> Red</MenuItem>
+                                    <MenuItem value="2"> Green</MenuItem>
+                                    <MenuItem value="3"> Neutral</MenuItem>
+                                    <MenuItem value="4"> None</MenuItem>
+                                </TextField>
+                                <TextField
                                 id="standard-number"
                                 label={ index+1 +". Sub-point"}
                                 multiline
                                 className={classes.textField}
-                                value={subpoints[index]}
-                                onChange={(event)=>changeSubPoint(index,event)}
+                                value={subpoints[index].data}
+                                onChange={(event)=>changeSubPointData(index,event)}
                                 size="small"
                                 /> 
                                 <div onClick={(event)=>addSubpoint(event)} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>+</div>

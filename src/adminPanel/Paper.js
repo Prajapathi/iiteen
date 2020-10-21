@@ -1,6 +1,6 @@
 import React from 'react'
-import PaperInfo from './PaperInfo'
-import InstructionInfo from './InstructionInfo'
+import PaperInfo from './elements/PaperInfo'
+import InstructionInfo from './elements/InstructionInfo'
 
 export default function Paper() {
     return (
