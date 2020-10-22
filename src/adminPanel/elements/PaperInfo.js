@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PaperInfo() {
+export default function PaperInfo(props) {
     const classes = useStyles();
     const [typeValue, settypeValue] = React.useState('mains');
     const [date,setDate]=React.useState('2017-05-24');
@@ -38,6 +38,10 @@ export default function PaperInfo() {
     const handleChange = (event) => {
         settypeValue(event.target.value);
     };
+
+    useEffect(() => {
+      props.sendNumberQ(noOfQuestions)
+    }, [noOfQuestions])
 
     let data={
         date:date,

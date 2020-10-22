@@ -3,8 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextTyper from './TextTyper'
 import Preview from './Preview'
 import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormLabel from '@material-ui/core/FormLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
@@ -35,6 +38,7 @@ export default function QuestionInfo() {
     const [hint,setHint]=React.useState([]);
     const [solution,setSolution]=React.useState([]);
     const [option,setOption]=React.useState([]);
+    const [multiOption,setMultiOption]=React.useState([false,false,false,false]);
 
     const setAnswerLower=(event)=>{
         const ans=[];
@@ -46,6 +50,21 @@ export default function QuestionInfo() {
         ans[1]=event.target.value;
         setAnswer(ans);
     }
+    const handleCheck=(index)=>{
+        const ans=[...multiOption];
+        ans[index]=!ans[index];
+        setMultiOption(ans);
+    }
+
+    useEffect(() => {
+        const newAns=[];
+        multiOption.map((item,index)=>
+            item==true?newAns.push(index):null
+        )
+        setAnswer(newAns)
+        console.log("jk",newAns)
+    }, [multiOption])
+
     return (
         <>
         <h1 style={{margin:'20px 0px -20px 50px'}}>Question 1</h1>
@@ -160,7 +179,13 @@ export default function QuestionInfo() {
                                         <MenuItem value="3"> 3</MenuItem>
                                         <MenuItem value="4"> 4</MenuItem>
                                     </TextField>
-                                    :(answerType=="1"?<h1>5options</h1>
+                                    :(answerType=="1"?<div style={{marginLeft:'30px'}}>
+                                                    <FormLabel component="legend" style={{color:'black'}}>Correct Options</FormLabel>
+                                                       <FormControlLabel checked={multiOption[0]} onChange={()=>handleCheck(0)} control={<Checkbox />} label="1" />
+                                                       <FormControlLabel checked={multiOption[1]} onChange={()=>handleCheck(1)} control={<Checkbox />} label="2" />
+                                                       <FormControlLabel checked={multiOption[2]} onChange={()=>handleCheck(2)} control={<Checkbox />} label="3" />
+                                                       <FormControlLabel checked={multiOption[3]} onChange={()=>handleCheck(3)} control={<Checkbox />} label="4" />
+                                                     </div>
                                                     :(answerType=="2"?<TextField
                                                                         id="standard-number"
                                                                         type="number"
@@ -202,7 +227,7 @@ export default function QuestionInfo() {
             <div style={{width:'40%',marginLeft:'25px'}}>
                 <h3>Question</h3>
                 <Preview data={question}/>
-                {answerType=="0"||"1"?[1,2,3,4].map((item,index)=><>
+                {answerType=="0"||answerType=="1"?[1,2,3,4].map((item,index)=><>
                                                                 <h6>Option {index+1}</h6>
                                                                 <Preview data={option[index]}/>
                                                             </>):null

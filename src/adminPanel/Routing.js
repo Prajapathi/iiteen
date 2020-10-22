@@ -2,6 +2,7 @@ import React from 'react'
 import {Switch,Route} from 'react-router-dom'
 import AddPaper from './AddPaper'
 import Paper from './Paper'
+import Questions from './Questions'
 import Question from './elements/Question'
 
 export default function Routing() {
@@ -12,6 +13,9 @@ export default function Routing() {
             </Route>
             <Route path="/Paper">
             <Paper/>
+            </Route>
+            <Route path="/Questions">
+            <Questions/>
             </Route>
             <Route path="/Question">
             <Question/>

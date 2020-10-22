@@ -1,5 +1,4 @@
 import React,{useEffect} from 'react'
-import {Link} from "react-router-dom";
 import InstructionField from './InstructionField'
 import InstructionPreview from './InstructionPreview'
 
@@ -29,9 +28,6 @@ export default function InstructionInfo() {
             </div>
             <InstructionPreview instructions={instructions}/>
         </div>
-        <Link to="/Question">
-            <button style={{width:'60%',margin:'0px 20% 20px 20%'}}>Continue</button>
-        </Link>
         </>
     )
 }
