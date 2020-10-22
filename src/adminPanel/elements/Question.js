@@ -138,19 +138,13 @@ export default function QuestionInfo() {
                         <MenuItem value="3"> Numerical</MenuItem>
                     </TextField>
 
-                    {answerType=="0"?[0,1,2,3].map((key,index)=>
+                    {answerType=="0"||answerType=="1"?[0,1,2,3].map((key,index)=>
                                         <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
                                         <FormLabel component="legend" style={{color:'black'}}>Option {index+1}</FormLabel>
                                         <TextTyper sendInfo={setOption} index={index} info={option}/>
                                         </div>
                                     )
-                                    :(answerType=="1"?[0,1,2,3,4].map((key,index)=>
-                                                        <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
-                                                        <FormLabel component="legend" style={{color:'black'}}>Option {index+1}</FormLabel>
-                                                        <TextTyper sendInfo={setOption} index={index} info={option}/>
-                                                        </div>
-                                                    )
-                                                    :null)
+                                    :null
                     }
 
                     {answerType=="0"?<TextField
@@ -208,13 +202,10 @@ export default function QuestionInfo() {
             <div style={{width:'40%',marginLeft:'25px'}}>
                 <h3>Question</h3>
                 <Preview data={question}/>
-                {answerType=="0"?[1,2,3,4].map((item,index)=><>
+                {answerType=="0"||"1"?[1,2,3,4].map((item,index)=><>
                                                                 <h6>Option {index+1}</h6>
                                                                 <Preview data={option[index]}/>
-                                                            </>):(answerType=="1"?[1,2,3,4,5].map((item,index)=><>
-                                                                                                            <h6>Option {index+1}</h6>
-                                                                                                            <Preview data={option[index]}/>
-                                                                                                        </>):null)
+                                                            </>):null
                 }
                 <h3>Solution</h3>
                 <Preview data={solution}/>
