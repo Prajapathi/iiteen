@@ -101,7 +101,11 @@ export default function PaperInfo(props) {
                                     onChange={(event) =>setDuration(event.target.value)}
                                   />
                               </div>
-                              :null
+                              :<TextField
+                                    id="standard-number"
+                                    label="Chapter name"
+                                    className={classes.textField}
+                                  />
             }
             <div style={{display:'flex',margin:'20px auto'}}>
                 {!props.subjective?
