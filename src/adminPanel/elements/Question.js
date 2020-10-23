@@ -236,7 +236,15 @@ export default function QuestionInfo() {
                 <Preview data={solution}/>
             </div>
         </div>
-        <button style={{width:'60%',margin:'0px 20% 20px 20%'}}>Continue</button>
+        <button style={{width:'60%',
+                margin:'0px 20% 20px 20%',
+                background:'#388cf2',
+                color:'white',
+                border:'1px solid white',
+                borderRadius:'20px'
+                }}>
+                    Continue
+        </button>
         </>
     )
 }

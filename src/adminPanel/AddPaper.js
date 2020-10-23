@@ -4,13 +4,23 @@ import './styles/AddPaper.css'
 
 export default function AddPaper() {
     return (
-        <Link to="/Paper">
-            <div id="addPaper">
-                <div id="addButton">
-                +
+        <>
+            <Link to={{ pathname: '/Paper', state: { subjective:false} }}>
+                <div id="addPaper">
+                    <div id="addButton">
+                    +
+                    </div>
+                    <h1>Add a paper</h1>
                 </div>
-                <h1>Add a paper</h1>
-            </div>
-        </Link>
+            </Link>
+            <Link to={{ pathname: '/Paper', state: { subjective:true} }}>
+                <div id="addPaper">
+                    <div id="addButton">
+                    +
+                    </div>
+                    <h1>Add a Subjective paper</h1>
+                </div>
+            </Link>
+        </>
     )
 }

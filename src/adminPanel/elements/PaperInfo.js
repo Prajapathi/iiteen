@@ -56,59 +56,65 @@ export default function PaperInfo(props) {
 
     return (
         <form className={classes.container} noValidate >
-            <div style={{display:'flex',alignItems:'center',margin:'20px auto'}}>
-                <TextField
-                  id="date"
-                  label="Date"
-                  type="date"
-                  defaultValue="2017-05-24"
-                  className={classes.textField}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={date}
-                  onChange={(e)=>setDate(e.target.value)}
-                />
-                <TextField
-                  id="time"
-                  label="Time"
-                  type="time"
-                  defaultValue="07:30"
-                  className={classes.textField}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    step: 300, 
-                  }}
-                  value={time}
-                  onChange={(e)=>setTime(e.target.value)}
-                />
-                <FormLabel component="legend" style={{marginRight:'15px'}}>Paper Type</FormLabel>
-                <RadioGroup aria-label="gender" name="gender1" value={typeValue} onChange={handleChange}>
-                    <div style={{display:'flex'}}>
-                        <FormControlLabel value="mains" control={<Radio />} label="Mains" />
-                        <FormControlLabel value="advance" control={<Radio />} label="Advance" />
-                    </div> 
-                </RadioGroup>
-                <TextField
-                  id="standard-number"
-                  type="number"
-                  label="Total Duration (in mins)"
-                  className={classes.textField}
-                  value={duration}
-                  onChange={(event) =>setDuration(event.target.value)}
-                />
-            </div>
+            {!props.subjective?
+                              <div style={{display:'flex',alignItems:'center',margin:'20px auto'}}>
+                                  <TextField
+                                    id="date"
+                                    label="Date"
+                                    type="date"
+                                    defaultValue="2017-05-24"
+                                    className={classes.textField}
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    value={date}
+                                    onChange={(e)=>setDate(e.target.value)}
+                                  />
+                                  <TextField
+                                    id="time"
+                                    label="Time"
+                                    type="time"
+                                    defaultValue="07:30"
+                                    className={classes.textField}
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    inputProps={{
+                                      step: 300, 
+                                    }}
+                                    value={time}
+                                    onChange={(e)=>setTime(e.target.value)}
+                                  />
+                                  <FormLabel component="legend" style={{marginRight:'15px'}}>Paper Type</FormLabel>
+                                  <RadioGroup aria-label="gender" name="gender1" value={typeValue} onChange={handleChange}>
+                                      <div style={{display:'flex'}}>
+                                          <FormControlLabel value="mains" control={<Radio />} label="Mains" />
+                                          <FormControlLabel value="advance" control={<Radio />} label="Advance" />
+                                      </div> 
+                                  </RadioGroup>
+                                  <TextField
+                                    id="standard-number"
+                                    type="number"
+                                    label="Total Duration (in mins)"
+                                    className={classes.textField}
+                                    value={duration}
+                                    onChange={(event) =>setDuration(event.target.value)}
+                                  />
+                              </div>
+                              :null
+            }
             <div style={{display:'flex',margin:'20px auto'}}>
-                <TextField
-                  id="standard-number"
-                  type="number"
-                  label="Total Marks"
-                  className={classes.textField}
-                  value={marks}
-                  onChange={(event) =>setMarks(event.target.value)}
-                />
+                {!props.subjective?
+                                  <TextField
+                                  id="standard-number"
+                                  type="number"
+                                  label="Total Marks"
+                                  className={classes.textField}
+                                  value={marks}
+                                  onChange={(event) =>setMarks(event.target.value)}
+                                />
+                                :null
+                }
                 <TextField
                   id="standard-number"
                   type="number"
@@ -117,19 +123,22 @@ export default function PaperInfo(props) {
                   value={noOfQuestions}
                   onChange={(event) =>setNoOfQuestions(event.target.value)}
                 />
-                <TextField
-                  id="standard-select-currency"
-                  select
-                  label="Select"
-                  value={level}
-                  onChange={(event) =>setLevel(event.target.value)}
-                  helperText="Level for subjectwise Paper"
-                  className={classes.textField}
-                >
-                    <MenuItem value="1"> 1</MenuItem>
-                    <MenuItem value="2"> 2</MenuItem>
-                    <MenuItem value="3"> 3</MenuItem>
-                </TextField>
+                {props.subjective?
+                                <TextField
+                                  id="standard-select-currency"
+                                  select
+                                  label="Select"
+                                  value={level}
+                                  onChange={(event) =>setLevel(event.target.value)}
+                                  helperText="Level for subjectwise Paper"
+                                  className={classes.textField}
+                                >
+                                    <MenuItem value="1"> 1</MenuItem>
+                                    <MenuItem value="2"> 2</MenuItem>
+                                    <MenuItem value="3"> 3</MenuItem>
+                                </TextField>
+                                :null
+                }
             </div>
         </form>
     );
