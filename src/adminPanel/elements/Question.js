@@ -68,11 +68,30 @@ export default function QuestionInfo(props) {
     }, [multiOption])
 
     useEffect(() => {
-        
+        const newData={
+            number:number,
+            subject:subject,
+            tag:tag,
+            section:section,
+            marks:marks,
+            negative:negative,
+            question:question,
+            option:option,
+            answerType:answerType,
+            answer:answer,
+            solution:solution
+        }
+        setData(newData)
     }, [number,subject,tag,section,marks,negative,question,answerType,answer,hint,solution,option,multiOption,])
+
+    useEffect(() => {
+        const arr=[...props.infoArray];
+        arr[props.index]=data;
+        props.sendInfo(arr)
+    }, [data])
     return (
         <>
-        <h1 style={{margin:'20px 0px -20px 50px'}}>Question {props.index}</h1>
+        <h1 style={{margin:'20px 0px -20px 50px'}}>Question {props.index+1}</h1>
         <div style={{padding:'3%',display:'flex'}}>
         
             <div style={{width:'40%',border:'2px solid black'}}>

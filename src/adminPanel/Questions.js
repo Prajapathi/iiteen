@@ -7,10 +7,11 @@ export default function Questions(props) {
     const location = useLocation();
     const [index,setIndex]=React.useState(0);
     const [questionArray,setQuestionArray]=React.useState([])
+    console.log("Yeh maal hai",questionArray)
     return (
         <>
                     <div>
-                    <Question key={index} index={index}/>
+                    <Question key={index} index={index} infoArray={questionArray} sendInfo={setQuestionArray}/>
                     <button style={{width:'60%',
                     margin:'0px 20% 20px 20%',
                     background:'#388cf2',
