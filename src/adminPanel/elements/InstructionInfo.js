@@ -2,7 +2,7 @@ import React,{useEffect} from 'react'
 import InstructionField from './InstructionField'
 import InstructionPreview from './InstructionPreview'
 
-export default function InstructionInfo() {
+export default function InstructionInfo(props) {
     const [instructions,setInstructions]=React.useState(['']);
     const deleteInstruction = (index) => {
         const values=[...instructions];
@@ -12,6 +12,9 @@ export default function InstructionInfo() {
     const addInstruction = () => {
         setInstructions([...instructions,''])
     };
+    useEffect(() => {
+        props.sendInfo(instructions)
+    }, [instructions])
     console.log(instructions)
     return (
         <>

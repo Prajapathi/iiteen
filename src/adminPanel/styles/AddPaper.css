@@ -5,6 +5,7 @@
     margin:100px auto;
     display:flex;
     align-items:center;
+    flex-wrap:wrap;
 }
 #addPaper h1{
     margin-left:30px;

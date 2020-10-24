@@ -34,6 +34,7 @@ export default function PaperInfo(props) {
     const [marks,setMarks]=React.useState();
     const [duration,setDuration]=React.useState();
     const [noOfQuestions,setNoOfQuestions]=React.useState();
+    const [data,setData]=React.useState([]);
 
     const handleChange = (event) => {
         settypeValue(event.target.value);
@@ -43,15 +44,23 @@ export default function PaperInfo(props) {
       props.sendNumberQ(noOfQuestions)
     }, [noOfQuestions])
 
-    let data={
-        date:date,
-        time:time,
-        type:typeValue,
-        marks:marks,
-        questions:noOfQuestions,
-        duration:duration,
-        level:level
-    }
+    useEffect(() => {
+        let data={
+          date:date,
+          time:time,
+          type:typeValue,
+          marks:marks,
+          questions:noOfQuestions,
+          duration:duration,
+          level:level
+        }
+        setData(data);
+    }, [date,time,typeValue,marks,noOfQuestions,duration,level])
+    
+    useEffect(() => {
+      props.sendInfo(data)
+    }, [data])
+    
     console.log(data)
 
     return (

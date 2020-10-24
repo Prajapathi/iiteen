@@ -5,14 +5,18 @@ import InstructionInfo from './elements/InstructionInfo'
 
 export default function Paper() {
     const [numberQ,setNumberQ]=React.useState(0)
+    const [paperInfo,setPaperInfo]=React.useState([]);
+    const [instructionInfo,setInstructionInfo]=React.useState([]);
     const location = useLocation();
+    console.log("yaha paper",paperInfo);
+    console.log("yaha inst",instructionInfo)
     return (
         <div>
-            <PaperInfo sendNumberQ={setNumberQ} subjective={location.state.subjective} />
+            <PaperInfo sendNumberQ={setNumberQ} sendInfo={setPaperInfo} subjective={location.state.subjective} />
             {
-                !(location.state.subjective)?<InstructionInfo/>:null
+                !(location.state.subjective)?<InstructionInfo sendInfo={setInstructionInfo}/>:null
             }
-            <Link to={{ pathname: '/Questions', state: { number:numberQ,subjective:location.state.subjective} }}>
+            <Link to={{ pathname: '/Questions', state: { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType} }}>
                 <button style={{width:'60%',
                 margin:'0px 20% 20px 20%',
                 background:'#388cf2',
