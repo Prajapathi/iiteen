@@ -8,8 +8,6 @@ export default function Paper() {
     const [paperInfo,setPaperInfo]=React.useState([]);
     const [instructionInfo,setInstructionInfo]=React.useState([]);
     const location = useLocation();
-    console.log("yaha paper",paperInfo);
-    console.log("yaha inst",instructionInfo)
     return (
         <div>
             <PaperInfo sendNumberQ={setNumberQ} sendInfo={setPaperInfo} subjective={location.state.subjective} />

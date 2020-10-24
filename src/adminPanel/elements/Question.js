@@ -1,4 +1,5 @@
 import React,{useEffect} from 'react'
+import {Link, useLocation } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import TextTyper from './TextTyper'
 import Preview from './Preview'
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function QuestionInfo() {
+export default function QuestionInfo(props) {
     const classes = useStyles();
     const [number,setNumber]=React.useState();
     const [subject,setSubject]=React.useState();
@@ -39,6 +40,7 @@ export default function QuestionInfo() {
     const [solution,setSolution]=React.useState([]);
     const [option,setOption]=React.useState([]);
     const [multiOption,setMultiOption]=React.useState([false,false,false,false]);
+    const [data,setData]=React.useState([]);
 
     const setAnswerLower=(event)=>{
         const ans=[];
@@ -65,9 +67,12 @@ export default function QuestionInfo() {
         console.log("jk",newAns)
     }, [multiOption])
 
+    useEffect(() => {
+        
+    }, [number,subject,tag,section,marks,negative,question,answerType,answer,hint,solution,option,multiOption,])
     return (
         <>
-        <h1 style={{margin:'20px 0px -20px 50px'}}>Question 1</h1>
+        <h1 style={{margin:'20px 0px -20px 50px'}}>Question {props.index}</h1>
         <div style={{padding:'3%',display:'flex'}}>
         
             <div style={{width:'40%',border:'2px solid black'}}>
@@ -236,15 +241,7 @@ export default function QuestionInfo() {
                 <Preview data={solution}/>
             </div>
         </div>
-        <button style={{width:'60%',
-                margin:'0px 20% 20px 20%',
-                background:'#388cf2',
-                color:'white',
-                border:'1px solid white',
-                borderRadius:'20px'
-                }}>
-                    Continue
-        </button>
+           
         </>
     )
 }
