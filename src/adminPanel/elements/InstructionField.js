@@ -71,7 +71,6 @@ export default function InstructionField(props) {
         let newInfo=[...props.array];
         newInfo[props.number]=Info;
         props.sendInfo(newInfo)
-        console.log("iugniung")
     },[Info])
     
     return (

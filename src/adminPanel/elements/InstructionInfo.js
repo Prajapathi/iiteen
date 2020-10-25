@@ -15,7 +15,6 @@ export default function InstructionInfo(props) {
     useEffect(() => {
         props.sendInfo(instructions)
     }, [instructions])
-    console.log(instructions)
     return (
         <>
         <div style={{padding:'0px 3% 3%',display:'flex',width:'90%',margin:'auto'}}>

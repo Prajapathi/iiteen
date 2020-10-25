@@ -44,7 +44,7 @@ export default function TextTyper(props) {
         <div>
             {
                 array.map((key,index)=>
-                    <div style={{display:'flex',alignItems:'center'}}>
+                    <div style={{display:'flex',alignItems:'center'}} key={index}>
                                 <TextField
                                 id="standard-select-currency"
                                 select

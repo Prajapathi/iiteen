@@ -61,7 +61,6 @@ export default function PaperInfo(props) {
       props.sendInfo(data)
     }, [data])
     
-    console.log(data)
 
     return (
         <form className={classes.container} noValidate >
