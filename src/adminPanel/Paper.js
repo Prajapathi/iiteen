@@ -7,10 +7,11 @@ export default function Paper() {
     const [numberQ,setNumberQ]=React.useState(0)
     const [paperInfo,setPaperInfo]=React.useState([]);
     const [instructionInfo,setInstructionInfo]=React.useState([]);
+    const [subjectiveClass,setSubjectiveClass]=React.useState();
     const location = useLocation();
     return (
         <div>
-            <PaperInfo sendNumberQ={setNumberQ} sendInfo={setPaperInfo} subjective={location.state.subjective} />
+            <PaperInfo sendNumberQ={setNumberQ} sendInfo={setPaperInfo} subjective={location.state.subjective} sendSubjectiveClass={setSubjectiveClass}/>
             {
                 !(location.state.subjective)?<InstructionInfo sendInfo={setInstructionInfo}/>:null
             }

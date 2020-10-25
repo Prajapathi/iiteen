@@ -121,11 +121,26 @@ export default function PaperInfo(props) {
                                   value={marks}
                                   onChange={(event) =>setMarks(event.target.value)}
                                 />
-                                :<TextField
+                                :
+                                <>
+                                <TextField
+                                  id="standard-select-currency"
+                                  select
+                                  label="Select"
+                                  value={level}
+                                  onChange={(event) =>setLevel(event.target.value)}
+                                  helperText="Level for subjectwise Paper"
+                                  className={classes.textField}
+                                >
+                                    <MenuItem value="11"> 11</MenuItem>
+                                    <MenuItem value="12"> 12</MenuItem>
+                                </TextField>
+                                <TextField
                                     id="standard-number"
                                     label="Chapter name"
                                     className={classes.textField}
                                   />
+                                  </>
                 }
                 <TextField
                   id="standard-number"
