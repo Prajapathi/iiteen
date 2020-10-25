@@ -35,6 +35,7 @@ export default function PaperInfo(props) {
     const [duration,setDuration]=React.useState();
     const [noOfQuestions,setNoOfQuestions]=React.useState();
     const [data,setData]=React.useState([]);
+    const [subjectiveClass,setSubjectiveClass]=React.useState([]);
 
     const handleChange = (event) => {
         settypeValue(event.target.value);
@@ -126,10 +127,10 @@ export default function PaperInfo(props) {
                                 <TextField
                                   id="standard-select-currency"
                                   select
-                                  label="Select"
-                                  value={level}
-                                  onChange={(event) =>setLevel(event.target.value)}
-                                  helperText="Level for subjectwise Paper"
+                                  label="Class"
+                                  value={subjectiveClass}
+                                  onChange={(event) =>setSubjectiveClass(event.target.value)}
+                                  helperText="Select Class"
                                   className={classes.textField}
                                 >
                                     <MenuItem value="11"> 11</MenuItem>
