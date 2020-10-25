@@ -46,6 +46,9 @@ export default function PaperInfo(props) {
     }, [noOfQuestions])
 
     useEffect(() => {
+      props.sendSubjectiveClass(subjectiveClass);
+    }, [subjectiveClass])
+    useEffect(() => {
         let data={
           date:date,
           time:time,
