@@ -15,7 +15,7 @@ export default function Questions(props) {
         <>
                     <div>
                     <Question key={index} index={index} infoArray={questionArray} sendInfo={setQuestionArray}/>
-                    {index<=(location.state.number-1)?
+                    {index<=(location.state.number-2)?
                                                     <button style={{width:'60%',
                                                     margin:'0px 20% 20px 20%',
                                                     background:'#388cf2',
