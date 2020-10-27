@@ -31,9 +31,9 @@ export default function PaperInfo(props) {
     const [date,setDate]=React.useState('2017-05-24');
     const [time,setTime]=React.useState('10:30');
     const [level,setLevel]=React.useState('');
-    const [marks,setMarks]=React.useState();
-    const [duration,setDuration]=React.useState();
-    const [noOfQuestions,setNoOfQuestions]=React.useState();
+    const [marks,setMarks]=React.useState('');
+    const [duration,setDuration]=React.useState('');
+    const [noOfQuestions,setNoOfQuestions]=React.useState('');
     const [data,setData]=React.useState([]);
     const [subjectiveClass,setSubjectiveClass]=React.useState([]);
 

@@ -1,4 +1,5 @@
 import React from 'react'
+import firebase from 'firebase'
 import {Link,useLocation} from "react-router-dom";
 import PaperInfo from './elements/PaperInfo'
 import InstructionInfo from './elements/InstructionInfo'
@@ -9,6 +10,17 @@ export default function Paper() {
     const [instructionInfo,setInstructionInfo]=React.useState([]);
     const [subjectiveClass,setSubjectiveClass]=React.useState();
     const location = useLocation();
+    
+    const addPaper=()=>{
+        const data={...paperInfo,instructions:instructionInfo}
+        const db = firebase.firestore();
+        db.settings({
+            timestampsInSnapshots: true
+        });
+        const userRef = db.collection("Trash/questionPaper/Questions").add({
+            data
+        });  
+    }
     return (
         <div>
             <PaperInfo sendNumberQ={setNumberQ} sendInfo={setPaperInfo} subjective={location.state.subjective} sendSubjectiveClass={setSubjectiveClass}/>
@@ -22,7 +34,8 @@ export default function Paper() {
                 color:'white',
                 border:'1px solid white',
                 borderRadius:'20px'
-                }}>
+                }}
+                onClick={addPaper}>
                     Continue
                 </button>
             </Link>
