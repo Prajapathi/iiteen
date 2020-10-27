@@ -10,7 +10,7 @@ export default function Paper() {
     const [instructionInfo,setInstructionInfo]=React.useState([]);
     const [subjectiveClass,setSubjectiveClass]=React.useState();
     const location = useLocation();
-    
+
     const addPaper=()=>{
         const data={...paperInfo,instructions:instructionInfo}
         const db = firebase.firestore();

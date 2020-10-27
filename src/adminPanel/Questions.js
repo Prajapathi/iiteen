@@ -1,4 +1,5 @@
 import React,{useEffect} from 'react'
+import firebase from 'firebase'
 import {Link, useLocation } from "react-router-dom";
 import Question from './elements/Question'
 
@@ -9,7 +10,13 @@ export default function Questions(props) {
     const [questionArray,setQuestionArray]=React.useState([])
     
     const savePaper=()=>{
-        console.log("Save",questionArray)
+        const db = firebase.firestore();
+        db.settings({
+            timestampsInSnapshots: true
+        });
+        const userRef = db.collection("Trash/questionPaper/Questions").add({
+        questionArray
+        });  
     }
     return (
         <>
