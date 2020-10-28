@@ -27,14 +27,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function QuestionInfo(props) {
     const classes = useStyles();
-    const [number,setNumber]=React.useState();
-    const [subject,setSubject]=React.useState();
-    const [tag,setTag]=React.useState();
+    const [number,setNumber]=React.useState('');
+    const [subject,setSubject]=React.useState('');
+    const [tag,setTag]=React.useState('');
     const [section,setSection]=React.useState('');
-    const [marks,setMarks]=React.useState();
-    const [negative,setNegative]=React.useState();
+    const [marks,setMarks]=React.useState('');
+    const [negative,setNegative]=React.useState('');
     const [question,setQuestion]=React.useState(['']);
-    const [answerType,setAnswerType]=React.useState();
+    const [answerType,setAnswerType]=React.useState('');
     const [answer,setAnswer]=React.useState([]);
     const [hint,setHint]=React.useState([]);
     const [solution,setSolution]=React.useState([]);
