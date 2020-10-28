@@ -11,7 +11,7 @@ export default function Paper() {
     const [paperInfo,setPaperInfo]=React.useState([]);
     const [instructionInfo,setInstructionInfo]=React.useState([]);
     const [subjectiveClass,setSubjectiveClass]=React.useState();
-    const[loading,setLoading]=React.useState(false)
+    const [loading,setLoading]=React.useState(false)
     const location = useLocation();
     let history = useHistory()
 
@@ -28,7 +28,7 @@ export default function Paper() {
             setLoading(false);
             history.push('/Questions', { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType})
         }).catch((error)=>{
-            console.log("Error loading the document: ",error)
+            console.log("Error saving the document: ",error)
         })  
     }
     return (
@@ -39,7 +39,6 @@ export default function Paper() {
                 {
                     !(location.state.subjective)?<InstructionInfo sendInfo={setInstructionInfo}/>:null
                 }
-                {/*  <Link to={{ pathname: '/Questions', state: { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType} }}> */}
                     <button style={{width:'60%',
                     margin:'0px 20% 20px 20%',
                     background:'#388cf2',
@@ -50,7 +49,6 @@ export default function Paper() {
                     onClick={addPaper}>
                         Continue
                     </button>
-                {/* </Link> */}
                 </>
             }
         </div>
