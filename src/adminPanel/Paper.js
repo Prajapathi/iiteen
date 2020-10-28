@@ -1,6 +1,6 @@
 import React from 'react'
 import firebase from 'firebase'
-import {Link,useLocation} from "react-router-dom";
+import {Link,useLocation,useHistory} from "react-router-dom";
 import PaperInfo from './elements/PaperInfo'
 import InstructionInfo from './elements/InstructionInfo'
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -13,6 +13,7 @@ export default function Paper() {
     const [subjectiveClass,setSubjectiveClass]=React.useState();
     const[loading,setLoading]=React.useState(false)
     const location = useLocation();
+    let history = useHistory()
 
     const addPaper=()=>{
         const data={...paperInfo,instructions:instructionInfo}
@@ -25,7 +26,7 @@ export default function Paper() {
             data
         }).then((res)=>{
             setLoading(false);
-            
+            history.push('/Questions', { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType})
         }).catch((error)=>{
             console.log("Error loading the document: ",error)
         })  
