@@ -17,7 +17,7 @@ export default function Questions(props) {
         db.settings({
             timestampsInSnapshots: true
         });
-        const userRef = db.collection("Trash/questionPaper/Questions").add({
+        const userRef = db.collection(`AITS/${location.state.paperRef}/Questions`).add({
                 questionArray
         }).then((res)=>{
             setLoading(false);
@@ -25,7 +25,6 @@ export default function Questions(props) {
         }).catch((error)=>{
             console.log("Error saving the document: ",error);
         })  
-        console.log("questions: ",questionArray)
     }
     return (
         <>

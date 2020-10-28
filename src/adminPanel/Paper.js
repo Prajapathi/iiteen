@@ -22,11 +22,11 @@ export default function Paper() {
             timestampsInSnapshots: true
         });
         setLoading(true)
-        const userRef = db.collection("Trash/questionPaper/Questions").add({
+        const paperRef = db.collection("AITS").add({
             data
         }).then((res)=>{
             setLoading(false);
-            history.push('/Questions', { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType})
+            history.push('/Questions', { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType,paperRef:res.id})
         }).catch((error)=>{
             console.log("Error saving the document: ",error)
         })  
