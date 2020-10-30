@@ -10,18 +10,19 @@ export default function Questions(props) {
     const history=useHistory();
     const [index,setIndex]=React.useState(0);
     const [questionArray,setQuestionArray]=React.useState([])
-    const[loading,setLoading]=React.useState(false)
+    const [loading,setLoading]=React.useState(false)
     
     const savePaper=()=>{
         const db = firebase.firestore();
+        setLoading(true)
         db.settings({
             timestampsInSnapshots: true
         });
-        const userRef = db.collection(`AITS/${location.state.paperRef}/Questions`).add({
+        const userRef = db.collection(`${location.state.paperRoute}/${location.state.paperRef}/Questions`).add({
                 questionArray
         }).then((res)=>{
             setLoading(false);
-            history.push('/AddPaper')
+            history.push('/AddPaper',{success:true})
         }).catch((error)=>{
             console.log("Error saving the document: ",error);
         })  
@@ -31,6 +32,17 @@ export default function Questions(props) {
             {loading==true?<CircularProgress style={{margin:'25% 50%'}}/>:
                     <div>
                     <Question key={index} index={index} infoArray={questionArray} sendInfo={setQuestionArray}/>
+                    {index>0?<button style={{width:'60%',
+                                                    height:'40px',
+                                                    margin:'0px 20% 20px 20%',
+                                                    background:'#388cf2',
+                                                    color:'white',
+                                                    border:'1px solid white',
+                                                    borderRadius:'20px'
+                                                    }}
+                                                    onClick={()=>setIndex(index-1)}>
+                                                        BACK
+                                                    </button>:null}
                     {index<=(location.state.number-2)?
                                                     <button style={{width:'60%',
                                                     margin:'0px 20% 20px 20%',
@@ -43,7 +55,8 @@ export default function Questions(props) {
                                                         Continue
                                                     </button>
                                                     
-                                                    :<button style={{width:'60%',
+                                                    :
+                                                    <button style={{width:'60%',
                                                     height:'40px',
                                                     margin:'0px 20% 20px 20%',
                                                     background:'#388cf2',

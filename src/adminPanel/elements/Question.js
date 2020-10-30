@@ -26,15 +26,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function QuestionInfo(props) {
+    const qArray=props.infoArray[props.index]
     const classes = useStyles();
-    const [number,setNumber]=React.useState('');
-    const [subject,setSubject]=React.useState('');
-    const [tag,setTag]=React.useState('');
-    const [section,setSection]=React.useState('');
-    const [marks,setMarks]=React.useState('');
-    const [negative,setNegative]=React.useState('');
-    const [question,setQuestion]=React.useState(['']);
-    const [answerType,setAnswerType]=React.useState('');
+    const [number,setNumber]=React.useState(qArray?qArray.number:'');
+    const [subject,setSubject]=React.useState(qArray?qArray.subject:'');
+    const [tag,setTag]=React.useState(qArray?qArray.tag:'');
+    const [section,setSection]=React.useState(qArray?qArray.section:'');
+    const [marks,setMarks]=React.useState(qArray?qArray.marks:'');
+    const [negative,setNegative]=React.useState(qArray?qArray.negative:'');
+    const [question,setQuestion]=React.useState(qArray?qArray.question:['']);
+    const [answerType,setAnswerType]=React.useState(qArray?qArray.answerType:'');
     const [answer,setAnswer]=React.useState([]);
     const [hint,setHint]=React.useState([]);
     const [solution,setSolution]=React.useState([]);
@@ -64,21 +65,21 @@ export default function QuestionInfo(props) {
             item==true?newAns.push(index):null
         )
         setAnswer(newAns)
-        console.log("jk",newAns)
     }, [multiOption])
 
     useEffect(() => {
         const newData={
-            number:number,
-            subject:subject,
+            number:Number(number),
+            subject:Number(subject),
             tag:tag,
-            section:section,
-            marks:marks,
-            negative:negative,
+            section:Number(section),
+            marks:Number(marks),
+            negativeMarks:Number(negative),
             question:question,
             option:option,
-            answerType:answerType,
+            answerType:Number(answerType),
             answer:answer,
+            hint:hint,
             solution:solution
         }
         setData(newData)

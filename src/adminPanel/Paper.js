@@ -16,17 +16,21 @@ export default function Paper() {
     let history = useHistory()
 
     const addPaper=()=>{
-        const data={...paperInfo,instructions:instructionInfo}
+        const data={...paperInfo,instructions:instructionInfo};
+        // var myTimestamp = firebase.firestore.Timestamp.fromDate(new Date())
+        // data.date=myTimestamp;
+        // console.log("pp",data.date,typeof(data.date))
+        var paperRoute=location.state.subjective?"SUBJECTIVE":(location.state.paperType=="1"?"AITS":(location.state.paperType=="2"?"PREVIOUS":"MOCK"))
         const db = firebase.firestore();
         db.settings({
             timestampsInSnapshots: true
         });
         setLoading(true)
-        const paperRef = db.collection("AITS").add({
-            data
+        const paperRef = db.collection(paperRoute).add({
+            ...paperInfo,instructions:instructionInfo
         }).then((res)=>{
             setLoading(false);
-            history.push('/Questions', { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType,paperRef:res.id})
+            history.push('/Questions', { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType,paperRoute:paperRoute,paperRef:res.id})
         }).catch((error)=>{
             console.log("Error saving the document: ",error)
         })  

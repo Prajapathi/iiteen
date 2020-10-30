@@ -25,7 +25,7 @@ export default function TextTyper(props) {
   }
     const setType=(event,index)=>{
         const values=[...array]
-        values[index].type=event.target.value;
+        values[index].type=Number(event.target.value);
         setArray(values);
     }
 
@@ -37,7 +37,6 @@ export default function TextTyper(props) {
         }
         else
         props.sendInfo(array)
-        console.log("aaya",array)
     }, [array])
 
     return (

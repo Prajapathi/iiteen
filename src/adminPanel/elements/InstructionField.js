@@ -55,16 +55,18 @@ export default function InstructionField(props) {
         if(event.target.value==4){
             values[index].color='';
         }
-        else values[index].color=event.target.value;
+        else values[index].color=Number(event.target.value);
         setSubpoints(values);
     }
 
     useEffect(() => {
-        setInfo({heading:heading,
-        data:data,
-        section:section,
-        subpoints:subpoints,
-        linebreak:linebreak})
+        setInfo({
+            heading:heading,
+            data:data,
+            section:Number(section),
+            points:subpoints,
+            isLine:linebreak=="true"?true:false
+        })
     }, [heading,data,section,subpoints,linebreak])
 
     useEffect(() => {

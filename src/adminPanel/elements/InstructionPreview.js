@@ -13,14 +13,14 @@ export default function InstructionPreview(props) {
                         {props.instructions[index].data}
                          
                         <ul>
-                        { props.instructions[index].subpoints?props.instructions[index].subpoints.map((key,ind)=>
-                            props.instructions[index].subpoints[ind]==""?null:
+                        { props.instructions[index].points?props.instructions[index].points.map((key,ind)=>
+                            props.instructions[index].points[ind]==""?null:
                                                                         <li key={ind} style={{listStyleType:'none'}}>
                                                                             <div id="sub-points">
-                                                                                {props.instructions[index].subpoints[ind].color==''?null:
-                                                                                    <div style={{background:props.instructions[index].subpoints[ind].color==1?'red':props.instructions[index].subpoints[ind].color==2?'green':'gray'}}></div>
+                                                                                {props.instructions[index].points[ind].color==''?null:
+                                                                                    <div style={{background:props.instructions[index].points[ind].color==1?'red':props.instructions[index].points[ind].color==2?'green':'gray'}}></div>
                                                                                 }
-                                                                                {props.instructions[index].subpoints[ind].data}
+                                                                                {props.instructions[index].points[ind].data}
                                                                             </div>
                                                                         </li>
                             ):null
@@ -29,7 +29,7 @@ export default function InstructionPreview(props) {
                     </div>
                 </div>
                
-                {props.instructions[index].linebreak=="true"?<hr/>:null}
+                {props.instructions[index].isLine==true?<hr/>:null}
                 </>
             )}
         </div>

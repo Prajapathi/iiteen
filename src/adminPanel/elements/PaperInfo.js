@@ -27,9 +27,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PaperInfo(props) {
     const classes = useStyles();
+    const [name,setName]=React.useState('');
     const [typeValue, settypeValue] = React.useState('mains');
-    const [date,setDate]=React.useState('2017-05-24');
-    const [time,setTime]=React.useState('10:30');
+    const [date,setDate]=React.useState('2017-05-24T10:30');
     const [level,setLevel]=React.useState('');
     const [marks,setMarks]=React.useState('');
     const [duration,setDuration]=React.useState('');
@@ -50,16 +50,17 @@ export default function PaperInfo(props) {
     }, [subjectiveClass])
     useEffect(() => {
         let data={
+          name:name,
           date:date,
-          time:time,
-          type:typeValue,
-          marks:marks,
-          questions:noOfQuestions,
-          duration:duration,
-          level:level
+          paperType:Number(typeValue=="Mains"?1:2),
+          totalMarks:Number(marks),
+          noOfQuestions:Number(noOfQuestions),
+          totalDuration:Number(duration),
+          level:level!=''?Number(level):null
         }
+        console.log("date",data.date)
         setData(data);
-    }, [date,time,typeValue,marks,noOfQuestions,duration,level])
+    }, [date,typeValue,marks,noOfQuestions,duration,level])
     
     useEffect(() => {
       props.sendInfo(data)
@@ -71,10 +72,17 @@ export default function PaperInfo(props) {
             {!props.subjective?
                               <div style={{display:'flex',alignItems:'center',margin:'20px auto'}}>
                                   <TextField
-                                    id="date"
-                                    label="Date"
-                                    type="date"
-                                    defaultValue="2017-05-24"
+                                    id="standard-number"
+                                    label="Paper Name"
+                                    className={classes.textField}
+                                    value={name}
+                                    onChange={(event) =>setName(event.target.value)}
+                                  />
+                                  <TextField
+                                    id="datetime-local"
+                                    label="Date and time"
+                                    type="datetime-local"
+                                    defaultValue="2017-05-24T10:30"
                                     className={classes.textField}
                                     InputLabelProps={{
                                       shrink: true,
@@ -82,26 +90,11 @@ export default function PaperInfo(props) {
                                     value={date}
                                     onChange={(e)=>setDate(e.target.value)}
                                   />
-                                  <TextField
-                                    id="time"
-                                    label="Time"
-                                    type="time"
-                                    defaultValue="07:30"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                      shrink: true,
-                                    }}
-                                    inputProps={{
-                                      step: 300, 
-                                    }}
-                                    value={time}
-                                    onChange={(e)=>setTime(e.target.value)}
-                                  />
                                   <FormLabel component="legend" style={{marginRight:'15px'}}>Paper Type</FormLabel>
                                   <RadioGroup aria-label="gender" name="gender1" value={typeValue} onChange={handleChange}>
                                       <div style={{display:'flex'}}>
-                                          <FormControlLabel value="mains" control={<Radio />} label="Mains" />
-                                          <FormControlLabel value="advance" control={<Radio />} label="Advance" />
+                                          <FormControlLabel value="Mains" control={<Radio />} label="Mains" />
+                                          <FormControlLabel value="Advance" control={<Radio />} label="Advance" />
                                       </div> 
                                   </RadioGroup>
                                   <TextField

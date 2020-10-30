@@ -1,11 +1,31 @@
 import React from 'react'
-import {Link} from "react-router-dom";
+import {Link,useLocation} from "react-router-dom";
 import './styles/AddPaper.css'
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 export default function AddPaper() {
+    const location = useLocation();
     const [paperType,setPaperType]=React.useState(0);
+    const [open, setOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        if(location.state&&location.state.success==true)
+        setOpen(true)
+    }, [])
+  
+    const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+    };
+
     return (
         <>
             
@@ -41,6 +61,24 @@ export default function AddPaper() {
                     <h1>Add a Subjective paper</h1>
                 </div>
             </Link>
+            
+                    <Snackbar
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                    }}
+                    severity="success"
+                    open={open}
+                    autoHideDuration={2000}
+                    message="Paper Added Successfully"
+                    action={
+                        <React.Fragment>
+                            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+                            <CloseIcon fontSize="small" />
+                            </IconButton>
+                        </React.Fragment>
+                        }
+                    />
         </>
     )
 }
