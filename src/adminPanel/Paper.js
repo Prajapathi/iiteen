@@ -32,19 +32,14 @@ export default function Paper() {
     }, [])
     
     const addPaper=()=>{
-        const data={...paperInfo,instructions:instructionInfo};
-        var myTimestamp = new firebase.firestore.Timestamp.fromDate(new Date())
-        data.date={
-            miliseconds:Date.now(),
-            nanoseconds:0
-        }
         const db = firebase.firestore();
         db.settings({
             timestampsInSnapshots: true
         });
         setLoading(true)
+        paperInfo.date=new Date(paperInfo.date)
         const paperRef = db.collection(paperRoute).add({
-            ...paperInfo,instructions:instructionInfo
+            ...paperInfo,instructionInfo
         }).then((res)=>{
             setLoading(false);
             setShowQuestion(true);
