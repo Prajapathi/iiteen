@@ -18,7 +18,7 @@ export default function Questions(props) {
         db.settings({
             timestampsInSnapshots: true
         });
-        const userRef = db.collection(`${location.state.paperRoute}/${location.state.paperRef}/Questions`).add({
+        const userRef = db.collection(`${props.paperRoute}/${props.paperRef}/Questions`).add({
                 questionArray
         }).then((res)=>{
             setLoading(false);
@@ -43,7 +43,7 @@ export default function Questions(props) {
                                                     onClick={()=>setIndex(index-1)}>
                                                         BACK
                                                     </button>:null}
-                    {index<=(location.state.number-2)?
+                    {index<=(props.number-2)?
                                                     <button style={{width:'60%',
                                                     margin:'0px 20% 20px 20%',
                                                     background:'#388cf2',
