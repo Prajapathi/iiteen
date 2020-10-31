@@ -62,7 +62,7 @@ export default function AddPaper() {
                 </div>
             </Link>
             
-                    <Snackbar
+                    {/* <Snackbar
                     anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'left',
@@ -78,7 +78,7 @@ export default function AddPaper() {
                             </IconButton>
                         </React.Fragment>
                         }
-                    />
+                    /> */}
         </>
     )
 }
