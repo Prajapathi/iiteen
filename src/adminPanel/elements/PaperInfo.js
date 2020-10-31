@@ -60,7 +60,7 @@ export default function PaperInfo(props) {
         }
         console.log("date",data.date)
         setData(data);
-    }, [date,typeValue,marks,noOfQuestions,duration,level])
+    }, [name,date,typeValue,marks,noOfQuestions,duration,level])
     
     useEffect(() => {
       props.sendInfo(data)
