@@ -14,12 +14,6 @@ export default function Routing() {
             <Route path="/Paper">
             <Paper/>
             </Route>
-            <Route exact path="/Questions">
-            <Questions/>
-            </Route>
-            <Route path="/Question">
-            <Question/>
-            </Route>
         </Switch>
     )
 }

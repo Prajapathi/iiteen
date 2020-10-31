@@ -58,7 +58,6 @@ export default function PaperInfo(props) {
           totalDuration:Number(duration),
           level:level!=''?Number(level):null
         }
-        console.log("date",data.date)
         setData(data);
     }, [name,date,typeValue,marks,noOfQuestions,duration,level])
     
