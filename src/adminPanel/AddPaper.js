@@ -16,6 +16,7 @@ export default function AddPaper() {
     React.useEffect(() => {
         if(location.state&&location.state.success==true)
         setOpen(true)
+        localStorage.removeItem("paperType")
     }, [])
   
     const handleClose = (event, reason) => {
@@ -25,6 +26,10 @@ export default function AddPaper() {
 
     setOpen(false);
     };
+
+    const setLocal=()=>{
+        localStorage.setItem("paperType",paperType)
+    }
 
     return (
         <>
@@ -43,7 +48,7 @@ export default function AddPaper() {
                         <MenuItem value="3">Mock Test</MenuItem>
                     </TextField>
                     {paperType!=0?
-                                <Link to={{ pathname: '/Paper', state: { subjective:false,paperType:paperType} }}>
+                                <Link to={{ pathname: '/Paper', state: { subjective:false,paperType:paperType} }} onClick={setLocal}>
                                     <div style={{display:'flex',alignItems:'center',width:'100%',marginTop:'30px'}}>
                                         <div id="addButton" style={{width:'20%'}}>
                                         +

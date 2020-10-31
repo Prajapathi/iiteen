@@ -22,7 +22,7 @@ export default function Questions(props) {
                 questionArray
         }).then((res)=>{
             setLoading(false);
-            history.push('/AddPaper',{success:true})
+            history.push('/AddPaper')
         }).catch((error)=>{
             console.log("Error saving the document: ",error);
         })  

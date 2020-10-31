@@ -15,15 +15,29 @@ export default function Paper() {
     const [loading,setLoading]=React.useState(false)
     const [showQuestion,setShowQuestion]=React.useState(false)
     const [refid,setRefid]=React.useState()
+    const [paperRoute,setpaperRoute]=React.useState()
     const location = useLocation();
     let history = useHistory()
 
-    let paperRoute=location.state.subjective?"SUBJECTIVE":(location.state.paperType=="1"?"AITS":(location.state.paperType=="2"?"PREVIOUS":"MOCK"))
-
+    React.useEffect(() => {
+        let paperType=localStorage.getItem("paperType");
+        console.log(paperType)
+        if(paperType!="1"&&paperType!="2"&&paperType!="3"){
+            history.push('/AddPaper');
+        }
+        else{
+            localStorage.removeItem("paperType")
+            setpaperRoute(location.state.subjective?"SUBJECTIVE":(location.state.paperType=="1"?"AITS":(location.state.paperType=="2"?"PREVIOUS":"MOCK")))
+        }
+    }, [])
+    
     const addPaper=()=>{
         const data={...paperInfo,instructions:instructionInfo};
-        var myTimestamp = firebase.firestore.Timestamp.fromDate(new Date())
-        data.date=myTimestamp;
+        var myTimestamp = new firebase.firestore.Timestamp.fromDate(new Date())
+        data.date={
+            miliseconds:Date.now(),
+            nanoseconds:0
+        }
         const db = firebase.firestore();
         db.settings({
             timestampsInSnapshots: true
@@ -46,9 +60,9 @@ export default function Paper() {
             {loading==true?<CircularProgress style={{margin:'25% 50%'}}/>:
                 (showQuestion==false?
                 <>
-                <PaperInfo sendNumberQ={setNumberQ} sendInfo={setPaperInfo} subjective={location.state.subjective} sendSubjectiveClass={setSubjectiveClass}/>
+                <PaperInfo sendNumberQ={setNumberQ} sendInfo={setPaperInfo} subjective={location.state?location.state.subjective:null} sendSubjectiveClass={setSubjectiveClass}/>
                 {
-                    !(location.state.subjective)?<InstructionInfo sendInfo={setInstructionInfo}/>:null
+                    !(location.state?location.state.subjective:null)?<InstructionInfo sendInfo={setInstructionInfo}/>:null
                 }
                     <button style={{width:'60%',
                     margin:'0px 20% 20px 20%',
