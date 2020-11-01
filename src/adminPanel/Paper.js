@@ -21,7 +21,6 @@ export default function Paper() {
 
     React.useEffect(() => {
         let paperType=localStorage.getItem("paperType");
-        console.log(paperType)
         if(paperType!="1"&&paperType!="2"&&paperType!="3"){
             history.push('/AddPaper');
         }

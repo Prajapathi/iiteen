@@ -12,9 +12,47 @@ export default function Questions(props) {
     const [questionArray,setQuestionArray]=React.useState([])
     const [loading,setLoading]=React.useState(false)
     
+    const uploadImg=()=>{
+        for(let i=0;i<questionArray.length;i++){
+            for(let j=0;j<questionArray[i].question.length;j++){
+                if(questionArray[i].question[j].type=="3"){
+                     console.log(questionArray[i].question[j].data)
+                     questionArray[i].question[j].data="URL";
+                }
+            }
+            for(let j=0;j<questionArray[i].solution.length;j++){
+                if(questionArray[i].solution[j].type=="3"){
+                     console.log(questionArray[i].solution[j].data)
+                     questionArray[i].solution[j].data="URL";
+                }
+            }
+            for(let j=0;j<questionArray[i].hint.length;j++){
+                if(questionArray[i].hint[j].type=="3"){
+                    console.log(questionArray[i].hint[j].data)
+                    questionArray[i].hint[j].data="URL";
+                }
+            }
+            for(let j=0;j<questionArray[i].option.length;j++){
+                for(let k=0;k<questionArray[i].option[j].length;k++){
+                    if(questionArray[i].option[j][k].type=="3"){
+                       console.log(questionArray[i].option[j][k].data) 
+                       questionArray[i].option[j][k].data="URL";
+                    }
+                }
+            }
+        }
+        savePaperFB();
+    }
+    const HandleImageUpload=(img)=>{
+        
+    }
     const savePaper=()=>{
-        const db = firebase.firestore();
         setLoading(true)
+        uploadImg();
+    }
+    const savePaperFB=()=>{
+        const db = firebase.firestore();
+        
         db.settings({
             timestampsInSnapshots: true
         });
@@ -25,7 +63,7 @@ export default function Questions(props) {
             history.push('/AddPaper')
         }).catch((error)=>{
             console.log("Error saving the document: ",error);
-        })  
+        }) 
     }
     return (
         <>
