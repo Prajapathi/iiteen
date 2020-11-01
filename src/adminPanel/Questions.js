@@ -16,6 +16,8 @@ export default function Questions(props) {
         for(let i=0;i<questionArray.length;i++){
             for(let j=0;j<questionArray[i].question.length;j++){
                 if(questionArray[i].question[j].type=="3"){
+                    const url=HandleImageUpload(questionArray[i].question[j].data)
+                    console.log("URL",url)
                      console.log(questionArray[i].question[j].data)
                      questionArray[i].question[j].data="URL";
                 }
@@ -44,7 +46,25 @@ export default function Questions(props) {
         savePaperFB();
     }
     const HandleImageUpload=(img)=>{
-        
+        const storage=firebase.storage();
+        const uploadTask = storage.ref(`/images/${img.name}`).put(img)
+        uploadTask.on('state_changed', 
+            (snapShot) => {
+            //takes a snap shot of the process as it is happening
+            console.log(snapShot)
+            }, (err) => {
+            //catches the errors
+            console.log(err)
+            }, () => {
+            // gets the functions from storage refences the image storage in firebase by the children
+            // gets the download url then sets the image from firebase as the value for the imgUrl key:
+            storage.ref('images').child(img.name).getDownloadURL()
+            .then(fireBaseUrl => {
+                const imgURL=fireBaseUrl
+                console.log("nice",imgURL)
+                return imgURL
+            })
+        })
     }
     const savePaper=()=>{
         setLoading(true)
