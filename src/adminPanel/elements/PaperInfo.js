@@ -33,7 +33,7 @@ export default function PaperInfo(props) {
     const [level,setLevel]=React.useState('');
     const [marks,setMarks]=React.useState('');
     const [duration,setDuration]=React.useState('');
-    const [noOfQuestions,setNoOfQuestions]=React.useState('');
+    const [noOfQuestions,setNoOfQuestions]=React.useState(0);
     const [data,setData]=React.useState([]);
     const [subjectiveClass,setSubjectiveClass]=React.useState([]);
 

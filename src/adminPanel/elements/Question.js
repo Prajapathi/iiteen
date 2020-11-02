@@ -86,7 +86,7 @@ export default function QuestionInfo(props) {
     }, [number,subject,tag,section,marks,negative,question,answerType,answer,hint,solution,option,multiOption,])
 
     useEffect(() => {
-        const arr=[...props.infoArray];
+        const arr=props.infoArray?[...props.infoArray]:null;
         arr[props.index]=data;
         props.sendInfo(arr)
     }, [data])

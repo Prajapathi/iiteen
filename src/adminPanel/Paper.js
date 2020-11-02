@@ -41,14 +41,15 @@ export default function Paper() {
             ...paperInfo,instructionInfo
         }).then((res)=>{
             setLoading(false);
+            localStorage.setItem("noOfQuestions",numberQ)
             setShowQuestion(true);
             setRefid(res.id)
             //history.push('/Questions', { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType,paperRoute:paperRoute,paperRef:res.id})
         }).catch((error)=>{
+            setLoading(false);
             console.log("Error saving the document: ",error)
         })  
     }
-    
     return (
         <div>
             {loading==true?<CircularProgress style={{margin:'25% 50%'}}/>:
@@ -68,7 +69,7 @@ export default function Paper() {
                     onClick={addPaper}>
                         Continue
                     </button>
-                </>:<Questions number={numberQ} subjective={location.state.subjective} paperType={location.state.paperType} paperRoute={paperRoute} paperRef={refid}/>)
+                </>:<Questions subjective={location.state.subjective} paperType={location.state.paperType} paperRoute={paperRoute} paperRef={refid}/>)
             }
         </div>
     )
