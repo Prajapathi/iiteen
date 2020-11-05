@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 200,
   },
 }));
-
 export default function QuestionInfo(props) {
     const qArray=props.infoArray[props.index]
     const classes = useStyles();
@@ -42,7 +41,6 @@ export default function QuestionInfo(props) {
     const [option,setOption]=React.useState([]);
     const [multiOption,setMultiOption]=React.useState([false,false,false,false]);
     const [data,setData]=React.useState([]);
-
     const setAnswerLower=(event)=>{
         const ans=[];
         ans[0]=event.target.value;
@@ -254,7 +252,7 @@ export default function QuestionInfo(props) {
                 <Preview data={question}/>
                 {answerType=="0"||answerType=="1"?[1,2,3,4].map((item,index)=><>
                                                                 <h6>Option {index+1}</h6>
-                                                                <Preview data={option[index]}/>
+                                                                <Preview data={option[index]?option[index].info:null}/>
                                                             </>):null
                 }
                 <h3>Solution</h3>

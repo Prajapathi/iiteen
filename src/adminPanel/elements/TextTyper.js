@@ -32,7 +32,7 @@ export default function TextTyper(props) {
     useEffect(() => {
         if(props.info!=null){
             const data=[...props.info];
-            data[props.index]=array;
+            data[props.index]={info:array};
             props.sendInfo(data)
         }
         else

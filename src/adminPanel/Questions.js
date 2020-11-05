@@ -23,6 +23,7 @@ export default function Questions(props) {
     async function uploadImg(){
         let imgtemp=[]
         let imageNum=0;
+        console.log("pp",questionArray)
         for(let i=0;i<questionArray.length;i++){
             for(let j=0;j<questionArray[i].question.length;j++){
                 if(questionArray[i].question[j].type=="3"){
@@ -43,6 +44,7 @@ export default function Questions(props) {
                 }
             }
             for(let j=0;j<questionArray[i].option.length;j++){
+                if(questionArray[i].option[j]==null)continue;
                 for(let k=0;k<questionArray[i].option[j].length;k++){
                     if(questionArray[i].option[j][k].type=="3"){
                         imageNum++;
@@ -52,7 +54,8 @@ export default function Questions(props) {
             }
         }
         if(imgtemp.length==0){
-            savePaperFB()
+           // savePaperFB()
+             outerFunction();
         }
         else{
             setImages(imgtemp)
@@ -61,14 +64,16 @@ export default function Questions(props) {
     }
     useEffect(() => {
         if(flag==true){
-            savePaperFB()
+            outerFunction()
         }
     }, [flag])
+
     useEffect(() => {
         if(imagesNum!=0&&images.length==imagesNum){
             HandleImageUpload()
         }
     }, [images])
+
     async function HandleImageUpload(){
         const storage=firebase.storage();
         let flagNum=0;
@@ -112,21 +117,52 @@ export default function Questions(props) {
         setLoading(true)
         uploadImg();
     }
-    const savePaperFB=()=>{
-        const db = firebase.firestore();
+    // const savePaperFB=()=>{
+    //     const db = firebase.firestore();
         
+    //     db.settings({
+    //         timestampsInSnapshots: true
+    //     });
+    //     // for(let i=0;i<questionArray.length;i++){
+
+    //     // }
+    //     const userRef = db.collection(`${props.paperRoute}/${props.paperRef}/Questions`).add({
+    //             questionArray
+    //     }).then((res)=>{
+    //         history.push('/AddPaper')
+    //     }).catch((error)=>{
+    //         console.log("Error saving the document: ",error);
+    //     }) 
+    // }
+    async function uploadQuestionAsPromise(file){
+        const db = firebase.firestore();
         db.settings({
             timestampsInSnapshots: true
         });
         const userRef = db.collection(`${props.paperRoute}/${props.paperRef}/Questions`).add({
-                questionArray
+                file
         }).then((res)=>{
-            history.push('/AddPaper')
+            console.log("yee",file)
+           // history.push('/AddPaper')
         }).catch((error)=>{
             console.log("Error saving the document: ",error);
         }) 
     }
-    console.log(numberQ,index)
+
+    async function uploadFiles() {
+        for (let file of questionArray) {
+            await uploadQuestionAsPromise(file);
+        }
+    }
+
+    async function outerFunction() {
+        await uploadFiles();
+         history.push('/AddPaper')
+    }
+
+  
+    
+
     return (
         <>
             {loading==true?<CircularProgress style={{margin:'25% 50%'}}/>:
