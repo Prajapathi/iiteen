@@ -23,7 +23,6 @@ export default function Questions(props) {
     async function uploadImg(){
         let imgtemp=[]
         let imageNum=0;
-        console.log("pp",questionArray)
         for(let i=0;i<questionArray.length;i++){
             for(let j=0;j<questionArray[i].question.length;j++){
                 if(questionArray[i].question[j].type=="3"){
@@ -45,12 +44,10 @@ export default function Questions(props) {
             }
             for(let j=0;j<questionArray[i].option.length;j++){
                 if(questionArray[i].option[j]==null)continue;
-                for(let k=0;k<questionArray[i].option[j].length;k++){
-                    if(questionArray[i].option[j][k].type=="3"){
+                    if(questionArray[i].option[j].type=="3"){
                         imageNum++;
-                        imgtemp.push({i,j,k,s:"option",file:questionArray[i].option[j][k].data})
+                        imgtemp.push({i,j,k:0,s:"option",file:questionArray[i].option[j].data})
                     }
-                }
             }
         }
         if(imgtemp.length==0){
@@ -89,7 +86,7 @@ export default function Questions(props) {
                 storage.ref('images').child(images[l].file.name).getDownloadURL()
                 .then(fireBaseUrl => {
                     const imgURL=fireBaseUrl
-                    const t={...questionArray}
+                    const t=[...questionArray]
                     if(images[l].s=="question"){
                         t[images[l].i].question[images[l].j].data=imgURL
                     }
@@ -100,7 +97,7 @@ export default function Questions(props) {
                         t[images[l].i].hint[images[l].j].data=imgURL
                     }
                     else{
-                        t[images[l].i].option[images[l].j][images[l].k].data=imgURL
+                        t[images[l].i].option[images[l].j].data=imgURL
                     }
                     setQuestionArray(t)
                     flagNum++;

@@ -9,7 +9,6 @@ export default function InstructionPreview(props) {
                 <div id="main-inst">
                     <div id="blue-box"></div>
                     <div id="main-data">
-                        <b>{props.instructions[index].heading}</b> 
                         {props.instructions[index].data}
                          
                         <ul>

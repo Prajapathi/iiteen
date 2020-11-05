@@ -32,13 +32,12 @@ export default function TextTyper(props) {
     useEffect(() => {
         if(props.info!=null){
             const data=[...props.info];
-            data[props.index]={info:array};
+            data[props.index]=array[0];
             props.sendInfo(data)
         }
         else
         props.sendInfo(array)
     }, [array])
-
     return (
         <div>
             {
@@ -68,8 +67,12 @@ export default function TextTyper(props) {
                                             /> 
                                         :(array[index].type=='3'?<Form.File id="exampleFormControlFile1" onChange={(event)=>handleImageAsFile(index,event)} />:null)
                                 }
+                                {props.isOption?null:
+                                <>
                                 <div onClick={(event)=>addArray(event)} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>+</div>
                                 <div onClick={array.length!=1?()=>deleteArray(index):null} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>-</div>
+                                </>
+                                }
                     </div>
                 )
             }

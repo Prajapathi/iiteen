@@ -183,7 +183,7 @@ export default function QuestionInfo(props) {
                     {answerType=="0"||answerType=="1"?[0,1,2,3].map((key,index)=>
                                         <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
                                         <FormLabel component="legend" style={{color:'black'}}>Option {index+1}</FormLabel>
-                                        <TextTyper sendInfo={setOption} index={index} info={option}/>
+                                        <TextTyper sendInfo={setOption} index={index} info={option} isOption={true}/>
                                         </div>
                                     )
                                     :null
@@ -252,7 +252,7 @@ export default function QuestionInfo(props) {
                 <Preview data={question}/>
                 {answerType=="0"||answerType=="1"?[1,2,3,4].map((item,index)=><>
                                                                 <h6>Option {index+1}</h6>
-                                                                <Preview data={option[index]?option[index].info:null}/>
+                                                                <Preview isOption={true} data={option[index]}/>
                                                             </>):null
                 }
                 <h3>Solution</h3>
