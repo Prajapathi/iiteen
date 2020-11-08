@@ -4,9 +4,9 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 
 export default function TextTyper(props) {
-    const [array,setArray]=React.useState([{type:'',data:''}]);
+    const [array,setArray]=React.useState([{type:"1",data:''}]);
     const addArray= (event) => {
-        setArray([...array,{type:'',data:''}])
+        setArray([...array,{type:"1",data:''}])
     };
     const deleteArray= (index) => {
         const values=[...array];
@@ -22,7 +22,7 @@ export default function TextTyper(props) {
         const values=[...array]
         values[index].data=e.target.files[0];
         setArray(values);
-  }
+    }
     const setType=(event,index)=>{
         const values=[...array]
         values[index].type=Number(event.target.value);
@@ -48,6 +48,7 @@ export default function TextTyper(props) {
                                 select
                                 label="Type"
                                 size="small"
+                                value={array[index]?array[index].type:1}
                                 style={{minWidth:'60px',marginRight:'30px'}}
                                  onChange={(event) =>setType(event,index)}
                                 >

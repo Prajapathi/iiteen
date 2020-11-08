@@ -25,15 +25,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function QuestionInfo(props) {
-    const qArray=props.infoArray[props.index]
+    const qArray=props.index==0?null:{...props.infoArray[props.index-1]}
     const classes = useStyles();
-    const [number,setNumber]=React.useState(qArray?qArray.number:'');
+    const [number,setNumber]=React.useState('');
     const [subject,setSubject]=React.useState(qArray?qArray.subject:'');
     const [tag,setTag]=React.useState(qArray?qArray.tag:'');
     const [section,setSection]=React.useState(qArray?qArray.section:'');
     const [marks,setMarks]=React.useState(qArray?qArray.marks:'');
-    const [negative,setNegative]=React.useState(qArray?qArray.negative:'');
-    const [question,setQuestion]=React.useState(qArray?qArray.question:['']);
+    const [negative,setNegative]=React.useState(qArray?qArray.negativeMarks:'');
+    const [question,setQuestion]=React.useState([]);
     const [answerType,setAnswerType]=React.useState(qArray?qArray.answerType:'');
     const [answer,setAnswer]=React.useState([]);
     const [hint,setHint]=React.useState([]);
@@ -112,9 +112,9 @@ export default function QuestionInfo(props) {
                     value={subject}
                     onChange={(event) =>setSubject(event.target.value)}
                     >
-                        <MenuItem value="physics"> Physics</MenuItem>
-                        <MenuItem value="chemistry"> Chemistry</MenuItem>
-                        <MenuItem value="maths"> Mathematics</MenuItem>
+                        <MenuItem value="1"> Physics</MenuItem>
+                        <MenuItem value="2"> Chemistry</MenuItem>
+                        <MenuItem value="3"> Mathematics</MenuItem>
                     </TextField>
 
                     <TextField
@@ -237,10 +237,10 @@ export default function QuestionInfo(props) {
                                                     )
                                     )
                     }
-                    <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
+                    {/* <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
                     <FormLabel component="legend" style={{color:'black'}}>Hint</FormLabel>
                     <TextTyper sendInfo={setHint}/>
-                    </div>
+                    </div> */}
                     <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
                     <FormLabel component="legend" style={{color:'black'}}>Solution</FormLabel>
                     <TextTyper sendInfo={setSolution}/>
