@@ -17,16 +17,16 @@ export default function Preview(props) {
                                     ):null
         :
             props.data?props.data.map((item,index)=>
-                <div key={index}>
+                < >
                 {item.type==0?<br/>:(item.type==1
-                                    ?<>{item.data}</>
+                                    ?item.data
                                     :(item.type==2
                                                 ?<InlineMath>{item.data}</InlineMath>
                                                 :null
                                      )
                                     )
                 }
-                </div>
+                </>
             ):null}
         </div>
     )

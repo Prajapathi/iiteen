@@ -29,7 +29,7 @@ export default function QuestionInfo(props) {
     const classes = useStyles();
     const [number,setNumber]=React.useState('');
     const [subject,setSubject]=React.useState(qArray?qArray.subject:'');
-    const [tag,setTag]=React.useState(qArray?qArray.tag:'');
+    const [tag,setTag]=React.useState(qArray?qArray.tag:"0");
     const [section,setSection]=React.useState(qArray?qArray.section:'');
     const [marks,setMarks]=React.useState(qArray?qArray.marks:'');
     const [negative,setNegative]=React.useState(qArray?qArray.negativeMarks:'');
@@ -69,7 +69,7 @@ export default function QuestionInfo(props) {
         const newData={
             number:Number(number),
             subject:Number(subject),
-            tag:tag,
+            tag:Number(tag),
             section:Number(section),
             marks:Number(marks),
             negativeMarks:Number(negative),
@@ -117,6 +117,7 @@ export default function QuestionInfo(props) {
                         <MenuItem value="3"> Mathematics</MenuItem>
                     </TextField>
 
+                    {subject==1?
                     <TextField
                     id="standard-select-currency"
                     select
@@ -125,10 +126,45 @@ export default function QuestionInfo(props) {
                     value={tag}
                     onChange={(event) =>setTag(event.target.value)}
                     >
-                        <MenuItem value="1"> Physics</MenuItem>
-                        <MenuItem value="2"> Chemistry</MenuItem>
-                        <MenuItem value="3"> Mathematics</MenuItem>
+                                <MenuItem value="0"> Mechanics-1</MenuItem>
+                                <MenuItem value="1"> Mechanics-2</MenuItem>
+                                <MenuItem value="2"> Waves and Thermodynamics</MenuItem>
+                                <MenuItem value="3"> Magnetism and EMI</MenuItem>
+                                <MenuItem value="4"> Optics and Modern Phy</MenuItem>
+                                <MenuItem value="5"> Electrostatics and current electricity</MenuItem>
                     </TextField>
+                    :(subject=="2"?
+                    <TextField
+                    id="standard-select-currency"
+                    select
+                    label="Select Tag"
+                    className={classes.textField}
+                    value={tag}
+                    onChange={(event) =>setTag(event.target.value)}
+                    >
+                                <MenuItem value="0"> Organic Chemistry-11</MenuItem>
+                                <MenuItem value="1"> Physical Chemistry-11</MenuItem>
+                                <MenuItem value="2"> Inorganic Chemistry-11</MenuItem>
+                                <MenuItem value="3"> Organic Chemistry-12</MenuItem>
+                                <MenuItem value="4"> Physical Chemistry-12</MenuItem>
+                                <MenuItem value="5"> Inorganic Chemistry-12</MenuItem>
+                    </TextField>
+                    :
+                    <TextField
+                    id="standard-select-currency"
+                    select
+                    label="Select Tag"
+                    className={classes.textField}
+                    value={tag}
+                    onChange={(event) =>setTag(event.target.value)}
+                    >
+                                <MenuItem value="0"> Trignometry</MenuItem>
+                                <MenuItem value="1"> Calculus</MenuItem>
+                                <MenuItem value="2"> Algebra</MenuItem>
+                                <MenuItem value="3"> Coordinate Geometry</MenuItem>
+                                <MenuItem value="4"> Vectors and 3D Geometry</MenuItem>
+                    </TextField>)
+                    }
 
                     <TextField
                     id="standard-select-currency"

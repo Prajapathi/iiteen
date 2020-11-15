@@ -136,7 +136,8 @@ export default function Questions(props) {
         db.settings({
             timestampsInSnapshots: true
         });
-        const userRef = db.collection(`${props.paperRoute}/${props.paperRef}/Questions`).add({
+        console.log(props.pname)
+        const userRef = db.collection(`${props.paperRoute}/${props.pname}/Questions`).add({
                 file
         }).then((res)=>{
             console.log("yee",file)

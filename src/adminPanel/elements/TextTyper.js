@@ -4,9 +4,9 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 
 export default function TextTyper(props) {
-    const [array,setArray]=React.useState([{type:"1",data:''}]);
+    const [array,setArray]=React.useState([{type:1,data:''}]);
     const addArray= (event) => {
-        setArray([...array,{type:"1",data:''}])
+        setArray([...array,{type:1,data:''}])
     };
     const deleteArray= (index) => {
         const values=[...array];

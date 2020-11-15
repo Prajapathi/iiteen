@@ -16,6 +16,7 @@ export default function Paper() {
     const [showQuestion,setShowQuestion]=React.useState(false)
     const [refid,setRefid]=React.useState()
     const [paperRoute,setpaperRoute]=React.useState()
+    const [pSaveName,setpSaveName]=React.useState()
     const location = useLocation();
     let history = useHistory()
 
@@ -31,13 +32,15 @@ export default function Paper() {
     }, [])
     
     const addPaper=()=>{
+        const pname=paperInfo.name
+        setpSaveName(paperInfo.name)
         const db = firebase.firestore();
         db.settings({
             timestampsInSnapshots: true
         });
         setLoading(true)
         paperInfo.date=new Date(paperInfo.date)
-        const paperRef = db.collection(paperRoute).add({
+        const paperRef = db.collection(paperRoute).doc(pname).set({
             ...paperInfo,instructionInfo
         }).then((res)=>{
             setLoading(false);
@@ -59,7 +62,7 @@ export default function Paper() {
                 {
                     !(location.state?location.state.subjective:null)?<InstructionInfo sendInfo={setInstructionInfo}/>:null
                 }
-                    <button style={{width:'60%',
+                    {paperInfo.name==''?null:<button style={{width:'60%',
                     margin:'0px 20% 20px 20%',
                     background:'#388cf2',
                     color:'white',
@@ -69,7 +72,8 @@ export default function Paper() {
                     onClick={addPaper}>
                         Continue
                     </button>
-                </>:<Questions subjective={location.state.subjective} paperType={location.state.paperType} paperRoute={paperRoute} paperRef={refid}/>)
+                    }
+                </>:<Questions subjective={location.state.subjective} paperType={location.state.paperType} paperRoute={paperRoute} pname={pSaveName} paperRef={refid}/>)
             }
         </div>
     )
