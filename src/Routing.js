@@ -7,7 +7,7 @@ import SubjectWise from './components/screens/sections/Subjectwise'
 import AITS from './components/screens/sections/AITS'
 import MockTest from './components/screens/sections/MockTest'
 import PreviousYear from './components/screens/sections/PreviousYear'
-import RoutingAdmin from './adminPanel/Routing'
+import Question from './components/screens/Question'
 
 export default function Routing() {
     return (
@@ -15,13 +15,10 @@ export default function Routing() {
             <Route exact path="/">
             <Home/>
             </Route>
-            <Route>
-            <RoutingAdmin/>
-            </Route>
-            <Route path="/MockTest">
+            <Route exact path="/MockTest">
             <MockTest/>
             </Route>
-            <Route path="/">
+            <Route path="/Subjectwise">
             <SubjectWise/>
             </Route>
             <Route path="/PreviousYear">
@@ -29,6 +26,9 @@ export default function Routing() {
             </Route>
             <Route path="/AITS">
             <AITS/>
+            </Route>
+            <Route path="/Question">
+            <Question/>
             </Route>
         </Switch>
     )

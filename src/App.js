@@ -10,6 +10,7 @@ import Paper from './adminPanel/Paper'
 import AddPaper from './adminPanel/AddPaper'
 import QuestionAdmin from './adminPanel/elements/Question'
 import RoutingAdmin from './adminPanel/Routing'
+import MockTest from './components/screens/sections/MockTest'
 
 function App() {
   let login=false;
@@ -17,7 +18,7 @@ function App() {
     <>
     <BrowserRouter>
     {login?
-      <><LeftMenu/><Routing/><Footer/></>
+      <><Routing/></>
       :<RoutingAdmin/>
     }
     </BrowserRouter>

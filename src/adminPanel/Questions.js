@@ -138,7 +138,7 @@ export default function Questions(props) {
         });
         console.log(props.pname)
         const userRef = db.collection(`${props.paperRoute}/${props.pname}/Questions`).add({
-                file
+                ...file
         }).then((res)=>{
             console.log("yee",file)
            // history.push('/AddPaper')
