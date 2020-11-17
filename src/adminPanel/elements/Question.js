@@ -43,12 +43,12 @@ export default function QuestionInfo(props) {
     const [data,setData]=React.useState([]);
     const setAnswerLower=(event)=>{
         const ans=[];
-        ans[0]=event.target.value;
+        ans[0]=Number(event.target.value);
         setAnswer(ans);
     }
     const setAnswerUpper=(event)=>{
         const ans=[...answer];
-        ans[1]=event.target.value;
+        ans[1]=Number(event.target.value);
         setAnswer(ans);
     }
     const handleCheck=(index)=>{
@@ -75,7 +75,7 @@ export default function QuestionInfo(props) {
             negativeMarks:Number(negative),
             question:question,
             option:option,
-            answerType:Number(answerType),
+            answerType:answerType==0?4:(answerType==1?5:(answerType==2?1:2)),
             answer:answer,
             hint:hint,
             solution:solution
@@ -231,7 +231,7 @@ export default function QuestionInfo(props) {
                                     label="Select answer"
                                     className={classes.textField}
                                     value={answer}
-                                    onChange={(event) =>setAnswer(event.target.value)}
+                                    onChange={(event) =>setAnswer(Number(event.target.value))}
                                     >
                                         <MenuItem value="1"> 1</MenuItem>
                                         <MenuItem value="2"> 2</MenuItem>
@@ -251,7 +251,7 @@ export default function QuestionInfo(props) {
                                                                         label="Enter Answer"
                                                                         className={classes.textField}
                                                                         value={answer}
-                                                                        onChange={(event) =>setAnswer(event.target.value)}
+                                                                        onChange={(event) =>setAnswer(Number(event.target.value))}
                                                                         />
                                                                      :(answerType=="3"?<>
                                                                                         <TextField
