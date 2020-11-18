@@ -188,7 +188,12 @@ export default function QuestionInfo(props) {
                     label="Marks"
                     className={classes.textField}
                     value={marks}
-                    onChange={(event) =>setMarks(event.target.value)}
+                    InputProps={{
+                         inputProps: { 
+                            min: 1
+                         }
+                    }}
+                    onChange={(event) =>event.target.value>=0?setMarks(event.target.value):null}
                     />
 
                     <TextField
@@ -197,7 +202,12 @@ export default function QuestionInfo(props) {
                     label="Negative Marking"
                     className={classes.textField}
                     value={negative}
-                    onChange={(event) =>setNegative(event.target.value)}
+                    InputProps={{
+                         inputProps: { 
+                            min: 1
+                         }
+                    }}
+                    onChange={(event) =>event.target.value>=0?setNegative(event.target.value):null}
                     />
                     
                     <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>

@@ -29,7 +29,7 @@ export default function PaperInfo(props) {
     const classes = useStyles();
     const [name,setName]=React.useState('');
     const [typeValue, settypeValue] = React.useState('mains');
-    const [date,setDate]=React.useState('2017-05-24T10:30');
+    const [date,setDate]=React.useState('2020-10-24T10:30');
     const [level,setLevel]=React.useState('');
     const [marks,setMarks]=React.useState('');
     const [duration,setDuration]=React.useState('');
@@ -102,7 +102,12 @@ export default function PaperInfo(props) {
                                     label="Total Duration (in mins)"
                                     className={classes.textField}
                                     value={duration}
-                                    onChange={(event) =>setDuration(event.target.value)}
+                                    InputProps={{
+                                        inputProps: { 
+                                          min: 1
+                                        }
+                                    }}
+                                    onChange={(event) =>event.target.value>=0?setDuration(event.target.value):null}
                                   />
                               </div>
                               :null
@@ -115,7 +120,12 @@ export default function PaperInfo(props) {
                                   label="Total Marks"
                                   className={classes.textField}
                                   value={marks}
-                                  onChange={(event) =>setMarks(event.target.value)}
+                                  InputProps={{
+                                        inputProps: { 
+                                          min: 1
+                                        }
+                                  }}
+                                  onChange={(event) =>event.target.value>=0?setMarks(event.target.value):null}
                                 />
                                 :
                                 <>
@@ -144,7 +154,12 @@ export default function PaperInfo(props) {
                   label="Number of questions"
                   className={classes.textField}
                   value={noOfQuestions}
-                  onChange={(event) =>setNoOfQuestions(event.target.value)}
+                  InputProps={{
+                                        inputProps: { 
+                                          min: 1
+                                        }
+                  }}
+                  onChange={(event) =>event.target.value>=0?setNoOfQuestions(event.target.value):null}
                 />
                 {props.subjective?
                                 <TextField
