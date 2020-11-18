@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
 export default function InstructionField(props) {
     
     const classes = useStyles();
-    const [heading,setHeading]=React.useState('')
     const [data,setData]=React.useState('')
     const [section,setSection]=React.useState('')
     const [subpoints,setSubpoints]=React.useState([{data:'',color:''}]);
@@ -61,13 +60,13 @@ export default function InstructionField(props) {
 
     useEffect(() => {
         setInfo({
-            heading:heading,
+            heading:"",
             data:data,
             section:Number(section),
             points:subpoints,
             isLine:linebreak=="true"?true:false
         })
-    }, [heading,data,section,subpoints,linebreak])
+    }, [data,section,subpoints,linebreak])
 
     useEffect(() => {
         let newInfo=[...props.array];
@@ -78,14 +77,7 @@ export default function InstructionField(props) {
     return (
             <div style={{padding:'30px 50px'}}>
                 <form className={classes.container} noValidate >
-                    <TextField
-                    id="standard-number"
-                    label="Heading"
-                    multiline
-                    className={classes.textField}
-                    value={heading}
-                    onChange={(event) =>setHeading(event.target.value)}
-                    />
+                    
                     <TextField
                     id="standard-number"
                     label="Data"

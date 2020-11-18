@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 export default function PaperInfo(props) {
     const classes = useStyles();
     const [name,setName]=React.useState('');
-    const [typeValue, settypeValue] = React.useState('mains');
+    const [typeValue, settypeValue] = React.useState('Mains');
     const [date,setDate]=React.useState('2020-10-24T10:30');
     const [level,setLevel]=React.useState('');
     const [marks,setMarks]=React.useState('');

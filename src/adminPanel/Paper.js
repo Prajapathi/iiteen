@@ -62,7 +62,7 @@ export default function Paper() {
                 {
                     !(location.state?location.state.subjective:null)?<InstructionInfo sendInfo={setInstructionInfo}/>:null
                 }
-                    {paperInfo.name==''?null:<button style={{width:'60%',
+                    {(paperInfo.name==''||paperInfo.totalDuration==''||paperInfo.totalMarks==''||paperInfo.noOfQuestions=='')?null:<button style={{width:'60%',
                     margin:'0px 20% 20px 20%',
                     background:'#388cf2',
                     color:'white',
