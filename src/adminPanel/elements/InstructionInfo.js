@@ -2,6 +2,54 @@ import React,{useEffect} from 'react'
 import InstructionField from './InstructionField'
 import InstructionPreview from './InstructionPreview'
 
+// [{
+// data: "25 questions each for Physics,↵Chemistry & Maths"
+// heading: ""
+// isLine: false
+// points: Array(1)
+// 0: {data: "", color: ""}
+// section: 0
+// },{
+// data: "20 Objective Multiple Choice type ↵Questions(MCQs) per  subject"
+// heading: ""
+// isLine: true
+// points: Array(3)
+// 0:
+// color: 2
+// data: "4 Marks for correct Answer"
+// 1:
+// color: 1
+// data: "1 Negative mark for Incorrect Answer"
+// 2:
+// color: 3
+// data: "No Negative mark for Skipped Questions"
+// length: 3
+// __proto__: Array(0)
+// section: 0
+// __proto__: Object
+// 2:
+// data: "5 Numerical Type Questions per subject"
+// heading: ""
+// isLine: false
+// points: Array(3)
+// 0:
+// color: 2
+// data: "4 Marks for correct Answer"
+// __proto__: Object
+// 1:
+// color: 1
+// data: "No Negative marks for Incorrect answer or ↵Skipped Questions"
+// __proto__: Object
+// 2:
+// color: 3
+// data: "Round off the answer to 2(two) decimal↵places;e.g. 3.45,-4.00,-156.10,0.12"
+// __proto__: Object
+// length: 3
+// __proto__: Array(0)
+// section: 0
+// __proto__: Object
+// length: 3
+// __proto__: Array(0)
 export default function InstructionInfo(props) {
     const [instructions,setInstructions]=React.useState(['']);
     const deleteInstruction = (index) => {

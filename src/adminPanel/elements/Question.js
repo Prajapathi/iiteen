@@ -38,7 +38,7 @@ export default function QuestionInfo(props) {
     const [answer,setAnswer]=React.useState([]);
     const [hint,setHint]=React.useState([]);
     const [solution,setSolution]=React.useState([]);
-    const [option,setOption]=React.useState([]);
+    const [option,setOption]=React.useState([{},{},{},{}]);
     const [multiOption,setMultiOption]=React.useState([false,false,false,false]);
     const [data,setData]=React.useState([]);
     const setAnswerLower=(event)=>{
