@@ -102,11 +102,12 @@ export default function InstructionField(props) {
                     value={section}
                     onChange={(event) =>setSection(event.target.value)}
                     >
-                        <MenuItem value="0"> 0</MenuItem>
-                        <MenuItem value="1"> 1</MenuItem>
-                        <MenuItem value="2"> 2</MenuItem>
-                        <MenuItem value="3"> 3</MenuItem>
-                        <MenuItem value="4"> 4</MenuItem>
+                        <MenuItem value="0"> Main</MenuItem>
+                        <MenuItem value="1"> Integer</MenuItem>
+                        <MenuItem value="2"> Numerical</MenuItem>
+                        <MenuItem value="3"> Single Correct</MenuItem>
+                        <MenuItem value="4"> Multiple Correct</MenuItem>
+                        <MenuItem value="5"> Paragraph</MenuItem>
                     </TextField>
 
                     <FormLabel component="legend" style={{color:'black',marginTop:'15px',marginBottom:'-0px'}}>Sub-points</FormLabel>
