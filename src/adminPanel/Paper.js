@@ -60,7 +60,7 @@ export default function Paper() {
                 <>
                 <PaperInfo sendNumberQ={setNumberQ} sendInfo={setPaperInfo} subjective={location.state?location.state.subjective:null} sendSubjectiveClass={setSubjectiveClass}/>
                 {
-                    !(location.state?location.state.subjective:null)?<InstructionInfo sendInfo={setInstructionInfo}/>:null
+                    !(location.state?location.state.subjective:null)?<InstructionInfo paperType={paperInfo.paperType} sendInfo={setInstructionInfo}/>:null
                 }
                     {(paperInfo.name==''||paperInfo.totalDuration==''||paperInfo.totalMarks==''||paperInfo.noOfQuestions=='')?null:<button style={{width:'60%',
                     margin:'0px 20% 20px 20%',

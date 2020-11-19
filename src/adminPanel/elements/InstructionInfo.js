@@ -2,59 +2,79 @@ import React,{useEffect} from 'react'
 import InstructionField from './InstructionField'
 import InstructionPreview from './InstructionPreview'
 
-// [{
-// data: "25 questions each for Physics,↵Chemistry & Maths"
-// heading: ""
-// isLine: false
-// points: Array(1)
-// 0: {data: "", color: ""}
-// section: 0
-// },{
-// data: "20 Objective Multiple Choice type ↵Questions(MCQs) per  subject"
-// heading: ""
-// isLine: true
-// points: Array(3)
-// 0:
-// color: 2
-// data: "4 Marks for correct Answer"
-// 1:
-// color: 1
-// data: "1 Negative mark for Incorrect Answer"
-// 2:
-// color: 3
-// data: "No Negative mark for Skipped Questions"
-// length: 3
-// __proto__: Array(0)
-// section: 0
-// __proto__: Object
-// 2:
-// data: "5 Numerical Type Questions per subject"
-// heading: ""
-// isLine: false
-// points: Array(3)
-// 0:
-// color: 2
-// data: "4 Marks for correct Answer"
-// __proto__: Object
-// 1:
-// color: 1
-// data: "No Negative marks for Incorrect answer or ↵Skipped Questions"
-// __proto__: Object
-// 2:
-// color: 3
-// data: "Round off the answer to 2(two) decimal↵places;e.g. 3.45,-4.00,-156.10,0.12"
-// __proto__: Object
-// length: 3
-// __proto__: Array(0)
-// section: 0
-// __proto__: Object
-// length: 3
-// __proto__: Array(0)
+const MainsDefaultInst=[
+    {   data:"25 questions each for Physics, Chemistry & Maths",
+        isLine: false,
+        section:0,
+        subpoints:[]
+    },
+    {   data:"20 Objective Multiple Choice type Questions(MCQs) per subject",
+        isLine: true,
+        section:0,
+        subpoints:[
+            {color:2,data:"4 Marks for correct Answer"},
+            {color:1,data:"1 Negative mark for Incorrect Answer"},
+            {color:3,data:"No Negative mark for Skipped Questions"}
+            ]
+    },
+    {   data:"5 Numerical Type Questions per subject",
+        isLine: false,
+        section:0,
+        subpoints:[
+            {color:2,data:"4 Marks for correct Answer"},
+            {color:1,data:"No Negative marks for Incorrect answer or Skipped Questions"},
+            {color:3,data:"Round off the answer to 2(two) decimal places;e.g. 3.45,-4.00,-156.10,0.12"}
+            ]
+
+    }
+]
+const AdvDefaultInst=[
+    {   data:"18 questions each for Physics, Chemistry & Maths",
+        isLine: false,
+        section:0,
+        subpoints:[]
+    },
+    {   data:"Each Subject contains Three Parts: Part-A, Part-B, Part-C",
+        isLine: true,
+        section:0,
+        subpoints:[]
+    },
+    {   data:"Part-A contains 6 multiple choice questions. Each Question has 4 choices (A),(B),(C),(D) out of which only ONE is correct.",
+        isLine: false,
+        section:3,
+        subpoints:[
+            {color:2,data:"3 Marks for correct Answer"},
+            {color:1,data:"1 Negative mark for Incorrect Answer"},
+            {color:3,data:"No Negative mark for Skipped Questions"}
+            ]
+    },
+    {   data:"Part-B contains 6 multiple choice questions. Each Question has 4 choices (A),(B),(C),(D) out of which one or more is/are correct.",
+        isLine: false,
+        section:4,
+        subpoints:[
+            {color:2,data:"4 Marks if all correct options are marked correct"},
+            {color:2,data:"4 Marks if all correct options are marked correct"},
+            {color:1,data:"-2 Negative mark for Incorrect combination of Answer marked"},
+            {color:3,data:"No Negative mark for Skipped Questions"}
+            ]
+    },
+    {   data:"Part-C contains 6 integer type questions. The answer to each question is a single digit integer ranging from 0 to 9.",
+        isLine: false,
+        section:1,
+        subpoints:[
+            {color:2,data:"3 Marks for correct Answer"},
+            {color:1,data:"-1 Negative mark for Incorrect Answer"},
+            {color:3,data:"No Negative mark for Skipped Questions"}
+            ]
+    },
+]
 export default function InstructionInfo(props) {
     const [instructions,setInstructions]=React.useState(['']);
     const deleteInstruction = (index) => {
         const values=[...instructions];
         values.splice(index, 1);
+        
+        //console.log(index,values)
         setInstructions(values)
     };
     const addInstruction = () => {
@@ -70,7 +90,7 @@ export default function InstructionInfo(props) {
                 {instructions.map((key,index)=>
                     <div style={{border:'1px dashed grey'}}>
                         <div style={{margin:'5px 20px'}}>{index+1}</div>
-                        <InstructionField number={index} sendInfo={setInstructions} array={instructions}/>
+                        <InstructionField key={index} number={index} sendInfo={setInstructions} array={instructions}/>
                         <div onClick={instructions.length!=1?()=>deleteInstruction(index):null} 
                         style={{margin:'-30px 14% 4% 14%',
                         background:'#f23b38',

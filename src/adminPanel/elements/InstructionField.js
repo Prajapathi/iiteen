@@ -27,16 +27,17 @@ export default function InstructionField(props) {
     const classes = useStyles();
     const [data,setData]=React.useState('')
     const [section,setSection]=React.useState('')
-    const [subpoints,setSubpoints]=React.useState([{data:'',color:''}]);
-    const [linebreak,setLinebreak]=React.useState("false")
+    const [subpoints,setSubpoints]=React.useState([]);
+    const [linebreak,setLinebreak]=React.useState(false)
     const [Info,setInfo]=React.useState([''])
 
-     const handleChange = (event) => {
+
+    const handleChange = (event) => {
         setLinebreak(event.target.value);
     };
 
     const addSubpoint = (event) => {
-        setSubpoints([...subpoints,{data:'',color:''}])
+        setSubpoints([...subpoints,{data:'',color:1}])
     };
     const deleteSubpoint = (index) => {
         const values=[...subpoints];
@@ -103,7 +104,9 @@ export default function InstructionField(props) {
                     </TextField>
 
                     <FormLabel component="legend" style={{color:'black',marginTop:'15px',marginBottom:'-0px'}}>Sub-points</FormLabel>
-                    {subpoints.map((key,index)=>
+                    {subpoints.length==0?
+                        <div onClick={(event)=>addSubpoint(event)} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>+</div>:
+                            subpoints.map((key,index)=>
                             <div style={{display:'flex',alignItems:'center'}}>
                                 <TextField
                                 id="standard-select-currency"
@@ -128,7 +131,7 @@ export default function InstructionField(props) {
                                 size="small"
                                 /> 
                                 <div onClick={(event)=>addSubpoint(event)} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>+</div>
-                                <div onClick={subpoints.length!=1?()=>deleteSubpoint(index):null} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>-</div>
+                                <div onClick={subpoints.length!=0?()=>deleteSubpoint(index):null} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>-</div>
                             </div>
                     )}
                     <RadioGroup aria-label="gender" name="gender1" value={linebreak} onChange={(e)=>setLinebreak(e.target.value)}>
