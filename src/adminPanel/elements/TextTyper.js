@@ -5,8 +5,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 export default function TextTyper(props) {
     const [array,setArray]=React.useState([{type:1,data:''}]);
-    const addArray= (event) => {
-        setArray([...array,{type:1,data:''}])
+    const addArray= (event,str) => {
+        if(str=="LB"){
+            setArray([...array,{type:0,data:''}])
+        }
+        else setArray([...array,{type:1,data:''}])
     };
     const deleteArray= (index) => {
         const values=[...array];
@@ -70,8 +73,9 @@ export default function TextTyper(props) {
                                 }
                                 {props.isOption?null:
                                 <>
-                                <div onClick={(event)=>addArray(event)} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>+</div>
+                                <div onClick={(event)=>addArray(event,null)} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>+</div>
                                 <div onClick={array.length!=1?()=>deleteArray(index):null} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>-</div>
+                                <div onClick={(event)=>addArray(event,"LB")} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>LB</div>
                                 </>
                                 }
                     </div>

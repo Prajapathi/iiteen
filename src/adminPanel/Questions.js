@@ -75,15 +75,16 @@ export default function Questions(props) {
         const storage=firebase.storage();
         let flagNum=0;
         let t
+        let paperTypeHere=props.paperType==1?"AITS":props.paperType==2?"PREVIOUS":"MOCK"
         for(let l=0;l<images.length;l++){
-            const uploadTask = storage.ref(`/images/${images[l].file.name}`).put(images[l].file)
+            const uploadTask = storage.ref(`/${paperTypeHere}/${props.pname}/${images[l].file.name}`).put(images[l].file)
                 t=await uploadTask.on('state_changed', 
                 (snapShot) => {
                 }, (err) => {
                 //catches the errors
                 console.log(err)
                 }, () => {
-                storage.ref('images').child(images[l].file.name).getDownloadURL()
+                storage.ref(`${paperTypeHere}/${props.pname}`).child(images[l].file.name).getDownloadURL()
                 .then(fireBaseUrl => {
                     const imgURL=fireBaseUrl
                     const t=[...questionArray]
@@ -165,7 +166,7 @@ export default function Questions(props) {
         <>
             {loading==true?<CircularProgress style={{margin:'25% 50%'}}/>:
                     <div>
-                    <Question key={index} index={index} infoArray={questionArray} sendInfo={setQuestionArray}/>
+                    <Question key={index} index={Number(index)} noOfQuestions={numberQ} infoArray={questionArray}  sendInfo={setQuestionArray} sectionInfo={props.sectionInfo}/>
                     {/* {index>0?<button style={{width:'60%',
                                                     height:'40px',
                                                     margin:'0px 20% 20px 20%',

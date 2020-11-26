@@ -25,22 +25,63 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function QuestionInfo(props) {
+    
     const qArray=props.index==0?null:{...props.infoArray[props.index-1]}
     const classes = useStyles();
-    const [number,setNumber]=React.useState('');
-    const [subject,setSubject]=React.useState(qArray?qArray.subject:'');
-    const [tag,setTag]=React.useState(qArray?qArray.tag:"0");
-    const [section,setSection]=React.useState(qArray?qArray.section:'');
-    const [marks,setMarks]=React.useState(qArray?qArray.marks:'');
-    const [negative,setNegative]=React.useState(qArray?qArray.negativeMarks:'');
+    const [number,setNumber]=React.useState(props.index+1);
+    // const [subject,setSubject]=React.useState(props.index==0?1:(((props.noOfQuestions)/3)>=(props.index+1)?1:
+    //                                     (2*(props.noOfQuestions/3))>=(props.index+1)?2:3));
+    
+    //const [section,setSection]=React.useState(qArray?qArray.section:'');
+    //const [marks,setMarks]=React.useState(qArray?qArray.marks:'');
+    //const [negative,setNegative]=React.useState(qArray?qArray.negativeMarks:'');
+    const [subject,setSubject]=React.useState('')
+    const [section,setSection]=React.useState('')
+    const [marks,setMarks]=React.useState('')
+    const [negative,setNegative]=React.useState('')
+    const [tag,setTag]=React.useState(0);
     const [question,setQuestion]=React.useState([]);
-    const [answerType,setAnswerType]=React.useState(qArray?qArray.answerType:'');
+    const [answerType,setAnswerType]=React.useState(0);
     const [answer,setAnswer]=React.useState([]);
     const [hint,setHint]=React.useState([]);
     const [solution,setSolution]=React.useState([]);
     const [option,setOption]=React.useState([{},{},{},{}]);
     const [multiOption,setMultiOption]=React.useState([false,false,false,false]);
     const [data,setData]=React.useState([]);
+
+    console.log("pp",qArray)
+
+    useEffect(()=>{
+        let sub;
+        if(props.index==0||((props.index+1)<=(props.noOfQuestions)/3)){
+            sub=1;
+        }
+        else if((2*(props.noOfQuestions/3))>=(props.index+1)){
+            sub=2;
+        }
+        else sub=3;
+
+        let ind=props.index+1;
+
+        if(sub==2){
+            ind-=props.noOfQuestions/3;
+        }
+        else if(sub==3){
+            ind-=2*(props.noOfQuestions/3);
+        }
+
+        let subQ=0;
+        for(let i=0;i<props.sectionInfo.length;i++){
+            subQ+=Number(props.sectionInfo[i].numberOfQuestions);
+            if(ind<=subQ){
+                setSection(props.sectionInfo[i].section)
+                setMarks(props.sectionInfo[i].marks)
+                setNegative(props.sectionInfo[i].negative)
+                break;
+            }
+        }
+        setSubject(sub)
+    },[props.sectionInfo])
     const setAnswerLower=(event)=>{
         const ans=[];
         ans[0]=Number(event.target.value);
@@ -68,7 +109,7 @@ export default function QuestionInfo(props) {
     useEffect(() => {
         const newData={
             number:Number(number),
-            subject:Number(subject),
+            subject:subject,
             tag:Number(tag),
             section:Number(section),
             marks:Number(marks),
@@ -88,23 +129,26 @@ export default function QuestionInfo(props) {
         arr[props.index]=data;
         props.sendInfo(arr)
     }, [data])
-    return (
-        <>
-        <h1 style={{margin:'20px 0px -20px 50px'}}>Question {props.index+1}</h1>
+    return (<>
+        <h1 style={{margin:'20px 0px -20px 50px',fontSize:"24px"}}>
+                        Question {props.index+1}
+                        {subject==1?" PHYSICS":subject==2?" CHEMISTRY":" MATHS"}
+                        {section==1?" Integer":(section==2?" Numerical":(section==3?" Single Correct":(section==4?" Multiple Correct":" Paragraph"):null):null)}
+        </h1>
         <div style={{padding:'3%',display:'flex'}}>
         
             <div style={{width:'40%',border:'2px solid black'}}>
                 <form>
-                    <TextField
+                    {/* <TextField
                     id="standard-number"
                     type="number"
                     label="Question No."
                     className={classes.textField}
                     value={number}
                     onChange={(event) =>setNumber(event.target.value)}
-                    />
+                    /> */}
 
-                    <TextField
+                    {/* <TextField
                     id="standard-select-currency"
                     select
                     label="Select Subject"
@@ -115,7 +159,7 @@ export default function QuestionInfo(props) {
                         <MenuItem value="1"> Physics</MenuItem>
                         <MenuItem value="2"> Chemistry</MenuItem>
                         <MenuItem value="3"> Mathematics</MenuItem>
-                    </TextField>
+                    </TextField> */}
 
                     {subject==1?
                     <TextField
@@ -166,7 +210,7 @@ export default function QuestionInfo(props) {
                     </TextField>)
                     }
 
-                    <TextField
+                    {/* <TextField
                     id="standard-select-currency"
                     select
                     label="Select section"
@@ -180,9 +224,9 @@ export default function QuestionInfo(props) {
                         <MenuItem value="3"> Single Correct</MenuItem>
                         <MenuItem value="4"> Multiple Correct</MenuItem>
                         <MenuItem value="5"> Paragraph</MenuItem>
-                    </TextField>
+                    </TextField> */}
                     
-                    <TextField
+                    {/* <TextField
                     id="standard-number"
                     type="number"
                     label="Marks"
@@ -194,9 +238,9 @@ export default function QuestionInfo(props) {
                          }
                     }}
                     onChange={(event) =>event.target.value>=0?setMarks(event.target.value):null}
-                    />
+                    /> */}
 
-                    <TextField
+                    {/* <TextField
                     id="standard-number"
                     type="number"
                     label="Negative Marking"
@@ -208,7 +252,7 @@ export default function QuestionInfo(props) {
                          }
                     }}
                     onChange={(event) =>event.target.value>=0?setNegative(event.target.value):null}
-                    />
+                    /> */}
                     
                     <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
                     <FormLabel component="legend" style={{color:'black'}}>Set Question</FormLabel>
@@ -300,9 +344,9 @@ export default function QuestionInfo(props) {
                 <h3>Question</h3>
                 <Preview data={question}/>
                 {answerType=="0"||answerType=="1"?[1,2,3,4].map((item,index)=><>
-                                                                <h6>Option {index+1}</h6>
+                                                                 <h6>Option {index+1}</h6>
                                                                 <Preview isOption={true} data={option[index]}/>
-                                                            </>):null
+                                                           </>):null
                 }
                 <h3>Solution</h3>
                 <Preview data={solution}/>
