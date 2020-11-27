@@ -155,9 +155,9 @@ export default function PaperInfo(props) {
                   className={classes.textField}
                   value={noOfQuestions}
                   InputProps={{
-                                        inputProps: { 
-                                          min: 1
-                                        }
+                                inputProps: { 
+                                min: 1
+                              }
                   }}
                   onChange={(event) =>event.target.value>=0?setNoOfQuestions(event.target.value):null}
                 />

@@ -24,9 +24,10 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 200,
   },
 }));
+
 export default function QuestionInfo(props) {
     
-    const qArray=props.index==0?null:{...props.infoArray[props.index-1]}
+    const qArray={...props.infoArray[props.index]}
     const classes = useStyles();
     const [number,setNumber]=React.useState(props.index+1);
     // const [subject,setSubject]=React.useState(props.index==0?1:(((props.noOfQuestions)/3)>=(props.index+1)?1:
@@ -39,17 +40,15 @@ export default function QuestionInfo(props) {
     const [section,setSection]=React.useState('')
     const [marks,setMarks]=React.useState('')
     const [negative,setNegative]=React.useState('')
-    const [tag,setTag]=React.useState(0);
-    const [question,setQuestion]=React.useState([]);
-    const [answerType,setAnswerType]=React.useState(0);
-    const [answer,setAnswer]=React.useState([]);
+    const [tag,setTag]=React.useState(Object.keys(qArray).length==0?0:qArray.tag);
+    const [question,setQuestion]=React.useState(Object.keys(qArray).length==0?[]:qArray.question);
+    const [answerType,setAnswerType]=React.useState(Object.keys(qArray).length==0?4:qArray.answerType);
+    const [answer,setAnswer]=React.useState(Object.keys(qArray).length==0?[]:qArray.answer);
     const [hint,setHint]=React.useState([]);
-    const [solution,setSolution]=React.useState([]);
-    const [option,setOption]=React.useState([{},{},{},{}]);
+    const [solution,setSolution]=React.useState(Object.keys(qArray).length==0?[]:qArray.solution);
+    const [option,setOption]=React.useState((Object.keys(qArray).length!=0 && (qArray.answerType==4 || qArray.answerType==5))?qArray.option:[{type:1,data:''},{type:1,data:''},{type:1,data:''},{type:1,data:''}]);
     const [multiOption,setMultiOption]=React.useState([false,false,false,false]);
     const [data,setData]=React.useState([]);
-
-    console.log("pp",qArray)
 
     useEffect(()=>{
         let sub;
@@ -72,26 +71,41 @@ export default function QuestionInfo(props) {
 
         let subQ=0;
         for(let i=0;i<props.sectionInfo.length;i++){
-            subQ+=Number(props.sectionInfo[i].numberOfQuestions);
-            if(ind<=subQ){
-                setSection(props.sectionInfo[i].section)
-                setMarks(props.sectionInfo[i].marks)
-                setNegative(props.sectionInfo[i].negative)
-                break;
-            }
+                subQ+=Number(props.sectionInfo[i].numberOfQuestions);
+                if(ind<=subQ){
+                    setSection(props.sectionInfo[i].section)
+                    setMarks(props.sectionInfo[i].marks)
+                    setNegative(props.sectionInfo[i].negative)
+                    break;
+                }
         }
         setSubject(sub)
     },[props.sectionInfo])
+
     const setAnswerLower=(event)=>{
-        const ans=[];
+        let ans=[]
+        if(answer != null && typeof answer[Symbol.iterator] === 'function'){
+             ans=[...answer];
+        }
+        else {
+             ans=[0,0];
+        }
         ans[0]=Number(event.target.value);
         setAnswer(ans);
     }
+    
     const setAnswerUpper=(event)=>{
-        const ans=[...answer];
+        let ans=[]
+        if(answer != null && typeof answer[Symbol.iterator] === 'function'){
+             ans=[...answer];
+        }
+        else {
+             ans=[0,0];
+        }
         ans[1]=Number(event.target.value);
         setAnswer(ans);
     }
+
     const handleCheck=(index)=>{
         const ans=[...multiOption];
         ans[index]=!ans[index];
@@ -99,13 +113,26 @@ export default function QuestionInfo(props) {
     }
 
     useEffect(() => {
+        if(answerType!=5)
+        return;
+        const newAns=[false,false,false,false];
+        if(answer != null && typeof answer[Symbol.iterator] === 'function'){
+                answer.map((item,index)=>
+                newAns[item]=true
+            )
+        }
+        if(newAns.length!=0)
+        setMultiOption(newAns)
+    }, [])
+
+    useEffect(() => {
         const newAns=[];
         multiOption.map((item,index)=>
             item==true?newAns.push(index):null
         )
+        if(newAns.length!=0)
         setAnswer(newAns)
     }, [multiOption])
-
     useEffect(() => {
         const newData={
             number:Number(number),
@@ -116,7 +143,7 @@ export default function QuestionInfo(props) {
             negativeMarks:Number(negative),
             question:question,
             option:option,
-            answerType:answerType==0?4:(answerType==1?5:(answerType==2?1:2)),
+            answerType:Number(answerType),
             answer:answer,
             hint:hint,
             solution:solution
@@ -129,6 +156,7 @@ export default function QuestionInfo(props) {
         arr[props.index]=data;
         props.sendInfo(arr)
     }, [data])
+    
     return (<>
         <h1 style={{margin:'20px 0px -20px 50px',fontSize:"24px"}}>
                         Question {props.index+1}
@@ -256,7 +284,7 @@ export default function QuestionInfo(props) {
                     
                     <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
                     <FormLabel component="legend" style={{color:'black'}}>Set Question</FormLabel>
-                    <TextTyper sendInfo={setQuestion}/>
+                    <TextTyper sendInfo={setQuestion} dataArray={question}/>
                     </div>
 
                     <TextField
@@ -267,22 +295,22 @@ export default function QuestionInfo(props) {
                     value={answerType}
                     onChange={(event) =>setAnswerType(event.target.value)}
                     >
-                        <MenuItem value="0"> Single correct</MenuItem>
-                        <MenuItem value="1"> Multiple correct</MenuItem>
-                        <MenuItem value="2"> Integer</MenuItem>
-                        <MenuItem value="3"> Numerical</MenuItem>
+                        <MenuItem value="4"> Single correct</MenuItem>
+                        <MenuItem value="5"> Multiple correct</MenuItem>
+                        <MenuItem value="1"> Integer</MenuItem>
+                        <MenuItem value="2"> Numerical</MenuItem>
                     </TextField>
 
-                    {answerType=="0"||answerType=="1"?[0,1,2,3].map((key,index)=>
+                    {answerType=="4"||answerType=="5"?[0,1,2,3].map((key,index)=>
                                         <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
                                         <FormLabel component="legend" style={{color:'black'}}>Option {index+1}</FormLabel>
-                                        <TextTyper sendInfo={setOption} index={index} info={option} isOption={true}/>
+                                        <TextTyper sendInfo={setOption} index={index} info={option} isOption={true} dataArray={option}/>
                                         </div>
                                     )
                                     :null
                     }
 
-                    {answerType=="0"?<TextField
+                    {answerType=="4"?<TextField
                                     id="standard-select-currency"
                                     select
                                     label="Select answer"
@@ -295,14 +323,14 @@ export default function QuestionInfo(props) {
                                         <MenuItem value="3"> 3</MenuItem>
                                         <MenuItem value="4"> 4</MenuItem>
                                     </TextField>
-                                    :(answerType=="1"?<div style={{marginLeft:'30px'}}>
+                                    :(answerType=="5"?<div style={{marginLeft:'30px'}}>
                                                     <FormLabel component="legend" style={{color:'black'}}>Correct Options</FormLabel>
                                                        <FormControlLabel checked={multiOption[0]} onChange={()=>handleCheck(0)} control={<Checkbox />} label="1" />
                                                        <FormControlLabel checked={multiOption[1]} onChange={()=>handleCheck(1)} control={<Checkbox />} label="2" />
                                                        <FormControlLabel checked={multiOption[2]} onChange={()=>handleCheck(2)} control={<Checkbox />} label="3" />
                                                        <FormControlLabel checked={multiOption[3]} onChange={()=>handleCheck(3)} control={<Checkbox />} label="4" />
                                                      </div>
-                                                    :(answerType=="2"?<TextField
+                                                    :(answerType=="1"?<TextField
                                                                         id="standard-number"
                                                                         type="number"
                                                                         label="Enter Answer"
@@ -310,10 +338,11 @@ export default function QuestionInfo(props) {
                                                                         value={answer}
                                                                         onChange={(event) =>setAnswer(Number(event.target.value))}
                                                                         />
-                                                                     :(answerType=="3"?<>
+                                                                     :(answerType=="2"?<>
                                                                                         <TextField
                                                                                             id="standard-number"
                                                                                             type="number"
+                                                                                            value={(answer && answer.length!=0)?answer[0]:''}
                                                                                             label="Lower Limit"
                                                                                             className={classes.textField}
                                                                                             onChange={(event) =>setAnswerLower(event)}
@@ -321,6 +350,7 @@ export default function QuestionInfo(props) {
                                                                                             <TextField
                                                                                             id="standard-number"
                                                                                             type="number"
+                                                                                            value={(answer && answer.length!=0)?answer[1]:''}
                                                                                             label="Upper Limit"
                                                                                             className={classes.textField}
                                                                                             onChange={(event) =>setAnswerUpper(event)}
@@ -336,14 +366,14 @@ export default function QuestionInfo(props) {
                     </div> */}
                     <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
                     <FormLabel component="legend" style={{color:'black'}}>Solution</FormLabel>
-                    <TextTyper sendInfo={setSolution}/>
+                    <TextTyper sendInfo={setSolution} dataArray={solution}/>
                     </div>
                 </form>
             </div>
             <div style={{width:'40%',marginLeft:'25px'}}>
                 <h3>Question</h3>
                 <Preview data={question}/>
-                {answerType=="0"||answerType=="1"?[1,2,3,4].map((item,index)=><>
+                {answerType=="4"||answerType=="5"?[1,2,3,4].map((item,index)=><>
                                                                  <h6>Option {index+1}</h6>
                                                                 <Preview isOption={true} data={option[index]}/>
                                                            </>):null

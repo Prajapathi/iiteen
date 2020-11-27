@@ -83,7 +83,7 @@ export default function Paper() {
         secTemp[index][type]=data;
         setSections(secTemp)
     }
-    // console.log("kaboom",sections)
+    
     const addPaper=()=>{
         if((3*secQNo)!=paperInfo.noOfQuestions){
             window.alert("Please enter number of questions in respective sections correctly.")

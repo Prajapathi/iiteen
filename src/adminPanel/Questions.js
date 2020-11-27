@@ -20,6 +20,7 @@ export default function Questions(props) {
         setnumberQ(localStorage.getItem("noOfQuestions"))
         localStorage.removeItem("noOfQuestions")
     }, [])
+
     async function uploadImg(){
         let imgtemp=[]
         let imageNum=0;
@@ -77,14 +78,14 @@ export default function Questions(props) {
         let t
         let paperTypeHere=props.paperType==1?"AITS":props.paperType==2?"PREVIOUS":"MOCK"
         for(let l=0;l<images.length;l++){
-            const uploadTask = storage.ref(`/${paperTypeHere}/${props.pname}/${images[l].file.name}`).put(images[l].file)
+            const uploadTask = storage.ref(`/${paperTypeHere}/${props.pname}/${images[l].i}/${images[l].file.name}`).put(images[l].file)
                 t=await uploadTask.on('state_changed', 
                 (snapShot) => {
                 }, (err) => {
                 //catches the errors
                 console.log(err)
                 }, () => {
-                storage.ref(`${paperTypeHere}/${props.pname}`).child(images[l].file.name).getDownloadURL()
+                storage.ref(`${paperTypeHere}/${props.pname}/${images[l].i}`).child(images[l].file.name).getDownloadURL()
                 .then(fireBaseUrl => {
                     const imgURL=fireBaseUrl
                     const t=[...questionArray]
@@ -167,7 +168,7 @@ export default function Questions(props) {
             {loading==true?<CircularProgress style={{margin:'25% 50%'}}/>:
                     <div>
                     <Question key={index} index={Number(index)} noOfQuestions={numberQ} infoArray={questionArray}  sendInfo={setQuestionArray} sectionInfo={props.sectionInfo}/>
-                    {/* {index>0?<button style={{width:'60%',
+                    {index>0?<button style={{width:'60%',
                                                     height:'40px',
                                                     margin:'0px 20% 20px 20%',
                                                     background:'#388cf2',
@@ -177,7 +178,7 @@ export default function Questions(props) {
                                                     }}
                                                     onClick={()=>setIndex(index-1)}>
                                                         BACK
-                                                    </button>:null} */}
+                                                    </button>:null}
                     {index<=(numberQ-2)?
                                                     <button style={{width:'60%',
                                                     margin:'0px 20% 20px 20%',

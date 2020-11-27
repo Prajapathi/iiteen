@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 
 export default function TextTyper(props) {
-    const [array,setArray]=React.useState([{type:1,data:''}]);
+    const [array,setArray]=React.useState(props.dataArray?(props.dataArray.length==0?[{type:1,data:''}]:props.dataArray):[{type:1,data:''}]);
     const addArray= (event,str) => {
         if(str=="LB"){
             setArray([...array,{type:0,data:''}])
@@ -31,7 +31,14 @@ export default function TextTyper(props) {
         values[index].type=Number(event.target.value);
         setArray(values);
     }
-
+    useEffect(() => {
+        if(props.isOption==true && props.dataArray.length!=0){
+            let ar=[];
+            ar[0]=props.dataArray[props.index]
+            setArray(ar)
+        }
+    }, [])
+    
     useEffect(() => {
         if(props.info!=null){
             const data=[...props.info];
@@ -43,7 +50,8 @@ export default function TextTyper(props) {
     }, [array])
     return (
         <div>
-            {
+            {   
+                
                 array.map((key,index)=>
                     <div style={{display:'flex',alignItems:'center'}} key={index}>
                                 <TextField
@@ -69,7 +77,12 @@ export default function TextTyper(props) {
                                             onChange={(event)=>changeArray(index,event)}
                                             style={{minWidth:'300px'}}
                                             /> 
-                                        :(array[index].type=='3'?<Form.File id="exampleFormControlFile1" onChange={(event)=>handleImageAsFile(index,event)} />:null)
+                                        :(array[index].type=='3'?<div>
+                                                                     <Form.File id="exampleFormControlFile1" style={{color:"white"}} onChange={(event)=>handleImageAsFile(index,event)} />
+                                                                     
+                                                                     <p>{array[index]?(array[index].data?array[index].data.name:"No file chosen"):"No file chosen"}</p>
+                                                                </div>
+                                                                :null)
                                 }
                                 {props.isOption?null:
                                 <>
