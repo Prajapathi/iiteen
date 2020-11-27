@@ -7,7 +7,7 @@ export default function TextTyper(props) {
     const [array,setArray]=React.useState(props.dataArray?(props.dataArray.length==0?[{type:1,data:''}]:props.dataArray):[{type:1,data:''}]);
     const addArray= (event,str) => {
         if(str=="LB"){
-            setArray([...array,{type:0,data:''}])
+            setArray([...array,{type:0,data:''},{type:1,data:''}])
         }
         else setArray([...array,{type:1,data:''}])
     };
