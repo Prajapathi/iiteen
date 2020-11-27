@@ -23,14 +23,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function InstructionField(props) {
-    
     const classes = useStyles();
-    const [data,setData]=React.useState('')
-    const [section,setSection]=React.useState('')
-    const [subpoints,setSubpoints]=React.useState([]);
-    const [linebreak,setLinebreak]=React.useState(false)
-    const [Info,setInfo]=React.useState([''])
-
+    const [data,setData]=React.useState(props.array.length!=0?props.array[props.number].data:'')
+    const [section,setSection]=React.useState(props.array.length!=0?props.array[props.number].section:0)
+    const [subpoints,setSubpoints]=React.useState(props.array.length!=0?props.array[props.number].points:[]);
+    const [linebreak,setLinebreak]=React.useState(props.array.length!=0?props.array[props.number].isLine:false)
+    const [Info,setInfo]=React.useState(props.array.length!=0?props.array[props.number]:[''])
 
     const handleChange = (event) => {
         setLinebreak(event.target.value);
@@ -84,7 +82,7 @@ export default function InstructionField(props) {
                     label="Data"
                     multiline
                     className={classes.textField}
-                    value={data}
+                    value={props.array?props.array[props.number].data:''}
                     onChange={(event) =>setData(event.target.value)}
                     />
                     <TextField
@@ -92,7 +90,7 @@ export default function InstructionField(props) {
                     select
                     label="Select section"
                     className={classes.textField}
-                    value={section}
+                    value={props.array?props.array[props.number].section:0}
                     onChange={(event) =>setSection(event.target.value)}
                     >
                         <MenuItem value="0"> Main</MenuItem>
@@ -104,16 +102,17 @@ export default function InstructionField(props) {
                     </TextField>
 
                     <FormLabel component="legend" style={{color:'black',marginTop:'15px',marginBottom:'-0px'}}>Sub-points</FormLabel>
-                    {subpoints.length==0?
-                        <div onClick={(event)=>addSubpoint(event)} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>+</div>:
-                            subpoints.map((key,index)=>
+                    {props.array?(props.array[props.number].points?props.array[props.number].points.length==0?
+                                    <div onClick={(event)=>addSubpoint(event)} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer',border:'1px solid gray'}}>+</div>
+                            :
+                            props.array[props.number].points.map((key,index)=>
                             <div style={{display:'flex',alignItems:'center'}}>
                                 <TextField
                                 id="standard-select-currency"
                                 select
                                 style={{width:'100px',marginRight:'20px'}}
                                 label="Colour"
-                                value={subpoints[index].color}
+                                value={props.array?props.array[props.number].points[index].color:""}
                                 onChange={(event)=>changeSubPointColor(index,event)}
                                 >
                                     <MenuItem value="1"> Red</MenuItem>
@@ -126,15 +125,15 @@ export default function InstructionField(props) {
                                 label={ index+1 +". Sub-point"}
                                 multiline
                                 className={classes.textField}
-                                value={subpoints[index].data}
+                                value={props.array?props.array[props.number].points[index].data:"1"}
                                 onChange={(event)=>changeSubPointData(index,event)}
                                 size="small"
                                 /> 
                                 <div onClick={(event)=>addSubpoint(event)} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>+</div>
                                 <div onClick={subpoints.length!=0?()=>deleteSubpoint(index):null} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>-</div>
                             </div>
-                    )}
-                    <RadioGroup aria-label="gender" name="gender1" value={linebreak} onChange={(e)=>setLinebreak(e.target.value)}>
+                    ):null):null}
+                    <RadioGroup aria-label="gender" name="gender1" value={props.array?props.array[props.number].isLine:false} onChange={(e)=>setLinebreak(e.target.value)}>
                     <div style={{display:'flex',alignItems:'center'}}>
                         <FormLabel component="legend" style={{color:'black',marginRight:'25px'}}>Give line-break</FormLabel>
                         <FormControlLabel value="true" control={<Radio />} label="Yes" />

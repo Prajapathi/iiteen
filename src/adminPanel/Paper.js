@@ -200,15 +200,6 @@ export default function Paper() {
                                     <br/>
                                 </div>
                             )
-                        // :sectionNo==2?
-                        //             [1,2].map((item,index)=>
-                        //                 "op"
-                        //             )
-                        //             :sectionNo==3?
-                        //                 [1,2,3].map((item,index)=>
-                        //                     "op"
-                        //                 )
-                        //                 :null
                     }
                 </div>
 
