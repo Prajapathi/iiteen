@@ -15,6 +15,7 @@ export default function Questions(props) {
     const [imagesNum,setImagesNum]=React.useState(0)
     const [flag,setFlag]=React.useState(false)
     const [numberQ,setnumberQ]=React.useState(0)
+    const [saveQ,setSaveQ]=React.useState(false)
     
     useEffect(() => {
         setnumberQ(localStorage.getItem("noOfQuestions"))
@@ -65,6 +66,12 @@ export default function Questions(props) {
             outerFunction()
         }
     }, [flag])
+
+    useEffect(() => {
+        if(saveQ==true){
+            history.push('/AddPaper')
+        }
+    }, [saveQ])
 
     useEffect(() => {
         if(imagesNum!=0&&images.length==imagesNum){
@@ -133,31 +140,49 @@ export default function Questions(props) {
     //         console.log("Error saving the document: ",error);
     //     }) 
     // }
-    async function uploadQuestionAsPromise(file){
-        const db = firebase.firestore();
-        db.settings({
-            timestampsInSnapshots: true
-        });
-        console.log(props.pname)
-        const userRef = db.collection(`${props.paperRoute}/${props.pname}/Questions`).add({
-                ...file
-        }).then((res)=>{
-            console.log("yee",file)
-           // history.push('/AddPaper')
-        }).catch((error)=>{
-            console.log("Error saving the document: ",error);
-        }) 
-    }
+    // async function uploadQuestionAsPromise(file){
+    //     const db = firebase.firestore();
+    //     db.settings({
+    //         timestampsInSnapshots: true
+    //     });
+    //     console.log(props.pname)
+    //     const userRef = db.collection(`${props.paperRoute}/${props.pname}/Questions`).add({
+    //             ...file
+    //     }).then((res)=>{
+    //          setSaveQ(saveQ+1)
+    //         console.log("yee",file)
+           
+    //        // history.push('/AddPaper')
+    //     }).catch((error)=>{
+    //         console.log("Error saving the document: ",error);
+    //     }) 
+    // }
 
     async function uploadFiles() {
+        let qs=0;
         for (let file of questionArray) {
-            await uploadQuestionAsPromise(file);
+            const db = firebase.firestore();
+            db.settings({
+                timestampsInSnapshots: true
+            });
+            console.log(props.pname)
+            const userRef = db.collection(`${props.paperRoute}/${props.pname}/Questions`).add({
+                    ...file
+            }).then((res)=>{
+                qs++;
+                console.log("yee",file)
+                if(qs==numberQ){
+                    setSaveQ(true)
+                }
+            // history.push('/AddPaper')
+            }).catch((error)=>{
+                console.log("Error saving the document: ",error);
+            }) 
         }
     }
 
     async function outerFunction() {
         await uploadFiles();
-         history.push('/AddPaper')
     }
 
   
