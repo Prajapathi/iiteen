@@ -27,8 +27,18 @@ export default function InstructionField(props) {
     const [data,setData]=React.useState(props.array.length!=0?props.array[props.number].data:'')
     const [section,setSection]=React.useState(props.array.length!=0?props.array[props.number].section:0)
     const [subpoints,setSubpoints]=React.useState(props.array.length!=0?props.array[props.number].points:[]);
-    const [linebreak,setLinebreak]=React.useState(props.array.length!=0?props.array[props.number].isLine:false)
+    const [linebreak,setLinebreak]=React.useState(props.array.length!=0?(props.array[props.number].isLine==true?"true":"false"):"false")
     const [Info,setInfo]=React.useState(props.array.length!=0?props.array[props.number]:[''])
+    
+    useEffect(() => {
+        if(localStorage.getItem("savingPaper")==true){
+            return
+        }
+            setData(props.array.length!=0?props.array[props.number].data:'')
+            setSection(props.array.length!=0?props.array[props.number].section:0)
+            setSubpoints(props.array.length!=0?props.array[props.number].points:[]);
+            setLinebreak(props.array.length!=0?(props.array[props.number].isLine==true?"true":"false"):"false")
+    }, [props.changeType])
 
     const handleChange = (event) => {
         setLinebreak(event.target.value);
@@ -82,7 +92,7 @@ export default function InstructionField(props) {
                     label="Data"
                     multiline
                     className={classes.textField}
-                    value={props.array?props.array[props.number].data:''}
+                    value={data}
                     onChange={(event) =>setData(event.target.value)}
                     />
                     <TextField
@@ -90,7 +100,7 @@ export default function InstructionField(props) {
                     select
                     label="Select section"
                     className={classes.textField}
-                    value={props.array?props.array[props.number].section:0}
+                    value={section}
                     onChange={(event) =>setSection(event.target.value)}
                     >
                         <MenuItem value="0"> Main</MenuItem>
@@ -112,7 +122,7 @@ export default function InstructionField(props) {
                                 select
                                 style={{width:'100px',marginRight:'20px'}}
                                 label="Colour"
-                                value={props.array?props.array[props.number].points[index].color:""}
+                                value={subpoints[index]?subpoints[index].color:0}
                                 onChange={(event)=>changeSubPointColor(index,event)}
                                 >
                                     <MenuItem value="1"> Red</MenuItem>
@@ -125,7 +135,7 @@ export default function InstructionField(props) {
                                 label={ index+1 +". Sub-point"}
                                 multiline
                                 className={classes.textField}
-                                value={props.array?props.array[props.number].points[index].data:"1"}
+                                value={subpoints[index]?subpoints[index].data:''}
                                 onChange={(event)=>changeSubPointData(index,event)}
                                 size="small"
                                 /> 
@@ -133,7 +143,7 @@ export default function InstructionField(props) {
                                 <div onClick={subpoints.length!=0?()=>deleteSubpoint(index):null} style={{marginRight:'10px',fontSize:'24px',cursor:'pointer'}}>-</div>
                             </div>
                     ):null):null}
-                    <RadioGroup aria-label="gender" name="gender1" value={props.array?props.array[props.number].isLine:false} onChange={(e)=>setLinebreak(e.target.value)}>
+                    <RadioGroup aria-label="gender" name="gender1" value={linebreak} onChange={(e)=>setLinebreak(e.target.value)}>
                     <div style={{display:'flex',alignItems:'center'}}>
                         <FormLabel component="legend" style={{color:'black',marginRight:'25px'}}>Give line-break</FormLabel>
                         <FormControlLabel value="true" control={<Radio />} label="Yes" />

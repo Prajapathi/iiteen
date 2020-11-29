@@ -47,6 +47,7 @@ export default function Paper() {
     let history = useHistory()
 
     React.useEffect(() => {
+        localStorage.setItem("savingPaper",false)
         let paperType=localStorage.getItem("paperType");
         if(paperType!="1"&&paperType!="2"&&paperType!="3"){
             history.push('/AddPaper');
@@ -93,6 +94,7 @@ export default function Paper() {
             window.alert("Please fill all details about sections correctly.")
             return;
         }
+        localStorage.setItem("savingPaper",true)
         const pname=paperInfo.name
         setpSaveName(paperInfo.name)
         const db = firebase.firestore();

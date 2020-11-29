@@ -68,11 +68,13 @@ const AdvDefaultInst=[
             ]
     },
 ]
-export default function InstructionInfo(props) {
-    const [instructions,setInstructions]=React.useState(props.paperType?props.paperType==1?MainsDefaultInst:AdvDefaultInst:AdvDefaultInst);
+export default function InstructionInfo(props){
+    const [instructions,setInstructions]=React.useState(props.paperType?props.paperType==2?AdvDefaultInst:MainsDefaultInst:[]);
+    const [changeType,setChangeType]=React.useState(false)
 
     useEffect(() => {
-        setInstructions(props.paperType==1?MainsDefaultInst:AdvDefaultInst)
+        setInstructions(props.paperType==2?AdvDefaultInst:MainsDefaultInst)
+        setChangeType(!changeType)
     }, [props.paperType])
 
     const deleteInstruction = (index) => {
@@ -95,7 +97,7 @@ export default function InstructionInfo(props) {
                 {instructions.map((key,index)=>
                     <div style={{border:'1px dashed grey'}} key={index}>
                         <div style={{margin:'5px 20px'}}>{index+1}</div>
-                        <InstructionField key={index} number={index} sendInfo={setInstructions} array={instructions}/>
+                        <InstructionField key={index} number={index} changeType={changeType} sendInfo={setInstructions} array={instructions}/>
                         <div onClick={instructions.length!=1?()=>deleteInstruction(index):null} 
                         style={{margin:'-30px 14% 4% 14%',
                         background:'#f23b38',
