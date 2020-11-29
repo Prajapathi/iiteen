@@ -94,7 +94,6 @@ export default function Paper() {
             window.alert("Please fill all details about sections correctly.")
             return;
         }
-        localStorage.setItem("savingPaper",true)
         const pname=paperInfo.name
         setpSaveName(paperInfo.name)
         const db = firebase.firestore();

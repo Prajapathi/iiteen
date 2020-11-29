@@ -39,6 +39,16 @@ export default function InstructionField(props) {
             setSubpoints(props.array.length!=0?props.array[props.number].points:[]);
             setLinebreak(props.array.length!=0?(props.array[props.number].isLine==true?"true":"false"):"false")
     }, [props.changeType])
+    useEffect(() => {
+        setInfo(props.array[props.number])
+        console.log("pui")
+    }, [props.array])
+    console.log(props.number,props.array[props.number])
+    const deleteInstruction = () => {
+        const values=[...props.array];
+        values.splice(props.number, 1);
+        props.sendInfo(values)
+    };
 
     const handleChange = (event) => {
         setLinebreak(event.target.value);
@@ -84,6 +94,7 @@ export default function InstructionField(props) {
     },[Info])
     
     return (
+        <>
             <div style={{padding:'30px 50px'}}>
                 <form className={classes.container} noValidate >
                     
@@ -152,5 +163,18 @@ export default function InstructionField(props) {
                 </RadioGroup>
                 </form>
             </div>
+            <div onClick={props.array.length!=1?()=>deleteInstruction():null} 
+                        style={{margin:'-30px 14% 4% 14%',
+                        background:'#f23b38',
+                        width:'70%',
+                        border:'1px solid black',
+                        cursor:'pointer',
+                        textAlign:'center',
+                        color:'white',
+                        border:'1px solid white',
+                        borderRadius:'20px'}}>
+                            Delete Instruction
+            </div>
+        </>
     )
 }
