@@ -17,7 +17,7 @@ const MainsDefaultInst=[
     },
     {   data:"20 Objective Multiple Choice type Questions(MCQs) per subject",
         isLine: true,
-        section:0,
+        section:3,
         points:[
             {color:2,data:"4 Marks for correct Answer"},
             {color:1,data:"1 Negative mark for Incorrect Answer"},
@@ -26,7 +26,7 @@ const MainsDefaultInst=[
     },
     {   data:"5 Numerical Type Questions per subject",
         isLine: false,
-        section:0,
+        section:2,
         points:[
             {color:2,data:"4 Marks for correct Answer"},
             {color:1,data:"No Negative marks for Incorrect answer or Skipped Questions"},

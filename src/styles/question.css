@@ -2,10 +2,52 @@
     color:black;
     display:flex;
 }
-
-.ques{
-    width:40%;
+.ques-pallete{
+    background:#E1E1E1;
+    width:100%;
+    height:auto;
+    padding:7px 0px;
+    border-left:2px solid #ccc;
+    border-bottom:2px solid #ccc;
+    border-bottom-left-radius:30px;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:center;
 }
-.choice{
-    width:60%;
+#ques-pallete-sub{
+    display:flex;
+    width:90%;
+    justify-content:space-evenly;
+    margin:5px 0px;
+}
+.subject-select{
+    width:30%;
+    background:white;
+    text-align:center;
+    padding:4px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    cursor:pointer;
+}
+.page-no{
+    background:white;
+    width:40px;
+    height:40px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    margin:5px 7px;
+    text-align:center;
+    padding:7px;
+}
+.color-code-box{
+    height:20px;
+    width:20px;
+    border-radius:3px;
+}
+.color-code-text{
+    margin:5px;
+    font-size:14px;
+    font-weight:450;
+    color:#2B5594
 }

@@ -16,12 +16,17 @@ export default function Questions(props) {
     const [flag,setFlag]=React.useState(false)
     const [numberQ,setnumberQ]=React.useState(0)
     const [saveQ,setSaveQ]=React.useState(false)
+    const [subjectwiseSub,setSubjectwiseSub]=React.useState('')
     
     useEffect(() => {
         setnumberQ(localStorage.getItem("noOfQuestions"))
         localStorage.removeItem("noOfQuestions")
+        if(props.subjectwise==true){
+            setSubjectwiseSub(localStorage.getItem("subject"))
+            localStorage.removeItem("subject")
+        }
     }, [])
-
+    
     async function uploadImg(){
         let imgtemp=[]
         let imageNum=0;
@@ -85,37 +90,73 @@ export default function Questions(props) {
         let t
         let paperTypeHere=props.paperType==1?"AITS":props.paperType==2?"PREVIOUS":"MOCK"
         for(let l=0;l<images.length;l++){
-            const uploadTask = storage.ref(`/${paperTypeHere}/${props.pname}/${images[l].i}/${images[l].file.name}`).put(images[l].file)
-                t=await uploadTask.on('state_changed', 
-                (snapShot) => {
-                }, (err) => {
-                //catches the errors
-                console.log(err)
-                }, () => {
-                storage.ref(`${paperTypeHere}/${props.pname}/${images[l].i}`).child(images[l].file.name).getDownloadURL()
-                .then(fireBaseUrl => {
-                    const imgURL=fireBaseUrl
-                    const t=[...questionArray]
-                    if(images[l].s=="question"){
-                        t[images[l].i].question[images[l].j].data=imgURL
-                    }
-                    else if(images[l].s=="solution"){
-                        t[images[l].i].solution[images[l].j].data=imgURL
-                    }
-                    else if(images[l].s=="hint"){
-                        t[images[l].i].hint[images[l].j].data=imgURL
-                    }
-                    else{
-                        t[images[l].i].option[images[l].j].data=imgURL
-                    }
-                    setQuestionArray(t)
-                    flagNum++;
-                    if(flagNum==images.length){
-                        setFlag(true)
-                    }
-                    // savePaperFB()
+            if(props.subjectwise==false){
+                const uploadTask = storage.ref(`/${paperTypeHere}/${props.pname}/${images[l].i}/${images[l].file.name}`).put(images[l].file)
+                    t=await uploadTask.on('state_changed', 
+                    (snapShot) => {
+                    }, (err) => {
+                    //catches the errors
+                    console.log(err)
+                    }, () => {
+                    storage.ref(`${paperTypeHere}/${props.pname}/${images[l].i}`).child(images[l].file.name).getDownloadURL()
+                    .then(fireBaseUrl => {
+                        const imgURL=fireBaseUrl
+                        const t=[...questionArray]
+                        if(images[l].s=="question"){
+                            t[images[l].i].question[images[l].j].data=imgURL
+                        }
+                        else if(images[l].s=="solution"){
+                            t[images[l].i].solution[images[l].j].data=imgURL
+                        }
+                        else if(images[l].s=="hint"){
+                            t[images[l].i].hint[images[l].j].data=imgURL
+                        }
+                        else{
+                            t[images[l].i].option[images[l].j].data=imgURL
+                        }
+                        setQuestionArray(t)
+                        flagNum++;
+                        if(flagNum==images.length){
+                            setFlag(true)
+                        }
+                        // savePaperFB()
+                    })
                 })
-            })
+            }
+            else{
+                    let subHere=subjectwiseSub==1?"PHYSICS":subjectwiseSub==2?"CHEMISTRY":"MATHS"
+                    const uploadTask = storage.ref(`/SUBJECTWISE/${subHere}/${props.pname}/${images[l].i}/${images[l].file.name}`).put(images[l].file)
+                    t=await uploadTask.on('state_changed', 
+                    (snapShot) => {
+                    }, (err) => {
+                    //catches the errors
+                    console.log(err)
+                    }, () => {
+                    storage.ref(`SUBJECTWISE/${subHere}/${props.pname}/${images[l].i}`).child(images[l].file.name).getDownloadURL()
+                    .then(fireBaseUrl => {
+                        const imgURL=fireBaseUrl
+                        const t=[...questionArray]
+                        if(images[l].s=="question"){
+                            t[images[l].i].question[images[l].j].data=imgURL
+                        }
+                        else if(images[l].s=="solution"){
+                            t[images[l].i].solution[images[l].j].data=imgURL
+                        }
+                        else if(images[l].s=="hint"){
+                            t[images[l].i].hint[images[l].j].data=imgURL
+                        }
+                        else{
+                            t[images[l].i].option[images[l].j].data=imgURL
+                        }
+                        setQuestionArray(t)
+                        flagNum++;
+                        if(flagNum==images.length){
+                            setFlag(true)
+                        }
+                        // savePaperFB()
+                    })
+                })
+            }
         }
         return t;
     }
@@ -166,18 +207,35 @@ export default function Questions(props) {
                 timestampsInSnapshots: true
             });
             console.log(props.pname)
-            const userRef = db.collection(`${props.paperRoute}/${props.pname}/Questions`).add({
+            if(props.subjectwise==false){
+                const userRef = db.collection(`${props.paperRoute}/${props.pname}/Questions`).add({
+                        ...file
+                }).then((res)=>{
+                    qs++;
+                    console.log("yee",file)
+                    if(qs==numberQ){
+                        setSaveQ(true)
+                    }
+                // history.push('/AddPaper')
+                }).catch((error)=>{
+                    console.log("Error saving the document: ",error);
+                }) 
+            }
+            else{
+                let paperSub=subjectwiseSub==1?"Physics":subjectwiseSub==2?"Chemistry":"Maths"
+                const userRef = db.collection(`SUBJECTWISE/${paperSub}/${paperSub}/${props.pname}/Questions`).add({
                     ...file
-            }).then((res)=>{
-                qs++;
-                console.log("yee",file)
-                if(qs==numberQ){
-                    setSaveQ(true)
-                }
-            // history.push('/AddPaper')
-            }).catch((error)=>{
-                console.log("Error saving the document: ",error);
-            }) 
+                }).then((res)=>{
+                    qs++;
+                    console.log("yee",file)
+                    if(qs==numberQ){
+                        setSaveQ(true)
+                    }
+                // history.push('/AddPaper')
+                }).catch((error)=>{
+                    console.log("Error saving the document: ",error);
+                }) 
+            }
         }
     }
 
@@ -192,7 +250,7 @@ export default function Questions(props) {
         <>
             {loading==true?<CircularProgress style={{margin:'25% 50%'}}/>:
                     <div>
-                    <Question key={index} index={Number(index)} noOfQuestions={numberQ} infoArray={questionArray}  sendInfo={setQuestionArray} sectionInfo={props.sectionInfo}/>
+                    <Question key={index} index={Number(index)} noOfQuestions={numberQ}  subjectwise={props.subjectwise} subject={subjectwiseSub} infoArray={questionArray}  sendInfo={setQuestionArray} sectionInfo={props.sectionInfo}/>
                     {index>0?<button style={{width:'60%',
                                                     height:'40px',
                                                     margin:'0px 20% 20px 20%',

@@ -30,38 +30,43 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Paper() {
     const classes = useStyles();
+    const location = useLocation();
+    let history = useHistory()
+
     const [numberQ,setNumberQ]=React.useState(0)
     const [paperInfo,setPaperInfo]=React.useState([]);
     const [instructionInfo,setInstructionInfo]=React.useState([]);
-    const [subjectiveClass,setSubjectiveClass]=React.useState();
+    const [subjectwiseClass,setSubjectwiseClass]=React.useState();
     const [loading,setLoading]=React.useState(false)
     const [showQuestion,setShowQuestion]=React.useState(false)
     const [refid,setRefid]=React.useState()
     const [paperRoute,setpaperRoute]=React.useState()
     const [pSaveName,setpSaveName]=React.useState()
-    const [sectionNo,setSectionNo]=React.useState(0)
+    const [sectionNo,setSectionNo]=React.useState(location.state.subjectwise==true?1:0)
     const [secQNo,setSecQNo]=React.useState(0)
     const [allowSec,setAllowSec]=React.useState(false)
     const [sections,setSections]=React.useState(['','','']);
-    const location = useLocation();
-    let history = useHistory()
+    const [subjectwiseSub,setSubjectwiseSub]=React.useState(0)
 
     React.useEffect(() => {
         localStorage.setItem("savingPaper",false)
         let paperType=localStorage.getItem("paperType");
-        if(paperType!="1"&&paperType!="2"&&paperType!="3"){
+        if(paperType!="1"&&paperType!="2"&&paperType!="3"&&paperType!="subjectwise"){
             history.push('/AddPaper');
         }
         else{
             localStorage.removeItem("paperType")
-            setpaperRoute(location.state.subjective?"SUBJECTIVE":(location.state.paperType=="1"?"AITS":(location.state.paperType=="2"?"PREVIOUS":"MOCK")))
+            setpaperRoute(location.state.subjectwise==true?"SUBJECTWISE":(location.state.paperType=="1"?"AITS":(location.state.paperType=="2"?"PREVIOUS":"MOCK")))
         }
     }, [])
-    
+
     React.useEffect(()=>{
         let arr=[];
         for(let i=0;i<Number(sectionNo);i++){
             arr.push({section:"",numberOfQuestions:0,marks:0,negative:0});
+        }
+        if(location.state.subjectwise==true){
+            arr=[{section:0,numberOfQuestions:paperInfo.noOfQuestions,marks:2,negative:0}]
         }
         setSections(arr)
     },[sectionNo])
@@ -79,6 +84,13 @@ export default function Paper() {
         setSecQNo(num);
     },[sections])
 
+    React.useEffect(() => {
+        if(location.state.subjectwise!=true){
+            return;
+        }
+        setSections([{section:0,numberOfQuestions:paperInfo.noOfQuestions,marks:2,negative:0}])
+    }, [paperInfo.noOfQuestions])
+
     const setSectionInfo=(index,data,type)=>{
         let secTemp=[...sections]
         secTemp[index][type]=data;
@@ -86,11 +98,11 @@ export default function Paper() {
     }
     
     const addPaper=()=>{
-        if((3*secQNo)!=paperInfo.noOfQuestions){
+        if(location.state.subjectwise==false && (3*secQNo)!=paperInfo.noOfQuestions){
             window.alert("Please enter number of questions in respective sections correctly.")
             return;
         }
-        if(allowSec==false){
+        if(location.state.subjectwise==false && allowSec==false){
             window.alert("Please fill all details about sections correctly.")
             return;
         }
@@ -102,26 +114,45 @@ export default function Paper() {
         });
         setLoading(true)
         paperInfo.date=new Date(paperInfo.date)
-        const paperRef = db.collection(paperRoute).doc(pname).set({
+
+        if(location.state.subjectwise==true){
+            let paperSub=subjectwiseSub==1?"Physics":subjectwiseSub==2?"Chemistry":"Maths"
+            const paperRef = db.collection(paperRoute).doc(paperSub).collection(paperSub).doc(pname).set({
             ...paperInfo,instructionInfo
-        }).then((res)=>{
-            setLoading(false);
-            localStorage.setItem("noOfQuestions",numberQ)
-            setShowQuestion(true);
-            setRefid(res.id)
-            //history.push('/Questions', { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType,paperRoute:paperRoute,paperRef:res.id})
-        }).catch((error)=>{
-            setLoading(false);
-            console.log("Error saving the document: ",error)
-        })  
+            }).then((res)=>{
+                setLoading(false);
+                localStorage.setItem("noOfQuestions",numberQ)
+                localStorage.setItem("subject",subjectwiseSub)
+                setShowQuestion(true);
+                setRefid(res.id)//history.push('/Questions', { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType,paperRoute:paperRoute,paperRef:res.id})
+            }).catch((error)=>{
+                setLoading(false);
+                console.log("Error saving the document: ",error)
+            }) 
+        }
+        else{
+            const paperRef = db.collection(paperRoute).doc(pname).set({
+                ...paperInfo,instructionInfo
+            }).then((res)=>{
+                setLoading(false);
+                localStorage.setItem("noOfQuestions",numberQ)
+                setShowQuestion(true);
+                setRefid(res.id)
+                //history.push('/Questions', { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType,paperRoute:paperRoute,paperRef:res.id})
+            }).catch((error)=>{
+                setLoading(false);
+                console.log("Error saving the document: ",error)
+            })  
+        }
     }
     return (
         <div>
             {loading==true?<CircularProgress style={{margin:'25% 50%'}}/>:
                 (showQuestion==false?
                 <>
-                <PaperInfo sendNumberQ={setNumberQ} sendInfo={setPaperInfo} subjective={location.state?location.state.subjective:null} sendSubjectiveClass={setSubjectiveClass}/>
+                <PaperInfo sendNumberQ={setNumberQ} sendInfo={setPaperInfo} subjectwise={location.state?location.state.subjectwise:null} sendSubjectwiseClass={setSubjectwiseClass} sendSubjectwiseSub={setSubjectwiseSub}/>
                 
+                {location.state.subjectwise==false?
                 <div style={{width:"80%",margin:"100px 10%",padding:"20px",border:"2px dashed black",background:"#EEEFED"}}>
                     <TextField
                         id="standard-select-currency"
@@ -202,12 +233,14 @@ export default function Paper() {
                                 </div>
                             )
                     }
-                </div>
+                </div>:null}
 
                 {
-                    !(location.state?location.state.subjective:null)?<InstructionInfo paperType={paperInfo.paperType} sendInfo={setInstructionInfo}/>:null
+                    !(location.state?location.state.subjectwise:null)?
+                                        <InstructionInfo paperType={paperInfo.paperType} sendInfo={setInstructionInfo}/>
+                                        :null
                 }
-                    {(paperInfo.name==''||paperInfo.totalDuration==''||paperInfo.totalMarks==''||paperInfo.noOfQuestions==''||(Number(paperInfo.noOfQuestions)%3)!=0)?
+                    {(paperInfo.name==''||paperInfo.totalDuration==''||paperInfo.totalMarks==''||paperInfo.noOfQuestions==''||paperInfo.noOfQuestions=="0" ||(Number(paperInfo.noOfQuestions)%3)!=0)?
                         null:
                         <button style={{width:'60%',
                         margin:'0px 20% 20px 20%',
@@ -220,7 +253,22 @@ export default function Paper() {
                             Continue
                         </button>
                     }
-                </>:<Questions subjective={location.state.subjective} sectionInfo={sections} paperType={location.state.paperType} paperRoute={paperRoute} pname={pSaveName} paperRef={refid}/>)
+                    {((location.state.subjectwise==true) &&
+                        (paperInfo.name!='' && paperInfo.noOfQuestions!='' && paperInfo.level!=''))?
+
+                            <button style={{width:'60%',
+                            margin:'0px 20% 20px 20%',
+                            background:'#388cf2',
+                            color:'white',
+                            border:'1px solid white',
+                            borderRadius:'20px'
+                            }}
+                            onClick={addPaper}>
+                                Continue
+                            </button>
+                        :null
+                    }
+                </>:<Questions subjectwise={location.state.subjectwise}  sectionInfo={sections} paperType={location.state.paperType} paperRoute={paperRoute} pname={pSaveName} paperRef={refid}/>)
             }
         </div>
     )

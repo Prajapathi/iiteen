@@ -1,68 +1,92 @@
 import React, { useState,useEffect } from 'react';
 import '../../../styles/choiceSection.css'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
 import Badge from '@material-ui/core/Badge';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 
 export default function ChoiceSection() {
     const [palleteSub,setPalleteSub]=React.useState(1);
     const [selectOpt,setSelectOpt]=React.useState([false,false,false,false])
-    
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => {console.log("bund");setShow(true)};
 
     const changeOptSingle=(ind)=>{
         const opts=[false,false,false,false];
-        opts[ind]=true;
+        opts[ind]=!selectOpt[ind];
         setSelectOpt(opts)
-        console.log(opts)
     }
-    useEffect(() => {
-        
-    }, [palleteSub])
-    return (
-            <div className="ans-sec">
-                
-                <div className="option-sec">
-                    <div style={{boxShadow:'1px 1px 4px 1px gray',width:'177.5%',padding:'5px 10px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                        Instructions
-                        <ArrowDropDownIcon style={{fontSize:'42px'}}/>
-                    </div>
-                    <div className="heading">
-                        Multiple Correct Question
-                    </div>
-                    <div className="options">
-                        {['Pressure', 'Strain', 'Compressibility','Forccn'].map((text, index) => ( 
-                            <div className="option" onClick={()=>console.log(index)} style={{border:selectOpt[index]?'blue':'white'}}> 
+    const changeOptMultiple=(ind)=>{
+        const opts=[false,false,false,false];
+        for(let i=0;i<4;i++){
+            if(ind==i)
+                opts[i]=!selectOpt[i]
+            else
+                opts[i]=selectOpt[i]
+        }
+        setSelectOpt(opts)
+    }
+    return(
+        <>
+        <Container style={{ paddingLeft: 0, paddingRight: 0 }}>
+            <Row noGutters >
+                <Col id="choice-sec">
+                     <div id="instruction-ques-box" onClick={handleShow}>
+                         Instructions
+                         <ZoomOutMapIcon id="instruction-zoom"/>
+                     </div>
+
+                     <div className="heading">
+                         Multiple Correct Question
+                        <div >
+                            <ReportProblemOutlinedIcon style={{color:'#A6A5A5'}}/>
+                            <BookmarkIcon style={{color:'#A6A5A5',marginLeft:'8px'}}/>
+                        </div>
+                     </div>
+
+                     <div className="options">
+                         {['Pressure', 'Strain', 'Compressibility','Forccn'].map((text, index) => ( 
+                            <div className="option"
+                                 onClick={()=>changeOptMultiple(index)}
+                                 style={{border:selectOpt[index]==true?'2px solid rgb(59, 149, 194)':'1px solid white'}}
+                            > 
                                     {index===0?'A':(index===1?'B':(index===2?'C':'D'))}. {"  "+text }
                             </div>
                         ))}
                     </div>
+
                     <div className="submit">
                         <button style={{background:'rgba(180,180,180)'}}>Skip</button>
                         <button style={{background:'#18d618'}} >Submit</button>
                     </div>
-                </div>
-                <div className="ans-sub-sec">
-                    <div style={{display:'flex',margin:'6.5% 5%'}}>
-                        <ReportProblemOutlinedIcon style={{color:'#A6A5A5'}}/>
-                        <BookmarkIcon style={{color:'#A6A5A5',marginLeft:'8px'}}/>
-                        </div>
+
+                </Col>
+
+                {/* <Col xs={4} id="pallete-sec">
+
                     <div className="ques-pallete">
-                        <div style={{display:'flex',width:'90%',justifyContent:'space-evenly',margin:'5px 0px'}}>
-                            <div className="subject-select" style={{background:palleteSub==1?'blue':'white'}} onClick={()=>setPalleteSub(1)}>Maths</div>
-                            <div className="subject-select" style={{background:palleteSub==2?'blue':'white'}} onClick={()=>setPalleteSub(2)}>Chemistry</div>
-                            <div className="subject-select" style={{background:palleteSub==3?'blue':'white'}} onClick={()=>setPalleteSub(3)}>Physics</div>
-                        </div>
-                        {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25].map((text, index) => ( 
+
+                         <div id="ques-pallete-sub">
+                             <div className="subject-select" style={{background:palleteSub==1?'blue':'white'}} onClick={()=>setPalleteSub(1)}>Maths</div>
+                             <div className="subject-select" style={{background:palleteSub==2?'blue':'white'}} onClick={()=>setPalleteSub(2)}>Chemistry</div>
+                             <div className="subject-select" style={{background:palleteSub==3?'blue':'white'}} onClick={()=>setPalleteSub(3)}>Physics</div>
+                         </div>
+
+                         {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25].map((text, index) => ( 
                             <div className="page-no" >
-                                {/* <Badge color="error" anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'right',
-                                }} variant="dot"> {index+1 } 
-                                </Badge> */}{index+1}
+                                {index+1}
                             </div>
                         ))}
-                       <div style={{margin:'5px 20px',fontSize:'14px',fontWeight:'500',color:'#2B5594'}}> The Questions Palette displayed will show the status of each question using one of the following symbols :</div>
+
+                       <div style={{margin:'5px 20px',fontSize:'14px',fontWeight:'500',color:'#2B5594'}}>
+                            The Questions Palette displayed will show the status of each question using one of the following symbols :
+                        </div>
                        <div>
                             <div style={{display:'flex',alignItems:'center'}}>
                                 <div style={{height:'20px',width:'20px',borderRadius:'3px',background:'white'}}></div>
@@ -91,7 +115,31 @@ export default function ChoiceSection() {
                             </div>
                        </div>
                     </div>
-                </div>
-            </div>
+                </Col> */}
+            </Row>
+        </Container>
+
+        <Modal
+            show={show}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton onHide={handleClose}>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Instructions
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <h4>Section Name</h4>
+                <p>
+                    This is custom instruction fetched on section number basis.
+                </p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={handleClose}>Close</Button>
+            </Modal.Footer>
+    </Modal>
+    </>
     )
 }

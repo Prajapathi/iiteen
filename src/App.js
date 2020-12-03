@@ -21,6 +21,8 @@ function App() {
       <><Routing/></>
       :<RoutingAdmin/>
     }
+      {/* <Routing/>
+      <RoutingAdmin/> */}
     </BrowserRouter>
     </>
   );

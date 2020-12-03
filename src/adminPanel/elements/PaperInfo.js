@@ -35,7 +35,8 @@ export default function PaperInfo(props) {
     const [duration,setDuration]=React.useState('');
     const [noOfQuestions,setNoOfQuestions]=React.useState(0);
     const [data,setData]=React.useState([]);
-    const [subjectiveClass,setSubjectiveClass]=React.useState([]);
+    const [subjectwiseClass,setSubjectwiseClass]=React.useState([]);
+    const [subjectwiseSubject,setSubjectwiseSubject]=React.useState(1);
 
     const handleChange = (event) => {
         settypeValue(event.target.value);
@@ -46,17 +47,22 @@ export default function PaperInfo(props) {
     }, [noOfQuestions])
 
     useEffect(() => {
-      props.sendSubjectiveClass(subjectiveClass);
-    }, [subjectiveClass])
+      props.sendSubjectwiseClass(subjectwiseClass);
+    }, [subjectwiseClass])
+
+    useEffect(() => {
+      props.sendSubjectwiseSub(subjectwiseSubject);
+    }, [subjectwiseSubject])
+
     useEffect(() => {
         let data={
           name:name,
           date:date,
           paperType:Number(typeValue=="Mains"?1:2),
-          totalMarks:Number(marks),
+          totalMarks:marks==''?0:Number(marks),
           noOfQuestions:Number(noOfQuestions),
-          totalDuration:Number(duration),
-          level:level!=''?Number(level):null
+          totalDuration:duration==''?0:Number(duration),
+          level:level!=''?Number(level):(props.subjectwise==true?'':null)
         }
         setData(data);
     }, [name,date,typeValue,marks,noOfQuestions,duration,level])
@@ -68,7 +74,7 @@ export default function PaperInfo(props) {
 
     return (
         <form className={classes.container} noValidate >
-            {!props.subjective?
+            {!props.subjectwise?
                               <div style={{display:'flex',alignItems:'center',margin:'20px auto'}}>
                                   <TextField
                                     id="standard-number"
@@ -110,10 +116,11 @@ export default function PaperInfo(props) {
                                     onChange={(event) =>event.target.value>=0?setDuration(event.target.value):null}
                                   />
                               </div>
-                              :null
+                              :
+                                null
             }
             <div style={{display:'flex',margin:'20px auto'}}>
-                {!props.subjective?
+                {!props.subjectwise?
                                   <TextField
                                   id="standard-number"
                                   type="number"
@@ -129,24 +136,26 @@ export default function PaperInfo(props) {
                                 />
                                 :
                                 <>
-                                <TextField
-                                  id="standard-select-currency"
-                                  select
-                                  label="Class"
-                                  value={subjectiveClass}
-                                  onChange={(event) =>setSubjectiveClass(event.target.value)}
-                                  helperText="Select Class"
-                                  className={classes.textField}
-                                >
-                                    <MenuItem value="11"> 11</MenuItem>
-                                    <MenuItem value="12"> 12</MenuItem>
-                                </TextField>
-                                <TextField
-                                    id="standard-number"
-                                    label="Chapter name"
-                                    className={classes.textField}
-                                  />
-                                  </>
+                                    <TextField
+                                      id="standard-select-currency"
+                                      select
+                                      label="Select Subject"
+                                      className={classes.textField}
+                                      value={subjectwiseSubject}
+                                      onChange={(event) =>setSubjectwiseSubject(event.target.value)}
+                                    >
+                                        <MenuItem value="1"> Physics</MenuItem>
+                                        <MenuItem value="2"> Chemistry</MenuItem>
+                                        <MenuItem value="3"> Mathematics</MenuItem>
+                                    </TextField>
+                                    <TextField
+                                        id="standard-number"
+                                        label="Chapter Name"
+                                        className={classes.textField}
+                                        value={name}
+                                        onChange={(event) =>setName(event.target.value)}
+                                    />
+                                </>
                 }
                 <TextField
                   id="standard-number"
@@ -161,7 +170,7 @@ export default function PaperInfo(props) {
                   }}
                   onChange={(event) =>event.target.value>=0?setNoOfQuestions(event.target.value):null}
                 />
-                {props.subjective?
+                {props.subjectwise?
                                 <TextField
                                   id="standard-select-currency"
                                   select

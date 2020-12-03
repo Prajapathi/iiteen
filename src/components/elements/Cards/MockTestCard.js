@@ -22,7 +22,7 @@ export default function MockTestCard() {
                             <div style={{fontSize:'14px',color:'#448698'}}>300</div>
                         </div>
                     </div> 
-                    <button>Attempt</button>
+                    <button >Attempt</button>
                 </div>
             </div>
         </div>

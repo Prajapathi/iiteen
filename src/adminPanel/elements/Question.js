@@ -44,13 +44,17 @@ export default function QuestionInfo(props) {
     const [question,setQuestion]=React.useState(Object.keys(qArray).length==0?[]:qArray.question);
     const [answerType,setAnswerType]=React.useState(Object.keys(qArray).length==0?4:qArray.answerType);
     const [answer,setAnswer]=React.useState(Object.keys(qArray).length==0?[]:qArray.answer);
-    const [hint,setHint]=React.useState([]);
+    const [hint,setHint]=React.useState(Object.keys(qArray).length==0?[]:qArray.hint);
     const [solution,setSolution]=React.useState(Object.keys(qArray).length==0?[]:qArray.solution);
     const [option,setOption]=React.useState((Object.keys(qArray).length!=0 && (qArray.answerType==4 || qArray.answerType==5))?qArray.option:[{type:1,data:''},{type:1,data:''},{type:1,data:''},{type:1,data:''}]);
     const [multiOption,setMultiOption]=React.useState([false,false,false,false]);
     const [data,setData]=React.useState([]);
 
     useEffect(()=>{
+        if(props.subjectwise==true){
+            return;
+        }
+
         let sub;
         if(props.index==0||((props.index+1)<=(props.noOfQuestions)/3)){
             sub=1;
@@ -133,14 +137,15 @@ export default function QuestionInfo(props) {
         if(newAns.length!=0)
         setAnswer(newAns)
     }, [multiOption])
+
     useEffect(() => {
         const newData={
             number:Number(number),
-            subject:subject,
+            subject:props.subjectwise==true?Number(props.subject):subject,
             tag:Number(tag),
-            section:Number(section),
-            marks:Number(marks),
-            negativeMarks:Number(negative),
+            section:props.subjectwise==true?0:Number(section),
+            marks:props.subjectwise==true?0:Number(marks),
+            negativeMarks:props.subjectwise==true?0:Number(negative),
             question:question,
             option:option,
             answerType:Number(answerType),
@@ -160,8 +165,11 @@ export default function QuestionInfo(props) {
     return (<>
         <h1 style={{margin:'20px 0px -20px 50px',fontSize:"24px"}}>
                         Question {props.index+1}
-                        {subject==1?" PHYSICS":subject==2?" CHEMISTRY":" MATHS"}
-                        {section==1?" Integer":(section==2?" Numerical":(section==3?" Single Correct":(section==4?" Multiple Correct":" Paragraph"):null):null)}
+                        {props.subjectwise==false?
+                            (subject==1?" PHYSICS":subject==2?" CHEMISTRY":" MATHS")
+                            :(props.subject==1?" PHYSICS":props.subject==2?" CHEMISTRY":" MATHS")}
+                        {section==0?null
+                            :section==1?" Integer":(section==2?" Numerical":(section==3?" Single Correct":(section==4?" Multiple Correct":" Paragraph"):null):null)}
         </h1>
         <div style={{padding:'3%',display:'flex'}}>
         
@@ -189,7 +197,7 @@ export default function QuestionInfo(props) {
                         <MenuItem value="3"> Mathematics</MenuItem>
                     </TextField> */}
 
-                    {subject==1?
+                    {(subject==1||(props.subjectwise==true && props.subject==1))?
                     <TextField
                     id="standard-select-currency"
                     select
@@ -205,7 +213,7 @@ export default function QuestionInfo(props) {
                                 <MenuItem value="4"> Optics and Modern Phy</MenuItem>
                                 <MenuItem value="5"> Electrostatics and current electricity</MenuItem>
                     </TextField>
-                    :(subject=="2"?
+                    :(subject==2||(props.subjectwise==true && props.subject==2)?
                     <TextField
                     id="standard-select-currency"
                     select
@@ -360,10 +368,13 @@ export default function QuestionInfo(props) {
                                                     )
                                     )
                     }
-                    {/* <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
-                    <FormLabel component="legend" style={{color:'black'}}>Hint</FormLabel>
-                    <TextTyper sendInfo={setHint}/>
-                    </div> */}
+                    {   props.subjectwise==true?
+                        <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
+                        <FormLabel component="legend" style={{color:'black'}}>Hint</FormLabel>
+                        <TextTyper sendInfo={setHint} dataArray={hint}/>
+                        </div>
+                        :null
+                    }
                     <div style={{border:'1px dashed black',width:'80%',padding:'20px',margin:'30px'}}>
                     <FormLabel component="legend" style={{color:'black'}}>Solution</FormLabel>
                     <TextTyper sendInfo={setSolution} dataArray={solution}/>
@@ -377,6 +388,13 @@ export default function QuestionInfo(props) {
                                                                  <h6>Option {index+1}</h6>
                                                                 <Preview isOption={true} data={option[index]}/>
                                                            </>):null
+                }
+                {props.subjectwise==true?
+                    <>
+                        <h3>Hint</h3>
+                        <Preview data={hint}/>
+                    </>
+                    :null
                 }
                 <h3>Solution</h3>
                 <Preview data={solution}/>

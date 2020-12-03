@@ -30,6 +30,9 @@ export default function AddPaper() {
     const setLocal=()=>{
         localStorage.setItem("paperType",paperType)
     }
+    const setSubjectwise=()=>{
+        localStorage.setItem("paperType","subjectwise")
+    }
 
     return (
         <>
@@ -48,7 +51,7 @@ export default function AddPaper() {
                         <MenuItem value="3">Mock Test</MenuItem>
                     </TextField>
                     {paperType!=0?
-                                <Link to={{ pathname: '/Paper', state: { subjective:false,paperType:paperType} }} onClick={setLocal}>
+                                <Link to={{ pathname: '/Paper', state: { subjectwise:false,paperType:paperType} }} onClick={setLocal}>
                                     <div style={{display:'flex',alignItems:'center',width:'100%',marginTop:'30px'}}>
                                         <div id="addButton" style={{width:'20%'}}>
                                         +
@@ -58,12 +61,12 @@ export default function AddPaper() {
                                 </Link>
                         :null}
                 </div>
-            <Link to={{ pathname: '/Paper', state: { subjective:true} }}>
+            <Link to={{ pathname: '/Paper', state: { subjectwise:true} }} onClick={setSubjectwise}>
                 <div id="addPaper">
                     <div id="addButton">
                     +
                     </div>
-                    <h1>Add a Subjective paper</h1>
+                    <h1>Add a SubjectWise paper</h1>
                 </div>
             </Link>
             
