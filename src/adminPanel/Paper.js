@@ -42,7 +42,7 @@ export default function Paper() {
     const [refid,setRefid]=React.useState()
     const [paperRoute,setpaperRoute]=React.useState()
     const [pSaveName,setpSaveName]=React.useState()
-    const [sectionNo,setSectionNo]=React.useState(location.state.subjectwise==true?1:0)
+    const [sectionNo,setSectionNo]=React.useState(location.state?location.state.subjectwise==true?1:0:0)
     const [secQNo,setSecQNo]=React.useState(0)
     const [allowSec,setAllowSec]=React.useState(false)
     const [sections,setSections]=React.useState(['','','']);
@@ -58,7 +58,15 @@ export default function Paper() {
             localStorage.removeItem("paperType")
             setpaperRoute(location.state.subjectwise==true?"SUBJECTWISE":(location.state.paperType=="1"?"AITS":(location.state.paperType=="2"?"PREVIOUS":"MOCK")))
         }
+        window.addEventListener('beforeunload',alertUser);
+        return ()=>{
+            window.removeEventListener('beforeunload',alertUser);
+        }
     }, [])
+    const alertUser=e=>{
+        e.preventDefault()
+        e.returnValue=''
+    }
 
     React.useEffect(()=>{
         let arr=[];
@@ -117,7 +125,7 @@ export default function Paper() {
 
         if(location.state.subjectwise==true){
             let paperSub=subjectwiseSub==1?"Physics":subjectwiseSub==2?"Chemistry":"Maths"
-            const paperRef = db.collection(paperRoute).doc(paperSub).collection(paperSub).doc(pname).set({
+            const paperRef = db.collection(paperRoute).doc("SUBJECT").collection(paperSub).doc(pname).set({
             ...paperInfo,instructionInfo
             }).then((res)=>{
                 setLoading(false);

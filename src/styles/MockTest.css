@@ -2,6 +2,7 @@
     background:url("../assets/images/subjectwisebg.png");
     margin-top:66px;
     padding-top:40px;
+    min-height:100vh;
 }
 .section-heading{
     font-size:2.4em;

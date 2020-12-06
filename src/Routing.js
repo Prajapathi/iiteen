@@ -7,7 +7,7 @@ import SubjectWise from './components/screens/sections/Subjectwise'
 import AITS from './components/screens/sections/AITS'
 import MockTest from './components/screens/sections/MockTest'
 import PreviousYear from './components/screens/sections/PreviousYear'
-import Papers from './components/screens/Paper'
+import Papers from './components/elements/Paper/Paper'
 
 export default function Routing() {
     return (
@@ -27,7 +27,7 @@ export default function Routing() {
             <Route path="/AITS">
             <AITS/>
             </Route>
-            <Route path="/Papers">
+            <Route exact path="/:paperType/Papers/:paperName">
             <Papers/>
             </Route>
         </Switch>

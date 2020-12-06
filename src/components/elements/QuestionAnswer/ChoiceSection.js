@@ -10,18 +10,19 @@ import BookmarkIcon from '@material-ui/icons/Bookmark';
 import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 
-export default function ChoiceSection() {
+export default function ChoiceSection(props) {
     const [palleteSub,setPalleteSub]=React.useState(1);
     const [selectOpt,setSelectOpt]=React.useState([false,false,false,false])
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-    const handleShow = () => {console.log("bund");setShow(true)};
+    const handleShow = () => setShow(true);
 
     const changeOptSingle=(ind)=>{
         const opts=[false,false,false,false];
         opts[ind]=!selectOpt[ind];
         setSelectOpt(opts)
     }
+
     const changeOptMultiple=(ind)=>{
         const opts=[false,false,false,false];
         for(let i=0;i<4;i++){
@@ -32,6 +33,7 @@ export default function ChoiceSection() {
         }
         setSelectOpt(opts)
     }
+
     return(
         <>
         <Container style={{ paddingLeft: 0, paddingRight: 0 }}>
@@ -62,7 +64,7 @@ export default function ChoiceSection() {
                     </div>
 
                     <div className="submit">
-                        <button style={{background:'rgba(180,180,180)'}}>Skip</button>
+                        <button style={{background:'rgba(180,180,180)'}} onClick={()=>props.nextQuestion()}>Skip</button>
                         <button style={{background:'#18d618'}} >Submit</button>
                     </div>
 

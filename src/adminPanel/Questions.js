@@ -223,7 +223,7 @@ export default function Questions(props) {
             }
             else{
                 let paperSub=subjectwiseSub==1?"Physics":subjectwiseSub==2?"Chemistry":"Maths"
-                const userRef = db.collection(`SUBJECTWISE/${paperSub}/${paperSub}/${props.pname}/Questions`).add({
+                const userRef = db.collection(`SUBJECTWISE/SUBJECT/${paperSub}/${props.pname}/Questions`).add({
                     ...file
                 }).then((res)=>{
                     qs++;

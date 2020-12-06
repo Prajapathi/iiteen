@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link,useLocation,useParams} from "react-router-dom";
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -6,15 +7,24 @@ import Badge from '@material-ui/core/Badge';
 import Question from './Question'
 
 
-export default function Paper() {
 
+export default function Paper(props) {
+    const location = useLocation();
+    let {mol}=useParams()
     const [palleteSub,setPalleteSub]=React.useState(1);
+    const [questions,setQuestions]=React.useState([])
+    const [index,setIndex]=React.useState(0)
+    
+    React.useEffect(() => {
+        console.log("Here",location.state.questions)
+        setQuestions(location.state.questions)
+    }, [])
 
     return (
         <Container fluid style={{ paddingLeft: 0, paddingRight: 0,marginLeft: 0, marginRight: 0}}>
             <div  noGutters style={{marginLeft: 0, marginRight: 0, display:'flex'}} >
                     <div style={{width:'80%'}} >
-                        <Question/>
+                        <Question key={index} question={questions[index]} number={questions[index]?questions[index].number:0} nextQuestion={()=>setIndex(index+1)}/>
                     </div>
                     <div style={{width:'20%'}}>
 
@@ -27,7 +37,7 @@ export default function Paper() {
                             </div>
 
                             {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25].map((text, index) => ( 
-                                <div className="page-no" >
+                                <div className="page-no" onClick={()=>setIndex(index)}>
                                     {index+1}
                                 </div>
                             ))}
