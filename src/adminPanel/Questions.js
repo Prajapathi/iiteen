@@ -79,7 +79,7 @@ export default function Questions(props) {
     }, [saveQ])
 
     useEffect(() => {
-        if(imagesNum!=0&&images.length==imagesNum){
+        if(imagesNum!=0 && images.length==imagesNum){
             HandleImageUpload()
         }
     }, [images])

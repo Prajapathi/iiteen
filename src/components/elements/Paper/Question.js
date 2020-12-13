@@ -41,7 +41,7 @@ export default function Question(props) {
                         <QuestionSection data={question}/>
                     </Col>
                     <Col xs={7}>
-                        {props.type=="subjectwise"?<SubjectwiseChoiceSection/>:<ChoiceSection nextQuestion={props.nextQuestion}/>} 
+                        {props.type=="subjectwise"?<SubjectwiseChoiceSection/>:<ChoiceSection goToNextQuestion={props.goToNextQuestion}/>} 
                     </Col>
             </Row>
         </Container>

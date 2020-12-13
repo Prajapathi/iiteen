@@ -326,10 +326,10 @@ export default function QuestionInfo(props) {
                                     value={answer}
                                     onChange={(event) =>setAnswer(Number(event.target.value))}
                                     >
-                                        <MenuItem value="1"> 1</MenuItem>
-                                        <MenuItem value="2"> 2</MenuItem>
-                                        <MenuItem value="3"> 3</MenuItem>
-                                        <MenuItem value="4"> 4</MenuItem>
+                                        <MenuItem value="0"> 1</MenuItem>
+                                        <MenuItem value="1"> 2</MenuItem>
+                                        <MenuItem value="2"> 3</MenuItem>
+                                        <MenuItem value="3"> 4</MenuItem>
                                     </TextField>
                                     :(answerType=="5"?<div style={{marginLeft:'30px'}}>
                                                     <FormLabel component="legend" style={{color:'black'}}>Correct Options</FormLabel>

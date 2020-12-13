@@ -64,7 +64,7 @@ export default function ChoiceSection(props) {
                     </div>
 
                     <div className="submit">
-                        <button style={{background:'rgba(180,180,180)'}} onClick={()=>props.nextQuestion()}>Skip</button>
+                        <button style={{background:'rgba(180,180,180)'}} onClick={()=>props.goToNextQuestion()}>Skip</button>
                         <button style={{background:'#18d618'}} >Submit</button>
                     </div>
 

@@ -6,6 +6,7 @@ import '../../../styles/MockTestCard.css'
 export default function MockTestCard(props) {
     let history = useHistory()
 
+    //put this is redux
     const getPaper=()=>{
         const db = firebase.firestore();
         db.collection("Trash").doc(props.paper.name).collection("Questions").get()
@@ -17,7 +18,7 @@ export default function MockTestCard(props) {
                 questions.push(doc.data())
             });
             console.log(questions)
-            history.push("MockTest/Papers/"+props.paper.name,{questions:questions})
+            history.push("MockTest/Papers/"+props.paper.name,{questions:questions,instructions:props.paper.instructions})
         })
         .catch(function(error) {
             console.log("Error getting documents: ", error);
@@ -46,6 +47,7 @@ export default function MockTestCard(props) {
                         </div>
                     </div> 
                     {/* <Link to={"MockTest/Papers/"+props.paper.name}> */}
+                    {/* if this paper is selected, fetch the questions it consists */}
                         <button onClick={getPaper}>Attempt</button>
                     {/* </Link> */}
                 </div>
