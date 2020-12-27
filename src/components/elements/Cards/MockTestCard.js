@@ -1,24 +1,31 @@
 import React from 'react'
 import firebase from 'firebase'
+import {connect} from 'react-redux'
+import {fetchPaper} from '../../../store/action/Paper'
 import {Link,useLocation,useHistory} from "react-router-dom";
 import '../../../styles/MockTestCard.css'
 
-export default function MockTestCard(props) {
+export function MockTestCard(props) {
     let history = useHistory()
 
     //put this is redux
     const getPaper=()=>{
         const db = firebase.firestore();
-        db.collection("Trash").doc(props.paper.name).collection("Questions").get()
+        db.collection("MOCK").doc(props.paper.name).collection("Questions").get()
         .then(function(querySnapshot) {
             let questions=[];
             
             querySnapshot.forEach(function(doc) {
                 console.log(doc.id, " => ", doc.data());
-                questions.push(doc.data())
+                questions.push({...doc.data(),qid:doc.id})
             });
             console.log(questions)
-            history.push("MockTest/Papers/"+props.paper.name,{questions:questions,instructions:props.paper.instructions})
+            questions.sort(function(a,b){return a.number-b.number});
+            const obj={...props.paper, questions:questions}
+            props.fetchPaper(
+                obj
+            )
+            history.push("MockTest/Papers/"+props.paper.name)
         })
         .catch(function(error) {
             console.log("Error getting documents: ", error);
@@ -55,3 +62,10 @@ export default function MockTestCard(props) {
         </div>
     )
 }
+const mapDispatchToProps=dispatch=>{
+    return{
+        fetchPaper:(paper)=>dispatch(fetchPaper(paper))
+    }
+}
+
+export default connect(null,mapDispatchToProps)(MockTestCard)

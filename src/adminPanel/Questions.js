@@ -124,15 +124,15 @@ export default function Questions(props) {
                 })
             }
             else{
-                    let subHere=subjectwiseSub==1?"PHYSICS":subjectwiseSub==2?"CHEMISTRY":"MATHS"
-                    const uploadTask = storage.ref(`/SUBJECTWISE/${subHere}/${props.pname}/${images[l].i}/${images[l].file.name}`).put(images[l].file)
+                    let subHere=subjectwiseSub==1?"Physics":subjectwiseSub==2?"Chemistry":"Maths"
+                    const uploadTask = storage.ref(`/SUBJECTWISE/Class ${props.subjectwiseClass}/${subHere}/${props.pname}/Level 0${props.level}/${images[l].i}/${images[l].file.name}`).put(images[l].file)
                     t=await uploadTask.on('state_changed', 
                     (snapShot) => {
                     }, (err) => {
                     //catches the errors
                     console.log(err)
                     }, () => {
-                    storage.ref(`SUBJECTWISE/${subHere}/${props.pname}/${images[l].i}`).child(images[l].file.name).getDownloadURL()
+                    storage.ref(`SUBJECTWISE/Class ${props.subjectwiseClass}/${subHere}/${props.pname}/Level 0${props.level}/${images[l].i}`).child(images[l].file.name).getDownloadURL()
                     .then(fireBaseUrl => {
                         const imgURL=fireBaseUrl
                         const t=[...questionArray]
@@ -212,7 +212,7 @@ export default function Questions(props) {
                         ...file
                 }).then((res)=>{
                     qs++;
-                    console.log("yee",file)
+                    console.log("Question uploaded: ",file)
                     if(qs==numberQ){
                         setSaveQ(true)
                     }
@@ -223,11 +223,11 @@ export default function Questions(props) {
             }
             else{
                 let paperSub=subjectwiseSub==1?"Physics":subjectwiseSub==2?"Chemistry":"Maths"
-                const userRef = db.collection(`SUBJECTWISE/SUBJECT/${paperSub}/${props.pname}/Questions`).add({
+                const userRef = db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}/${props.pname}/Level 0${props.level}`).add({
                     ...file
                 }).then((res)=>{
                     qs++;
-                    console.log("yee",file)
+                    console.log("Question uploaded: ",file)
                     if(qs==numberQ){
                         setSaveQ(true)
                     }

@@ -1,69 +1,318 @@
 import React from 'react'
 import {Link,useLocation,useParams} from "react-router-dom";
+import firebase from 'firebase'
+import {connect} from 'react-redux'
 import '../../../styles/choiceSection.css'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Badge from '@material-ui/core/Badge';
+import CloseIcon from '@material-ui/icons/Close';
 import Question from './Question'
 import PaperInstruction from './PaperInstruction'
 import GeneralInstruction from './GeneralInstruction'
 import Timer from './Timer'
+import PaperSummary from './PaperSummary'
 
 
 
-export default function Paper(props) {
+
+export function Paper(props) {
     const location = useLocation();
     const [palleteSub,setPalleteSub]=React.useState(1);
+    const [palleteArray,setPalleteArray]=React.useState({phy:[],maths:[],chem:[]})
     const [questions,setQuestions]=React.useState([])
     const [index,setIndex]=React.useState(0)
     const [showGeneralInst,setShowGeneralInst]=React.useState(false);
     const [start,setStart]=React.useState(false)
-    
+    const [showSummary,setShowSummary]=React.useState(false)
+    const [timeOver,setTimeOver]=React.useState(false)
+
     React.useEffect(() => {
-        console.log("Here",location.state.questions)
-        setQuestions(location.state.questions)
+        setQuestions(props.paper.questions)
+        const a=[];
+        for(let i=0;i<(props.paper.noOfQuestions)/3;i++){
+            a.push(0)
+        }
+        const t={
+            maths:a,
+            chem:a,
+            phy:a
+        }
+        setPalleteArray(t);
     }, [])
 
+    //function to change subject if the user enters next subject using "Submit and next" button
+    React.useEffect(() => {
+        if(index==0||index==(props.paper.noOfQuestions/3)-1)
+            setPalleteSub(1)
+        else if(index==(props.paper.noOfQuestions)/3||index==(2*props.paper.noOfQuestions/3)-1)
+            setPalleteSub(2)
+        else if (index==(2*props.paper.noOfQuestions)/3||index==(props.paper.noOfQuestions-1))
+            setPalleteSub(3)
+    }, [index])
+
+    //Auto-submit on time over
+
+    React.useEffect(() => {
+        if(timeOver){
+            submitPaperFinal()
+        }
+    }, [timeOver])
+
+    const navigateQuestion=(ind)=>{
+        if(palleteSub==1){
+            setIndex(ind)
+        }
+        else if(palleteSub==2){
+            setIndex((props.paper.noOfQuestions/3)+ind)
+        }
+        else
+            setIndex((2*props.paper.noOfQuestions/3)+ind)
+    }
+
+    const submitPaperFinal=()=>{
+        const UserQuestionModel={
+            ...props.answers,
+            uid:props.paper.name,
+            attempted:true
+        }
+        const db = firebase.firestore();
+        const paperRef = db.collection("User").doc(props.paper.name)
+            .set(UserQuestionModel)
+            .then((res)=>{
+                let marks = 0;
+                let chemistryMarks = 0;
+                let physicsMarks = 0;
+                let mathsMarks = 0;
+                let totalAttempted = 0;
+                let totalCorrect = 0;
+                let physicsAttempted = 0;
+                let physicsCorrect = 0;
+                let chemistryAttempted = 0;
+                let chemistryCorrect = 0;
+                let mathsAttempted = 0;
+                let mathsCorrect = 0;
+                let physicsTags = {
+                    '1c': 0,
+                    '1a': 0,
+                    '0c': 0,
+                    '0a': 0,
+                    '2c': 0,
+                    '2a': 0,
+                    '3c': 0,
+                    '3a': 0,
+                    '4c': 0,
+                    '4a': 0,
+                };
+                let chemistryTags = {
+                    '1c': 0,
+                    '1a': 0,
+                    '0c': 0,
+                    '0a': 0,
+                    '2c': 0,
+                    '2a': 0,
+                    '3c': 0,
+                    '3a': 0,
+                    '4c': 0,
+                    '4a': 0,
+                    '5c': 0,
+                    '5a': 0,
+                };
+                let mathsTags = {
+                    '1c': 0,
+                    '1a': 0,
+                    '0c': 0,
+                    '0a': 0,
+                    '2c': 0,
+                    '2a': 0,
+                    '3c': 0,
+                    '3a': 0,
+                    '4c': 0,
+                    '4a': 0,
+                };
+                props.answers.map((item,i)=>{
+                    console.log(props.paper.questions[i])
+                    if(item.isAnswered){
+                        totalAttempted++;
+                        switch (props.paper.questions[i].subject) {
+                            case 1:
+                                physicsAttempted++;
+                                physicsTags[props.paper.questions[i].tag+'a']++;
+
+                                if(!item.isAnsweredWrong){
+                                    physicsCorrect++;
+                                    totalCorrect++;
+                                    physicsMarks+=props.paper.questions[i].marks;
+                                    marks+=props.paper.questions[i].marks;
+                                    physicsTags[props.paper.questions[i].tag+'c']++;
+                                }
+                                else{
+                                    physicsMarks-=props.paper.questions[i].negativeMarks;
+                                    marks-=props.paper.questions[i].negativeMarks;
+                                }
+                                break;
+                            case 2:
+                                chemistryAttempted++;
+                                chemistryTags[props.paper.questions[i].tag+'a']++;
+                                if(!item.isAnsweredWrong){
+                                    totalCorrect++;
+                                    chemistryCorrect++;
+                                    chemistryMarks+=props.paper.questions[i].marks;
+                                    marks+=props.paper.questions[i].marks;
+                                    chemistryTags[props.paper.questions[i].tag+'c']++;
+                                }
+                                else{
+                                    chemistryMarks-=props.paper.questions[i].negativeMarks;
+                                    marks-=props.paper.questions[i].negativeMarks;
+                                }
+                                break;
+                            case 3:
+                                mathsAttempted++;
+                                mathsTags[props.paper.questions[i].tag+'a']++;
+                                if(!item.isAnsweredWrong){
+                                    totalCorrect++;
+                                    mathsCorrect++;
+                                    mathsMarks+=props.paper.questions[i].marks;
+                                    marks+=props.paper.questions[i].marks;
+                                    mathsTags[props.paper.questions[i].tag+'c']++;
+                                }
+                                else{
+                                    mathsMarks-=props.paper.questions[i].negativeMarks;
+                                    marks-=props.paper.questions[i].negativeMarks;
+                                }
+                                break;
+                            default:
+                        }
+                    }
+                })
+                let Analysis={
+                    totalMarks: marks,
+                    totalAttempted: totalAttempted,
+                    totalCorrect: totalCorrect,
+
+                    ///tags
+                    physicsTags: physicsTags,
+                    chemistryTags: chemistryTags,
+                    mathsTags: mathsTags,
+
+                    ///physics
+                    physicsCorrect: physicsCorrect,
+                    physicsAttempted: physicsAttempted,
+                    physicsMarks: physicsMarks,
+
+                    ///chemistry
+                    chemistryCorrect: chemistryCorrect,
+                    chemistryAttempted: chemistryAttempted,
+                    chemistryMarks: chemistryMarks,
+
+                    ///maths
+                    mathsCorrect: mathsCorrect,
+                    mathsAttempted: mathsAttempted,
+                    mathsMarks: mathsMarks,
+                }
+
+                //Send leaderboard and Analysis to User model
+                db.collection("User").doc(props.paper.name).collection("Leaderboard").doc("Analysis")
+                .set({...Analysis})
+                .then((res)=>{
+                    window.alert("yo");
+                })
+                .catch((err)=>{
+                    console.log("Error saving Leaderboard Analysis",err)
+                })
+
+            }).catch((error)=>{
+                console.log("Error saving the document: ",error)
+            }) 
+    }
+
     return (
-        !start?
-        (
-            !showGeneralInst?
-            <>
-            <PaperInstruction setContinue={setShowGeneralInst} inst={location.state.instructions}/>
-            {/* <Timer duration={1}/> */}
-            </>
-            :<GeneralInstruction start={setStart}/>
-        )
-        :
+        // !start?
+        // //if start is false then display Marking scheme and General Instructions one by one
+        // (
+        //     !showGeneralInst?
+        //     <>
+        //     <PaperInstruction setContinue={setShowGeneralInst} inst={props.paper.instructions}/>
+        //     {/* <Timer duration={1}/> */}
+        //     </>
+        //     :<GeneralInstruction start={setStart}/>
+        // )
+        // :
+        //after start is set to true, display individual questions
         <>
-            <div>
-                <Timer duration={60} id="timer-bar"/>
-            </div>
+        <div className="timer-bar">
+                    <div>
+                        <div style={{marginRight:'10px'}}>Time Remaining: </div>
+                        <Timer duration={props.paper.totalDuration} timeOver={setTimeOver}/>
+                    </div>
+                    <CloseIcon id="close-paper" onClick={()=>setShowSummary(true)}/>
+                </div>
+      
+       { !showSummary?
+        
+                
             <Container fluid style={{ paddingLeft: 0, paddingRight: 0,marginLeft: 0, marginRight: 0}}>
                 <div  noGutters style={{marginLeft: 0, marginRight: 0, display:'flex'}} >
+
                         <div style={{width:'80%'}} >
-                            <Question key={index} question={questions[index]} number={questions[index]?questions[index].number:0} goToNextQuestion={()=>setIndex(index+1)}/>
+                            <Question key={index} 
+                                question={questions[index]}
+                                noOfQuestions={props.paper.noOfQuestions}
+                                number={questions[index]?questions[index].number:0}
+                                goToPrevQuestion={()=>setIndex(index-1)} 
+                                goToNextQuestion={()=>setIndex(index+1)}
+                                showSummary={()=>setShowSummary(true)}
+                            />
                         </div>
+
                         <div style={{width:'20%'}}>
-
                             <div className="ques-pallete">
-
                                 <div id="ques-pallete-sub">
-                                    <div className="subject-select" style={{background:palleteSub==1?'blue':'white'}} onClick={()=>setPalleteSub(1)}>Maths</div>
-                                    <div className="subject-select" style={{background:palleteSub==2?'blue':'white'}} onClick={()=>setPalleteSub(2)}>Chemistry</div>
-                                    <div className="subject-select" style={{background:palleteSub==3?'blue':'white'}} onClick={()=>setPalleteSub(3)}>Physics</div>
+                                    <div className="subject-select" style={{background:palleteSub==1?'#448698':'white',color:palleteSub==1?'white':'black'}} onClick={()=>setPalleteSub(1)}>Physics</div>
+                                    <div className="subject-select" style={{background:palleteSub==2?'#448698':'white',color:palleteSub==2?'white':'black'}} onClick={()=>setPalleteSub(2)}>Chemistry</div>
+                                    <div className="subject-select" style={{background:palleteSub==3?'#448698':'white',color:palleteSub==3?'white':'black'}} onClick={()=>setPalleteSub(3)}>Maths</div>
                                 </div>
-
-                                {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25].map((text, index) => ( 
-                                    <div className="page-no" onClick={()=>setIndex(index)}>
-                                        {index+1}
-                                    </div>
-                                ))}
+                                
+                                {
+                                    palleteSub==1?
+                                     palleteArray.phy.map((text, ind) => ( 
+                                            <div className="page-no" 
+                                                style={{background:props.answers[ind].isAnswered?(props.answers[ind].isBookmarked?'#ff9700':'#2AD586')
+                                                    :props.answers[ind].isBookmarked?'#3B95C2'
+                                                    :props.answers[ind].isSeen?'#FF1E1E':'white',
+                                                    border:index==ind?'1px solid black':null}} 
+                                                onClick={()=>navigateQuestion(ind)}>
+                                                {ind+1}
+                                            </div>
+                                        ))
+                                        :palleteSub==2?
+                                            palleteArray.phy.map((text, ind) => ( 
+                                                <div className="page-no" 
+                                                    style={{background:props.answers[(props.paper.noOfQuestions/3)+ind].isAnswered?(props.answers[(props.paper.noOfQuestions/3)+ind].isBookmarked?'#ff9700':'#2AD586')
+                                                        :props.answers[(props.paper.noOfQuestions/3)+ind].isBookmarked?'#3B95C2'
+                                                        :props.answers[(props.paper.noOfQuestions/3)+ind].isSeen?'#FF1E1E':'white',
+                                                        border:index==(props.paper.noOfQuestions/3)+ind?'1px solid black':null}} 
+                                                    onClick={()=>navigateQuestion(ind)}>
+                                                    {ind+1}
+                                                </div>
+                                            ))
+                                        :palleteArray.phy.map((text, ind) => ( 
+                                                <div className="page-no" 
+                                                    style={{background:props.answers[(2*props.paper.noOfQuestions/3)+ind].isAnswered?(props.answers[(2*props.paper.noOfQuestions/3)+ind].isBookmarked?'#ff9700':'#2AD586')
+                                                        :props.answers[(2*props.paper.noOfQuestions/3)+ind].isBookmarked?'#3B95C2'
+                                                        :props.answers[(2*props.paper.noOfQuestions/3)+ind].isSeen?'#FF1E1E':'white',
+                                                        border:index==(2*props.paper.noOfQuestions/3)+ind?'1px solid black':null}} 
+                                                    onClick={()=>navigateQuestion(ind)}>
+                                                    {ind+1}
+                                                </div>
+                                        ))
+                                }
+                                
 
                             <div style={{margin:'5px 20px',fontSize:'14px',fontWeight:'500',color:'#2B5594'}}>
                                     The Questions Palette displayed will show the status of each question using one of the following symbols :
-                                </div>
+                            </div>
                             <div>
                                     <div style={{display:'flex',alignItems:'center'}}>
                                         <div className="color-code-box" style={{background:'white'}}></div>
@@ -82,7 +331,7 @@ export default function Paper(props) {
                                         <div className="color-code-text">: Marked for Review</div>
                                     </div>
                                     <div style={{display:'flex',alignItems:'center'}}>
-                                        <div className="color-code-box" style={{background:'#3B95C2'}}></div>
+                                        <div className="color-code-box" style={{background:'#ff9700'}}></div>
                                         <div className="color-code-text">: Attempted and Marked Questions</div>
                                     </div>
                             </div>
@@ -90,6 +339,16 @@ export default function Paper(props) {
                         </div>
                 </div>
             </Container>
+            :<PaperSummary resume={setShowSummary} submit={submitPaperFinal} name={props.paper.name} answers={props.answers}/>}
         </>
     )
 }
+const mapStateToProps=(state)=>{
+    return{
+        paper:state.MockTestReducer.paper,
+        answers:state.MockTestReducer.answers,
+    }
+}
+
+
+export default connect(mapStateToProps)(Paper)

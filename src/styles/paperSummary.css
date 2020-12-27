@@ -1,0 +1,56 @@
+#paper-summary{
+    text-align:center;
+    margin:5%;
+}
+#paper-summary hr{
+    width:80%;
+    background:rgba(0,0,0,0.3);
+}
+#summary-name{
+    color:#3B95C2;
+    font-weight:600;
+    font-size:30px;
+}
+#time{
+    color:#EEBA12;
+    font-weight:600;
+    font-size:26px;
+    margin:3%;
+}
+#paper-summary-detail{
+    font-weight:550;
+    font-size:20px;
+    margin:5%;
+}
+#paper-summary-detail hr{
+    width:60%;
+    background:rgba(0,0,0,0.2);
+}
+.summary-detail{
+    display:flex;
+    justify-content:center;
+}
+.summary-detail-head{
+    width:200px;
+}
+.summary-detail-info{
+    width:100px;
+    text-align:center;
+}
+#summary-button button{
+    margin:0px 30px;
+    padding:5px;
+    width:150px;
+    border:none;
+    color:white;
+    border-radius:5px;
+    box-shadow: 0px 2px 3px 0 rgba(0,0,0,0.3);
+}
+#submit-button button:hover{
+    box-shadow: 0px 4px 5px 0 rgba(0,0,0,0.4);
+}
+#summary-button button:focus{
+    outline:none;
+    border:none;
+    box-shadow: 0px 0px 3px 0 rgba(0,0,0,0.3);
+}

@@ -23,6 +23,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
     minWidth: 200,
   },
+  smallTextField:{
+    marginLeft: theme.spacing(5),
+    marginRight: theme.spacing(2),
+    minWidth: 100,
+  }
 }));
 
 export default function PaperInfo(props) {
@@ -147,6 +152,18 @@ export default function PaperInfo(props) {
                                         <MenuItem value="1"> Physics</MenuItem>
                                         <MenuItem value="2"> Chemistry</MenuItem>
                                         <MenuItem value="3"> Mathematics</MenuItem>
+                                    </TextField>
+                                    <TextField
+                                      id="standard-select-currency"
+                                      select
+                                      label="Select"
+                                      value={subjectwiseClass}
+                                      onChange={(event) =>setSubjectwiseClass(event.target.value)}
+                                      helperText="Select Class"
+                                      className={classes.smallTextField}
+                                    >
+                                        <MenuItem value="11"> 11</MenuItem>
+                                        <MenuItem value="12"> 12</MenuItem>
                                     </TextField>
                                     <TextField
                                         id="standard-number"

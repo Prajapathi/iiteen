@@ -15,7 +15,7 @@ export default function MockTest() {
         setLoading(true)
 
         const db = firebase.firestore();
-        db.collection("Trash").get()
+        db.collection("MOCK").get()
         .then(function(querySnapshot) {
             let papers=[];
             setLoading(false)

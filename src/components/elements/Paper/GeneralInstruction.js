@@ -7,7 +7,7 @@ export default function GeneralInstruction(props) {
         {color:"#FF1E1E", data:"Visited Questions but not Answered"},
         {color:"#2AD586", data:"Attempted Questions"},
         {color:"#3B95C2", data:"Marked for review"},
-        {color:"#3B95C2", data:"Attempted and Marked Questions"},
+        {color:"#ff9700", data:"Attempted and Marked Questions"},
     ]
     const generalInst=[
         "Number pad can be accessed from left top corner.",

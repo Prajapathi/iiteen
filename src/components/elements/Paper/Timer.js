@@ -43,10 +43,13 @@ export default function Timer(props) {
     }, [counter])
 
     useEffect(() => {
-        
+        if(clear==true)
+            props.timeOver(true)
     }, [clear])
+    
     return (
         <div>
+        {Date()}
             {hours<10?"0"+hours:hours}:{mins<10?"0"+mins:mins}:{secs<10?"0"+secs:secs}
         </div>
     )

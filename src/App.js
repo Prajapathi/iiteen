@@ -10,12 +10,14 @@ import AddPaper from './adminPanel/AddPaper'
 import QuestionAdmin from './adminPanel/elements/Question'
 import RoutingAdmin from './adminPanel/Routing'
 import PaperInstruction from './components/elements/Paper/PaperInstruction'
+import PaperAnalysis from './components/elements/Paper/PaperAnalysis'
 import MockTest from './components/screens/sections/MockTest'
 
 function App() {
   let login=false;
   return (
     <>
+    {/* <PaperAnalysis/> */}
     <BrowserRouter>
     {login?
       <><Routing/></>
@@ -23,8 +25,8 @@ function App() {
     }
       {/* <Routing/>
       <RoutingAdmin/> */}
-    </BrowserRouter>
-     {/* <LeftMenu/>
+     </BrowserRouter> 
+      {/* 
      <PaperInstruction/> */}
     </>
   );

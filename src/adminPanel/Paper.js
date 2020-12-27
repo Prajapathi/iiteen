@@ -124,19 +124,23 @@ export default function Paper() {
         paperInfo.date=new Date(paperInfo.date)
 
         if(location.state.subjectwise==true){
-            let paperSub=subjectwiseSub==1?"Physics":subjectwiseSub==2?"Chemistry":"Maths"
-            const paperRef = db.collection(paperRoute).doc("SUBJECT").collection(paperSub).doc(pname).set({
-            ...paperInfo,instructionInfo
-            }).then((res)=>{
-                setLoading(false);
-                localStorage.setItem("noOfQuestions",numberQ)
-                localStorage.setItem("subject",subjectwiseSub)
-                setShowQuestion(true);
-                setRefid(res.id)//history.push('/Questions', { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType,paperRoute:paperRoute,paperRef:res.id})
-            }).catch((error)=>{
-                setLoading(false);
-                console.log("Error saving the document: ",error)
-            }) 
+            // let paperSub=subjectwiseSub==1?"Physics":subjectwiseSub==2?"Chemistry":"Maths"
+            // const paperRef = db.collection(paperRoute).doc("Class 11").collection(paperSub).doc("chapter").collection("Level 0").doc(pname).set({
+            // ...paperInfo,instructionInfo
+            // }).then((res)=>{
+            //     setLoading(false);
+            //     localStorage.setItem("noOfQuestions",numberQ)
+            //     localStorage.setItem("subject",subjectwiseSub)
+            //     setShowQuestion(true);
+            //     setRefid(res.id)//history.push('/Questions', { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType,paperRoute:paperRoute,paperRef:res.id})
+            // }).catch((error)=>{
+            //     setLoading(false);
+            //     console.log("Error saving the document: ",error)
+            // }) 
+            setLoading(false);
+            localStorage.setItem("noOfQuestions",numberQ)
+            setShowQuestion(true);
+            console.log("Subjectwise Paper Submitted")
         }
         else{
             const paperRef = db.collection(paperRoute).doc(pname).set({
@@ -276,7 +280,7 @@ export default function Paper() {
                             </button>
                         :null
                     }
-                </>:<Questions subjectwise={location.state.subjectwise}  sectionInfo={sections} paperType={location.state.paperType} paperRoute={paperRoute} pname={pSaveName} paperRef={refid}/>)
+                </>:<Questions subjectwise={location.state.subjectwise} subjectwiseClass={subjectwiseClass} level={paperInfo.level}  sectionInfo={sections} paperType={location.state.paperType} paperRoute={paperRoute} pname={pSaveName} paperRef={refid}/>)
             }
         </div>
     )

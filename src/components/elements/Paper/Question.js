@@ -36,12 +36,19 @@ export default function Question(props) {
     return (
         <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
             <Row noGutters  >
-                    <Col xs={5}>
-                    <h2>{props.question?props.question.number:"pop"}</h2>
-                        <QuestionSection data={question}/>
+                    <Col xs={6}>
+                        <QuestionSection number={props.number} data={question}/>
                     </Col>
-                    <Col xs={7}>
-                        {props.type=="subjectwise"?<SubjectwiseChoiceSection/>:<ChoiceSection goToNextQuestion={props.goToNextQuestion}/>} 
+                    <Col xs={6}>
+                        {props.type=="subjectwise"?<SubjectwiseChoiceSection/>:
+                            <ChoiceSection 
+                                data={props.question} 
+                                noOfQuestions={props.noOfQuestions} 
+                                number={props.number} 
+                                goToPrevQuestion={props.goToPrevQuestion} 
+                                goToNextQuestion={props.goToNextQuestion}
+                                showSummary={props.showSummary}
+                            />} 
                     </Col>
             </Row>
         </Container>

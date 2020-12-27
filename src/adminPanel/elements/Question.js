@@ -142,10 +142,10 @@ export default function QuestionInfo(props) {
         const newData={
             number:Number(number),
             subject:props.subjectwise==true?Number(props.subject):subject,
-            tag:Number(tag),
-            section:props.subjectwise==true?0:Number(section),
-            marks:props.subjectwise==true?0:Number(marks),
-            negativeMarks:props.subjectwise==true?0:Number(negative),
+            tag:props.subjectwise==true?null:Number(tag),
+            section:props.subjectwise==true?null:Number(section),
+            marks:props.subjectwise==true?null:Number(marks),
+            negativeMarks:props.subjectwise==true?null:Number(negative),
             question:question,
             option:option,
             answerType:Number(answerType),
@@ -197,7 +197,8 @@ export default function QuestionInfo(props) {
                         <MenuItem value="3"> Mathematics</MenuItem>
                     </TextField> */}
 
-                    {(subject==1||(props.subjectwise==true && props.subject==1))?
+                    {props.subjectwise==false?
+                    (subject==1)?
                     <TextField
                     id="standard-select-currency"
                     select
@@ -213,7 +214,7 @@ export default function QuestionInfo(props) {
                                 <MenuItem value="4"> Optics and Modern Phy</MenuItem>
                                 <MenuItem value="5"> Electrostatics and current electricity</MenuItem>
                     </TextField>
-                    :(subject==2||(props.subjectwise==true && props.subject==2)?
+                    :(subject==2)?
                     <TextField
                     id="standard-select-currency"
                     select
@@ -243,7 +244,7 @@ export default function QuestionInfo(props) {
                                 <MenuItem value="2"> Algebra</MenuItem>
                                 <MenuItem value="3"> Coordinate Geometry</MenuItem>
                                 <MenuItem value="4"> Vectors and 3D Geometry</MenuItem>
-                    </TextField>)
+                    </TextField>:null
                     }
 
                     {/* <TextField

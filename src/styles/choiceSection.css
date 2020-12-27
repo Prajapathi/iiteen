@@ -3,13 +3,19 @@
    
 }
 #choice-sec{
-    min-height:100vh;
+    min-height:93vh;
+    
+    border-left:1px solid gray;
 }
 
 #instruction-ques-box{
-    box-shadow:1px 1px 4px 1px gray;
+    box-shadow:1px 3px 4px 0px rgba(0,0,0,0.2);
     width:100%;
     margin:0px;
+    background:white;
+    color:black;
+    border:2px solid rgba(0,0,0,0.2);
+    border-radius:0px;
     padding:5px 10px;
     display:flex;
     align-items:center;
@@ -27,6 +33,7 @@
 }
 .heading{
     padding:4%;
+    padding-bottom:0%;
     font-size:22px;
     display:flex;
     align-items:center;
@@ -38,7 +45,7 @@
 
 .options{
     width:75%;
-    padding:10% 3% 4% 5%;
+    padding:8% 3% 0% 5%;
 }
 .option{
     word-wrap:break-word;
@@ -65,17 +72,42 @@
     box-shadow: 2px 3px 5px 0 rgba(0,0,0,0.2);
     border:2px solid green;
 }
+.num-input{
+    margin:50px;
+}
+.back-button{
+    margin-left:40px;
+    color:#A6A5A5;
+    cursor:pointer;
+}
+
+.back-button :hover{
+    color:black
+}
+.forward-button{
+    margin-right:40px;
+    color:#A6A5A5;
+    cursor:pointer;
+}
+
+.forward-button :hover{
+    color:black
+}
 .submit{
     margin:4%;
+    margin-bottom:0%;
     text-align:center;
-    width:350px;
+    width:450px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 .submit button{
     width:48%;
     color:white;
     border:0px solid gray;
     border-radius:4px;
-    margin:70px 3px;
+    margin:70px 30px;
     padding:1%;
 }
 .submit button:hover{
@@ -98,8 +130,19 @@
     padding:5%;
 }
 
-#timer-bar{
+.timer-bar{
     text-align:right;
-    padding:10px;
-    box-shadow:2px 3px 5px 0 rgba(0,0,0,0.2);
+    padding:10px 20px;
+    display:flex;
+    justify-content:space-between;
+    color:#448698;
+    font-weight:500;
+    font-size:20px;
+    box-shadow:2px 3px 2px 0 rgba(0,0,0,0.2);
+}
+.timer-bar div{
+    display:flex;
+}
+#close-paper{
+    cursor:pointer;
 }

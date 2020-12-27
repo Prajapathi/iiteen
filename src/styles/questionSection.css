@@ -1,13 +1,16 @@
 
 .question-sec{
     height:100%;
-    border-right:1px solid gray;
 }
 #question-no{
    padding:5%;
 }
+#ques-img-sec{
+    width:90%;
+    margin:5%;
+}
 #question-text{
-    width:60%;
+    width:90%;
     margin:auto;
     margin-top:20%;
 }
