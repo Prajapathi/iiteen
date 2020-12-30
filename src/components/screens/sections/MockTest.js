@@ -45,7 +45,7 @@ export default function MockTest() {
                 {/* rendering each paper in a card and passing the paper info to the individual card */}
                 {
                     mockTestPapers.map((item) =>
-                            <div style={{margin:'20px'}}><MockTestCard  paper={item}/></div>
+                            <div style={{margin:'20px'}}><MockTestCard  paper={item} setLoading={setLoading}/></div>
                         )}
                 </div>
             </div>

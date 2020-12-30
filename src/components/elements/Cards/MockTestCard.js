@@ -8,23 +8,28 @@ import '../../../styles/MockTestCard.css'
 export function MockTestCard(props) {
     let history = useHistory()
 
-    //put this is redux
+    //fetch paper and put it into redux store
     const getPaper=()=>{
         const db = firebase.firestore();
+        props.setLoading(true)
         db.collection("MOCK").doc(props.paper.name).collection("Questions").get()
         .then(function(querySnapshot) {
             let questions=[];
-            
             querySnapshot.forEach(function(doc) {
                 console.log(doc.id, " => ", doc.data());
                 questions.push({...doc.data(),qid:doc.id})
             });
+
             console.log(questions)
+            //sort questions based on number
             questions.sort(function(a,b){return a.number-b.number});
+
             const obj={...props.paper, questions:questions}
-            props.fetchPaper(
-                obj
-            )
+            //put into redux store
+            props.fetchPaper(obj)
+            //to check if user is navigating through MockTestCard
+            localStorage.setItem("PaperName",props.paper.name)
+            props.setLoading(false)
             history.push("MockTest/Papers/"+props.paper.name)
         })
         .catch(function(error) {

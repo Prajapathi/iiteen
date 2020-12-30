@@ -9,10 +9,9 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Toast from 'react-bootstrap/Toast'
 import Button from 'react-bootstrap/Button'
-import Dropdown from 'react-bootstrap/Dropdown'
-import Badge from '@material-ui/core/Badge';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
-import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
@@ -22,7 +21,7 @@ export function ChoiceSection(props) {
     const [answer,setAnswer]=React.useState('')
     const [selectOpt,setSelectOpt]=React.useState([false,false,false,false])
     const [show, setShow] = useState(false);
-
+    const [showInstruction,setShowInstruction]=useState(false)
     useEffect(() => {
         //set isSeen true when the component mounts and recieves the value of props.number
         if(props.number==null)
@@ -125,15 +124,17 @@ export function ChoiceSection(props) {
         <Container style={{ paddingLeft: 0, paddingRight: 0 }}>
             <Row noGutters >
                 <Col id="choice-sec">
-                    
-                        <Dropdown style={{width:'100%'}}>
-                            <Dropdown.Toggle id="instruction-ques-box">
+                        <div>
+                            <div id="instruction-ques-box" onClick={()=>setShowInstruction(!showInstruction)}>
                                 Instructions
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu style={{background:'red',minWidth:'100%',padding:'30px'}}>
-                                Action and reaction yo yo boy.
-                            </Dropdown.Menu>
-                        </Dropdown>
+                                {
+                                    showInstruction?<ArrowDropUpIcon/>:<ArrowDropDownIcon/>
+                                }
+                            </div>
+                            <div style={{opacity:showInstruction?1:0}} id="instruction-detail">
+                                    this is the instruction
+                            </div>
+                        </div>
                         
 
                      <div className="heading">

@@ -20,7 +20,7 @@
 }
 .report-card-heading{
     background:#46889A;
-    padding:3px 60px;
+    padding:3px 10%;
     font-size:1.2rem;
     margin-bottom:20px;
     color:white;
@@ -32,7 +32,7 @@
     background:#F2EFEF;
     color:#46889A;
     margin:10px 0px;
-    padding:5px 2% 5px 1%;
+    padding:5px 15% 5px 10%;
     display:flex;
     flex-wrap:wrap;
     justify-content:space-between;
@@ -40,11 +40,11 @@
 
 
 .analysis-section{
-    width:90%;
+    width:80%;
     display:flex;
     border-radius:10px;
     box-shadow:0px 2px 5px 1px rgba(0,0,0,0.2);
-    margin:20px 5%;
+    margin:2% 10%;
     color:#448498;
 }
 #marks-analysis{
@@ -58,18 +58,22 @@
     width:20%;
     background:#F2EFEF;
     font-size:16px;
-    padding:5% 0px;
+    padding:5%;
     text-align:center;
 }
 #legend div{
+    width:90%;
     display:flex;
     align-items:center;
-    margin:5px 15px;
+    padding:2%;
 }
 .legend-circle{
     min-width:15px;
+    max-width:15px;
     min-height:15px;
+    max-height:15px;
     border-radius:50%;
+    margin-right:5px;
     border:1px solid #929292;
 }
 #time-analysis{
@@ -81,11 +85,25 @@
 .analysis-sub-section{
     display:flex;
     justify-content:space-between;
-    font-size:18px;
-    margin:5% 20px;
+    text-align:left;
+    font-size:1.1rem;
+    margin:5%;
+    margin-left:10px;
 }
-
-
+#analysis-chart-legend{
+    margin:5% 3%;
+}
+#analysis-chart{
+    width:60%;
+    text-align:center;
+    margin:auto;
+}
+@media(max-width:1080px){
+    .analysis-section{
+        width:90%;
+        margin:3% 5%;
+    }
+}
 @media(max-width:930px){
     .report-card{
         width:45%;
@@ -94,6 +112,9 @@
     .analysis-section{
         width:95%;
         margin:2.5%;
+    }
+    .analysis-sub-section{
+        font-size:0.9rem;
     }
 }
 
@@ -106,7 +127,14 @@
     }
     .analysis-section{
         display:block;
+        padding:2.5% 0%;
     }
+    .analysis-sub-section{
+        font-size:1rem;
+    }
+    #analysis-chart{
+        margin:0px;
+    }   
     #marks-analysis{
         width:100%;
     }
@@ -118,6 +146,7 @@
     }
     #legend div{
         margin:5px;
+        justify-content:center;
     }
     #time-analysis{
         width:100%;
@@ -127,4 +156,7 @@
     .report-card{
         width:80%;
     }
+    #analysis-chart{
+        margin:auto;
+    } 
 }

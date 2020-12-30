@@ -39,6 +39,9 @@ export default function Timer(props) {
             }
             setCounter(counter-1)
         }, 1000)
+        // if(props.set==true){
+        //     props.setTimerProp({mins:mins,secs:secs,hours:hours,counter:counter})
+        // }
         return () => clearInterval(IntervalId);
     }, [counter])
 
@@ -49,7 +52,9 @@ export default function Timer(props) {
     
     return (
         <div>
-        {Date()}
+        {/* {Math.floor(props.duration/60)-Math.floor(Math.floor((Math.floor(new Date().getTime()/1000) - Math.floor(localStorage.getItem("time")/1000))/3600))}:
+        {Math.floor(props.duration%60)-(Math.floor((Math.floor(Math.floor(new Date().getTime()/1000) - Math.floor(localStorage.getItem("time")/1000)))/60)%60)}:
+        {59-((Math.floor(new Date().getTime()/1000) - Math.floor(localStorage.getItem("time")/1000))%60)} */}
             {hours<10?"0"+hours:hours}:{mins<10?"0"+mins:mins}:{secs<10?"0"+secs:secs}
         </div>
     )

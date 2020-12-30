@@ -1,4 +1,5 @@
 import React,{useState,useEffect} from 'react'
+import Timer from './Timer'
 import '../../../styles/paperSummary.css'
 
 export default function PaperSummary(props) {
@@ -25,7 +26,7 @@ export default function PaperSummary(props) {
         <div id="paper-summary">
             <div id="summary-name">{props.name}</div>
             <hr/>
-            <div id="time">Time Remaining:</div>
+            {/* <div id="time">Time Remaining: <Timer duration={150} /></div> */}
             <div id="paper-summary-detail">
                 <div className="summary-detail">
                     <div className="summary-detail-head">

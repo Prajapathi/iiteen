@@ -1,5 +1,5 @@
 import React from 'react'
-import {Link,useLocation,useParams} from "react-router-dom";
+import {Link,useLocation,useHistory} from "react-router-dom";
 import firebase from 'firebase'
 import {connect} from 'react-redux'
 import '../../../styles/choiceSection.css'
@@ -19,6 +19,7 @@ import PaperSummary from './PaperSummary'
 
 export function Paper(props) {
     const location = useLocation();
+    const history= useHistory();
     const [palleteSub,setPalleteSub]=React.useState(1);
     const [palleteArray,setPalleteArray]=React.useState({phy:[],maths:[],chem:[]})
     const [questions,setQuestions]=React.useState([])
@@ -29,6 +30,13 @@ export function Paper(props) {
     const [timeOver,setTimeOver]=React.useState(false)
 
     React.useEffect(() => {
+        //if user is not navigating through MockTestCard then redirect to home
+        let verifyPaper=localStorage.getItem("PaperName")
+        if(verifyPaper==null|| verifyPaper!=props.paper.name){
+            history.push('/')
+        }
+        localStorage.removeItem("PaperName")
+
         setQuestions(props.paper.questions)
         const a=[];
         for(let i=0;i<(props.paper.noOfQuestions)/3;i++){
@@ -52,8 +60,8 @@ export function Paper(props) {
             setPalleteSub(3)
     }, [index])
 
-    //Auto-submit on time over
 
+    //Auto-submit on time over
     React.useEffect(() => {
         if(timeOver){
             submitPaperFinal()
@@ -217,6 +225,7 @@ export function Paper(props) {
                 .set({...Analysis})
                 .then((res)=>{
                     window.alert("yo");
+                    history.push({pathname:"Analysis/"+props.paper.name})
                 })
                 .catch((err)=>{
                     console.log("Error saving Leaderboard Analysis",err)
@@ -241,12 +250,15 @@ export function Paper(props) {
         // :
         //after start is set to true, display individual questions
         <>
-        <div className="timer-bar">
+                <div className="timer-bar" style={{justifyContent:showSummary?"center":"space-between"}}>
                     <div>
                         <div style={{marginRight:'10px'}}>Time Remaining: </div>
-                        <Timer duration={props.paper.totalDuration} timeOver={setTimeOver}/>
+                        <Timer duration={1} timeOver={setTimeOver}/>
                     </div>
-                    <CloseIcon id="close-paper" onClick={()=>setShowSummary(true)}/>
+                    {showSummary?
+                        null:
+                        <CloseIcon id="close-paper" onClick={()=>setShowSummary(true)}/>
+                    }
                 </div>
       
        { !showSummary?

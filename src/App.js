@@ -11,6 +11,7 @@ import QuestionAdmin from './adminPanel/elements/Question'
 import RoutingAdmin from './adminPanel/Routing'
 import PaperInstruction from './components/elements/Paper/PaperInstruction'
 import PaperAnalysis from './components/elements/Paper/PaperAnalysis'
+import Timer from './components/elements/Paper/Timer'
 import MockTest from './components/screens/sections/MockTest'
 
 function App() {
@@ -18,8 +19,9 @@ function App() {
   return (
     <>
     {/* <PaperAnalysis/> */}
+    {/* <Timer duration={150}/> */}
     <BrowserRouter>
-    {login?
+     {login?
       <><Routing/></>
       :<RoutingAdmin/>
     }
