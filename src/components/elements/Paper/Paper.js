@@ -221,7 +221,7 @@ export function Paper(props) {
                 }
 
                 //Send leaderboard and Analysis to User model
-                db.collection("User").doc(props.paper.name).collection("Leaderboard").doc("Analysis")
+                db.collection("User").doc(props.paper.name).collection("LeaderBoard").doc("Analysis")
                 .set({...Analysis})
                 .then((res)=>{
                     window.alert("yo");

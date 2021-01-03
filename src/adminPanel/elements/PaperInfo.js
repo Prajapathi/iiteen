@@ -62,11 +62,11 @@ export default function PaperInfo(props) {
     useEffect(() => {
         let data={
           name:name,
-          date:props.subjectiwise==true?null:date,
-          paperType:props.subjectiwise==true?null:Number(typeValue=="Mains"?1:2),
-          totalMarks:props.subjectiwise==true?null:marks==''?0:Number(marks),
-          noOfQuestions:props.subjectiwise==true?25:Number(noOfQuestions),
-          totalDuration:props.subjectiwise==true?null:duration==''?0:Number(duration),
+          date:props.subjectwise==true?null:date,
+          paperType:props.subjectwise==true?null:Number(typeValue=="Mains"?1:2),
+          totalMarks:props.subjectwise==true?null:marks==''?0:Number(marks),
+          noOfQuestions:props.subjectwise==true?25:Number(noOfQuestions),
+          totalDuration:props.subjectwise==true?null:duration==''?0:Number(duration),
           level:level!=''?Number(level):(props.subjectwise==true?'':null)
         }
         setData(data);
@@ -176,19 +176,18 @@ export default function PaperInfo(props) {
                                                 value={name}
                                                 onChange={(event) =>setName(event.target.value)}
                                             >
-                                                <MenuItem value="Chapter 01">Basic Mathematics in physics</MenuItem>
-                                                <MenuItem value="Chapter 02">Vectors, Units, Dimensions and Measurements</MenuItem>
-                                                <MenuItem value="Chapter 03">Kinematics</MenuItem>
-                                                <MenuItem value="Chapter 04">Laws of Motions and Friction</MenuItem>
-                                                <MenuItem value="Chapter 05">Work, Energy and Power</MenuItem>
-                                                <MenuItem value="Chapter 06">Centre of mass and collisions</MenuItem>
-                                                <MenuItem value="Chapter 07">Rotational Motion</MenuItem>
-                                                <MenuItem value="Chapter 08">Thermal Physics</MenuItem>
-                                                <MenuItem value="Chapter 09">Gravitation</MenuItem>
-                                                <MenuItem value="Chapter 10">Properties of matter</MenuItem>
-                                                <MenuItem value="Chapter 11">Fluid Mechanics</MenuItem>
-                                                <MenuItem value="Chapter 12">Simple Harmonic Motion</MenuItem>
-                                                <MenuItem value="Chapter 13">Waves (String and Sound waves)</MenuItem>
+                                                <MenuItem value="Chapter 01">Basic Mathematics in physics, Vectors, Units, Dimensions and Measurements</MenuItem>
+                                                <MenuItem value="Chapter 02">Kinematics</MenuItem>
+                                                <MenuItem value="Chapter 03">Laws of Motions and Friction</MenuItem>
+                                                <MenuItem value="Chapter 04">Work, Energy and Power</MenuItem>
+                                                <MenuItem value="Chapter 05">Centre of mass and collisions</MenuItem>
+                                                <MenuItem value="Chapter 06">Rotational Motion</MenuItem>
+                                                <MenuItem value="Chapter 07">Thermal Physics</MenuItem>
+                                                <MenuItem value="Chapter 08">Gravitation</MenuItem>
+                                                <MenuItem value="Chapter 09">Properties of matter</MenuItem>
+                                                <MenuItem value="Chapter 10">Fluid Mechanics</MenuItem>
+                                                <MenuItem value="Chapter 11">Simple Harmonic Motion</MenuItem>
+                                                <MenuItem value="Chapter 12">Waves (String and Sound waves)</MenuItem>
                                             </TextField>
                                           :subjectwiseSubject==2?
                                               <TextField
@@ -199,22 +198,22 @@ export default function PaperInfo(props) {
                                                   value={name}
                                                   onChange={(event) =>setName(event.target.value)}
                                               >
-                                                  <MenuItem value="Chapter 01">Mole concept</MenuItem>
+                                                  <MenuItem value="Chapter 01">Some Basic Concepts of Chemistry</MenuItem>
                                                   <MenuItem value="Chapter 02">Atomic Structure</MenuItem>
-                                                  <MenuItem value="Chapter 03">Periodic properties</MenuItem>
-                                                  <MenuItem value="Chapter 04">Basic nomenclature</MenuItem>
-                                                  <MenuItem value="Chapter 05">Chemical Bonding</MenuItem>
-                                                  <MenuItem value="Chapter 06">Redox and equivalent concept</MenuItem>
-                                                  <MenuItem value="Chapter 07">chemical Equilibrium</MenuItem>
-                                                  <MenuItem value="Chapter 08">Organic nomenclature</MenuItem>
-                                                  <MenuItem value="Chapter 09">Basic principles of practical Organic chem</MenuItem>
-                                                  <MenuItem value="Chapter 10">Ionic equilibrium</MenuItem>
-                                                  <MenuItem value="Chapter 11">s-block elements</MenuItem>
-                                                  <MenuItem value="Chapter 12">GOC</MenuItem>
-                                                  <MenuItem value="Chapter 13">Isomerism</MenuItem>
-                                                  <MenuItem value="Chapter 14">Alkanes, Alkenes and Alkynes</MenuItem>
-                                                  <MenuItem value="Chapter 15">Chemical Thermodynamics</MenuItem>
-                                                  <MenuItem value="Chapter 16">Aromatic Hydrocarbon</MenuItem>
+                                                  <MenuItem value="Chapter 03">State of matter</MenuItem>
+                                                  <MenuItem value="Chapter 04">Chemical Thermodynamics</MenuItem>
+                                                  <MenuItem value="Chapter 05">Chemical Equilibrium</MenuItem>
+                                                  <MenuItem value="Chapter 06">Ionic Equilibrium</MenuItem>
+                                                  <MenuItem value="Chapter 07">Redox Reactions</MenuItem>
+                                                  <MenuItem value="Chapter 08">Classification of Elements and Periodicity of Properties</MenuItem>
+                                                  <MenuItem value="Chapter 09">Chemical Bonding and Molecular Structure</MenuItem>
+                                                  <MenuItem value="Chapter 10">Hydrogen</MenuItem>
+                                                  <MenuItem value="Chapter 11">s-block Elements</MenuItem>
+                                                  <MenuItem value="Chapter 12">p-block elements (Group 13 and 14)</MenuItem>
+                                                  <MenuItem value="Chapter 13">Some Basic Principles of Organic Chemistry</MenuItem>
+                                                  <MenuItem value="Chapter 14">Isomerism in Organic Compounds</MenuItem>
+                                                  <MenuItem value="Chapter 15">Classification, Purification and Nomenclature of Organic Compounds</MenuItem>
+                                                  <MenuItem value="Chapter 16">Hydrocarbons</MenuItem>
                                                   <MenuItem value="Chapter 17">Environmental Chemistry</MenuItem>
                                               </TextField>
                                           :
@@ -226,21 +225,27 @@ export default function PaperInfo(props) {
                                                   value={name}
                                                   onChange={(event) =>setName(event.target.value)}
                                               >
-                                                  <MenuItem value="Chapter 01">Logarithms, Trignometric Ratios and identities</MenuItem>
-                                                  <MenuItem value="Chapter 02">Quadratic equations and linear inequalities</MenuItem>
-                                                  <MenuItem value="Chapter 03">Trignometric equations</MenuItem>
-                                                  <MenuItem value="Chapter 04">Height and distance</MenuItem>
-                                                  <MenuItem value="Chapter 05">Point and straight line</MenuItem>
-                                                  <MenuItem value="Chapter 06">Circle</MenuItem>
-                                                  <MenuItem value="Chapter 07">Sequence and series</MenuItem>
-                                                  <MenuItem value="Chapter 08">Permutations and combination</MenuItem>
-                                                  <MenuItem value="Chapter 09">Binomial Theorem</MenuItem>
-                                                  <MenuItem value="Chapter 10">Principles of mathematical induction</MenuItem>
-                                                  <MenuItem value="Chapter 11">Parabola, Ellipse and hyperbola</MenuItem>
-                                                  <MenuItem value="Chapter 12">Functions, limits and derivatives</MenuItem>
-                                                  <MenuItem value="Chapter 13">3-D geometry</MenuItem>
-                                                  <MenuItem value="Chapter 14">Probability</MenuItem>
-                                                  <MenuItem value="Chapter 15">Sets, realtions, statistics and mathematical reasoning</MenuItem>
+                                                  <MenuItem value="Chapter 01">Sets</MenuItem>
+                                                  <MenuItem value="Chapter 02">Fundamentals of Relations and Functions</MenuItem>
+                                                  <MenuItem value="Chapter 03">Sequence and Series</MenuItem>
+                                                  <MenuItem value="Chapter 04">Complex Numbers</MenuItem>
+                                                  <MenuItem value="Chapter 05">Inequalities and Quadratic Equation</MenuItem>
+                                                  <MenuItem value="Chapter 06">Permutation and Combination</MenuItem>
+                                                  <MenuItem value="Chapter 07">Mathematical Reasoning</MenuItem>
+                                                  <MenuItem value="Chapter 08">Binomial Theorem</MenuItem>
+                                                  <MenuItem value="Chapter 09">Trignometric Functions and Equations</MenuItem>
+                                                  <MenuItem value="Chapter 10">Properties of Triangles, Heights and Distances</MenuItem>
+                                                  <MenuItem value="Chapter 11">Cartesian System of Rectangular Coordinates</MenuItem>
+                                                  <MenuItem value="Chapter 12">Straight line and pair of straight lines</MenuItem>
+                                                  <MenuItem value="Chapter 13">Circle</MenuItem>
+                                                  <MenuItem value="Chapter 14">Parabola</MenuItem>
+                                                  <MenuItem value="Chapter 15">Ellipse</MenuItem>
+                                                  <MenuItem value="Chapter 16">Hyperbola</MenuItem>
+                                                  <MenuItem value="Chapter 17">Introduction to 3-D Geometry</MenuItem>
+                                                  <MenuItem value="Chapter 18">Introduction to Limits and Derivatives</MenuItem>
+                                                  <MenuItem value="Chapter 19">Mathematical Reasoning</MenuItem>
+                                                  <MenuItem value="Chapter 20">Statistics</MenuItem>
+                                                  <MenuItem value="Chapter 21">Fundamentals of Probability</MenuItem>
                                               </TextField>
                                           
                                         :
@@ -277,29 +282,22 @@ export default function PaperInfo(props) {
                                                   value={name}
                                                   onChange={(event) =>setName(event.target.value)}
                                               >
-                                                  <MenuItem value="Chapter 01">Basic principles of organic chemistry</MenuItem>
-                                                  <MenuItem value="Chapter 02">Chemical Thermodynamics and thermochem</MenuItem>
-                                                  <MenuItem value="Chapter 03">GOC</MenuItem>
-                                                  <MenuItem value="Chapter 04">Solid state</MenuItem>
-                                                  <MenuItem value="Chapter 05">Chemical Kinetics</MenuItem>
-                                                  <MenuItem value="Chapter 06">State of matter</MenuItem>
-                                                  <MenuItem value="Chapter 07">Redox and equivalent concept</MenuItem>
-                                                  <MenuItem value="Chapter 08">Nuclear chemistry</MenuItem>
-                                                  <MenuItem value="Chapter 09">Co-ordination compound</MenuItem>
-                                                  <MenuItem value="Chapter 10">Haloalkane</MenuItem>
-                                                  <MenuItem value="Chapter 11">Aryl Halide(Substitution and Elimination)</MenuItem>
-                                                  <MenuItem value="Chapter 12">Electrochemistry</MenuItem>
-                                                  <MenuItem value="Chapter 13">Solution</MenuItem>
-                                                  <MenuItem value="Chapter 14">Ores and Metallurgy</MenuItem>
-                                                  <MenuItem value="Chapter 15">Organic Compounds containing oxygen and nitrogen</MenuItem>
-                                                  <MenuItem value="Chapter 16">Qualitative Analysis</MenuItem>
-                                                  <MenuItem value="Chapter 17">Biomolecules</MenuItem>
-                                                  <MenuItem value="Chapter 18">Polymer</MenuItem>
-                                                  <MenuItem value="Chapter 19">Practical Organic Chemistry</MenuItem>
-                                                  <MenuItem value="Chapter 20">Chemistry in everyday life</MenuItem>
-                                                  <MenuItem value="Chapter 21">Surface Chemistry</MenuItem>
-                                                  <MenuItem value="Chapter 22">d and f block elements</MenuItem>
-                                                  <MenuItem value="Chapter 23">p-block</MenuItem>
+                                                  <MenuItem value="Chapter 01">Solid state</MenuItem>
+                                                  <MenuItem value="Chapter 02">Solutions</MenuItem>
+                                                  <MenuItem value="Chapter 03">Electrochemistry</MenuItem>
+                                                  <MenuItem value="Chapter 04">Chemical Kinetics</MenuItem>
+                                                  <MenuItem value="Chapter 05">Nuclear Chemistry</MenuItem>
+                                                  <MenuItem value="Chapter 06">Surface Chemistry</MenuItem>
+                                                  <MenuItem value="Chapter 07">General Principles and Processes of Isolation of Elements</MenuItem>
+                                                  <MenuItem value="Chapter 08">p-block Elements (Group 15,16,17,18)</MenuItem>
+                                                  <MenuItem value="Chapter 09">d- and f-block elements</MenuItem>
+                                                  <MenuItem value="Chapter 10">Coordinate Compounds</MenuItem>
+                                                  <MenuItem value="Chapter 11">Organic Compounds containing Halogens</MenuItem>
+                                                  <MenuItem value="Chapter 12">Alcohols, Phenols and Ethers</MenuItem>
+                                                  <MenuItem value="Chapter 13">Aldehydes, Ketones and Carboxylic Acids</MenuItem>
+                                                  <MenuItem value="Chapter 14">Organic Compounds Containing Nitrogen</MenuItem>
+                                                  <MenuItem value="Chapter 15">Biomolecules, Polymers and Chemistry in Everyday Life</MenuItem>
+                                                  <MenuItem value="Chapter 16">Principles related to Practical Chemistry</MenuItem>
                                               </TextField>
                                           :
                                               <TextField
@@ -310,18 +308,22 @@ export default function PaperInfo(props) {
                                                   value={name}
                                                   onChange={(event) =>setName(event.target.value)}
                                               >
-                                                  <MenuItem value="Chapter 01">Matrcies and Determinants</MenuItem>
-                                                  <MenuItem value="Chapter 02">Functions and Inverse Trignometric Function</MenuItem>
-                                                  <MenuItem value="Chapter 03">Differential Calculus</MenuItem>
-                                                  <MenuItem value="Chapter 04">Indefinite Integration</MenuItem>
-                                                  <MenuItem value="Chapter 05">Definite Integration</MenuItem>
-                                                  <MenuItem value="Chapter 06">Application of derivatives</MenuItem>
-                                                  <MenuItem value="Chapter 07">Vectors</MenuItem>
-                                                  <MenuItem value="Chapter 08">Three Dimensional Geometry</MenuItem>
-                                                  <MenuItem value="Chapter 09">Parabola, Ellipse and Hyperbola</MenuItem>
-                                                  <MenuItem value="Chapter 10">Area under the curve</MenuItem>
-                                                  <MenuItem value="Chapter 11">Differential Equations</MenuItem>
-                                                  <MenuItem value="Chapter 12">Probability</MenuItem>
+                                                  <MenuItem value="Chapter 01">Matrix</MenuItem>
+                                                  <MenuItem value="Chapter 02">Determinants</MenuItem>
+                                                  <MenuItem value="Chapter 03">Relations and Functions</MenuItem>
+                                                  <MenuItem value="Chapter 04">Inverse Trignometric Functions</MenuItem>
+                                                  <MenuItem value="Chapter 05">Continuity</MenuItem>
+                                                  <MenuItem value="Chapter 06">Differentiation</MenuItem>
+                                                  <MenuItem value="Chapter 07">Application of Derivatives</MenuItem>
+                                                  <MenuItem value="Chapter 08">Maxima and Minima</MenuItem>
+                                                  <MenuItem value="Chapter 09">Indefinite Integrals</MenuItem>
+                                                  <MenuItem value="Chapter 10">Definite Integrals</MenuItem>
+                                                  <MenuItem value="Chapter 11">Area bounded by Curves</MenuItem>
+                                                  <MenuItem value="Chapter 12">Differential Equations</MenuItem>
+                                                  <MenuItem value="Chapter 13">Vector Algebra</MenuItem>
+                                                  <MenuItem value="Chapter 14">Three Dimensional Geometry</MenuItem>
+                                                  <MenuItem value="Chapter 15">Linear Programming</MenuItem>
+                                                  <MenuItem value="Chapter 16">Advanced Probability</MenuItem>
                                               </TextField>
                                         )
                                      }

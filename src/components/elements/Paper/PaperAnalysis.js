@@ -6,26 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import '../../../styles/paperAnalysis.css'
 
 
-const dataPie = {
-    labels: ['Physics', 'Chemistry', 'Maths'],
-    datasets: [
-    {
-      label: '# of Votes',
-      data: [40, 50, 10],
-      backgroundColor: [
-        '#448498',
-        '#FF4A4F',
-        '#2AD586',
-      ],
-      borderColor: [
-        'rgba(0, 0, 0, 0.1)',
-        'rgba(0, 0, 0, 0.1)',
-        'rgba(0, 0, 0, 0.1)',
-      ],
-      borderWidth: 1,
-    },
-  ],
-}
+
 
 export default function PaperAnalysis(props) {
 
@@ -38,9 +19,51 @@ export default function PaperAnalysis(props) {
     const [data,setData]=useState([])
     const [paperInfo,setPaperInfo]=useState([])
 
+    const [percent, setPercent] = useState({physics:0,chemistry:0,maths:0})
+
+    const marksDataChart = {
+        labels: ['Physics', 'Chemistry', 'Maths'],
+        datasets: [
+            {
+            data: [percent.physics,percent.chemistry,percent.maths],
+            backgroundColor: [
+                '#448498',
+                '#FF4A4F',
+                '#2AD586',
+            ],
+            borderColor: [
+                'rgba(0, 0, 0, 0.1)',
+                'rgba(0, 0, 0, 0.1)',
+                'rgba(0, 0, 0, 0.1)',
+            ],
+            borderWidth: 1,
+            },
+        ],
+    }
+     const quesDataChart = {
+        labels: ['Correct', 'Wrong'],
+        datasets: [
+        {
+        data: data?(data.totalAttempted==0?[0,0]:[data.totalCorrect/data.totalAttempted,1-(data.totalCorrect/data.totalAttempted)]):[],
+            backgroundColor: [
+                '#2AD586',
+                '#FF4A4F',
+            ],
+            borderColor: [
+                'rgba(0, 0, 0, 0.1)',
+                'rgba(0, 0, 0, 0.1)',
+                'rgba(0, 0, 0, 0.1)',
+            ],
+            borderWidth: 1,
+            },
+        ],
+    }
+    
+    //data fetching
     React.useEffect(() => {
         const db = firebase.firestore();
-        db.collection("User").doc(paperName).collection("Leaderboard").doc("Analysis").get()
+        console.log("ppp",paperName)
+        db.collection("User").doc(paperName).collection("LeaderBoard").doc("Analysis").get()
             .then(function(querySnapshot) {
                 console.log("here's the analysis:",querySnapshot.data())
                 setData(querySnapshot.data());
@@ -52,7 +75,7 @@ export default function PaperAnalysis(props) {
             .catch(function(error) {
                 console.log("Error getting documents: ", error);
             });
-        let paperTypeRoute=paperType=="MockTest"?"MOCK":"User"
+        let paperTypeRoute=paperType=="MockTest"?"MOCK":"Undefined"
         db.collection(paperTypeRoute).doc(paperName).get()
             .then(function(querySnapshot) {
                 console.log("here's the paper:",querySnapshot.data())
@@ -68,6 +91,26 @@ export default function PaperAnalysis(props) {
                 console.log("Error getting documents: ", error);
             });
         }, [])
+
+    //Data calculation for pie chart after fetching
+    React.useEffect(() => {
+        //setting % marks
+        let total=Math.abs(data.mathsMarks)+Math.abs(data.chemistryMarks)+Math.abs(data.physicsMarks);
+        let p=0,c=0,m=0;
+        if(data.totalMarks!==0){
+            if(data.physicsMarks!==0){
+                p=(data.physicsMarks/data.totalMarks)
+            }
+            if(data.chemistryMarks!==0){
+                c=(data.chemistryMarks/data.totalMarks)
+            }
+            if(data.mathsMarks!==0){
+                m=(data.mathsMarks/data.totalMarks)
+            }
+        }
+        setPercent({physics:p,chemistry:c,maths:m})
+
+    }, [paperInfo])
 
     return (
         loading==true?
@@ -125,7 +168,7 @@ export default function PaperAnalysis(props) {
                                     Accuracy
                                 </div>
                                 <div>
-                                    0
+                                    {data.totalAttempted==0?0:<>{(data.totalCorrect/data.totalAttempted)*100}%</>}
                                 </div>
                         </div>
                         <div className="report-card-sections">
@@ -184,7 +227,7 @@ export default function PaperAnalysis(props) {
                                     Accuracy
                                 </div>
                                 <div>
-                                    0
+                                    {data.physicsAttempted==0?0:<>{(data.physicsCorrect/data.physicsAttempted)*100}%</>}
                                 </div>
                         </div>
                         <div className="report-card-sections">
@@ -235,7 +278,7 @@ export default function PaperAnalysis(props) {
                                     Wrong
                                 </div>
                                 <div>
-                                    {data.chemistryAttempted}
+                                    {data.chemistryAttempted-data.chemistryCorrect}
                                 </div>
                         </div>
                         
@@ -244,7 +287,7 @@ export default function PaperAnalysis(props) {
                                     Accuracy
                                 </div>
                                 <div>
-                                    0
+                                    {data.chemistryAttempted==0?0:<>{(data.chemistryCorrect/data.chemistryAttempted)*100}%</>}
                                 </div>
                         </div>
                         <div className="report-card-sections">
@@ -303,7 +346,7 @@ export default function PaperAnalysis(props) {
                                     Accuracy
                                 </div>
                                 <div>
-                                    0
+                                    {data.mathsAttempted==0?0:<>{(data.mathsCorrect/data.mathsAttempted)*100}%</>}
                                 </div>
                         </div>
                         <div className="report-card-sections">
@@ -321,16 +364,16 @@ export default function PaperAnalysis(props) {
             </div>
             <div className="analysis-section">
                 <div id="marks-analysis">
-                    Subjective Marks
+                    Subjectwise Marks
                     <div className="analysis-sub-section">
                         <div id="analysis-chart">
-                            <Pie data={dataPie}
+                            <Pie data={marksDataChart}
                             options= {{legend: {display: false}}} />
                         </div>
                         <div id="analysis-chart-legend">
-                            <div>Physics- 25%</div>
-                            <div style={{color:'#FF4A4F'}}>Chemistry- 25%</div>
-                            <div style={{color:'#2AD586'}}>Maths- 25%</div>
+                            <div>Physics: {percent.physics}%</div>
+                            <div style={{color:'#FF4A4F'}}>Chemistry: {percent.chemistry}%</div>
+                            <div style={{color:'#2AD586'}}>Maths: {percent.maths}%</div>
                         </div>
                     </div>
                 </div>
@@ -351,15 +394,14 @@ export default function PaperAnalysis(props) {
                 </div>
 
                 <div id="time-analysis">
-                    Time Devoted
+                    Question Distribution
                     <div className="analysis-sub-section">
                         <div id="analysis-chart-legend">
-                            <div>Physics- 25%</div>
-                            <div style={{color:'#FF4A4F'}}>Chemistry- 25%</div>
-                            <div style={{color:'#2AD586'}}>Maths- 25%</div>
+                            <div style={{color:'#2AD586'}}>Correct: {data.totalAttempted==0?0:data.totalCorrect/data.totalAttempted}%</div>
+                            <div style={{color:'#FF4A4F'}}>Wrong: {data.totalAttempted==0?0:1-(data.totalCorrect/data.totalAttempted)}%</div>
                         </div>
                         <div id="analysis-chart">
-                            <Pie data={dataPie}
+                            <Pie data={quesDataChart}
                             options= {{legend: {display: false}}} />
                         </div>
                     </div>

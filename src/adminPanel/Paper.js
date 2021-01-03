@@ -48,6 +48,7 @@ export default function Paper() {
     const [sections,setSections]=React.useState(['','','']);
     const [subjectwiseSub,setSubjectwiseSub]=React.useState(0)
 
+
     React.useEffect(() => {
         localStorage.setItem("savingPaper",false)
         let paperType=localStorage.getItem("paperType");
@@ -129,8 +130,6 @@ export default function Paper() {
             // ...paperInfo,instructionInfo
             // }).then((res)=>{
             //     setLoading(false);
-            //     localStorage.setItem("noOfQuestions",numberQ)
-            //     localStorage.setItem("subject",subjectwiseSub)
             //     setShowQuestion(true);
             //     setRefid(res.id)//history.push('/Questions', { number:numberQ,subjective:location.state.subjective,paperType:location.state.paperType,paperRoute:paperRoute,paperRef:res.id})
             // }).catch((error)=>{
@@ -138,7 +137,8 @@ export default function Paper() {
             //     console.log("Error saving the document: ",error)
             // }) 
             setLoading(false);
-            localStorage.setItem("noOfQuestions",numberQ)
+            localStorage.setItem("subject",subjectwiseSub)
+            localStorage.setItem("noOfQuestions",paperInfo.noOfQuestions)
             setShowQuestion(true);
             console.log("Subjectwise Paper Submitted")
         }
