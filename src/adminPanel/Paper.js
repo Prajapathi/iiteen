@@ -1,6 +1,7 @@
 import React from 'react'
 import firebase from 'firebase'
 import {Link,useLocation,useHistory} from "react-router-dom";
+import { Prompt } from 'react-router'
 import { makeStyles } from '@material-ui/core/styles';
 import PaperInfo from './elements/PaperInfo'
 import Questions from './Questions'
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Paper() {
+export default function Paper(props) {
     const classes = useStyles();
     const location = useLocation();
     let history = useHistory()
@@ -48,7 +49,6 @@ export default function Paper() {
     const [sections,setSections]=React.useState(['','','']);
     const [subjectwiseSub,setSubjectwiseSub]=React.useState(0)
 
-
     React.useEffect(() => {
         localStorage.setItem("savingPaper",false)
         let paperType=localStorage.getItem("paperType");
@@ -59,6 +59,19 @@ export default function Paper() {
             localStorage.removeItem("paperType")
             setpaperRoute(location.state.subjectwise==true?"SUBJECTWISE":(location.state.paperType=="1"?"AITS":(location.state.paperType=="2"?"PREVIOUS":"MOCK")))
         }
+        // history.listen((loc, action) => 
+        //     (action === 'POP')?
+        //         window.confirm("ok?")
+        //      :null
+        //     // do stuff
+        //     )
+        // window.onpopstate  = (e) => {
+        //     const rs=window.confirm("ok?");
+        //     if(rs==false){
+        //         console.log("chan")
+        //         window.history.pushState(null, null, "/Paper");
+        //     }
+        // } 
         window.addEventListener('beforeunload',alertUser);
         return ()=>{
             window.removeEventListener('beforeunload',alertUser);
@@ -159,6 +172,10 @@ export default function Paper() {
     }
     return (
         <div>
+            <Prompt
+                when={true}
+                message="Are you sure you want to leave?"
+            />
             {loading==true?<CircularProgress style={{margin:'25% 50%'}}/>:
                 (showQuestion==false?
                 <>

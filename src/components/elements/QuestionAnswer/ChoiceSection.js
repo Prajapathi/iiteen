@@ -15,6 +15,7 @@ import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
+import InstructionDropdown from '../Paper/InstructionDropdown'
 
 export function ChoiceSection(props) {
     const [palleteSub,setPalleteSub]=React.useState(1);
@@ -132,7 +133,7 @@ export function ChoiceSection(props) {
                                 }
                             </div>
                             <div style={{opacity:showInstruction?1:0}} id="instruction-detail">
-                                    this is the instruction
+                                   <InstructionDropdown inst={props.paper.instructionInfo} section={props.paper.questions[props.number-1]?props.paper.questions[props.number-1].section:0}/>
                             </div>
                         </div>
                         
