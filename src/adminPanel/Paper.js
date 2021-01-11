@@ -269,7 +269,7 @@ export default function Paper(props) {
                                         <InstructionInfo paperType={paperInfo.paperType} sendInfo={setInstructionInfo}/>
                                         :null
                 }
-                    {(paperInfo.name==''||paperInfo.totalDuration==''||paperInfo.totalMarks==''||paperInfo.noOfQuestions==''||paperInfo.noOfQuestions=="0" ||(Number(paperInfo.noOfQuestions)%3)!=0)?
+                    {(paperInfo.name==''||paperInfo.totalDuration==''||paperInfo.totalMarks==''||paperInfo.noOfQuestions==''||paperInfo.toBeAttempted==''||paperInfo.noOfQuestions=="0" ||(Number(paperInfo.noOfQuestions)%3)!=0)?
                         null:
                         <button style={{width:'60%',
                         margin:'0px 20% 20px 20%',

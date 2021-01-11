@@ -1,0 +1,12 @@
+.solution-analysis{
+    background:#E1E1E1;
+    margin:7% 20px 2% 4%;
+    width:85%;
+    padding:3%;
+}
+.answer-analysis{
+    padding:2% 0%;
+    width:75%;
+    background:red;
+    text-align:center;
+}

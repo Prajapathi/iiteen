@@ -39,6 +39,7 @@ export default function PaperInfo(props) {
     const [marks,setMarks]=React.useState('');
     const [duration,setDuration]=React.useState('');
     const [noOfQuestions,setNoOfQuestions]=React.useState(0);
+    const [toBeAttempted, setToBeAttempted]=React.useState(0);
     const [data,setData]=React.useState([]);
     const [subjectwiseClass,setSubjectwiseClass]=React.useState(11);
     const [subjectwiseSubject,setSubjectwiseSubject]=React.useState(1);
@@ -66,6 +67,7 @@ export default function PaperInfo(props) {
           paperType:props.subjectwise==true?null:Number(typeValue=="Mains"?1:2),
           totalMarks:props.subjectwise==true?null:marks==''?0:Number(marks),
           noOfQuestions:props.subjectwise==true?25:Number(noOfQuestions),
+          toBeAttempted:props.subjectwise==true?25:Number(toBeAttempted),
           totalDuration:props.subjectwise==true?null:duration==''?0:Number(duration),
           level:level!=''?Number(level):(props.subjectwise==true?'':null)
         }
@@ -346,6 +348,7 @@ export default function PaperInfo(props) {
                                     <MenuItem value="3"> 3</MenuItem>
                                 </TextField>
                                 :
+                                <>
                                 <TextField
                                   id="standard-number"
                                   type="number"
@@ -359,6 +362,20 @@ export default function PaperInfo(props) {
                                   }}
                                   onChange={(event) =>event.target.value>=0?setNoOfQuestions(event.target.value):null}
                                 />
+                                 <TextField
+                                  id="standard-number"
+                                  type="number"
+                                  label="Questions to be attempted"
+                                  className={classes.textField}
+                                  value={toBeAttempted}
+                                  InputProps={{
+                                                inputProps: { 
+                                                min: 1
+                                              }
+                                  }}
+                                  onChange={(event) =>event.target.value>=0?setToBeAttempted(event.target.value):null}
+                                />
+                                </>
                 }
             </div>
         </form>

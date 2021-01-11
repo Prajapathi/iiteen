@@ -13,6 +13,7 @@ import PaperInstruction from './components/elements/Paper/PaperInstruction'
 import PaperAnalysis from './components/elements/Paper/PaperAnalysis'
 import Timer from './components/elements/Paper/Timer'
 import MockTest from './components/screens/sections/MockTest'
+import Analysis from './components/elements/DetailedAnalysis/Analysis'
 
 function App() {
   let login=false;
@@ -25,11 +26,10 @@ function App() {
       <><Routing/></>
       :<RoutingAdmin/>
     }
-      {/* <Routing/>
-      <RoutingAdmin/> */}
      </BrowserRouter> 
       {/* 
      <PaperInstruction/> */}
+     {/* <Analysis/> */}
     </>
   );
 }

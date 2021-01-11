@@ -54,6 +54,7 @@
 .options{
     width:75%;
     padding:8% 3% 0% 5%;
+    background:green;
 }
 .option{
     word-wrap:break-word;
@@ -129,18 +130,14 @@
 }
 .solution{
     background:#E1E1E1;
-    margin-top:7%;
-    margin-bottom:2%;
-    margin-left:-120px;
-    margin-right:20px;
-    height:400px;
-    width:450px;
-    padding:5%;
+    margin:7% 20px 2% 4%;
+    width:85%;
+    padding:3%;
 }
 
 .timer-bar{
     text-align:right;
-    padding:10px 20px;
+    padding:10px;
     display:flex;
     justify-content:space-between;
     color:#448698;

@@ -8,7 +8,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/Close';
-import Question from './Question'
+import Question from '../QuestionAnswer/Question'
 import PaperInstruction from './PaperInstruction'
 import GeneralInstruction from './GeneralInstruction'
 import Timer from './Timer'
@@ -104,43 +104,74 @@ export function Paper(props) {
                 let physicsTags = {
                     '1c': 0,
                     '1a': 0,
+                    '1e':false,
                     '0c': 0,
                     '0a': 0,
+                    '0e':false,
                     '2c': 0,
                     '2a': 0,
+                    '2e':false,
                     '3c': 0,
                     '3a': 0,
+                    '3e':false,
                     '4c': 0,
                     '4a': 0,
+                    '4e':false
                 };
                 let chemistryTags = {
                     '1c': 0,
                     '1a': 0,
+                    '1e':false,
                     '0c': 0,
                     '0a': 0,
+                    '0e':false,
                     '2c': 0,
                     '2a': 0,
+                    '2e':false,
                     '3c': 0,
                     '3a': 0,
+                    '3e':false,
                     '4c': 0,
                     '4a': 0,
+                    '4e':false,
                     '5c': 0,
                     '5a': 0,
+                    '5e':false
                 };
                 let mathsTags = {
                     '1c': 0,
                     '1a': 0,
+                    '1e':false,
                     '0c': 0,
                     '0a': 0,
+                    '0e':false,
                     '2c': 0,
                     '2a': 0,
+                    '2e':false,
                     '3c': 0,
                     '3a': 0,
+                    '3e':false,
                     '4c': 0,
                     '4a': 0,
+                    '4e':false,
                 };
                 props.answers.map((item,i)=>{
                     console.log(props.paper.questions[i])
+
+                    //set tag exists to true
+                    switch(props.paper.questions[i].subject){
+                        case 1:
+                            physicsTags[props.paper.questions[i].tag+'e']=true;
+                            break;
+                        case 2:
+                            chemistryTags[props.paper.questions[i].tag+'e']=true;
+                            break;
+                        case 3:
+                            mathsTags[props.paper.questions[i].tag+'e']=true;
+                            break;
+                    }
+
+                    //if attempted then calculate marks and increment attempted values
                     if(item.isAnswered){
                         totalAttempted++;
                         switch (props.paper.questions[i].subject) {
