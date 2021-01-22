@@ -16,7 +16,7 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import InstructionDropdown from '../Paper/InstructionDropdown'
 
-export default function ChoiceSection(props) {
+export default function ChoiceAnalysis(props) {
     const [palleteSub,setPalleteSub]=React.useState(1);
     const [answer,setAnswer]=React.useState('')
     const [selectOpt,setSelectOpt]=React.useState([false,false,false,false])
@@ -63,15 +63,43 @@ export default function ChoiceSection(props) {
                             <BookmarkIcon style={{color:props.answers[props.number-1]?props.answers[props.number-1].isBookmarked?'black':'#A6A5A5':'#A6A5A5',marginLeft:'8px',cursor:'pointer'}} />
                         </div>
                      </div>
-                    
+
+                    {/* Section displaying the correct answer */}
+                    <div className="answer-analysis" style={{paddingTop:"5%"}}>
+                        <div>
+                            {props.answers[props.number-1]?
+                                props.answers[props.number-1].answerType==1? 
+                                      <>  The correct answer is {props.answers[props.number-1].answer}  </>
+                                :props.answers[props.number-1].answerType==2?
+                                        <> The correct answer is between {props.answers[props.number-1].answer[0]}-{props.answers[props.number-1].answer[1]} </>
+                                        : props.answers[props.number-1].answerType==4?
+                                                <>  The correct answer is option {props.answers[props.number-1].answer==0?"A."
+                                                                                        :(props.answers[props.number-1].answer==1?"B."
+                                                                                            :props.answers[props.number-1].answer==2?"C."
+                                                                                                :"D.")} 
+                                                </>
+                                                :<>
+                                                    The correct answer is option{props.answers[props.number-1].answer.length==1?" ":"s "}
+                                                        {props.answers[props.number-1].answer.map((opt,i)=>
+                                                            <>
+                                                                {opt==0?"A":opt==1?"B":opt==2?"C":"D"}
+                                                                {i==props.answers[props.number-1].answer.length-1?".":", "}
+                                                            </>
+                                                        )}
+                                                 </>
+                            :""}
+                        </div>
+                    </div>
+
                         {props.data?props.data.answerType==1?
                                 <div className="num-input">
                                     <TextField
                                         id="standard-number"
                                         type="number"
                                         step={1}
-                                        label="Enter Answer"
+                                        label="Your Answer"
                                         value={answer}
+                                        style={{margin:"0% 20%"}}
                                     />
                                 </div>
                                 :props.data.answerType==2?
@@ -79,12 +107,13 @@ export default function ChoiceSection(props) {
                                         <TextField
                                             id="standard-number"
                                             type="number"
-                                            label="Enter Answer"
+                                            label="Your Answer"
                                             value={answer}
-                                        />
+                                            style={{margin:"0% 20%"}}
+                                    />
                                     </div>
                                     :props.data.answerType==5||props.data.answerType==4?
-                                        <div className="options">
+                                        <div className="options" style={{paddingTop:'0%'}}>
                                             {props.data?props.data.option.map((text, index) =>
                                                 <div className="option"
                                                     style={{border:props.answers[props.number-1].answer==index?'2px solid #2AD586':(selectOpt[index]==true?'2px solid #FF1E1E':'1px solid white')}}
@@ -103,10 +132,21 @@ export default function ChoiceSection(props) {
                                             ):null}
                                         </div>
                         :null:null}
+
+                    {/* Section containing statement about answer by user */}
                     <div className="answer-analysis">
-                        {props.answers[props.number-1].isAnsweredWrong?"YO":"no"}Your answer was incorrect
+                        <div style={{color:props.answers[props.number-1].isAnsweredWrong?"#FF1E1E":(props.answers[props.number-1].isAnswered?"#2AD586":"#3B95C2")}}>
+                            {props.answers[props.number-1].isAnsweredWrong?
+                                "Your answer was incorrect.":
+                                (props.answers[props.number-1].isAnswered?
+                                    "Your answer was correct!":
+                                    "Question not attempted"
+                                )
+                            }
+                        </div>
                     </div>
 
+                    {/* Section with submit button and arrows */}
                     <div className="submit">
                         <div className="back-button">
                             <ArrowBackIosIcon 
@@ -128,6 +168,7 @@ export default function ChoiceSection(props) {
                         }      
                     </div>
                     
+                 {/* Section containing solution to the problem */}
                  <div className="solution-analysis">
                         <h5 style={{textAlign:'center',color:'green',marginBottom:'8px'}}>Solution</h5>
                           {

@@ -8,12 +8,12 @@ export default function Analysis() {
     const [data,setData]=React.useState(0)
     const [paper,setPaper]=React.useState(0)
     const [questions,setQuestions]=React.useState(0)
-
+console.log("-----",data,paper,questions,"------")
     React.useEffect(() => {
         setLoading(true);
         
         const db = firebase.firestore();
-        db.collection("User").doc("MT2").get()
+        db.collection("User").doc("Testing").get()
             .then(function(querySnapshot) {
                 console.log("here's the analysis:",querySnapshot.data())
                 setData(querySnapshot.data());
@@ -23,16 +23,16 @@ export default function Analysis() {
                 console.log("Error getting documents: ", error);
             });
 
-        db.collection("MOCK").doc("MT2").get()
+        db.collection("MOCK").doc("Testing").get()
             .then(function(querySnapshot) {
-                console.log("here's the analysis:",querySnapshot.data())
+                console.log("here's the questionPaper:",querySnapshot.data())
                 setPaper(querySnapshot.data())
             })
             .catch(function(error) {
                 console.log("Error getting documents: ", error);
             });
 
-        db.collection("MOCK").doc("MT2").collection("Questions").get()
+        db.collection("MOCK").doc("Testing").collection("Questions").get()
             .then(function(querySnapshot) {
                 let qs=[];
                 querySnapshot.forEach(function(doc) {

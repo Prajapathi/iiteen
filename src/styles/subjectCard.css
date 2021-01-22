@@ -1,7 +1,7 @@
 .flip-card {
   background-color: #F8F7F7;
-  width: 220px;
-  height: 220px;
+  width: 250px;
+  height: 250px;
   perspective: 1000px;
   border:0px solid black;
   border-radius:30px; 
@@ -87,4 +87,8 @@
 }
 .flip-card-back button:focus { 
     outline: none;
+}
+.subject-card:hover #slide{
+transition:1s;
+left:0;
 }

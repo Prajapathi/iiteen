@@ -1,9 +1,7 @@
 body{
     background:white;
 }
-.screen{
-    margin-top:80px;
-}
+
 #homeBanner{
    max-width:100%;
    height:auto;

@@ -1,7 +1,7 @@
 .flip-card-mock{
   background-color: #F8F7F7;
-  width: 220px;
-  height: 220px;
+  width: 250px;
+  height: 250px;
   perspective: 1000px;
   border:0px solid black;
   border-radius:12px;
@@ -47,6 +47,11 @@
     justify-content:space-around;
     align-items:center;
 }
+.card-button-mock{
+  display:flex;
+  justify-content:space-around;
+  padding:10px;
+}
 .flip-card-front-mock{
   background-color:white;
   color: black;
@@ -60,9 +65,8 @@
   box-shadow:1px 1px 1px 0 rgba(0,0,0,0.2);
   border-radius:10px;
   font-size:14px;
-  width:40%;
-  margin-top:10px;
-  padding:2px;
+  width:100px;
+  padding:3px;
 }
 .flip-card-front-mock button:hover{
     box-shadow:2px 2px 2px 0 rgba(0,0,0,0.2);

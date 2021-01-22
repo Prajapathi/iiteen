@@ -54,7 +54,6 @@
 .options{
     width:75%;
     padding:8% 3% 0% 5%;
-    background:green;
 }
 .option{
     word-wrap:break-word;
@@ -150,4 +149,11 @@
 }
 #close-paper{
     cursor:pointer;
+}
+.subjectwise-title-bar{
+    width:100%;
+    display:flex;
+    padding:10px 30px;
+    flex-wrap:wrap;
+    justify-content:space-between;
 }

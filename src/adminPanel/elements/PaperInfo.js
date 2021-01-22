@@ -4,7 +4,6 @@ import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -178,16 +177,16 @@ export default function PaperInfo(props) {
                                                 value={name}
                                                 onChange={(event) =>setName(event.target.value)}
                                             >
-                                                <MenuItem value="Chapter 01">Basic Mathematics in physics, Vectors, Units, Dimensions and Measurements</MenuItem>
+                                                <MenuItem value="Chapter 01">Physics and Measurement</MenuItem>
                                                 <MenuItem value="Chapter 02">Kinematics</MenuItem>
                                                 <MenuItem value="Chapter 03">Laws of Motions and Friction</MenuItem>
                                                 <MenuItem value="Chapter 04">Work, Energy and Power</MenuItem>
                                                 <MenuItem value="Chapter 05">Centre of mass and collisions</MenuItem>
                                                 <MenuItem value="Chapter 06">Rotational Motion</MenuItem>
-                                                <MenuItem value="Chapter 07">Thermal Physics</MenuItem>
-                                                <MenuItem value="Chapter 08">Gravitation</MenuItem>
-                                                <MenuItem value="Chapter 09">Properties of matter</MenuItem>
-                                                <MenuItem value="Chapter 10">Fluid Mechanics</MenuItem>
+                                                <MenuItem value="Chapter 07">Gravitation</MenuItem>
+                                                <MenuItem value="Chapter 08">Properties of Solids and Liquids</MenuItem>
+                                                <MenuItem value="Chapter 09">Thermodynamics</MenuItem>
+                                                <MenuItem value="Chapter 10">Kinetic Theory of Gases</MenuItem>
                                                 <MenuItem value="Chapter 11">Simple Harmonic Motion</MenuItem>
                                                 <MenuItem value="Chapter 12">Waves (String and Sound waves)</MenuItem>
                                             </TextField>
@@ -263,17 +262,14 @@ export default function PaperInfo(props) {
                                             >
                                                   <MenuItem value="Chapter 01">Electrostatics</MenuItem>
                                                   <MenuItem value="Chapter 02">Current Electricity</MenuItem>
-                                                  <MenuItem value="Chapter 03">Capacitors</MenuItem>
-                                                  <MenuItem value="Chapter 04">Magnetic effects of current</MenuItem>
-                                                  <MenuItem value="Chapter 05">Magnetism and matter</MenuItem>
-                                                  <MenuItem value="Chapter 06">Electromagnetic induction</MenuItem>
-                                                  <MenuItem value="Chapter 07">Alternating Curretn(AC)</MenuItem>
-                                                  <MenuItem value="Chapter 08">Ray optics and optical instruments</MenuItem>
-                                                  <MenuItem value="Chapter 09">Wave optics</MenuItem>
-                                                  <MenuItem value="Chapter 10">Electromagnetic Waves</MenuItem>
-                                                  <MenuItem value="Chapter 11">Modern Physics</MenuItem>
-                                                  <MenuItem value="Chapter 12">Practical Physics</MenuItem>
-                                                  <MenuItem value="Chapter 13">Electronics and communication systems</MenuItem>
+                                                  <MenuItem value="Chapter 03">Magnetic Effects of Current and Magnetism</MenuItem>
+                                                  <MenuItem value="Chapter 04">Electromagnetic Induction and Alternating Currents</MenuItem>
+                                                  <MenuItem value="Chapter 05">Electromagnetic Waves</MenuItem>
+                                                  <MenuItem value="Chapter 06">Optics</MenuItem>
+                                                  <MenuItem value="Chapter 07">Dual Nature of Matter and Radiation</MenuItem>
+                                                  <MenuItem value="Chapter 08">Atoms and Nuclei</MenuItem>
+                                                  <MenuItem value="Chapter 09">Electronic Devices</MenuItem>
+                                                  <MenuItem value="Chapter 10">Communication Systems</MenuItem>
                                             </TextField>
                                           :subjectwiseSubject==2?
                                               <TextField

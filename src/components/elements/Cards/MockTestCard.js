@@ -4,9 +4,16 @@ import {connect} from 'react-redux'
 import {fetchPaper} from '../../../store/action/Paper'
 import {Link,useLocation,useHistory} from "react-router-dom";
 import '../../../styles/MockTestCard.css'
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 export function MockTestCard(props) {
     let history = useHistory()
+    const [open, setOpen] = React.useState(false);
 
     //fetch paper and put it into redux store
     const getPaper=()=>{
@@ -58,12 +65,46 @@ export function MockTestCard(props) {
                             <div style={{fontSize:'14px',color:'#448698'}}>{props.paper.totalMarks}</div>
                         </div>
                     </div> 
-                    {/* <Link to={"MockTest/Papers/"+props.paper.name}> */}
+        
                     {/* if this paper is selected, fetch the questions it consists */}
-                        <button onClick={getPaper}>Attempt</button>
-                    {/* </Link> */}
+                    <div className="card-button-mock">
+                        <button onClick={props.isAttempted?()=>setOpen(true):()=>getPaper()}>
+                            { props.isAttempted? "Re-attempt" : "Attempt" }
+                        </button>
+                        {
+                            props.isAttempted?
+                                <Link to={"MockTest/Papers/Analysis/"+props.paper.name}>
+                                    <button>Analysis</button>
+                                </Link>
+                            :null
+                        }
+                    </div>
+                    
                 </div>
             </div>
+
+            <Dialog
+                open={open}
+                onClose={()=>setOpen(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth={true}
+            >
+                <DialogTitle id="alert-dialog-title">{"Re-attempt Paper?"}</DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    You will lose your data on re-attempting.
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={()=>getPaper()} style={{color:"#3B95C2"}}>
+                    Continue
+                </Button>
+                <Button onClick={()=>setOpen(false)} style={{color:"#3B95C2"}} autoFocus>
+                    Cancel
+                </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }

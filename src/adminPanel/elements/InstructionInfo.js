@@ -6,7 +6,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
 const MainsDefaultInst=[
@@ -251,7 +250,6 @@ export default function InstructionInfo(props){
                                     style={{margin:'-30px 14% 4% 14%',
                                     background:'#f23b38',
                                     width:'70%',
-                                    border:'1px solid black',
                                     cursor:'pointer',
                                     textAlign:'center',
                                     color:'white',
@@ -263,7 +261,6 @@ export default function InstructionInfo(props){
                 )}
                 <div onClick={addInstruction} style={{margin:'3% 14%',
                     width:'70%',
-                    border:'1px solid black',
                     cursor:'pointer',
                     textAlign:'center',
                     background:'#0fcf0c',

@@ -1,6 +1,5 @@
 #mocktest{
     background:url("../assets/images/subjectwisebg.png");
-    margin-top:66px;
     padding-top:40px;
     min-height:100vh;
 }
@@ -35,12 +34,12 @@
     margin-left:-40px;
     margin-right:60px;
 }
+
 .mocktestcardsection{
-    padding:50px 100px;
     display:flex;
     flex-wrap:wrap;
-    justify-content:flex-start;
-
+    justify-content:center;
+    margin:3% 0%;
 }
 @media(max-width:700px){
     #mocktest-heading div{

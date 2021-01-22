@@ -8,6 +8,11 @@ import CardSection from './CardSection'
 export default function SubjectSection(props) {
     const [search, setSearch] = useState("")
     var subject=props.subject;
+
+    const searchup=(item)=>{
+        //console.log(item)
+        setSearch(item)
+    }
     return (
         <div>
             <div id="subject-bar">
@@ -25,7 +30,7 @@ export default function SubjectSection(props) {
                             <img src={subject=='physics'?physics:(subject=='chemistry'?chemistry:maths)} id="subject-img"/>
                         </div>
                     </div>
-                    <input type="text" id="search-chapter" onChange={(e)=>{setSearch(e.target.value)}} />
+                    <input type="text" id="search-chapter" onChange={(e)=>{searchup(e.target.value)}} />
                 </div>
             </div>
             <div >

@@ -5,6 +5,7 @@ import '../../../styles/choiceSection.css'
 import Container from 'react-bootstrap/Container'
 import { InlineMath, BlockMath } from 'react-katex';
 import TextField from '@material-ui/core/TextField';
+import Snackbar from '@material-ui/core/Snackbar';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Toast from 'react-bootstrap/Toast'
@@ -22,13 +23,17 @@ export function ChoiceSection(props) {
     const [answer,setAnswer]=React.useState('')
     const [selectOpt,setSelectOpt]=React.useState([false,false,false,false])
     const [show, setShow] = useState(false);
+    const [errorType,setErrorType]=useState(0)
     const [showInstruction,setShowInstruction]=useState(false)
+
     useEffect(() => {
         //set isSeen true when the component mounts and recieves the value of props.number
         if(props.number==null)
             return
         props.setSeen(props.number-1)
     }, [props.number])
+
+console.log("kkk",props.stateAnswer[props.number-1])
 
     useEffect(() => {
         //if answer was already submitted then load this into local state for display
@@ -93,6 +98,19 @@ export function ChoiceSection(props) {
         }
     }
     const submitQuestion=()=>{
+        //If there is choice in questions then check for no of questions attempted
+        if(props.paper.toBeAttempted && props.paper.noOfQuestions!=props.paper.toBeAttempted){
+            let countQ=0, sub=props.paper.questions[props.number-1].subject;
+            for(let i=0;i<props.stateAnswer.length;i++){
+                if((props.stateAnswer[i].answerType==4||props.stateAnswer[i].answerType==5) && (sub==props.paper.questions[i]) && (props.stateAnswer[i].isAnswered))
+                    countQ++;
+            }
+            if(countQ>=(props.paper.noOfQuestions-props.paper.toBeAttempted)/3){
+                setErrorType(1)
+                setShow(true)
+                return;
+            }
+        }
         //before submitting check the input answer. Set the value of flag to 1 if answer is not acceptable
         let flag=0;
         if(props.data.answerType==1){
@@ -112,9 +130,11 @@ export function ChoiceSection(props) {
         }
         if(flag==0){
             props.setAnswer(props.number-1,answer);
-            props.goToNextQuestion();
+            if(props.number!=props.noOfQuestions)
+                props.goToNextQuestion();
         }
         else{
+            setErrorType(0)
             setShow(true)
         }
         
@@ -125,7 +145,7 @@ export function ChoiceSection(props) {
         <Container style={{ paddingLeft: 0, paddingRight: 0 }}>
             <Row noGutters >
                 <Col id="choice-sec">
-                        <div>
+                        {/* <div>
                             <div id="instruction-ques-box" onClick={()=>setShowInstruction(!showInstruction)}>
                                 Instructions
                                 {
@@ -133,9 +153,9 @@ export function ChoiceSection(props) {
                                 }
                             </div>
                             <div style={{opacity:showInstruction?1:0}} id="instruction-detail">
-                                   <InstructionDropdown inst={props.paper.instructionInfo} section={props.paper.questions[props.number-1]?props.paper.questions[props.number-1].section:0}/>
+                                   <InstructionDropdown inst={.noOfQuestions!=props.paper.toBeAttempted.instructionInfo} section={props.paper.questions[props.number-1]?props.paper.questions[props.number-1].section:0}/>
                             </div>
-                        </div>
+                        </div> */}
                         
 
                      <div className="heading">
@@ -225,16 +245,43 @@ export function ChoiceSection(props) {
             </Row>
         </Container>
 
-      
+{/*       
         <Toast onClose={() => setShow(false)} show={show} delay={3000} autohide style={{
             position: 'absolute',
-            bottom: 50,
-            left: -400
+            bottom: 100,
+            left: -500,
+            background:'#3B95C2',
+            color:'white'
         }}>
-          <Toast.Header>
-            <strong className="mr-auto" style={{color:'#3B95C2'}}>Please enter a proper response before submitting.</strong>
+          <Toast.Header style={{background:'#3B95C2'}}>
+                <div className="mr-auto" style={{color:'white',fontSize:'18px'}}>
+                        {errorType==0?"Please enter a proper response before submitting."
+                            :"Maximum number of questions already attempted in this section. Please clear response before attempting more."}
+                </div>
           </Toast.Header>
-        </Toast>
+        </Toast> */}
+        <Snackbar
+            open={show}
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+            }}
+            style={{
+                background:'#3B95C2',
+                color:'white',
+                padding:"15px",
+                fontSize:"18px"
+            }}
+            onClose={() => setShow(false)}
+        >
+            <div>
+                {errorType==1?
+                        "Please enter a proper response before submitting."
+                        :<> Maximum number of questions already attempted in this section. 
+                            <br/> Please clear response before attempting more.</>
+                    }
+            </div>
+        </Snackbar>
     </>
     )
 }

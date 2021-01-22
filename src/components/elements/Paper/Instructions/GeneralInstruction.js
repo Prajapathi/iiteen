@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../../styles/paperInstruction.css'
+import '../../../../styles/paperInstruction.css'
 
 export default function GeneralInstruction(props) {
     const symbols=[

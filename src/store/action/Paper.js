@@ -40,3 +40,13 @@ export const bookmarkQuestion=(ind)=>{
         }
     }
 }
+
+export const attemptSubjective=(ind,ans)=>{
+    return{
+        type:actionTypes.ATTEMPT_SUBJECTIVE,
+        payload:{
+            index:ind,
+            answer:ans
+        }
+    }
+}

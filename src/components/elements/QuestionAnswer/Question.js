@@ -40,8 +40,15 @@ export default function Question(props) {
                         <QuestionSection number={props.number} data={question}/>
                     </Col>
                     <Col xs={6}>
-                        {props.type=="subjectwise"?<SubjectwiseChoiceSection/>:
-                            <ChoiceSection 
+                        {props.type=="subjectwise"?
+                            <SubjectwiseChoiceSection
+                                data={props.question} 
+                                noOfQuestions={props.noOfQuestions} 
+                                number={props.number} 
+                                goToPrevQuestion={props.goToPrevQuestion} 
+                                goToNextQuestion={props.goToNextQuestion}
+                            />
+                            :<ChoiceSection 
                                 data={props.question} 
                                 noOfQuestions={props.noOfQuestions} 
                                 number={props.number} 

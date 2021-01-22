@@ -6,11 +6,10 @@ import '../../../styles/choiceSection.css'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Badge from '@material-ui/core/Badge';
 import CloseIcon from '@material-ui/icons/Close';
 import Question from '../QuestionAnswer/Question'
-import PaperInstruction from './PaperInstruction'
-import GeneralInstruction from './GeneralInstruction'
+import PaperInstruction from './Instructions/PaperInstruction'
+import GeneralInstruction from './Instructions/GeneralInstruction'
 import Timer from './Timer'
 import PaperSummary from './PaperSummary'
 
@@ -81,7 +80,7 @@ export function Paper(props) {
 
     const submitPaperFinal=()=>{
         const UserQuestionModel={
-            ...props.answers,
+            answers:props.answers,
             uid:props.paper.name,
             attempted:true
         }
@@ -382,7 +381,7 @@ export function Paper(props) {
                         </div>
                 </div>
             </Container>
-            :<PaperSummary resume={setShowSummary} submit={submitPaperFinal} name={props.paper.name} answers={props.answers}/>}
+            :<PaperSummary resume={setShowSummary} submit={submitPaperFinal} totalQ={props.paper.toBeAttempted} name={props.paper.name} answers={props.answers}/>}
         </>
     )
 }

@@ -55,7 +55,7 @@ export default function PaperAnalysis(props) {
         labels: ['Correct', 'Wrong'],
         datasets: [
         {
-        data: data?(data.totalAttempted==0?[0,0]:[data.totalCorrect/data.totalAttempted,1-(data.totalCorrect/data.totalAttempted)]):[],
+        data: data?(data.totalAttempted==0?[0,0]:[(data.totalCorrect/data.totalAttempted)*100,100-((data.totalCorrect/data.totalAttempted))]):[],
             backgroundColor: [
                 '#2AD586',
                 '#FF4A4F',
@@ -126,13 +126,13 @@ export default function PaperAnalysis(props) {
         let p=0,c=0,m=0;
         if(data.totalMarks!==0){
             if(data.physicsMarks!==0){
-                p=(data.physicsMarks/data.totalMarks)
+                p=(data.physicsMarks/data.totalMarks)*100
             }
             if(data.chemistryMarks!==0){
-                c=(data.chemistryMarks/data.totalMarks)
+                c=(data.chemistryMarks/data.totalMarks)*100
             }
             if(data.mathsMarks!==0){
-                m=(data.mathsMarks/data.totalMarks)
+                m=(data.mathsMarks/data.totalMarks)*100
             }
         }
         setPercent({physics:p,chemistry:c,maths:m})
@@ -424,8 +424,8 @@ export default function PaperAnalysis(props) {
                     Question Distribution
                     <div className="analysis-sub-section">
                         <div id="analysis-chart-legend">
-                            <div style={{color:'#2AD586'}}>Correct: {data.totalAttempted==0?0:data.totalCorrect/data.totalAttempted}%</div>
-                            <div style={{color:'#FF4A4F'}}>Wrong: {data.totalAttempted==0?0:1-(data.totalCorrect/data.totalAttempted)}%</div>
+                            <div style={{color:'#2AD586'}}>Correct: {data.totalAttempted==0?0:((data.totalCorrect/data.totalAttempted)*100)}%</div>
+                            <div style={{color:'#FF4A4F'}}>Wrong: {data.totalAttempted==0?0:100-((data.totalCorrect/data.totalAttempted)*100)}%</div>
                         </div>
                         <div id="analysis-chart">
                             <Pie data={data.totalAttempted==0?blankData:quesDataChart}

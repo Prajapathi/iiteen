@@ -5,7 +5,7 @@ export default function PreviousYear() {
     return (
          <div  className="screen" id="AITS">
             <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                <img src={icon} id="aitsicon"/>
+                <img src={icon} id="aitsicon" alt=""/>
                 <div class="section-heading">PREVIOUS YEAR TEST PAPERS</div>
             </div>
             <div>

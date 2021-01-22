@@ -42,7 +42,7 @@ export default function PaperSummary(props) {
                         Not-Attempted
                     </div>
                     <div className="summary-detail-info">
-                        {props.answers.length-attempted}
+                        {props.totalQ?props.totalQ-attempted:props.answers.length-attempted}
                     </div>
                 </div>
                 <hr/>

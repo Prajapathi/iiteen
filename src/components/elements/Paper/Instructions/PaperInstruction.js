@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../../styles/paperInstruction.css'
+import '../../../../styles/paperInstruction.css'
 
 const MainsDefaultInst=[
     {   data:"25 questions each for Physics, Chemistry & Maths",

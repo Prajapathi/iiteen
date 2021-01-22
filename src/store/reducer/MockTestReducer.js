@@ -1,13 +1,25 @@
 import * as actionTypes from '../action/actionTypes'
 
+
+// Contents:
+//     1. Initial values
+//     2. Fetching paper
+//     3. Setting seen to true
+//     4. Setting and evaluating answers
+//     5. Clear Answer
+//     6. Bookmark Questions
+//     7. Attempt question for subjective question
+
+//initial values
 const initValues={
     paper:{},
     answers:[],
 }
 
+//store paper inside intital values and create answers[]
 const fetchPaper=(state,action)=>{
-    
     let ans=[];
+    //after fetching paper, set the answers[]
     if(state.answers.length==0){
         for(let i=0;i<action.payload.noOfQuestions;i++){
             ans.push({
@@ -24,7 +36,6 @@ const fetchPaper=(state,action)=>{
             })
         }
     }
-    
     console.log(ans,"ooop")
     return{
         ...state,
@@ -32,6 +43,8 @@ const fetchPaper=(state,action)=>{
         answers:ans.length==0?state.answers:ans
     }
 }
+
+//setting seen as the question renders to show in question pallete
 const setSeen=(state,action)=>{
     if(action.payload.index<0)
         return state
@@ -42,10 +55,13 @@ const setSeen=(state,action)=>{
         answers:ans
     }
 }
+
+//setting answerGiven and isAnswered fields and evaluating isAnsweredWrong
 const setAnswer=(state,action)=>{
     const ans=[...state.answers]
     ans[action.payload.index].answerGiven=action.payload.answer
     ans[action.payload.index].isAnswered=true
+
     switch(ans[action.payload.index].answerType){
         case 1:{
             if(ans[action.payload.index].answer===action.payload.answer)
@@ -55,10 +71,12 @@ const setAnswer=(state,action)=>{
             break;
         }
         case 2:{
-            if(ans[action.payload.index].answer[0]>=action.payload.answer && ans[action.payload.index].answer[1]<=action.payload.answer)
+           if(ans[action.payload.index].answer[0]<=action.payload.answer && ans[action.payload.index].answer[1]>=action.payload.answer){
                  ans[action.payload.index].isAnsweredWrong=false;
+            }
             else 
                  ans[action.payload.index].isAnsweredWrong=true;
+            break;
         }
         case 4:{
             
@@ -94,6 +112,7 @@ const setAnswer=(state,action)=>{
     }
 }
 
+//removing isAnswered, isAnsweredWrong and answerGiven
 const clearAnswer=(state,action)=>{
     const ans=[...state.answers]
     ans[action.payload.index].isAnswered=false
@@ -106,10 +125,22 @@ const clearAnswer=(state,action)=>{
     }
 }
 
+//setting isBookmarked to true
 const bookmarkQuestion=(state,action)=>{
     const ans=[...state.answers]
     ans[action.payload.index].isBookmarked=!ans[action.payload.index].isBookmarked
     console.log("po",ans)
+    return{
+        ...state,
+        answers:ans
+    }
+}
+
+//for attempting subjective questions
+const attemptSubjective=(state,action)=>{
+    const ans=[...state.answers]
+    ans[action.payload.index].isAnswered=true
+    console.log("Attempting Subjective",ans)
     return{
         ...state,
         answers:ans
@@ -129,6 +160,8 @@ const MockTestReducer=(state=initValues,action)=>{
             return clearAnswer(state,action)
         case actionTypes.BOOKMARK_QUESTION:
             return bookmarkQuestion(state,action)
+        case actionTypes.ATTEMPT_SUBJECTIVE:
+            return attemptSubjective(state,action)
         default:
             return state
     }
