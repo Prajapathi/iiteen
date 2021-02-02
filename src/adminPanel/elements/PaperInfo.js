@@ -244,7 +244,7 @@ export default function PaperInfo(props) {
                                                   <MenuItem value="Chapter 16">Hyperbola</MenuItem>
                                                   <MenuItem value="Chapter 17">Introduction to 3-D Geometry</MenuItem>
                                                   <MenuItem value="Chapter 18">Introduction to Limits and Derivatives</MenuItem>
-                                                  <MenuItem value="Chapter 19">Mathematical Reasoning</MenuItem>
+                                                  <MenuItem value="Chapter 19">Mathematical Induction</MenuItem>
                                                   <MenuItem value="Chapter 20">Statistics</MenuItem>
                                                   <MenuItem value="Chapter 21">Fundamentals of Probability</MenuItem>
                                               </TextField>

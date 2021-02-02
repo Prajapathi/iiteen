@@ -33,11 +33,12 @@
     padding:3px;
     border-radius:5px;
 }
-#search-chapter{
+.search-chapter{
     border:1px solid rgba(256,256,256,0.4);
     border-radius:7px;
+    padding:0px 10px;
 }
-#search-chapter:focus { 
+.search-chapter:focus { 
     outline: none;
 }
 .sub-cards{
@@ -47,7 +48,7 @@
 }
 @media(min-width:1080px){
     .subject-sub-bar{
-        width:60%;
+        width:70%;
     }
     #sub{
         justify-content:center;

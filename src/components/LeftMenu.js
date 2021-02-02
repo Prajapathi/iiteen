@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import {Link} from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -223,7 +224,7 @@ export default function LeftMenu() {
                 justify = "flex-start"
                 direction = "row"
             > 
-                    {!open ? <img src={logo} className={classes.navlogo}/>
+                    {!open ? <Link to="/"> <img src={logo} className={classes.navlogo}/> </Link>
                            :null} 
             </Grid> 
             <Grid container alignItems = "flex-end"
@@ -232,7 +233,9 @@ export default function LeftMenu() {
                 style = {{ marginRight: '3%' }}
             >
                 <div className = { clsx(classes.tab) } >
-                    <Typography className = { clsx(classes.tabs) } >Home </Typography> 
+                    <Link to="/" className="menu-link">
+                        <Typography className = { clsx(classes.tabs) } >Home </Typography>
+                    </Link>
                     <Typography className = { clsx(classes.tabs) } >Report </Typography> 
                     <Typography className = { clsx(classes.tabs) } >IITeenCorner </Typography> 
                     <Typography className = { clsx(classes.tabs) } >Plan </Typography>

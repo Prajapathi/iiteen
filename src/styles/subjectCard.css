@@ -88,7 +88,3 @@
 .flip-card-back button:focus { 
     outline: none;
 }
-.subject-card:hover #slide{
-transition:1s;
-left:0;
-}

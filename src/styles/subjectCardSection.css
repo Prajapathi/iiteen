@@ -4,3 +4,10 @@
 .arrow:hover{
     color:rgba(0,0,0,0.5);
 }
+.no-results{
+    color:#3F7B94;
+    font-size:3rem;
+    font-weight:800;
+    padding:120px 0px;
+    height:320px;
+}

@@ -2,8 +2,10 @@ import React, { useState,useEffect } from 'react';
 import {connect} from 'react-redux'
 import {clearAnswer,setAnswer,bookmarkQuestion} from '../../../store/action/Paper'
 import '../../../styles/choiceSection.css'
+import '../../../styles/detailedAnalysis.css'
 import Container from 'react-bootstrap/Container'
 import { InlineMath, BlockMath } from 'react-katex';
+import Grow from '@material-ui/core/Grow';
 import TextField from '@material-ui/core/TextField';
 import Snackbar from '@material-ui/core/Snackbar';
 import Row from 'react-bootstrap/Row'
@@ -23,13 +25,22 @@ export function SubjectwiseChoiceSection(props) {
     const [correctAnswer,setCorrectAnswer]=React.useState('')
     const [selectOpt,setSelectOpt]=React.useState([false,false,false,false])
     const [show, setShow] = useState(false);
-    const [showInstruction,setShowInstruction]=useState(false)
     const [wrongAttempt,setWrongAttempt]=useState(false)
     const [showSolution,setShowSolution]=useState(false)
+    const [showHint,setShowHint]=useState(false)
+    const [checked, setChecked] = React.useState(false);
+    const [animate,setAnimate]=React.useState(false)
+
+  const handleChange = () => {
+    setChecked((prev) => !prev);
+  };
 
 console.log("kkk",props.stateAnswer[props.number-1])
 
     useEffect(() => {
+        //if answer given was wrong initially and solution was not shown, don't display previously given answer
+        if(props.stateAnswer[props.number-1] && props.stateAnswer[props.number-1].isAnsweredWrong &&props.stateAnswer[props.number-1].isAnswered)
+            return
         //if answer was already submitted then load this into local state for display
         if(props.stateAnswer[props.number-1] && props.stateAnswer[props.number-1].answerGiven!=null){
             let opt=[false,false,false,false]
@@ -47,6 +58,8 @@ console.log("kkk",props.stateAnswer[props.number-1])
             setSelectOpt(opt)
             setAnswer(props.stateAnswer[props.number-1].answerGiven)
         }
+        if(props.stateAnswer[props.number-1] && !props.stateAnswer[props.number-1].isAnsweredWrong && props.stateAnswer[props.number-1].isAnswered)
+            setShowSolution(true)
         
     }, [props.stateAnswer[props.number-1]])
 
@@ -78,7 +91,9 @@ console.log("kkk",props.stateAnswer[props.number-1])
         setAnswer(ans)
         setSelectOpt(opts)
     }
-   
+    const submitQuestionPre=()=>{
+        setAnimate(false)
+    }
     const submitQuestion=()=>{
         //before submitting check the input answer. Set the value of flag to 1 if answer is not acceptable
         let flag=0;
@@ -99,14 +114,31 @@ console.log("kkk",props.stateAnswer[props.number-1])
         }
         if(flag==0){
             props.setAnswer(props.number-1,answer);
-            if(props.stateAnswer[props.number-1].isAnsweredWrong)
+            console.log(answer)
+            if(props.stateAnswer[props.number-1].isAnsweredWrong){
                 setWrongAttempt(true)
-            else setShowSolution(true)
+                setShowHint(true)
+                submitQuestionPre()
+                setTimeout(() => {
+                    setAnimate(true)
+                }, 100);
+            }
+            else {
+                setWrongAttempt(false)
+                setShowSolution(true)
+            }
         }
         else{
             setShow(true)
         }
         
+    }
+
+    const giveUp=()=>{
+        setShowSolution(true)
+        setShowHint(false)
+        setAnswer(props.stateAnswer[props.number-1].answer)
+        props.setAnswer(props.number-1,props.stateAnswer[props.number-1].answer)
     }
 
     return(
@@ -127,6 +159,50 @@ console.log("kkk",props.stateAnswer[props.number-1])
                         </div>
                      </div>
                     
+                     {/* Section displaying the correct answer */}
+                    {
+                        showSolution?
+                            <div className="answer-analysis" style={{paddingTop:"5%"}}>
+                                <div>
+                                    {props.stateAnswer[props.number-1]?
+                                        props.stateAnswer[props.number-1].answerType==1? 
+                                            <>  The correct answer is {props.stateAnswer[props.number-1].answer}  </>
+                                        :props.stateAnswer[props.number-1].answerType==2?
+                                                <> The correct answer is between {props.stateAnswer[props.number-1].answer[0]}-{props.stateAnswer[props.number-1].answer[1]} </>
+                                                : props.stateAnswer[props.number-1].answerType==4?
+                                                        <>  The correct answer is option {props.stateAnswer[props.number-1].answer==0?"A."
+                                                                                                :(props.stateAnswer[props.number-1].answer==1?"B."
+                                                                                                    :props.stateAnswer[props.number-1].answer==2?"C."
+                                                                                                        :"D.")} 
+                                                        </>
+                                                        :<>
+                                                            The correct answer is option{props.stateAnswer[props.number-1].answer.length==1?" ":"s "}
+                                                                {props.stateAnswer[props.number-1].answer.map((opt,i)=>
+                                                                    <>
+                                                                        {opt==0?"A":opt==1?"B":opt==2?"C":"D"}
+                                                                        {i==props.stateAnswer[props.number-1].answer.length-1?".":", "}
+                                                                    </>
+                                                                )}
+                                                        </>
+                                    :""}
+                                    
+                                </div>
+                            </div>
+                            :
+                               wrongAttempt && !showSolution?
+                               <Grow
+                                in={animate}
+                                style={{ transformOrigin: '0 0 0' }}
+                                {...(checked ? { timeout: 1000 } : {})}
+                                >
+                                    <div className="answer-analysis" style={{paddingTop:"5%"}}>
+                                        <div style={{color:"red"}}>
+                                             Wrong Answer. Please try again.
+                                        </div>
+                                    </div>
+                                </Grow>
+                                :null   
+                        }
                         {props.data?props.data.answerType==1?
                                 <div className="num-input">
                                     <TextField
@@ -135,7 +211,7 @@ console.log("kkk",props.stateAnswer[props.number-1])
                                         step={1}
                                         label="Enter Answer"
                                         value={answer}
-                                        onChange={props.stateAnswer[props.number-1]&&props.stateAnswer[props.number-1].isAnswered?null:(event) =>setAnswer(Number(event.target.value))}
+                                        onChange={(event) =>setAnswer(Number(event.target.value))}
                                     />
                                 </div>
                                 :props.data.answerType==2?
@@ -145,14 +221,14 @@ console.log("kkk",props.stateAnswer[props.number-1])
                                             type="number"
                                             label="Enter Answer"
                                             value={answer}
-                                            onChange={props.stateAnswer[props.number-1]&&props.stateAnswer[props.number-1].isAnswered?null:(event) =>setAnswer(Number(event.target.value))}
+                                            onChange={(event) =>setAnswer(Number(event.target.value))}
                                         />
                                     </div>
                                     :props.data.answerType==5||props.data.answerType==4?
-                                        <div className="options">
+                                        <div className="options" style={{paddingTop:showSolution || (wrongAttempt && !showSolution)?"0px":'8%'}}>
                                             {props.data?props.data.option.map((text, index) =>
                                                 <div className="option"
-                                                    onClick={props.stateAnswer[props.number-1]&&props.stateAnswer[props.number-1].isAnswered?null:(props.data.answerType==5?()=>changeOptMultiple(index):()=>changeOptSingle(index))}
+                                                    onClick={(props.data.answerType==5?()=>changeOptMultiple(index):()=>changeOptSingle(index))}
                                                     style={{border:selectOpt[index]==true?'2px solid rgb(59, 149, 194)':'1px solid white'}}
                                                 > 
                                                         {index===0?'A.  ':(index===1?'B.  ':(index===2?'C. ':'D. '))} 
@@ -170,9 +246,68 @@ console.log("kkk",props.stateAnswer[props.number-1])
                                         </div>
                         :null:null}
                     
-                     
+                    <div className="solution-hint-sec">
+                        
+                        {
+                            showHint && !showSolution?
+                                <div className="solution-subjectwise">
+                                    <h5 style={{textAlign:'center',color:'yellow'}}>Hint</h5>
+                                    { props.hint?
+                                        props.hint.map((item,index)=>
+                                            <>
+                                            {item.type==0?<br/>:(item.type==1
+                                                                ?item.data
+                                                                :(item.type==2
+                                                                        ?<InlineMath>{item.data}</InlineMath>
+                                                                        :(item.type==3?
+                                                                            <div id="ques-img-sec">
+                                                                                <img src={item.data} style={{width:"100%"}}/>
+                                                                            </div>
+                                                                        :null)
+                                                                )
+                                                                )
+                                            }
+                                            </>
+                                        )
+                                        :null
+                                    }
+                                </div>
+                            :null
+                        }
+                        {
+                            showHint && !showSolution?
+                                <button onClick={()=>giveUp()}>Show solution</button>
+                            :null
+                        }
+                        {
+                            showSolution===true?
+                                <div className="solution-subjectwise">
+                                    <h5 style={{textAlign:'center',color:'green'}}>Solution</h5>
+                                    { props.solution?
+                                        props.solution.map((item,index)=>
+                                            <>
+                                            {item.type==0?<br/>:(item.type==1
+                                                                ?item.data
+                                                                :(item.type==2
+                                                                        ?<InlineMath>{item.data}</InlineMath>
+                                                                        :(item.type==3?
+                                                                            <div id="ques-img-sec">
+                                                                                <img src={item.data} style={{width:"100%"}}/>
+                                                                            </div>
+                                                                        :null)
+                                                                )
+                                                                )
+                                            }
+                                            </>
+                                        )
+                                        :null
+                                    }
+                                </div>
+                            :null
+                        } 
+                    </div>
 
-                    <div className="submit">
+                    <div className="submit" style={{marginTop:"2%",marginBottom:"2%"}}>
                         <div className="back-button">
                             <ArrowBackIosIcon 
                                 style={{fontSize:'38px',color:props.number==1?'rgba(0,0,0,0.1)':null,cursor:props.number==1?'not-allowed':'pointer'}}
@@ -182,9 +317,12 @@ console.log("kkk",props.stateAnswer[props.number-1])
 
                         {
                             props.stateAnswer[props.number-1] && props.stateAnswer[props.number-1].isAnswered?
-                                (props.number!=props.noOfQuestions?
+                                wrongAttempt && !showSolution?
+                                <button style={{background:'red'}} onClick={()=>submitQuestion()}>Retry</button>
+                                :
+                                (props.stateAnswer[props.number-1] && props.number!=props.noOfQuestions && (!props.stateAnswer[props.number-1].isAnsweredWrong &&props.stateAnswer[props.number-1].isAnswered)?
                                     <button style={{background:'#3B95C2'}} onClick={()=>props.goToNextQuestion()}>Next</button>
-                                    :null
+                                    :<button style={{background:'#18d618'}} onClick={()=>submitQuestion()}>Submit</button>
                                 )
                                 :<button style={{background:'#18d618'}} onClick={()=>submitQuestion()}>Submit</button>
                         }
@@ -199,8 +337,8 @@ console.log("kkk",props.stateAnswer[props.number-1])
                                     </ArrowForwardIosIcon>
                                 </div>
                         }      
+                       
                     </div>
-
                 </Col>
             </Row>
         </Container>
@@ -242,8 +380,3 @@ const mapDispatchToProps=dispatch=>{
 export default connect(mapStateToProps,mapDispatchToProps)(SubjectwiseChoiceSection)
 
 
-// {showSolution===true?
-//                     <div className="solution">
-//                         <h5 style={{textAlign:'center',color:'green',marginBottom:'8px'}}>Solution</h5>
-//                         this is the solution to the given problem. you can check it out here:www.google.com. This is the solution of subject-wise problem;
-//                     </div>:null}

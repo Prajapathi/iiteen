@@ -21,7 +21,7 @@ export function Paper(props) {
     const history= useHistory();
     const [palleteSub,setPalleteSub]=React.useState(1);
     const [palleteArray,setPalleteArray]=React.useState({phy:[],maths:[],chem:[]})
-    const [questions,setQuestions]=React.useState([])
+    const [questions,setQuestions]=React.useState()
     const [index,setIndex]=React.useState(0)
     const [showGeneralInst,setShowGeneralInst]=React.useState(false);
     const [start,setStart]=React.useState(false)
@@ -29,9 +29,11 @@ export function Paper(props) {
     const [timeOver,setTimeOver]=React.useState(false)
 
     React.useEffect(() => {
+        console.log("Yaha aaya")
         //if user is not navigating through MockTestCard then redirect to home
         let verifyPaper=localStorage.getItem("PaperName")
         if(verifyPaper==null|| verifyPaper!=props.paper.name){
+            console.log("Because of this")
             history.push('/')
         }
         localStorage.removeItem("PaperName")
@@ -299,9 +301,9 @@ export function Paper(props) {
 
                         <div style={{width:'80%'}} >
                             <Question key={index} 
-                                question={questions[index]}
+                                question={questions?questions[index]:[]}
                                 noOfQuestions={props.paper.noOfQuestions}
-                                number={questions[index]?questions[index].number:0}
+                                number={questions && questions[index]?questions[index].number:0}
                                 goToPrevQuestion={()=>setIndex(index-1)} 
                                 goToNextQuestion={()=>setIndex(index+1)}
                                 showSummary={()=>setShowSummary(true)}

@@ -27,7 +27,9 @@ const sampleQues=[
 ]
 
 export default function Question(props) {
-    const [question,setQuestion]=React.useState(props.question?props.question.question:["yo"])
+    const [question,setQuestion]=React.useState(props.question?props.question.question:["No content found"])
+    const [solution,setSolution]=React.useState(props.question?props.question.solution:["No content found"])
+    const [hint,setHint]=React.useState(props.question?props.question.hint:["No content found"])
     
     React.useEffect(() => {
         setQuestion(props.question?props.question.question:sampleQues)
@@ -43,6 +45,8 @@ export default function Question(props) {
                         {props.type=="subjectwise"?
                             <SubjectwiseChoiceSection
                                 data={props.question} 
+                                solution={solution}
+                                hint={hint}
                                 noOfQuestions={props.noOfQuestions} 
                                 number={props.number} 
                                 goToPrevQuestion={props.goToPrevQuestion} 

@@ -18,9 +18,14 @@ const initValues={
 
 //store paper inside intital values and create answers[]
 const fetchPaper=(state,action)=>{
+    //in case questions are not present
+    if(action.payload.questions.length==0)
+        return{
+            ...state,
+            paper:action.payload,
+        }
     let ans=[];
     //after fetching paper, set the answers[]
-    if(state.answers.length==0){
         for(let i=0;i<action.payload.noOfQuestions;i++){
             ans.push({
                 qid:action.payload.questions[i].qid,
@@ -35,7 +40,6 @@ const fetchPaper=(state,action)=>{
                 isAnswered:false
             })
         }
-    }
     console.log(ans,"ooop")
     return{
         ...state,

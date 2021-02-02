@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Carousel from 'react-bootstrap/Carousel'
-import banner1 from '../../assets/images/bg.jpg'
-import banner2 from '../../assets/images/bg2.jpg'
-import banner3 from '../../assets/images/bg3.jpg'
+import banner1 from '../../assets/images/bg.png'
+import banner2 from '../../assets/images/bg2.png'
+import banner3 from '../../assets/images/bg3.png'
 export default function HomeCarousel() {
   const [vpWidth,setvpWidth]=useState(window.innerWidth);
   const [showIndicator, setshowIndicator] = useState(true)

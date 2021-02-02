@@ -47,9 +47,9 @@ export function Paper(props) {
                         <div style={{width:'80%'}} >
                             <Question key={index}
                                 type={"subjectwise"} 
-                                question={questions[index]}
+                                question={questions? questions[index]: []}
                                 noOfQuestions={25}
-                                number={questions[index]?questions[index].number:0}
+                                number={questions && questions[index]?questions[index].number:0}
                                 goToPrevQuestion={()=>setIndex(index-1)} 
                                 goToNextQuestion={()=>setIndex(index+1)}
                             />
@@ -62,8 +62,8 @@ export function Paper(props) {
                                             <div className="page-no" 
                                                 style={{
                                                     background:props.answers[ind].isBookmarked?'#ff9700':
-                                                        (props.answers[ind].isAnswered?'#3B95C2':'white'),
-                                                    color:props.answers[ind].isBookmarked||props.answers[ind].isAnswered?"white":"black",
+                                                        ((!props.answers[ind].isAnsweredWrong && props.answers[ind].isAnswered)?'#3B95C2':'white'),
+                                                    color:props.answers[ind].isBookmarked||(!props.answers[ind].isAnsweredWrong && props.answers[ind].isAnswered)?"white":"black",
                                                     border:index==ind?'1px solid black':null
                                                 }} 
                                                 onClick={()=>navigateQuestion(ind)}>

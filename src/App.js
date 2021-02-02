@@ -23,13 +23,13 @@ function App() {
     {/* <Timer duration={150}/> */}
     <BrowserRouter>
      {login?
-      <><div style={{height:"70px"}}></div><Routing/></>
+      <><LeftMenu/><div style={{height:"70px"}}></div><Routing style={{minHeight:'80vh'}}/><Footer/></>
       :<RoutingAdmin/>
     }
      </BrowserRouter> 
       {/* 
      <PaperInstruction/> */}
-     {/* <Paper/> */}
+     {/* <Landing/> */}
     </>
   );
 }

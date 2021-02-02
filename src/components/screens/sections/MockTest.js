@@ -11,6 +11,8 @@ export default function MockTest() {
     const [attemptedPapers,setAttemptedPapers]=useState([])
     const [loading, setLoading] = useState(false)
 
+    document.title="Mock Test | IITEENS"
+
     useEffect(() => {
         //fetching all the papers from MOCK folder of database and storing it in mockTestPapers
         setLoading(true)
@@ -48,30 +50,7 @@ export default function MockTest() {
             setLoading(false)
             console.log("Error getting documents: ", error);
         });
-
-        // db.collection("SUBJECTWISE/Class 11/Physics/Chapter 07/Level 01").get()
-        //     .then(function(querySnapshot) {
-        //         let arr=[]
-        //         querySnapshot.forEach(function(doc) {
-        //             console.log(doc.id, " => ", doc.data());
-        //             db.collection("SUBJECTWISE/Class 11/Physics/Chapter 09/Level 01").add(doc.data())
-        //             .then((data)=>{
-        //                 console.log("DONE!!!!",data.id())
-        //             })
-        //             .catch((error)=>{
-        //                 console.log(error)
-        //             })
-        //             arr.push(doc.data())
-        //         });
-        //         console.log("data is here",arr)
-                
-        //     })
-        //     .catch(function(error) {
-        //         setLoading(false)
-        //         console.log("Error getting documents: ", error);
-        //     });
-
-}, [])
+    }, [])
     
     //function to check if particular paper has been attempted
     const checkAttempted=(id)=>{

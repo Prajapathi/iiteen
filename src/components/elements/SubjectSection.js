@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import '../../styles/subjectSection.css'
 import physics from '../../assets/images/physics.png'
 import chemistry from '../../assets/images/Chemistry.png'
+import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import maths from '../../assets/images/Maths.png'
 import CardSection from './CardSection'
+
 
 export default function SubjectSection(props) {
     const [search, setSearch] = useState("")
@@ -30,11 +32,11 @@ export default function SubjectSection(props) {
                             <img src={subject=='physics'?physics:(subject=='chemistry'?chemistry:maths)} id="subject-img"/>
                         </div>
                     </div>
-                    <input type="text" id="search-chapter" onChange={(e)=>{searchup(e.target.value)}} />
+                    <input type="text" className="search-chapter" placeholder="Search" onChange={(e)=>{searchup(e.target.value)}} />
                 </div>
             </div>
             <div >
-                     <CardSection search={search} subject={subject} class={props.class}/> 
+                     <CardSection search={search} subject={subject} classNumber={props.classNumber} loadingStart={props.loadingStart}/> 
             </div>
         </div>
     )

@@ -27,19 +27,27 @@ export function MockTestCard(props) {
                 questions.push({...doc.data(),qid:doc.id})
             });
 
-            console.log(questions)
-            //sort questions based on number
-            questions.sort(function(a,b){return a.number-b.number});
+            console.log("Here are the questions",questions)
+            if(questions.length==0){
+                history.push("/QuestionsError")
+            }
+            else{
+                //sort questions based on number
+                questions.sort(function(a,b){return a.number-b.number});
 
-            const obj={...props.paper, questions:questions}
-            //put into redux store
-            props.fetchPaper(obj)
-            //to check if user is navigating through MockTestCard
-            localStorage.setItem("PaperName",props.paper.name)
-            props.setLoading(false)
-            history.push("MockTest/Papers/"+props.paper.name)
+                const obj={...props.paper, questions:questions}
+                //put into redux store
+                props.fetchPaper(obj)
+                //to check if user is navigating through MockTestCard
+                localStorage.setItem("PaperName",props.paper.name)
+                props.setLoading(false)
+                history.push("MockTest/Papers/"+props.paper.name)
+            }
+            
         })
         .catch(function(error) {
+            props.setLoading(false)
+            history.push("/QuestionsError")
             console.log("Error getting documents: ", error);
         });
     }

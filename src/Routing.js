@@ -8,6 +8,7 @@ import AITS from './components/screens/sections/AITS'
 import MockTest from './components/screens/sections/MockTest'
 import PreviousYear from './components/screens/sections/PreviousYear'
 import Papers from './components/elements/Paper/Paper'
+import NoQuestionsError from './components/elements/Paper/NoQuestionsError'
 import SubjectwisePaper from './components/elements/Paper/Subjectwise/Paper'
 import PaperAnalysis from './components/elements/Paper/PaperAnalysis'
 
@@ -23,7 +24,7 @@ export default function Routing() {
             <Route exact path="/Subjectwise">
                 <SubjectWise/>
             </Route>
-            <Route path="/PreviousYear">
+            <Route exact path="/PreviousYear">
                 <PreviousYear/>
             </Route>
             <Route path="/AITS">
@@ -37,6 +38,9 @@ export default function Routing() {
             </Route>
             <Route exact path="/:paperType/Papers/Analysis/:paperName">
                 <PaperAnalysis/>
+            </Route>
+            <Route exact path="/QuestionsError">
+                <NoQuestionsError/>
             </Route>
         </Switch>
     )

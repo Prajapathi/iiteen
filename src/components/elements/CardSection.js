@@ -6,27 +6,50 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import SubjectCard from './Cards/SubjectCard'
 import AITSCard from './Cards/AITSCard'
 import PreviousYearCard from './Cards/PreviousYearCard'
-import phy from '../../assets/data/11th'
+import {phy11,chem11,maths11} from '../../assets/data/11th'
+import {phy12,chem12,maths12} from '../../assets/data/12th'
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Slide from '@material-ui/core/Slide';
+
 
 export default function SubjectCardSection(props) {
-    const [products, setProducts] = useState([]);
-    const [productIndex, setProductIndex] = useState(0);
-    const [prodNumber,setProdNumber]=useState([])
+    const [chapters, setChapters] = useState([]);
+    const [chapterIndex, setChapterIndex] = useState(0);
+    const [chapterNumber,setChapterNumber]=useState([])
     const [disableLeft,setDisableLeft]=useState("gray");
     const [color,setColor]=useState("gray");
     const [vpWidth,setvpWidth]=useState(window.innerWidth);
     const [cardNumbers, setcardNumbers] = useState(1)
     const [stl,setStl]=useState("red")
+    const [loading,setLoading]=useState(true)
+    const [slideIn, setSlideIn] = useState(true);
+    const [slideDirection, setSlideDirection] = useState('left');
+    
+    //set list of chapters
+    let initialItems=[];
+    if(props.section==null){
+        switch(props.subject){
+            case "physics":{
+                initialItems=props.classNumber=="11"?phy11:phy12;
+                break;
+            }
+            case "chemistry":{
+                initialItems=props.classNumber=="11"?chem11:chem12;
+                break;
+            }
+            case "maths":{
+                initialItems=props.classNumber=="11"?maths11:maths12;
+                break;
+            }
+                
+        }
+    }
+    else{
+        initialItems=props.paper
+    }
 
-    let section;
-    let initialItems;
-    //if(props.section===null){
-         initialItems=phy
-    //}
     useEffect(() => {
-        setProducts(initialItems.slice(productIndex, productIndex + cardNumbers))
-    }, [productIndex])
-    useEffect(() => {
+        //evaluate the number of cards to be displayed at one time
         let cardN;
         if(vpWidth>1250){
             cardN=(5);
@@ -43,54 +66,64 @@ export default function SubjectCardSection(props) {
         else cardN=(1);
         setcardNumbers(cardN)
 
+        setLoading(false)
+
+        //set array for card numbers
         let items=[]
         for (let i=0;i<initialItems.length/cardN;i++) {
             items.push(i+1)
         }
+        setChapterNumber(items)
 
-        setProdNumber(items)
-        if(!props.section){
-            let firstFourProducts = initialItems.slice(productIndex, productIndex + cardN);
-            setProducts(firstFourProducts)
-        }
-        else{
-            setProducts([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]);
-        }
+        //set initial cards list
+            let firstFourProducts = initialItems.slice(chapterIndex, chapterIndex + cardN);
+            setChapters(firstFourProducts)
+        
         window.addEventListener("resize", () => setvpWidth(window.innerWidth));
     },[])
 
+    //Change cards to be shown when chapterIndex is changed by navigation
     useEffect(() => {
-        if(vpWidth>1250){
+        setChapters(initialItems.slice(chapterIndex, chapterIndex + cardNumbers))
+    }, [chapterIndex])
+
+    //listen for screen width change
+    useEffect(() => {
+        if(vpWidth>1300){
             setcardNumbers(5);
         }
-        else if(vpWidth>1000){
+        else if(vpWidth>1180){
             setcardNumbers(4);
         }
-        else if(vpWidth>700){
+        else if(vpWidth>890){
             setcardNumbers(3);
         }
-        else if(vpWidth>500){
+        else if(vpWidth>600){
             setcardNumbers(2);
         }
         else setcardNumbers(1);
         console.log(cardNumbers);
     },[vpWidth])
 
+    //change number list when number of cards is changed
     useEffect(() => {
-        setProducts(initialItems.slice(productIndex,productIndex+cardNumbers))
+        setChapters(initialItems.slice(chapterIndex,chapterIndex+cardNumbers))
         let items=[]
         for (let i=0;i<initialItems.length/cardNumbers;i++) {
             items.push(i+1)
         }
 
-        setProdNumber(items)
+        setChapterNumber(items)
     }, [cardNumbers])
 
+
+    //Show chapters based on chapter
     useEffect(() => {
         if(props.search==null||props.search===""||!props.search.trim()){
+            setChapters(initialItems.slice(chapterIndex,chapterIndex+cardNumbers))
             return;
         }
-        setProducts(initialItems.filter((data)=>{
+        setChapters(initialItems.filter((data)=>{
             let s=props.search.trim();
             if(props.search===null||props.search==="")
                 return data;
@@ -101,45 +134,70 @@ export default function SubjectCardSection(props) {
     }, [props.search])
 
     const nextProduct = () => {
-        setDisableLeft("black");
-        const lastProductIndex = initialItems.length - 1;
-        const resetProductIndex = (productIndex+cardNumbers-1) >= lastProductIndex;
-        const index = resetProductIndex ? 0 : productIndex + cardNumbers;
-        setProductIndex(index);
-        setStl("blue")
+        setSlideDirection('right')
+        setSlideIn(false);
+
+        setTimeout(() => {
+            setDisableLeft("black");
+            const lastchapterIndex = initialItems.length - 1;
+            const resetChapterIndex = (chapterIndex+cardNumbers-1) >= lastchapterIndex;
+            const index = resetChapterIndex ? 0 : chapterIndex + cardNumbers;
+            setChapterIndex(index);
+            setStl("blue")
+            setSlideDirection('left')
+            setSlideIn(true);
+        }, 300);
     };
     
     const prevProduct = (e) => {
-        if(productIndex===0){
+        if(chapterIndex===0){
             setDisableLeft("gray");
             return;
         }
-        setDisableLeft("black");
-        const index =  productIndex - cardNumbers;
-        setProductIndex(index);
-        if(index===0){
-            setDisableLeft("gray")
-        }
+        setSlideDirection('left');
+        setSlideIn(false);
+        setTimeout(() => {
+            setDisableLeft("black");
+            const index =  chapterIndex - cardNumbers;
+            setChapterIndex(index);
+            if(index===0){
+                setDisableLeft("gray")
+            }
+            setSlideDirection('right')
+            setSlideIn(true);
+        }, 300);
     };
 
     return (
+        loading==true?
+            <CircularProgress style={{margin:'25% 50%'}}/>:
         <div>
             <div className="sub-cards" >
-                    {products.length===0?
-                        <div>
+                    {chapters.length===0?
+                        <div className="no-results">
                             No Results found
                         </div>    
-                        :products.map((product,index) => (
+                        :chapters.map((chapter,index) => (
+                             
                             props.section=="AITS"
                                 ?<AITSCard/>
                                 :(props.section=="PreviousYear"
-                                    ?<PreviousYearCard type={props.type} style={{transform: `translateX(${0}px)`,transition: 'transform ease-out 0.45s'}}/>
-                                    :<SubjectCard number={productIndex+index+1}  name={products[index]} subject={props.subject}/>
+                                    ?<Slide in={slideIn} direction={slideDirection}>
+                                        <div>
+                                            <PreviousYearCard isAttempted={props.checkAttempted(chapter.name)} setLoading={props.setLoading} type={props.type} paper={chapter}/>
+                                        </div>
+                                    </Slide>
+                                    :<Slide in={slideIn} direction={slideDirection}>
+                                        <div>
+                                            <SubjectCard number={chapterIndex+index+1}  name={chapters[index]} subject={props.subject} loadingStart={props.loadingStart}/>
+                                        </div>
+                                    </Slide>
                                 )
+                           
                         ))
                     }
             </div>
-            {products.length!==0 && products.length!==1?
+            {chapters.length!==0 ?
                 <div style={{display:'flex',margin:'20px 0'}}>
                     <ArrowLeftIcon type="button" style={{fontSize:'46px',margin:'0px 0 0px auto',color:disableLeft}} className="arrow" onClick={prevProduct}/>
 
@@ -147,8 +205,8 @@ export default function SubjectCardSection(props) {
                     <div style={{margin:'auto 0',display:'flex'}}>
                         {
                             cardNumbers!=1?
-                                prodNumber.map((number) =>
-                                    <div style={{margin:'4px',color:number==((productIndex+cardNumbers)/cardNumbers)?"#448698":"rgba(0,0,0,0.8)"}}>
+                                chapterNumber.map((number) =>
+                                    <div style={{margin:'4px',color:number==((chapterIndex+cardNumbers)/cardNumbers)?"#448698":"rgba(0,0,0,0.8)"}}>
                                         {number}
                                     </div>
                                 )

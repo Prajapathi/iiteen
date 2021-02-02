@@ -6,6 +6,7 @@ import HomeCarousel from '../elements/HomeCarousel'
 import banner from '../../assets/images/mainbanner.png'
 
 export default function Home() {
+    document.title="IITEENS"
     return (
         <div class="screen">
         <div style={{height:'auto',width:'80%',margin:'auto'}}>

@@ -58,33 +58,38 @@ export function SubjectCard(props) {
 
     const selectLevel=(lev)=>{
         setLevel(lev);
-        console.log("ohh",lev,subject,chapter)
-
+        console.log("ohh","Class "+classNumber,lev,subject,chapter)
+        props.loadingStart(true)
         //Access question to pass as prop
         const db = firebase.firestore();
-        db.collection("SUBJECTWISE").doc("Class 12").collection(subject).doc("Chapter "+chapter).collection("Level 01").orderBy("number").get()
+        db.collection("SUBJECTWISE").doc("Class "+classNumber).collection(subject).doc("Chapter "+chapter).collection("Level 0"+lev).orderBy("number").get()
         .then(function(querySnapshot) {
             let questions=[];
             querySnapshot.forEach(function(doc) {
                 questions.push({...doc.data(),qid:doc.id})
             });
             console.log("k",questions)
-            setPaper(questions)
+            if(questions.length==0){
+                history.push("/QuestionsError")
+            }
+            else{
+                setPaper(questions)
+                props.loadingStart(false)
+                //put into redux store
+                props.fetchPaper({questions,noOfQuestions:25,name:props.name, subject,level:lev,classNumber})
 
-            //put into redux store
-            props.fetchPaper({questions,noOfQuestions:25,name:props.name, subject,level:lev,classNumber})
-
-            //to check if user is navigating through SubjectCard
-            localStorage.setItem("PaperName","Subjectwise")
-            history.push("Subjectwise/Papers/"+chapter)
+                //to check if user is navigating through SubjectCard
+                localStorage.setItem("PaperName","Subjectwise")
+                history.push("Subjectwise/Papers/"+chapter)
+            }
         })
         .catch(function(error) {
             console.log("Error getting documents: ", error);
+            history.push("/QuestionsError");
         });
     }
 
     return (
-        
         <div className="flip-card subject-card">
             <div className="flip-card-inner">
                 <div className="flip-card-front">
