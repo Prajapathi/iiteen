@@ -16,6 +16,9 @@ export default function Routing() {
     return (
         <Switch>
             <Route exact path="/">
+                <Landing/>
+            </Route>
+            <Route exact path="/Home">
                 <Home/>
             </Route>
             <Route exact path="/MockTest">

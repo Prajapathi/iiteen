@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter} from "react-router-dom";
 import Routing from './Routing'
-import Landing from './components/Landing'
+import Landing from './components/signin'
 import Footer from './components/Footer'
 import LeftMenu from './components/LeftMenu'
 import HomeCarousel from './components/elements/HomeCarousel'
@@ -16,10 +16,10 @@ import MockTest from './components/screens/sections/MockTest'
 import Analysis from './components/elements/DetailedAnalysis/Analysis'
 
 function App() {
-  let login=false;
+  let login=true;
   return (
     <>
-    {/* <PaperAnalysis/> */}
+    {/* <Landing/> */}
     {/* <Timer duration={150}/> */}
     <BrowserRouter>
      {login?

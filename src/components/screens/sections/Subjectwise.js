@@ -25,6 +25,8 @@ export default function Subjectwise() {
         <div className="screen" id="subjectwise">
             {open?
                 <Dialog
+                    disableBackdropClick 
+                    disableEscapeKeyDown 
                     open={open}
                     onClose={()=>setOpen(false)}
                     aria-labelledby="alert-dialog-title"

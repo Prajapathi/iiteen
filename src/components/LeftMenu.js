@@ -233,7 +233,7 @@ export default function LeftMenu() {
                 style = {{ marginRight: '3%' }}
             >
                 <div className = { clsx(classes.tab) } >
-                    <Link to="/" className="menu-link">
+                    <Link to="/Home" className="menu-link">
                         <Typography className = { clsx(classes.tabs) } >Home </Typography>
                     </Link>
                     <Typography className = { clsx(classes.tabs) } >Report </Typography> 
