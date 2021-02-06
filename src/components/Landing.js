@@ -30,6 +30,9 @@ export default function Landing() {
 
     return (
         <div id="landingpage" >
+            {
+                openLogin?<Signin openLogin={openLogin} closeLogin={()=>setOpenLogin(false)}/>:null
+            }
             <div style={{transform: open ? 'translateX(0)' : 'translateX(180px)', transition: "all 0.5s linear"}}>
                 <div  id="app-bar">
                     <div id="app-bar-open" onClick={()=>setOpen(!open)}>
@@ -212,9 +215,7 @@ export default function Landing() {
                     </div>
                 </div>
             </div>
-            {
-                openLogin?<Signin openLogin={openLogin} closeLogin={()=>setOpenLogin(false)}/>:null
-            }
         </div>
+        
     )
 }

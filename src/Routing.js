@@ -11,40 +11,45 @@ import Papers from './components/elements/Paper/Paper'
 import NoQuestionsError from './components/elements/Paper/NoQuestionsError'
 import SubjectwisePaper from './components/elements/Paper/Subjectwise/Paper'
 import PaperAnalysis from './components/elements/Paper/PaperAnalysis'
+import Footer from './components/Footer'
+import LeftMenu from './components/LeftMenu'
 
 export default function Routing() {
     return (
+        <>
         <Switch>
             <Route exact path="/">
-                <Landing/>
+               <LeftMenu/><div style={{height:"70px"}}></div> <Landing/><Footer/>
             </Route>
             <Route exact path="/Home">
-                <Home/>
+                <LeftMenu/><div style={{height:"70px"}}></div><Home/><Footer/>
             </Route>
             <Route exact path="/MockTest">
-                <MockTest/>
+                 <LeftMenu/><div style={{height:"70px"}}></div><MockTest/><Footer/>
             </Route>
             <Route exact path="/Subjectwise">
-                <SubjectWise/>
+                <LeftMenu/><div style={{height:"70px"}}></div><SubjectWise/><Footer/>
             </Route>
             <Route exact path="/PreviousYear">
-                <PreviousYear/>
+                <LeftMenu/><div style={{height:"70px"}}></div><PreviousYear/><Footer/>
             </Route>
             <Route path="/AITS">
-                <AITS/>
+                <LeftMenu/><div style={{height:"70px"}}></div><AITS/><Footer/>
             </Route>
             <Route exact path="/Subjectwise/Papers/:paperName">
-                <SubjectwisePaper/>
+                <LeftMenu/><div style={{height:"70px"}}></div><SubjectwisePaper/><Footer/>
             </Route>
             <Route exact path="/:paperType/Papers/:paperName">
-                <Papers/>
+                <LeftMenu/><div style={{height:"70px"}}></div><Papers/><Footer/>
             </Route>
             <Route exact path="/:paperType/Papers/Analysis/:paperName">
-                <PaperAnalysis/>
+                <LeftMenu/><div style={{height:"70px"}}></div><PaperAnalysis/><Footer/>
             </Route>
             <Route exact path="/QuestionsError">
-                <NoQuestionsError/>
+                <LeftMenu/><div style={{height:"70px"}}></div><NoQuestionsError/><Footer/>
             </Route>
         </Switch>
+        
+        </>
     )
 }

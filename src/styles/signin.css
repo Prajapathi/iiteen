@@ -1,4 +1,6 @@
-
-.signin-dialog{
+.dialog-content-signin{
     background:#EAEAEA;
+}
+#signin-dialog{
+    text-align:center;
 }

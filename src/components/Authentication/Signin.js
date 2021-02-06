@@ -11,22 +11,21 @@ export default function Signin(props) {
     return (
         <div>
                 <Dialog
-                    className="signin-dialog"
+                    id="signin-dialog"
                     open={props.openLogin}
                     onClose={props.closeLogin}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                     fullWidth={true}
-                    id="class-select-dialog"
+                    style= {{
+                        backgroundColor: 'transparent',}}
                 >
-                    <DialogTitle id="alert-dialog-title">{"Please select your class"}</DialogTitle>
-                    <DialogContent>
+                    <DialogTitle id="alert-dialog-title" className="dialog-content-signin">{"Please enter your mobile number"}</DialogTitle>
+                    <DialogContent className="dialog-content-signin">
                         <DialogContentText id="alert-dialog-description">
+                            
                             <Button>
-                                Class 11
-                            </Button>
-                            <Button>
-                                Class 12
+                                Enter
                             </Button>
                         </DialogContentText>
                     </DialogContent>

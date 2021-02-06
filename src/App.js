@@ -23,7 +23,7 @@ function App() {
     {/* <Timer duration={150}/> */}
     <BrowserRouter>
      {login?
-      <><LeftMenu/><div style={{height:"70px"}}></div><Routing style={{minHeight:'80vh'}}/><Footer/></>
+      <><Routing style={{minHeight:'80vh'}}/><RoutingAdmin/></>
       :<RoutingAdmin/>
     }
      </BrowserRouter> 
