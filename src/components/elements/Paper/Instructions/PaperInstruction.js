@@ -77,15 +77,15 @@ export default function PaperInstruction(props) {
             <div id="detail-head">
                 <div>
                     <div className="detail-subhead">Duration</div>
-                    <div className="detail-subhead-data">180 mins</div>
+                    <div className="detail-subhead-data">{props.details?props.details.totalDuration:"-"} mins</div>
                 </div>
                 <div>
                     <div className="detail-subhead">Questions</div>
-                    <div className="detail-subhead-data">75</div>
+                    <div className="detail-subhead-data">{props.details?props.details.noOfQuestions:"-"}</div>
                 </div>
                 <div>
                     <div className="detail-subhead">Marks</div>
-                    <div className="detail-subhead-data">300</div>
+                    <div className="detail-subhead-data">{props.details?props.details.totalMarks:"-"}</div>
                 </div>
             </div>
            
@@ -97,7 +97,7 @@ export default function PaperInstruction(props) {
                         {props.inst[index].data}
                          
                         <ul>
-                        { props.inst[index].points?props.inst[index].points.map((key,ind)=>
+                        { !props.inst?null:props.inst[index].points?props.inst[index].points.map((key,ind)=>
                             props.inst[index].points[ind]==""?null:
                                                                         <li key={ind} style={{listStyleType:'none'}}>
                                                                             <div className="inst-sub-points">

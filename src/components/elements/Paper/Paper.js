@@ -269,17 +269,17 @@ export function Paper(props) {
     }
 
     return (
-        // !start?
+        !start?
         // //if start is false then display Marking scheme and General Instructions one by one
-        // (
-        //     !showGeneralInst?
-        //     <>
-        //     <PaperInstruction setContinue={setShowGeneralInst} inst={props.paper.instructions}/>
-        //     {/* <Timer duration={1}/> */}
-        //     </>
-        //     :<GeneralInstruction start={setStart}/>
-        // )
-        // :
+        (
+            !showGeneralInst?
+            <>
+            <PaperInstruction setContinue={setShowGeneralInst} details={props.paper} inst={props.paper.instructionInfo}/>
+            {/* <Timer duration={1}/> */}
+            </>
+            :<GeneralInstruction start={setStart}/>
+        )
+        :
         //after start is set to true, display individual questions
         <>
                 <div className="timer-bar" style={{justifyContent:showSummary?"center":"space-between"}}>
