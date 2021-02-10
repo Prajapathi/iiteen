@@ -1,8 +1,9 @@
 #landingpage{
     background:#F5F5F5;
-    background-image:url(../assets/images/Landing/top-left-blob.png);
-    background-size:60%,85px,85px,50px,95px,65px;
-    background-position: 0px -5px,310px 320px,590px 60px,870px 200px,1110px 300px,1420px 50px;
+    background-image:url(../assets/images/Landing/top-left-blob.png),url(../assets/images/Landing/top-right-blob.png),
+                    url(../assets/images/Landing/bottom-left-blob.png),url(../assets/images/Landing/bottom-right-blob.png);
+    background-size:60%,15%,15%,15%;
+    background-position: 0px -5px,100% -20%,0% 120%,100% 73%;
     background-repeat: no-repeat;
     background-origin: content-box;
     color:#498E9C;

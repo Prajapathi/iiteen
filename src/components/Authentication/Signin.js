@@ -6,8 +6,12 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import TextField from '@material-ui/core/TextField';
+
 
 export default function Signin(props) {
+    const[showOTPInput,setShowOTPInput]=React.useState(false)
     return (
         <div>
                 <Dialog
@@ -20,11 +24,21 @@ export default function Signin(props) {
                     style= {{
                         backgroundColor: 'transparent',}}
                 >
-                    <DialogTitle id="alert-dialog-title" className="dialog-content-signin">{"Please enter your mobile number"}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title" className="dialog-content-signin">
+                        {"Please enter your mobile number"}
+                    </DialogTitle>
                     <DialogContent className="dialog-content-signin">
                         <DialogContentText id="alert-dialog-description">
-                            
-                            <Button>
+                            <TextField
+                                label="Phone Number"
+                                id="outlined-start-adornment"
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">+91</InputAdornment>,
+                                }}
+                                variant="outlined"
+                            />
+                            <br/>
+                            <Button id="signin-button">
                                 Enter
                             </Button>
                         </DialogContentText>

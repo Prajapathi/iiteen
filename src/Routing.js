@@ -13,13 +13,14 @@ import SubjectwisePaper from './components/elements/Paper/Subjectwise/Paper'
 import PaperAnalysis from './components/elements/Paper/PaperAnalysis'
 import Footer from './components/Footer'
 import LeftMenu from './components/LeftMenu'
+import Signin from './components/signin'
 
 export default function Routing() {
     return (
         <>
         <Switch>
             <Route exact path="/">
-               <LeftMenu/><div style={{height:"70px"}}></div> <Landing/><Footer/>
+               <LeftMenu/><div style={{height:"60px"}}></div> <Landing/><Footer/>
             </Route>
             <Route exact path="/Home">
                 <LeftMenu/><div style={{height:"70px"}}></div><Home/><Footer/>
@@ -47,6 +48,9 @@ export default function Routing() {
             </Route>
             <Route exact path="/QuestionsError">
                 <LeftMenu/><div style={{height:"70px"}}></div><NoQuestionsError/><Footer/>
+            </Route>
+            <Route exact path="/Signin">
+                <LeftMenu/><div style={{height:"70px"}}></div><Signin/><Footer/>
             </Route>
         </Switch>
         

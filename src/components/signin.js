@@ -14,7 +14,17 @@ export default class PhoneLogin extends Component {
       alert: false,
     };
   }
-
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                console.log("User is signed in",user.uid)
+            } else {
+                console.log("No user is signed in")
+            }
+        });
+    }
+    
+    
   onChangeHandler = (event) => {
     const { name, value } = event.target;
     this.setState({
@@ -76,6 +86,30 @@ export default class PhoneLogin extends Component {
       });
   };
 
+  showCurrentUser=()=>{
+      var user = firebase.auth().currentUser;
+        var name, phoneNumber, photoUrl, uid, phoneNumberVerified;
+
+        if (user != null) {
+        name = user.displayName;
+        phoneNumber = user.phoneNumber;
+        photoUrl = user.photoUrl;
+        phoneNumberVerified = user.phoneNumberVerified;
+        uid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
+                        // this value to authenticate with your backend server, if
+                        // you have one. Use User.getToken() instead.
+        }
+      console.log("USER: ",name,phoneNumber,photoUrl,uid,phoneNumberVerified)
+  }
+
+  signout=()=>{
+      firebase.auth().signOut().then(() => {
+        console.log("Sign-out successful")
+    }).catch((error) => {
+     console.log("An error happened.")
+    });
+  }
+
   render() {
     return (
       <div>
@@ -112,6 +146,8 @@ export default class PhoneLogin extends Component {
                   />
                 </Form.Group>
                 <Button button="Submit" type="submit" >Sign In</Button>
+                <Button onClick={this.showCurrentUser}>Show User</Button>
+                <Button onClick={this.signout}>Sign Out</Button>
               </Form>
             </Col>
           </Row>
