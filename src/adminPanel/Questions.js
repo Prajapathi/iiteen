@@ -243,7 +243,13 @@ export default function Questions(props) {
         await uploadFiles();
     }
 
-  
+    const confirmSave=()=>{
+        let save=window.confirm("Do you want to save the paper?")
+        if(save==true){
+            savePaper()
+        }
+        else return
+    }
     
 
     return (
@@ -283,7 +289,7 @@ export default function Questions(props) {
                                                     border:'1px solid white',
                                                     borderRadius:'20px'
                                                     }}
-                                                    onClick={savePaper}>
+                                                    onClick={confirmSave}>
                                                         SAVE PAPER
                                                     </button>
                     }

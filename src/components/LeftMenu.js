@@ -169,10 +169,12 @@ const useStyles = makeStyles((theme) => ({
         
     },
     navlogo:{
-        height:'50px',
+        height:'64px',
         [theme.breakpoints.down('sm')]: {
-            height:'40px'
+            height:'56px'
         },
+        marginTop:"0px",
+        marginBottom:"0px"
     },
     navimg: {
         height: '35px',
