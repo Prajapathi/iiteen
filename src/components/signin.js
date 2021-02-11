@@ -16,11 +16,11 @@ export default class PhoneLogin extends Component {
   }
     componentDidMount() {
         firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                console.log("User is signed in",user.uid)
-            } else {
-                console.log("No user is signed in")
-            }
+        if (user) {
+            console.log("User is signed in",user.uid)
+        } else {
+            console.log("No user is signed in")
+        }
         });
     }
     
@@ -59,7 +59,7 @@ export default class PhoneLogin extends Component {
         // SMS sent. Prompt user to type the code from the message, then sign the
         // user in with confirmationResult.confirm(code).
         window.confirmationResult = confirmationResult;
-        // console.log(confirmationResult);
+         console.log(confirmationResult);
         console.log("OTP is sent");
       })
       .catch(function (error) {

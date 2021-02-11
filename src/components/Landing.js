@@ -55,8 +55,8 @@ export default function Landing() {
             <div id="section1">
                 <img src={banner}/>
                 <div id="section1-text">
-                    <h1 style={{fontSize:'3.5rem',fontWeight:'650'}}>Are you Preparing for <b>JEE</b>?</h1>
-                    <h1 style={{fontSize:'2.5rem',fontWeight:'600'}}><b>CRACK</b> IIT JEE with <b>IITeens</b></h1>
+                    <h1 id="section1-heading-line1">Are you Preparing for <b>JEE</b>?</h1>
+                    <h1 id="section1-heading-line2"><b>CRACK</b> IIT JEE with <b>IITeens</b></h1>
                     <p style={{fontSize:'20px'}}>IITeens conducts online Test Series for Concept Building,
                         Learning and Development of Basics of the JEE aspirants. 
                         In depth Technical Analysis accelerates the performance.</p>
@@ -68,7 +68,7 @@ export default function Landing() {
             </div>
 
             <div id="section2">
-                <h1 style={{fontSize:'3.5rem',fontWeight:'700'}}>Why You should choose us?</h1>
+                <h1 id="section2-heading">Why You should choose us?</h1>
                 <img src={second}/>
             </div>
 
