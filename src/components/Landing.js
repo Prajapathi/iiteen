@@ -164,7 +164,7 @@ export default function Landing() {
                                 when an unknoas asassa asrdfbervawn
                             </p>
                             <div className="sub-section4-button-section">
-                                <button className="landing-button">Enroll Now</button>
+                                <button className="landing-button" onClick={()=>setOpenLogin(true)}>Enroll Now</button>
                                 <button className="landing-button">View Schedule</button>
                             </div>
                         </div>
@@ -185,7 +185,7 @@ export default function Landing() {
                                 when an unknoas asassa asrdfbervawn
                             </p>
                             <div className="sub-section4-button-section">
-                                <button className="landing-button">Enroll Now</button>
+                                <button className="landing-button" onClick={()=>setOpenLogin(true)}>Enroll Now</button>
                                 <button className="landing-button">View Schedule</button>
                             </div>
                         </div>
