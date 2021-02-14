@@ -1,17 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux'
-import {combineReducers,createStore} from 'redux'
 import Firebase, { FirebaseContext } from './Firebase';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import MockTestReducer from './store/reducer/MockTestReducer'
+import store from './store/config'
 
-const rootReducer= combineReducers({
-  MockTestReducer
-})
-const store=createStore(rootReducer)
 
 ReactDOM.render(
   <React.StrictMode>

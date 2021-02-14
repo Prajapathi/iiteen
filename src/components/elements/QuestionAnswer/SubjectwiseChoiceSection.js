@@ -44,13 +44,11 @@ console.log("kkk",props.stateAnswer[props.number-1])
         //if answer was already submitted then load this into local state for display
         if(props.stateAnswer[props.number-1] && props.stateAnswer[props.number-1].answerGiven!=null){
             let opt=[false,false,false,false]
-
             //for multi-correct questions
             if(props.stateAnswer[props.number-1].answerType==5)
                 for(let i=0;i<props.stateAnswer[props.number-1].answerGiven.length;i++){
                         opt[props.stateAnswer[props.number-1].answerGiven[i]]=true
                 }
-
             //for single-correct questions
             else if(props.stateAnswer[props.number-1].answerType==4)
                 opt[props.stateAnswer[props.number-1].answerGiven]=true
@@ -237,7 +235,7 @@ console.log("kkk",props.stateAnswer[props.number-1])
                                                                                 ?text.data
                                                                                 :(text.type==2
                                                                         ?<InlineMath>{text.data}</InlineMath>
-                                                                        :(text.type==3?<img src={text.data} style={{width:"100%"}}/>:null)
+                                                                        :(text.type==3?<img src={text.data} style={{width:"50%"}}/>:null)
                                                                     )
                                                                 )
                                                             }
@@ -251,7 +249,7 @@ console.log("kkk",props.stateAnswer[props.number-1])
                         {
                             showHint && !showSolution?
                                 <div className="solution-subjectwise">
-                                    <h5 style={{textAlign:'center',color:'yellow'}}>Hint</h5>
+                                    <h5 style={{textAlign:'center'}}>Hint</h5>
                                     { props.hint?
                                         props.hint.map((item,index)=>
                                             <>
@@ -320,7 +318,7 @@ console.log("kkk",props.stateAnswer[props.number-1])
                                 wrongAttempt && !showSolution?
                                 <button style={{background:'red'}} onClick={()=>submitQuestion()}>Retry</button>
                                 :
-                                (props.stateAnswer[props.number-1] && props.number!=props.noOfQuestions && (!props.stateAnswer[props.number-1].isAnsweredWrong &&props.stateAnswer[props.number-1].isAnswered)?
+                                (props.stateAnswer[props.number-1] && props.number!=props.noOfQuestions && (!props.stateAnswer[props.number-1].isAnsweredWrong &&props.stateAnswer[props.number-1].isAnswered && props.number!=props.noOfQuestions)?
                                     <button style={{background:'#3B95C2'}} onClick={()=>props.goToNextQuestion()}>Next</button>
                                     :<button style={{background:'#18d618'}} onClick={()=>submitQuestion()}>Submit</button>
                                 )
@@ -328,7 +326,7 @@ console.log("kkk",props.stateAnswer[props.number-1])
                         }
                         {
                             props.number==props.noOfQuestions?
-                                <button style={{background:'#ff9700'}} onClick={props.showSummary}>Submit Paper</button>
+                                null
                                 :
                                 <div className="forward-button">
                                     <ArrowForwardIosIcon 

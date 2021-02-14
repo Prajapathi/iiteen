@@ -1,5 +1,7 @@
 import React from 'react';
 import {BrowserRouter} from "react-router-dom";
+import store from './store/config'
+import * as Actions from './store/action/Authentication'
 import Routing from './Routing'
 import Landing from './components/signin'
 import Footer from './components/Footer'
@@ -15,8 +17,10 @@ import Paper from './components/elements/Paper/Subjectwise/Paper'
 import MockTest from './components/screens/sections/MockTest'
 import Analysis from './components/elements/DetailedAnalysis/Analysis'
 
+
 function App() {
   let login=true;
+  store.dispatch(Actions.verifyAuth())
   return (
     <>
     {/* <Landing/> */}

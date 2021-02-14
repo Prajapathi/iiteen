@@ -1,5 +1,8 @@
 import React from 'react'
 import '../../styles/signin.css'
+import firebase from 'firebase'
+import {setAuthentication} from '../../store/action/Authentication'
+import {connect} from 'react-redux'
 import Form from "react-bootstrap/Form";
 import Button from 'react-bootstrap/Button'
 import Dialog from '@material-ui/core/Dialog';
@@ -9,17 +12,35 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
-import firebase from 'firebase'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
-export default function Signin(props) {
+export function Signin(props) {
+    const [showLoading,setShowLoading]=React.useState(false)
+    const [recaptchaSetOnce,setRecaptchaSetOnce]=React.useState(false)
     const [showOTPInput,setShowOTPInput]=React.useState(false);
     const [phoneNo,setPhoneNo]=React.useState('');
     const [otp,setOTP]=React.useState('')
+    const [showIncorrectOTPError,setShowIncorrectOTPError]=React.useState(false)
+    const [showInvalidNumber,setShowInvalidNumber]=React.useState(false)
+    const [showError,setShowError]=React.useState(false)
+    const [disableExit,setDisableExit]=React.useState(false)
 
     const onSignInSubmit = (e) => {
         e.preventDefault();
-        setUpRecaptcha();
+
+        //if previously the Phone was invalid then this new attempt will hide the error
+        setShowInvalidNumber(false)
+
+        setShowLoading(true)
+        setDisableExit(true)
+
+        //set recaptcha only the first time
+        if(recaptchaSetOnce==false){
+            setUpRecaptcha();
+            setRecaptchaSetOnce(true)
+        }
+
         let phoneNumber = "+91" + phoneNo;
         console.log(phoneNumber);
         let appVerifier = window.recaptchaVerifier;
@@ -31,16 +52,26 @@ export default function Signin(props) {
             // user in with confirmationResult.confirm(code).
             window.confirmationResult = confirmationResult;
             // console.log(confirmationResult);
+            setShowLoading(false)
             console.log("OTP is sent");
             setShowOTPInput(true)
         })
         .catch(function (error) {
-            console.log("Toh?",error);
+            setShowLoading(false)
+            if(error.code="auth/invalid-phone-number"){
+                setShowInvalidNumber(true)
+            }
+            else setShowError(true)
+            console.log("Signin Error:",error);
         });
     };
 
     const onSubmitOtp = (e) => {
         e.preventDefault();
+        setShowLoading(true)
+
+        //if previously the OTP was incorrect then this attempt will hide the error
+        setShowIncorrectOTPError(false)
         let otpInput = otp;
         let optConfirm = window.confirmationResult;
         optConfirm
@@ -48,12 +79,20 @@ export default function Signin(props) {
         .then(function (result) {
             // User signed in successfully.
             // console.log("Result" + result.verificationID);
-            console.log("Sign in ho gaya!")
+            setShowLoading(false)
+            console.log("Sign in successful!")
             let user = result.user;
+            props.setAuthentication(user)
         })
         .catch(function (error) {
+            setShowLoading(false)
+            if(error.code=="auth/invalid-verification-code"){
+                //alert("Incorrect OTP");
+                setShowIncorrectOTPError(true)
+            }
+            else
+                setShowError(true)
             console.log(error);
-            alert("Incorrect OTP");
         });
     };
 
@@ -81,6 +120,8 @@ export default function Signin(props) {
                     fullWidth={true}
                     style= {{
                         backgroundColor: 'transparent',}}
+                    disableBackdropClick={showOTPInput || disableExit?true:false}
+                    disableEscapeKeyDown={showOTPInput|| disableExit?true:false}
                 >
                     <DialogTitle id="alert-dialog-title" className="dialog-content-signin">
                         {"Please enter your mobile number"}
@@ -103,6 +144,7 @@ export default function Signin(props) {
                                     :
                                     <TextField
                                         label="Enter OTP"
+                                        placeholder="_ _ _ _ _ _"
                                         id="outlined-start-adornment"
                                         value={otp}
                                         onChange={(e)=>setOTP(e.target.value)}
@@ -110,9 +152,35 @@ export default function Signin(props) {
                                     />
                                 }
                                 <br/>
-                                <Button id="signin-button" onClick={showOTPInput? onSubmitOtp: onSignInSubmit}>
-                                    Enter
-                                </Button>
+                                 {
+                                        showIncorrectOTPError?
+                                            <div id="incorrect-error">Incorrect OTP. Please Try Again.</div>
+                                            :null
+                                }
+                                 {
+                                        showInvalidNumber?
+                                            <div id="incorrect-error">Please enter a valid Phone Number.</div>
+                                            :null
+                                }
+                                <div id="signin-button-section">
+                                    {
+                                        showLoading?<CircularProgress/>:null
+                                    }
+                                    {
+                                        showError?
+                                            <>Something went Wrong. Please Try Again.<br/></>
+                                        :
+                                    
+                                        <Button 
+                                            id="signin-button" 
+                                            disabled={showLoading} 
+                                            onClick={showOTPInput? onSubmitOtp: onSignInSubmit}
+                                            style={{backgroundColor:showLoading?'grey':null}}
+                                        >
+                                            Enter
+                                        </Button>
+                                    }
+                                </div>
                             </Form>
                         </DialogContentText>
                     </DialogContent>
@@ -120,3 +188,11 @@ export default function Signin(props) {
         </div>
     )
 }
+
+const mapDispatchToProps=dispatch=>{
+    return{
+        setAuthentication:(user)=>dispatch(setAuthentication(user))
+    }
+}
+
+export default connect(null,mapDispatchToProps)(Signin)

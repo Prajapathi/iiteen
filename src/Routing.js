@@ -1,5 +1,6 @@
 import React from 'react'
 import {Switch,Route} from 'react-router-dom'
+import {connect} from 'react-redux'
 import Home from './components/screens/Home'
 import About from './components/screens/About'
 import Landing from './components/Landing' 
@@ -14,13 +15,30 @@ import PaperAnalysis from './components/elements/Paper/PaperAnalysis'
 import Footer from './components/Footer'
 import LeftMenu from './components/LeftMenu'
 import Signin from './components/signin'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-export default function Routing() {
+export function Routing(props) {
+    const [authenticated,setAuthenticated]=React.useState('')
+
+    React.useEffect(() => {
+        console.log("YEAH?")
+        setAuthenticated(props.isAuthenticated)
+    }, [props.isAuthenticated])
+
+    console.log("Token",props.isAuthenticated,authenticated)
     return (
+        authenticated===''?<CircularProgress/>:
+        authenticated==false?
+            <><LeftMenu/><div style={{height:"60px"}}></div><Landing/><Footer/></>
+        :
         <>
         <Switch>
             <Route exact path="/">
-               <LeftMenu/><div style={{height:"60px"}}></div> <Landing/><Footer/>
+               {
+                   authenticated?
+                    <><LeftMenu/><div style={{height:"70px"}}></div><Home/><Footer/></>
+                    :<><LeftMenu/><div style={{height:"60px"}}></div> <Landing/><Footer/></>
+               }
             </Route>
             <Route exact path="/Home">
                 <LeftMenu/><div style={{height:"70px"}}></div><Home/><Footer/>
@@ -57,3 +75,11 @@ export default function Routing() {
         </>
     )
 }
+
+const mapStateToProps=(state)=>{
+    return{
+        isAuthenticated:state.AuthReducer.isAuthenticated
+    }
+}
+
+export default connect(mapStateToProps,null)(Routing)

@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import {signOut} from '../store/action/Authentication'
+import {connect} from 'react-redux'
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Button from 'react-bootstrap/Button'
@@ -6,7 +8,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import firebase from 'firebase'
 
-export default class PhoneLogin extends Component {
+export class PhoneLogin extends Component {
   constructor() {
     super();
     this.state = {
@@ -105,6 +107,7 @@ export default class PhoneLogin extends Component {
   signout=()=>{
       firebase.auth().signOut().then(() => {
         console.log("Sign-out successful")
+        this.props.signOut()
     }).catch((error) => {
      console.log("An error happened.")
     });
@@ -156,3 +159,11 @@ export default class PhoneLogin extends Component {
     );
   }
 }
+
+const mapDispatchToProps=dispatch=>{
+    return{
+        signOut:()=>dispatch(signOut())
+    }
+}
+
+export default connect(null,mapDispatchToProps)(PhoneLogin)

@@ -68,6 +68,9 @@ const AdvDefaultInst=[
     },
 ]
 export default function PaperInstruction(props) {
+
+    const [check,setCheck]=React.useState(false);
+
     return (
         <div id="inst-body">
            <div id="paper-heading">JEE MAINS </div>
@@ -89,7 +92,7 @@ export default function PaperInstruction(props) {
                 </div>
             </div>
            
-             { props.inst.map((key,index)=>
+             {!props.inst?null: props.inst.map((key,index)=>
                 <>
                 <div className="paper-inst">
                     <div className="inst-point-box"></div>
@@ -118,12 +121,20 @@ export default function PaperInstruction(props) {
                 </>
             )}
 
-            <div id="inst-bottom" style={{padding:"20px 50px"}}>
-            <div></div>
+            <div id="inst-bottom">
+                <div style={{display:"flex"}}>
+                    <label class="inst-checkbox">I have read the instructions
+                    <input type="checkbox" checked={check} onClick={()=>setCheck(!check)}/>
+                            <span class="checkmark"></span>
+                    </label>
+                </div>
                 <div>
-                    Time Remaining: 00:30:00
-                    <button id="inst-start"  style={{background:"white",color:"#333131"}} onClick={()=>props.setContinue(true)}>
-                        Next
+                    {/* Time Remaining: 00:30:00 */}
+                    <button id="inst-start"  style={{background:"#ff9700"}} onClick={()=>props.goToGeneralInst()}>
+                        Back
+                    </button>
+                    <button id="inst-start"  style={{background:!check?"grey":null}} disabled={!check} onClick={()=>props.start(true)}>
+                        Start
                     </button>
                 </div>
             </div>

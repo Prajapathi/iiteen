@@ -23,7 +23,7 @@ export function Paper(props) {
     const [palleteArray,setPalleteArray]=React.useState({phy:[],maths:[],chem:[]})
     const [questions,setQuestions]=React.useState()
     const [index,setIndex]=React.useState(0)
-    const [showGeneralInst,setShowGeneralInst]=React.useState(false);
+    const [showPaperInst,setShowPaperInst]=React.useState(false);
     const [start,setStart]=React.useState(false)
     const [showSummary,setShowSummary]=React.useState(false)
     const [timeOver,setTimeOver]=React.useState(false)
@@ -272,12 +272,12 @@ export function Paper(props) {
         !start?
         // //if start is false then display Marking scheme and General Instructions one by one
         (
-            !showGeneralInst?
+            !showPaperInst?
             <>
-            <PaperInstruction setContinue={setShowGeneralInst} details={props.paper} inst={props.paper.instructionInfo}/>
+            <GeneralInstruction setContinue={setShowPaperInst} />
             {/* <Timer duration={1}/> */}
             </>
-            :<GeneralInstruction start={setStart}/>
+            :<PaperInstruction start={setStart} goToGeneralInst={()=>setShowPaperInst(false)} details={props.paper} inst={props.paper.instructionInfo}/>
         )
         :
         //after start is set to true, display individual questions

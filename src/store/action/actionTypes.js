@@ -1,3 +1,16 @@
+//for Authentication
+export const SIGN_IN="SIGN_IN"
+export const SIGN_IN_SUCCESS="SIGN_IN_SUCCESS"
+export const SIGN_IN_ERROR="SIGN_IN_FAIL"
+
+export const SET_AUTHENTICATED_USER="SET_AUTHENTICATED_USER"
+export const SIGN_OUT="SIGN_OUT"
+export const SIGNOUT_SUCCESS = "SIGNOUT_SUCCESS";
+export const SIGNOUT_ERROR = "SIGNOUT_ERROR";
+
+
+
+//for Attempting Paper
 export const FETCH_PAPER="FETCH_PAPER"
 export const SET_SEEN="SET_SEEN"
 export const SET_ANSWER="SET_ANSWER"
