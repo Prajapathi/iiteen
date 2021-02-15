@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import SubjectSection from '../../elements/SubjectSection'
+import SubjectSection from './SubjectSection'
 
 export default function Subjectwise() {
     const [open,setOpen]=React.useState(true)

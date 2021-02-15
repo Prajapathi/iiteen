@@ -1,9 +1,9 @@
 import React from 'react'
 import {Link} from "react-router-dom";
-import '../../styles/homeStyle.css'
-import HomeCard from '../elements/HomeCard'
-import HomeCarousel from '../elements/HomeCarousel'
-import banner from '../../assets/images/mainbanner.png'
+import '../../../styles/homeStyle.css'
+import HomeCard from './HomeCard'
+import HomeCarousel from './HomeCarousel'
+import banner from '../../../assets/images/mainbanner.png'
 
 export default function Home() {
     document.title="IITEENS"

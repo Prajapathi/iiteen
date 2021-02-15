@@ -1,6 +1,6 @@
 import React from 'react'
 import '../../styles/signin.css'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
 import {setAuthentication} from '../../store/action/Authentication'
 import {connect} from 'react-redux'
 import Form from "react-bootstrap/Form";

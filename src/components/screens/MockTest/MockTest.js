@@ -3,7 +3,7 @@ import firebase from 'firebase'
 import {Link,useHistory} from "react-router-dom";
 import '../../../styles/MockTest.css'
 import CircularProgress from '@material-ui/core/CircularProgress';
-import MockTestCard from '../../elements/Cards/MockTestCard'
+import MockTestCard from './MockTestCard'
 import icon from '../../../assets/images/MockTesticon.png'
 
 export default function MockTest() {

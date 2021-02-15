@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import '../../styles/subjectSection.css'
-import physics from '../../assets/images/physics.png'
-import chemistry from '../../assets/images/Chemistry.png'
+import '../../../styles/subjectSection.css'
+import physics from '../../../assets/images/physics.png'
+import chemistry from '../../../assets/images/Chemistry.png'
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
-import maths from '../../assets/images/Maths.png'
-import CardSection from './CardSection'
+import maths from '../../../assets/images/Maths.png'
+import CardSection from '../../elements/CardSection'
 
 
 export default function SubjectSection(props) {

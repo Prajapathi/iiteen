@@ -3,9 +3,9 @@ import '../../styles/subjectSection.css'
 import '../../styles/subjectCardSection.css'
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import SubjectCard from './Cards/SubjectCard'
-import AITSCard from './Cards/AITSCard'
-import PreviousYearCard from './Cards/PreviousYearCard'
+import SubjectCard from '../screens/Subjectwise/SubjectCard'
+import AITSCard from '../screens/AITS/AITSCard'
+import PreviousYearCard from '../screens/PreviousYear/PreviousYearCard'
 import {phy11,chem11,maths11} from '../../assets/data/11th'
 import {phy12,chem12,maths12} from '../../assets/data/12th'
 import CircularProgress from '@material-ui/core/CircularProgress';
