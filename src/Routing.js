@@ -1,5 +1,5 @@
 import React from 'react'
-import {Switch,Route} from 'react-router-dom'
+import {Switch,Route, Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
 import Home from './components/screens/Home/Home'
 import About from './components/screens/About'
@@ -17,29 +17,23 @@ import LeftMenu from './components/LeftMenu'
 import Signin from './components/signin'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+
+
 export function Routing(props) {
-    const [authenticated,setAuthenticated]=React.useState('')
+    const [authenticated,setAuthenticated]=React.useState(false)
+    const [isChecking,setIsChecking]=React.useState(true)
 
     React.useEffect(() => {
-        console.log("YEAH?")
         setAuthenticated(props.isAuthenticated)
-    }, [props.isAuthenticated])
+        setIsChecking(props.isCheckingAuth)
+    }, [props.isAuthenticated,props.isCheckingAuth])
 
-    console.log("Token",props.isAuthenticated,authenticated)
     return (
-        authenticated===''?<CircularProgress/>:
-        authenticated==false?
-            <><LeftMenu/><div style={{height:"60px"}}></div><Landing/><Footer/></>
-        :
+        isChecking?<CircularProgress/>:
+        ( !props.isAuthenticated )?
+           <Redirect to='/'/>:
         <>
         <Switch>
-            <Route exact path="/">
-               {
-                   authenticated?
-                    <><LeftMenu/><div style={{height:"70px"}}></div><Home/><Footer/></>
-                    :<><LeftMenu/><div style={{height:"60px"}}></div> <Landing/><Footer/></>
-               }
-            </Route>
             <Route exact path="/Home">
                 <LeftMenu/><div style={{height:"70px"}}></div><Home/><Footer/>
             </Route>
@@ -78,7 +72,8 @@ export function Routing(props) {
 
 const mapStateToProps=(state)=>{
     return{
-        isAuthenticated:state.AuthReducer.isAuthenticated
+        isAuthenticated:state.AuthReducer.isAuthenticated,
+        isCheckingAuth:state.AuthReducer.isChecking
     }
 }
 

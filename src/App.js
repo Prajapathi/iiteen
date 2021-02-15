@@ -2,7 +2,7 @@ import React from 'react';
 import {BrowserRouter} from "react-router-dom";
 import store from './store/config'
 import * as Actions from './store/action/Authentication'
-import Routing from './Routing'
+import RoutingWrapper from './RoutingWrapper'
 import Landing from './components/signin'
 import Footer from './components/Footer'
 import LeftMenu from './components/LeftMenu'
@@ -25,7 +25,7 @@ function App() {
     {/* <Timer duration={150}/> */}
     <BrowserRouter>
      {login?
-      <><Routing style={{minHeight:'80vh'}}/><RoutingAdmin/></>
+      <><RoutingWrapper style={{minHeight:'80vh'}}/><RoutingAdmin/></>
       :<RoutingAdmin/>
     }
      </BrowserRouter> 

@@ -5,6 +5,7 @@ import firebase from 'firebase'
 //initial state
 const initValues={
     isAuthenticated:false,
+    isChecking:true,
     user:{},
 }
 
@@ -14,6 +15,13 @@ const setAuthenticatedUser=(state,action)=>{
         ...state,
         isAuthenticated:true,
         user:action.payload
+    }
+}
+
+const checkingAuthenticatedUser=(state,action)=>{
+    return{
+        ...state,
+        isChecking:action.payload
     }
 }
 
@@ -30,6 +38,8 @@ const AuthReducer=(state=initValues,action)=>{
     switch (action.type) {
         case actionTypes.SET_AUTHENTICATED_USER:
             return setAuthenticatedUser(state,action)
+        case actionTypes.CHECKING_AUTHENTICATED_USER:
+            return checkingAuthenticatedUser(state,action)
         case actionTypes.SIGN_OUT:
             return signOut(state,action)
         default:
