@@ -1,12 +1,13 @@
 import React,{useEffect,useState} from 'react'
 import firebase from 'firebase'
+import {connect} from 'react-redux'
 import {Link,useHistory} from "react-router-dom";
 import '../../../styles/MockTest.css'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import MockTestCard from './MockTestCard'
 import icon from '../../../assets/images/MockTesticon.png'
 
-export default function MockTest() {
+export function MockTest(props) {
     const [mockTestPapers,setMockTestPapers]=useState([])
     const [attemptedPapers,setAttemptedPapers]=useState([])
     const [loading, setLoading] = useState(false)
@@ -30,7 +31,7 @@ export default function MockTest() {
             setMockTestPapers(papers)
 
             //After fetcing papers, fetch attempted papers to check for re-attempts
-            db.collection("User").get()
+            db.collection("User").doc(props.user.uid).collection("MOCKPapers").get()
             .then(function(querySnapshot) {
                 let attempted=[];
                 querySnapshot.forEach(function(doc) {
@@ -81,3 +82,11 @@ export default function MockTest() {
             </div>
     )
 }
+
+const mapStateToProps=(state)=>{
+    return{
+        user:state.AuthReducer.user
+    }
+}
+
+export default connect(mapStateToProps,null)(MockTest)

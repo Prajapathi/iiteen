@@ -1,5 +1,5 @@
 import React from 'react'
-import {Link,useLocation,useHistory} from "react-router-dom";
+import {Link,useLocation,useHistory,useParams} from "react-router-dom";
 import firebase from 'firebase'
 import {connect} from 'react-redux'
 import '../../../styles/choiceSection.css'
@@ -19,6 +19,8 @@ import PaperSummary from './PaperSummary'
 export function Paper(props) {
     const location = useLocation();
     const history= useHistory();
+    let {paperType,paperName}=useParams();
+    paperType=paperType.toUpperCase()
     const [palleteSub,setPalleteSub]=React.useState(1);
     const [palleteArray,setPalleteArray]=React.useState({phy:[],maths:[],chem:[]})
     const [questions,setQuestions]=React.useState()
@@ -30,7 +32,7 @@ export function Paper(props) {
 
     React.useEffect(() => {
         console.log("Yaha aaya")
-        //if user is not navigating through MockTestCard then redirect to home
+        //if user is not navigating through Cards then redirect to home
         let verifyPaper=localStorage.getItem("PaperName")
         if(verifyPaper==null|| verifyPaper!=props.paper.name){
             console.log("Because of this")
@@ -86,8 +88,16 @@ export function Paper(props) {
             uid:props.paper.name,
             attempted:true
         }
+        let paperTypeRoute;
+        switch(paperType){
+            case "MOCKTEST":
+                paperTypeRoute="MOCKPapers"
+                break;
+            case "PREVIOUSYEAR":
+                paperTypeRoute="PREVIOUSPapers"
+        }
         const db = firebase.firestore();
-        const paperRef = db.collection("User").doc(props.paper.name)
+        const paperRef = db.collection("User").doc(props.user.uid).collection(paperTypeRoute).doc(props.paper.name)
             .set(UserQuestionModel)
             .then((res)=>{
                 let marks = 0;
@@ -253,7 +263,7 @@ export function Paper(props) {
                 }
 
                 //Send leaderboard and Analysis to User model
-                db.collection("User").doc(props.paper.name).collection("LeaderBoard").doc("Analysis")
+                db.collection("User").doc(props.user.uid).collection(paperTypeRoute).doc(props.paper.name).collection("LeaderBoard").doc("Analysis")
                 .set({...Analysis})
                 .then((res)=>{
                     window.alert("yo");
@@ -391,6 +401,7 @@ const mapStateToProps=(state)=>{
     return{
         paper:state.MockTestReducer.paper,
         answers:state.MockTestReducer.answers,
+        user:state.AuthReducer.user
     }
 }
 

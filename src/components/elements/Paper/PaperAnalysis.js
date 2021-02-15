@@ -1,19 +1,17 @@
 import React, {useState} from 'react'
 import firebase from 'firebase'
+import {connect} from 'react-redux'
 import {useLocation,useParams,useHistory} from "react-router-dom";
 import { Pie, Bar } from 'react-chartjs-2'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import '../../../styles/paperAnalysis.css'
 
-
-
-
-export default function PaperAnalysis(props) {
+export function PaperAnalysis(props) {
 
     const location = useLocation();
     const history=useHistory();
     let {paperType,paperName}=useParams();
-
+    paperType=paperType.toUpperCase()
     const [loading, setLoading] = useState(true)
 
     const [data,setData]=useState([])
@@ -88,9 +86,18 @@ export default function PaperAnalysis(props) {
     
     //data fetching
     React.useEffect(() => {
+        let paperTypeRoute;
+        switch(paperType){
+            case "MOCKTEST":
+                paperTypeRoute="MOCK"
+                break;
+            case "PREVIOUSYEAR":
+                paperTypeRoute="PREVIOUS"
+        }
+        console.log("POP",paperTypeRoute,paperType)
         const db = firebase.firestore();
         console.log("ppp",paperName)
-        db.collection("User").doc(paperName).collection("LeaderBoard").doc("Analysis").get()
+        db.collection("User").doc(props.user.uid).collection(paperTypeRoute+"Papers").doc(paperName).collection("LeaderBoard").doc("Analysis").get()
             .then(function(querySnapshot) {
                 console.log("here's the analysis:",querySnapshot.data())
                 setData(querySnapshot.data());
@@ -102,7 +109,6 @@ export default function PaperAnalysis(props) {
             .catch(function(error) {
                 console.log("Error getting documents: ", error);
             });
-        let paperTypeRoute=paperType=="MockTest"?"MOCK":"Undefined"
         db.collection(paperTypeRoute).doc(paperName).get()
             .then(function(querySnapshot) {
                 console.log("here's the paper:",querySnapshot.data())
@@ -448,3 +454,11 @@ export default function PaperAnalysis(props) {
         </div>
     )
 }
+const mapStateToProps=(state)=>{
+    return{
+        user:state.AuthReducer.user
+    }
+}
+
+
+export default connect(mapStateToProps)(PaperAnalysis)

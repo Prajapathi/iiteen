@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux'
 import clsx from 'clsx';
 import {Link} from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
@@ -188,7 +189,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function LeftMenu() {
+export function LeftMenu(props) {
     
     const classes = useStyles();
     const theme = useTheme();
@@ -212,14 +213,18 @@ export default function LeftMenu() {
                 })}
             >
             <Toolbar className = { clsx(classes.mynav)}>
-            <IconButton color = "inherit"
-                aria-label = "open drawer"
-                onClick = { handleDrawerOpen }
-                edge = "start"
-                className = { clsx(classes.menuButton, open && classes.hide)}
-            >
-                <MenuIcon/>
-            </IconButton> 
+            {
+                props.isAuthenticated?
+                <IconButton color = "inherit"
+                    aria-label = "open drawer"
+                    onClick = { handleDrawerOpen }
+                    edge = "start"
+                    className = { clsx(classes.menuButton, open && classes.hide)}
+                >
+                    <MenuIcon/>
+                </IconButton> 
+                :null
+            }
             <Grid container alignItems = "flex-start"
                 justify = "flex-start"
                 direction = "row"
@@ -251,42 +256,54 @@ export default function LeftMenu() {
             </Grid>
             </Toolbar> 
             </AppBar>
-            <Drawer
-                className = { classes.drawer }
-                variant = "persistent"
-                anchor = "left"
-                open = { open }
-                classes = {{paper: classes.drawerPaper,}}
-            >
-                <div className = {classes.menuHead}>
-                    <div className = {classes.drawerHeader}>
-                        <img src={logo} className={classes.navlogo} style={{}}/>
-                        <IconButton onClick = { handleDrawerClose } > 
-                                    <MenuIcon/>
-                        </IconButton>
-                    </div> 
-                    <img src = { avatar }style = {{ marginLeft: '29%' }}className = { classes.profile }/>
-                    <div className = { classes.name } >
-                        <Badge overlap="circle" badgeContent={<EditIcon style={{ fontSize: '16px', marginLeft: '40px',marginTop:'40px'}}/>} color=""><Typography variant = "h6" > Anjali Patle </Typography></Badge> 
-                        {/* <EditIcon style = {{ fontSize: '16px', marginLeft: '5px'}}/> */}
-                    </div> 
-                </div>
-                <List>
-                    {['My Purchases', 'Ask Experts', 'Study Materials', 'How to Study'].map((text, index) => ( 
-                        <ListItem button key = { text } >
-                            <ListItemText primary = { text }/> 
-                        </ListItem>
-                    ))}
-                </List>
-                <Divider/>
-                <List> 
-                    {['About', 'Logout', 'Setting'].map((text, index) => ( 
-                        <ListItem button key = { text } >
-                            <ListItemText primary = { text }/>
-                        </ListItem>
-                    ))}
-                </List>
-            </Drawer>
+            { props.isAuthenticated?
+                <Drawer
+                    className = { classes.drawer }
+                    variant = "persistent"
+                    anchor = "left"
+                    open = { open }
+                    classes = {{paper: classes.drawerPaper,}}
+                >
+                    <div className = {classes.menuHead}>
+                        <div className = {classes.drawerHeader}>
+                            <img src={logo} className={classes.navlogo} style={{}}/>
+                            <IconButton onClick = { handleDrawerClose } > 
+                                        <MenuIcon/>
+                            </IconButton>
+                        </div> 
+                        <img src = { avatar }style = {{ marginLeft: '29%' }}className = { classes.profile }/>
+                        <div className = { classes.name } >
+                            <Badge overlap="circle" badgeContent={<EditIcon style={{ fontSize: '16px', marginLeft: '40px',marginTop:'40px'}}/>} color=""><Typography variant = "h6" > Anjali Patle </Typography></Badge> 
+                            {/* <EditIcon style = {{ fontSize: '16px', marginLeft: '5px'}}/> */}
+                        </div> 
+                    </div>
+                    <List>
+                        {['My Purchases', 'Ask Experts', 'Study Materials', 'How to Study'].map((text, index) => ( 
+                            <ListItem button key = { text } >
+                                <ListItemText primary = { text }/> 
+                            </ListItem>
+                        ))}
+                    </List>
+                    <Divider/>
+                    <List> 
+                        {['About', 'Logout', 'Setting'].map((text, index) => ( 
+                            <ListItem button key = { text } >
+                                <ListItemText primary = { text }/>
+                            </ListItem>
+                        ))}
+                    </List>
+                </Drawer>
+                :null
+            }
             </div>
         );
     }
+
+    const mapStateToProps=(state)=>{
+    return{
+        isAuthenticated:state.AuthReducer.isAuthenticated,
+        user:state.AuthReducer.user
+    }
+}
+
+export default connect(mapStateToProps,null)(LeftMenu)

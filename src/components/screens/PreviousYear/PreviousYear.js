@@ -1,11 +1,12 @@
 import React,{useState,useEffect} from 'react'
 import firebase from 'firebase'
+import {connect} from 'react-redux'
 import CardSection from '../../elements/CardSection'
 import icon from '../../../assets/images/mainbanner.png'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 
-export default function PreviousYear() {
+export function PreviousYear(props) {
 
     const [previousPapers,setPreviousPapers]=useState({})
     const [attemptedPapers,setAttemptedPapers]=useState([])
@@ -33,7 +34,7 @@ export default function PreviousYear() {
             setPreviousPapers({mainsPapers,advancePapers})
 
             //After fetcing papers, fetch attempted papers to check for re-attempts
-            db.collection("User").get()
+            db.collection("User").doc(props.user.uid).collection("PREVIOUSPapers").get()
             .then(function(querySnapshot) {
                 let attempted=[];
                 querySnapshot.forEach(function(doc) {
@@ -87,3 +88,11 @@ export default function PreviousYear() {
         </div>
     )
 }
+
+const mapStateToProps=(state)=>{
+    return{
+        user:state.AuthReducer.user
+    }
+}
+
+export default connect(mapStateToProps,null)(PreviousYear)
