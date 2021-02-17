@@ -86,7 +86,7 @@ export default function SubjectCardSection(props) {
     useEffect(() => {
         setChapters(initialItems.slice(chapterIndex, chapterIndex + cardNumbers))
     }, [chapterIndex])
-
+    
     //listen for screen width change
     useEffect(() => {
         if(vpWidth>1300){

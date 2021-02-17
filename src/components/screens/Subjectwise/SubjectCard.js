@@ -35,6 +35,7 @@ export function SubjectCard(props) {
     const [progress,setProgress]=useState(0)
 
     useEffect(() => {
+
         setClassNumber(props.classNumber)
 
         let ch=props.number;
@@ -58,6 +59,7 @@ export function SubjectCard(props) {
             if(doc.data()==null){
                 setTotalAttempted(0)
                 setProgress(0)
+                setAnswers({})
             }
             else{
                 let totalQAttempted=0;
@@ -93,18 +95,13 @@ export function SubjectCard(props) {
             history.push("/QuestionsError");
         });
         
-    }, [])
+    }, [props.number])
 
     const selectLevel=(lev)=>{
         setLevel(lev);
         console.log("ohh","Class "+classNumber,lev,subject,chapter)
         props.loadingStart(true)
         
-        //set Previously given answers for this level
-        if(answers["Level 0"+lev]){
-            console.log("Yaha")
-            props.fetchPreviousAnswers(answers["Level 0"+lev])
-        }
         //Access question to pass as prop
         const db = firebase.firestore();
         db.collection("SUBJECTWISE").doc("Class "+classNumber).collection(subject).doc("Chapter "+chapter).collection("Level 0"+lev).orderBy("number").get()
@@ -119,9 +116,16 @@ export function SubjectCard(props) {
             }
             else{
                 setPaper(questions)
+                console.log("hmmm",questions)
                 props.loadingStart(false)
                 //put into redux store
                 props.fetchPaper({questions,noOfQuestions:25,name:props.name, subject,level:lev,classNumber,chapter})
+
+                //set Previously given answers for this level
+                if(answers["Level 0"+lev]){
+                    console.log("Yaha",chapter,answers["Level 0"+lev])
+                    props.fetchPreviousAnswers(answers["Level 0"+lev])
+                }
 
                 //to check if user is navigating through SubjectCard
                 localStorage.setItem("PaperName","Subjectwise")
