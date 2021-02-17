@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import {connect} from 'react-redux'
+import firebase from 'firebase'
 import {clearAnswer,setAnswer,bookmarkQuestion} from '../../../store/action/Paper'
 import '../../../styles/choiceSection.css'
 import '../../../styles/detailedAnalysis.css'
@@ -89,6 +90,22 @@ console.log("kkk",props.stateAnswer[props.number-1])
         setAnswer(ans)
         setSelectOpt(opts)
     }
+
+    const saveAttemptDatabase=()=>{
+        //when user clicks on show Solution or gives correct answer, update it in DB
+        let lev="Level 0"+props.paper.level
+        const db = firebase.firestore();
+        db.collection("User").doc(props.user.uid).collection("SUBJECTWISEPapers").doc("Class "+props.paper.classNumber).collection(props.paper.subject).doc("Chapter "+props.paper.chapter)
+            .set({
+                [lev]:[...props.stateAnswer]
+            },{merge: true})
+            .then((res)=>{
+                console.log("Saved")
+            })
+            .catch((err)=>{
+                console.log("Error saving option",err)
+            })
+    }
     const submitQuestionPre=()=>{
         setAnimate(false)
     }
@@ -110,9 +127,14 @@ console.log("kkk",props.stateAnswer[props.number-1])
             if(answer==='' || answer.length==0)
                 flag=1;
         }
+        //if the answer given was in acceptable format
         if(flag==0){
+            let previouslyAnswered=props.stateAnswer[props.number-1].isAnswered;
             props.setAnswer(props.number-1,answer);
+            //if it was not answered before, save the new first attempt in database
+
             console.log(answer)
+            //if the answer was wrong
             if(props.stateAnswer[props.number-1].isAnsweredWrong){
                 setWrongAttempt(true)
                 setShowHint(true)
@@ -121,11 +143,17 @@ console.log("kkk",props.stateAnswer[props.number-1])
                     setAnimate(true)
                 }, 100);
             }
+            //if the answer was correct
             else {
                 setWrongAttempt(false)
                 setShowSolution(true)
+                saveAttemptDatabase();
+            }
+            if(!previouslyAnswered){
+                saveAttemptDatabase();
             }
         }
+        //if the answer given was not in acceptable format
         else{
             setShow(true)
         }
@@ -137,8 +165,24 @@ console.log("kkk",props.stateAnswer[props.number-1])
         setShowHint(false)
         setAnswer(props.stateAnswer[props.number-1].answer)
         props.setAnswer(props.number-1,props.stateAnswer[props.number-1].answer)
-    }
 
+        let opt=[false,false,false,false]
+
+        //for multi-correct questions
+        if(props.stateAnswer[props.number-1].answerType==5)
+            for(let i=0;i<props.stateAnswer[props.number-1].answer.length;i++){
+                    opt[props.stateAnswer[props.number-1].answer[i]]=true
+            }
+
+        //for single-correct questions
+        else if(props.stateAnswer[props.number-1].answerType==4)
+            opt[props.stateAnswer[props.number-1].answer]=true
+        
+        setSelectOpt(opt)
+
+        saveAttemptDatabase();
+    }
+    
     return(
         <>
         <Container style={{ paddingLeft: 0, paddingRight: 0 }}>
@@ -209,7 +253,7 @@ console.log("kkk",props.stateAnswer[props.number-1])
                                         step={1}
                                         label="Enter Answer"
                                         value={answer}
-                                        onChange={(event) =>setAnswer(Number(event.target.value))}
+                                        onChange={showSolution?null:(event) =>setAnswer(Number(event.target.value))}
                                     />
                                 </div>
                                 :props.data.answerType==2?
@@ -219,14 +263,14 @@ console.log("kkk",props.stateAnswer[props.number-1])
                                             type="number"
                                             label="Enter Answer"
                                             value={answer}
-                                            onChange={(event) =>setAnswer(Number(event.target.value))}
+                                            onChange={showSolution?null:(event) =>setAnswer(Number(event.target.value))}
                                         />
                                     </div>
                                     :props.data.answerType==5||props.data.answerType==4?
                                         <div className="options" style={{paddingTop:showSolution || (wrongAttempt && !showSolution)?"0px":'8%'}}>
                                             {props.data?props.data.option.map((text, index) =>
                                                 <div className="option"
-                                                    onClick={(props.data.answerType==5?()=>changeOptMultiple(index):()=>changeOptSingle(index))}
+                                                    onClick={showSolution?null:(props.data.answerType==5?()=>changeOptMultiple(index):()=>changeOptSingle(index))}
                                                     style={{border:selectOpt[index]==true?'2px solid rgb(59, 149, 194)':'1px solid white'}}
                                                 > 
                                                         {index===0?'A.  ':(index===1?'B.  ':(index===2?'C. ':'D. '))} 
@@ -364,7 +408,8 @@ console.log("kkk",props.stateAnswer[props.number-1])
 const mapStateToProps=(state)=>{
     return{
         paper:state.MockTestReducer.paper,
-        stateAnswer:state.MockTestReducer.answers
+        stateAnswer:state.MockTestReducer.answers,
+        user:state.AuthReducer.user
     }
 }
 const mapDispatchToProps=dispatch=>{

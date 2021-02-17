@@ -1,6 +1,7 @@
 #subjectwise{
     background:url(../assets/images/subjectwisebg.png);
     margin-bottom:0px;
+    min-height:80vh;
 }
 #phy{
     background-image:url(../assets/images/ChemistryIcons/1.png),url(../assets/images/ChemistryIcons/2.png),

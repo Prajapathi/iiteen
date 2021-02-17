@@ -18,7 +18,7 @@ export function Paper(props) {
         //if user is not navigating through MockTestCard then redirect to home
         let verifyPaper=localStorage.getItem("PaperName")
         if(verifyPaper==null|| verifyPaper!="Subjectwise"){
-            history.push('/')
+            history.push('/Subjectwise')
         }
         localStorage.removeItem("PaperName")
 
@@ -62,8 +62,8 @@ export function Paper(props) {
                                             <div className="page-no" 
                                                 style={{
                                                     background:props.answers[ind].isBookmarked?'#ff9700':
-                                                        ((!props.answers[ind].isAnsweredWrong && props.answers[ind].isAnswered)?'#3B95C2':'white'),
-                                                    color:props.answers[ind].isBookmarked||(!props.answers[ind].isAnsweredWrong && props.answers[ind].isAnswered)?"white":"black",
+                                                        (( props.answers[ind].isAnswered)?'#3B95C2':'white'),
+                                                    color:props.answers[ind].isBookmarked||( props.answers[ind].isAnswered)?"white":"black",
                                                     border:index==ind?'1px solid black':null
                                                 }} 
                                                 onClick={()=>navigateQuestion(ind)}>

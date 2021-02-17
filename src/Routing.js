@@ -15,7 +15,7 @@ import PaperAnalysis from './components/elements/Paper/PaperAnalysis'
 import Footer from './components/Footer'
 import LeftMenu from './components/LeftMenu'
 import Signin from './components/signin'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Loading from './components/elements/Loading'
 
 
 
@@ -29,43 +29,44 @@ export function Routing(props) {
     }, [props.isAuthenticated,props.isCheckingAuth])
 
     return (
-        isChecking?<CircularProgress/>:
+        isChecking?<Loading/>:
         ( !props.isAuthenticated )?
            <Redirect to='/'/>:
         <>
-        <Switch>
-            <Route exact path="/Home">
-                <LeftMenu/><div style={{height:"70px"}}></div><Home/><Footer/>
-            </Route>
-            <Route exact path="/MockTest">
-                 <LeftMenu/><div style={{height:"70px"}}></div><MockTest/><Footer/>
-            </Route>
-            <Route exact path="/Subjectwise">
-                <LeftMenu/><div style={{height:"70px"}}></div><SubjectWise/><Footer/>
-            </Route>
-            <Route exact path="/PreviousYear">
-                <LeftMenu/><div style={{height:"70px"}}></div><PreviousYear/><Footer/>
-            </Route>
-            <Route path="/AITS">
-                <LeftMenu/><div style={{height:"70px"}}></div><AITS/><Footer/>
-            </Route>
-            <Route exact path="/Subjectwise/Papers/:paperName">
-                <LeftMenu/><div style={{height:"70px"}}></div><SubjectwisePaper/><Footer/>
-            </Route>
-            <Route exact path="/:paperType/Papers/:paperName">
-                <LeftMenu/><div style={{height:"70px"}}></div><Papers/><Footer/>
-            </Route>
-            <Route exact path="/:paperType/Papers/Analysis/:paperName">
-                <LeftMenu/><div style={{height:"70px"}}></div><PaperAnalysis/><Footer/>
-            </Route>
-            <Route exact path="/QuestionsError">
-                <LeftMenu/><div style={{height:"70px"}}></div><NoQuestionsError/><Footer/>
-            </Route>
-            <Route exact path="/Signin">
-                <LeftMenu/><div style={{height:"70px"}}></div><Signin/><Footer/>
-            </Route>
-        </Switch>
-        
+            <LeftMenu/>
+            <Switch>
+                <Route exact path="/Home">
+                    <Home/>
+                </Route>
+                <Route exact path="/MockTest">
+                    <MockTest/>
+                </Route>
+                <Route exact path="/Subjectwise">
+                    <SubjectWise/>
+                </Route>
+                <Route exact path="/PreviousYear">
+                    <PreviousYear/>
+                </Route>
+                <Route path="/AITS">
+                    <AITS/>
+                </Route>
+                <Route exact path="/Subjectwise/Papers/:paperName">
+                    <SubjectwisePaper/>
+                </Route>
+                <Route exact path="/:paperType/Papers/:paperName">
+                    <Papers/>
+                </Route>
+                <Route exact path="/:paperType/Papers/Analysis/:paperName">
+                    <PaperAnalysis/>
+                </Route>
+                <Route exact path="/QuestionsError">
+                    <NoQuestionsError/>
+                </Route>
+                <Route exact path="/Signin">
+                    <Signin/>
+                </Route>
+            </Switch>
+            <Footer/>
         </>
     )
 }

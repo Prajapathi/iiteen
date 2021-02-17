@@ -3,7 +3,7 @@ import firebase from 'firebase'
 import {connect} from 'react-redux'
 import CardSection from '../../elements/CardSection'
 import icon from '../../../assets/images/mainbanner.png'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Loading from '../../elements/Loading';
 
 
 export function PreviousYear(props) {
@@ -66,25 +66,29 @@ export function PreviousYear(props) {
     }
 
     return (
-        loading==true?
-            <CircularProgress style={{margin:'25% 50%'}}/>:
          <div  className="screen" id="AITS">
-            <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-                <img src={icon} id="aitsicon" alt=""/>
-                <div class="section-heading">PREVIOUS YEAR TEST PAPERS</div>
-            </div>
-            <div>
-                <div className="bar">
-                    <h2>JEE MAINS</h2>
-                </div>
-                <CardSection section="PreviousYear" setLoading={setLoading} checkAttempted={checkAttempted} paper={previousPapers.mainsPapers} type="mains"/>
-            </div>
-            <div>
-                <div className="bar">
-                    <h2>JEE ADVANCE</h2>
-                </div>
-                <CardSection section="PreviousYear" setLoading={setLoading} paper={previousPapers.advancePapers} type="advance"/>
-            </div>
+         {
+             loading?
+                <Loading/>:
+                <>
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+                        <img src={icon} id="aitsicon" alt=""/>
+                        <div class="section-heading">PREVIOUS YEAR TEST PAPERS</div>
+                    </div>
+                    <div>
+                        <div className="bar">
+                            <h2>JEE MAINS</h2>
+                        </div>
+                        <CardSection section="PreviousYear" setLoading={setLoading} checkAttempted={checkAttempted} paper={previousPapers.mainsPapers} type="mains"/>
+                    </div>
+                    <div>
+                        <div className="bar">
+                            <h2>JEE ADVANCE</h2>
+                        </div>
+                        <CardSection section="PreviousYear" setLoading={setLoading} paper={previousPapers.advancePapers} type="advance"/>
+                    </div>
+                </>
+         }
         </div>
     )
 }

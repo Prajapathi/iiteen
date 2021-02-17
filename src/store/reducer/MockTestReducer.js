@@ -3,12 +3,13 @@ import * as actionTypes from '../action/actionTypes'
 
 // Contents:
 //     1. Initial values
-//     2. Fetching paper
-//     3. Setting seen to true
-//     4. Setting and evaluating answers
-//     5. Clear Answer
-//     6. Bookmark Questions
-//     7. Attempt question for subjective question
+//     2. Fetching Paper
+//     3. Fetching previous answers
+//     4. Setting seen to true
+//     5. Setting and evaluating answers
+//     6. Clear Answer
+//     7. Bookmark Questions
+//     8. Attempt question for subjective question
 
 //initial values
 const initValues={
@@ -25,6 +26,7 @@ const fetchPaper=(state,action)=>{
             paper:action.payload,
         }
     let ans=[];
+    if(state.answers.length==0){
     //after fetching paper, set the answers[]
         for(let i=0;i<action.payload.noOfQuestions;i++){
             ans.push({
@@ -40,11 +42,19 @@ const fetchPaper=(state,action)=>{
                 isAnswered:false
             })
         }
+    }
     console.log(ans,"ooop")
     return{
         ...state,
         paper:action.payload,
         answers:ans.length==0?state.answers:ans
+    }
+}
+
+const fetchPreviousAnswers=(state,action)=>{
+    return{
+        ...state,
+        answers:action.payload
     }
 }
 
@@ -156,6 +166,8 @@ const MockTestReducer=(state=initValues,action)=>{
     switch(action.type){
         case actionTypes.FETCH_PAPER:
             return fetchPaper(state,action)
+        case actionTypes.FETCH_PREVIOUS_ANSWERS:
+            return fetchPreviousAnswers(state,action)
         case actionTypes.SET_SEEN:
             return setSeen(state,action)
         case actionTypes.SET_ANSWER:

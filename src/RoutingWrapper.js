@@ -6,19 +6,19 @@ import Home from './components/screens/Home/Home'
 import Footer from './components/Footer'
 import LeftMenu from './components/LeftMenu'
 import Routing from './Routing'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Loading from './components/elements/Loading'
 
 export function RoutingWrapper(props) {
     return (
         props.isCheckingAuth?
-            <CircularProgress/>
+            <Loading/>
         :
         <Switch>
             <Route exact path="/">
                 {
                     props.isAuthenticated?
-                        <><LeftMenu/><div style={{height:"70px"}}></div><Home/><Footer/></>:
-                        <><LeftMenu/><div style={{height:"70px"}}></div><Landing/><Footer/></>
+                        <><LeftMenu/><Home/><Footer/></>:
+                        <><LeftMenu/><Landing/><Footer/></>
                 }
             </Route>
             <Route path="/">

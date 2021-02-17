@@ -3,7 +3,7 @@ import firebase from 'firebase'
 import {connect} from 'react-redux'
 import {Link,useHistory} from "react-router-dom";
 import '../../../styles/MockTest.css'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Loading from '../../elements/Loading';
 import MockTestCard from './MockTestCard'
 import icon from '../../../assets/images/MockTesticon.png'
 
@@ -63,23 +63,27 @@ export function MockTest(props) {
     }
 
     return (
-        loading==true?
-            <CircularProgress style={{margin:'25% 50%'}}/>:
-            <div className="screen" id="mocktest">
-                <div id="mocktest-heading">
-                    <img src={icon} id="mocktesticon"/>
-                    <div class="section-heading" style={{color:'white'}}>MOCK TEST PAPERS</div>
-                </div>
-                <div className="mocktestcardsection">
-                    {/* rendering each paper in a card and passing the paper info to the individual card */}
-                    {
-                        mockTestPapers.map((item) =>
-                                <div style={{margin:'20px'}}>
-                                    <MockTestCard isAttempted={checkAttempted(item.name)} paper={item} setLoading={setLoading}/>
-                                </div>
-                            )}
-                </div>
-            </div>
+        <div className="screen" id="mocktest">
+            {
+                 loading==true?
+                    <Loading/>:
+                    <>
+                        <div id="mocktest-heading">
+                            <img src={icon} id="mocktesticon"/>
+                            <div class="section-heading" style={{color:'white'}}>MOCK TEST PAPERS</div>
+                        </div>
+                        <div className="mocktestcardsection">
+                            {/* rendering each paper in a card and passing the paper info to the individual card */}
+                            {
+                                mockTestPapers.map((item) =>
+                                        <div style={{margin:'20px'}}>
+                                            <MockTestCard isAttempted={checkAttempted(item.name)} paper={item} setLoading={setLoading}/>
+                                        </div>
+                                    )}
+                        </div>
+                    </>
+            }
+        </div>
     )
 }
 

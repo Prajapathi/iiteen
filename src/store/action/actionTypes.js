@@ -13,6 +13,7 @@ export const SIGNOUT_ERROR = "SIGNOUT_ERROR";
 
 //for Attempting Paper
 export const FETCH_PAPER="FETCH_PAPER"
+export const FETCH_PREVIOUS_ANSWERS="FETCH_PREVIOUS_ANSWERS"
 export const SET_SEEN="SET_SEEN"
 export const SET_ANSWER="SET_ANSWER"
 export const CLEAR_ANSWER="CLEAR_ANSWER"

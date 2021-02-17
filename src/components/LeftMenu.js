@@ -1,5 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux'
+import {signOut} from '../store/action/Authentication'
+import firebase from 'firebase'
 import clsx from 'clsx';
 import {Link} from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
@@ -31,6 +33,7 @@ const drawerWidth = 300;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        marginBottom:'60px'
     },
     appBar: {
         transition: theme.transitions.create(['margin', 'width'], {
@@ -118,6 +121,7 @@ const useStyles = makeStyles((theme) => ({
         margin: '0px'
     },
     tabs: {
+        cursor:'pointer',
         padding: theme.spacing(1),
         marginRight: "2%",
         [theme.breakpoints.down('sm')]: {
@@ -195,6 +199,15 @@ export function LeftMenu(props) {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
+    const signout=()=>{
+        firebase.auth().signOut().then(() => {
+            console.log("Sign-out successful")
+            props.signOut()
+        }).catch((error) => {
+            console.log("An error happened.",error)
+        });
+    }
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -251,7 +264,7 @@ export function LeftMenu(props) {
                                 <NotificationsRoundedIcon className = { clsx(classes.notif) }/>
                     </Badge>
                     <img src = { avatar } className = { clsx(classes.navimg) }/>
-                    <Typography className = { clsx(classes.tabs) } >Logout </Typography>
+                    <Typography className = { clsx(classes.tabs) } onClick={()=>{signout()}}>Logout </Typography>
                 </div>
             </Grid>
             </Toolbar> 
@@ -299,11 +312,17 @@ export function LeftMenu(props) {
         );
     }
 
-    const mapStateToProps=(state)=>{
+const mapStateToProps=(state)=>{
     return{
         isAuthenticated:state.AuthReducer.isAuthenticated,
         user:state.AuthReducer.user
     }
 }
+const mapDispatchToProps=dispatch=>{
+    return{
+        signOut:()=>dispatch(signOut())
+    }
+}
 
-export default connect(mapStateToProps,null)(LeftMenu)
+
+export default connect(mapStateToProps,mapDispatchToProps)(LeftMenu)

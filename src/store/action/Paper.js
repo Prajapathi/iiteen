@@ -7,6 +7,12 @@ export const fetchPaper=(paper)=>{
         payload:paper
     }
 }
+export const fetchPreviousAnswers=(answers)=>{
+    return{
+        type:actionTypes.FETCH_PREVIOUS_ANSWERS,
+        payload:answers
+    }
+}
 export const setSeen=(ind)=>{
     return{
         type:actionTypes.SET_SEEN,

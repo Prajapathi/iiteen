@@ -3,7 +3,7 @@ import firebase from 'firebase'
 import '../../../styles/subjectCard.css'
 import {Link,useLocation,useHistory} from "react-router-dom";
 import {connect} from 'react-redux'
-import {fetchPaper} from '../../../store/action/Paper'
+import {fetchPaper,fetchPreviousAnswers} from '../../../store/action/Paper'
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
@@ -30,12 +30,12 @@ export function SubjectCard(props) {
     const [subject,setSubject]=useState()
     const [level,setLevel]=useState()
     const [chapter,setChapter]=useState()
-    const [attemped,setAttempted]=useState(0)
+    const [answers,setAnswers]=useState(0)
     const [totalAttemped,setTotalAttempted]=useState(0)
     const [progress,setProgress]=useState(0)
 
     useEffect(() => {
-        setClassNumber(11)
+        setClassNumber(props.classNumber)
 
         let ch=props.number;
         if(props.number<10)
@@ -52,7 +52,46 @@ export function SubjectCard(props) {
         setSubject(sub)
 
         //fetch attempted answers to show in progress bar
-
+        const db = firebase.firestore();
+        db.collection("User").doc(props.user.uid).collection("SUBJECTWISEPapers").doc("Class "+props.classNumber).collection(sub).doc("Chapter "+ch).get()
+        .then((doc)=> {
+            if(doc.data()==null){
+                setTotalAttempted(0)
+                setProgress(0)
+            }
+            else{
+                let totalQAttempted=0;
+                let lvl1=doc.data()["Level 01"]
+                let lvl2=doc.data()["Level 02"]
+                let lvl3=doc.data()["Level 03"]
+                console.log(lvl1,lvl2,lvl3)
+                if(lvl1){
+                    for(let i=0;i<lvl1.length;i++){
+                        if(lvl1[i].isAnswered===true)
+                            totalQAttempted++;
+                    }
+                }
+                if(lvl2){
+                    for(let i=0;i<lvl2.length;i++){
+                        if(lvl2[i].isAnswered===true)
+                            totalQAttempted++;
+                    }
+                }
+                if(lvl3){
+                    for(let i=0;i<lvl3.length;i++){
+                        if(lvl3[i].isAnswered===true)
+                            totalQAttempted++;
+                    }
+                }
+                setAnswers(doc.data())
+                setTotalAttempted(totalQAttempted)
+                setProgress((totalQAttempted/75)*100)
+            }
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
+            history.push("/QuestionsError");
+        });
         
     }, [])
 
@@ -60,6 +99,12 @@ export function SubjectCard(props) {
         setLevel(lev);
         console.log("ohh","Class "+classNumber,lev,subject,chapter)
         props.loadingStart(true)
+        
+        //set Previously given answers for this level
+        if(answers["Level 0"+lev]){
+            console.log("Yaha")
+            props.fetchPreviousAnswers(answers["Level 0"+lev])
+        }
         //Access question to pass as prop
         const db = firebase.firestore();
         db.collection("SUBJECTWISE").doc("Class "+classNumber).collection(subject).doc("Chapter "+chapter).collection("Level 0"+lev).orderBy("number").get()
@@ -76,7 +121,7 @@ export function SubjectCard(props) {
                 setPaper(questions)
                 props.loadingStart(false)
                 //put into redux store
-                props.fetchPaper({questions,noOfQuestions:25,name:props.name, subject,level:lev,classNumber})
+                props.fetchPaper({questions,noOfQuestions:25,name:props.name, subject,level:lev,classNumber,chapter})
 
                 //to check if user is navigating through SubjectCard
                 localStorage.setItem("PaperName","Subjectwise")
@@ -113,10 +158,17 @@ export function SubjectCard(props) {
         </div>
     )
 }
+
+const mapStateToProps=(state)=>{
+    return{
+        user:state.AuthReducer.user
+    }
+}
 const mapDispatchToProps=dispatch=>{
     return{
-        fetchPaper:(paper)=>dispatch(fetchPaper(paper))
+        fetchPaper:(paper)=>dispatch(fetchPaper(paper)),
+        fetchPreviousAnswers:(answers)=>dispatch(fetchPreviousAnswers(answers))
     }
 }
 
-export default connect(null,mapDispatchToProps)(SubjectCard)
+export default connect(mapStateToProps,mapDispatchToProps)(SubjectCard)

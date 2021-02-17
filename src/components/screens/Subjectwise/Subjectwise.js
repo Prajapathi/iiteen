@@ -6,8 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import CircularProgress from '@material-ui/core/CircularProgress';
-
+import Loading from '../../elements/Loading'
 import SubjectSection from './SubjectSection'
 
 export default function Subjectwise() {
@@ -21,9 +20,9 @@ export default function Subjectwise() {
     }
     document.title="Subjectwise | IITEENS"
     return (
-        loading?<CircularProgress style={{margin:'24% 49%'}}/>:
         <div className="screen" id="subjectwise">
-            {open?
+            {loading?<Loading />:
+            open?
                 <Dialog
                     disableBackdropClick 
                     disableEscapeKeyDown 

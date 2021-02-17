@@ -8,7 +8,7 @@ import AITSCard from '../screens/AITS/AITSCard'
 import PreviousYearCard from '../screens/PreviousYear/PreviousYearCard'
 import {phy11,chem11,maths11} from '../../assets/data/11th'
 import {phy12,chem12,maths12} from '../../assets/data/12th'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Loading from './Loading';
 import Slide from '@material-ui/core/Slide';
 
 
@@ -170,7 +170,7 @@ export default function SubjectCardSection(props) {
 
     return (
         loading==true?
-            <CircularProgress style={{margin:'25% 50%'}}/>:
+            <Loading/>:
         <div>
             <div className="sub-cards" >
                     {chapters.length===0?
@@ -189,7 +189,7 @@ export default function SubjectCardSection(props) {
                                     </Slide>
                                     :<Slide in={slideIn} direction={slideDirection}>
                                         <div>
-                                            <SubjectCard number={chapterIndex+index+1}  name={chapters[index]} subject={props.subject} loadingStart={props.loadingStart}/>
+                                            <SubjectCard number={chapterIndex+index+1} classNumber={props.classNumber} name={chapters[index]} subject={props.subject} loadingStart={props.loadingStart}/>
                                         </div>
                                     </Slide>
                                 )

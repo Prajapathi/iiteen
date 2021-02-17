@@ -1,6 +1,7 @@
 #AITS{
     background:url(../assets/images/subjectwisebg.png);
     margin-bottom:0px;
+    min-height:80vh;
 }
 #aitsicon{
     height:65px;
