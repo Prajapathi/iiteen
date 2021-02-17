@@ -33,40 +33,40 @@ export function Routing(props) {
         ( !props.isAuthenticated )?
            <Redirect to='/'/>:
         <>
-            <LeftMenu/>
-            <Switch>
-                <Route exact path="/Home">
-                    <Home/>
-                </Route>
-                <Route exact path="/MockTest">
-                    <MockTest/>
-                </Route>
-                <Route exact path="/Subjectwise">
-                    <SubjectWise/>
-                </Route>
-                <Route exact path="/PreviousYear">
-                    <PreviousYear/>
-                </Route>
-                <Route path="/AITS">
-                    <AITS/>
-                </Route>
-                <Route exact path="/Subjectwise/Papers/:paperName">
-                    <SubjectwisePaper/>
-                </Route>
-                <Route exact path="/:paperType/Papers/:paperName">
-                    <Papers/>
-                </Route>
-                <Route exact path="/:paperType/Papers/Analysis/:paperName">
-                    <PaperAnalysis/>
-                </Route>
-                <Route exact path="/QuestionsError">
-                    <NoQuestionsError/>
-                </Route>
-                <Route exact path="/Signin">
-                    <Signin/>
-                </Route>
-            </Switch>
-            <Footer/>
+        
+        <Switch>
+            <Route exact path="/Home">
+                <LeftMenu/><Home/><Footer/>
+            </Route>
+            <Route exact path="/MockTest">
+                 <LeftMenu/><MockTest/><Footer/>
+            </Route>
+            <Route exact path="/Subjectwise">
+                <LeftMenu/><SubjectWise/><Footer/>
+            </Route>
+            <Route exact path="/PreviousYear">
+                <LeftMenu/><PreviousYear/><Footer/>
+            </Route>
+            <Route path="/AITS">
+                <LeftMenu/><AITS/><Footer/>
+            </Route>
+            <Route exact path="/Subjectwise/Papers/:paperName">
+                <LeftMenu/><SubjectwisePaper/><Footer/>
+            </Route>
+            <Route exact path="/:paperType/Papers/:paperName">
+                <LeftMenu/><Papers/><Footer/>
+            </Route>
+            <Route exact path="/:paperType/Papers/Analysis/:paperName">
+                <LeftMenu/><PaperAnalysis/><Footer/>
+            </Route>
+            <Route exact path="/QuestionsError">
+                <LeftMenu/><NoQuestionsError/><Footer/>
+            </Route>
+            <Route exact path="/Signin">
+                <LeftMenu/><Signin/><Footer/>
+            </Route>
+        </Switch>
+        
         </>
     )
 }
