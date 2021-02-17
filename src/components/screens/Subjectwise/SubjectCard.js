@@ -33,6 +33,7 @@ export function SubjectCard(props) {
     const [answers,setAnswers]=useState(0)
     const [totalAttemped,setTotalAttempted]=useState(0)
     const [progress,setProgress]=useState(0)
+    const [lastIndex,setLastIndex]=useState([0,0,0])
 
     useEffect(() => {
 
@@ -57,12 +58,13 @@ export function SubjectCard(props) {
         db.collection("User").doc(props.user.uid).collection("SUBJECTWISEPapers").doc("Class "+props.classNumber).collection(sub).doc("Chapter "+ch).get()
         .then((doc)=> {
             if(doc.data()==null){
+                setLastIndex([0,0,0])
                 setTotalAttempted(0)
                 setProgress(0)
                 setAnswers({})
             }
             else{
-                let totalQAttempted=0;
+                let totalQAttempted=0,lastInd1=0,lastInd2=0,lastInd3=0,flag=0;
                 let lvl1=doc.data()["Level 01"]
                 let lvl2=doc.data()["Level 02"]
                 let lvl3=doc.data()["Level 03"]
@@ -71,20 +73,37 @@ export function SubjectCard(props) {
                     for(let i=0;i<lvl1.length;i++){
                         if(lvl1[i].isAnswered===true)
                             totalQAttempted++;
+                        else{
+                            if(flag==0){
+                                lastInd1=i
+                                flag=1;
+                            }
+                        }
                     }
                 }
+                flag=0;
                 if(lvl2){
                     for(let i=0;i<lvl2.length;i++){
                         if(lvl2[i].isAnswered===true)
                             totalQAttempted++;
+                        if(flag==0){
+                            lastInd2=i
+                            flag=1;
+                        }
                     }
                 }
+                flag=0;
                 if(lvl3){
                     for(let i=0;i<lvl3.length;i++){
                         if(lvl3[i].isAnswered===true)
                             totalQAttempted++;
+                        if(flag==0){
+                            lastInd3=i
+                            flag=1;
+                        }
                     }
                 }
+                setLastIndex([lastInd1,lastInd2,lastInd3])
                 setAnswers(doc.data())
                 setTotalAttempted(totalQAttempted)
                 setProgress((totalQAttempted/75)*100)
@@ -119,7 +138,7 @@ export function SubjectCard(props) {
                 console.log("hmmm",questions)
                 props.loadingStart(false)
                 //put into redux store
-                props.fetchPaper({questions,noOfQuestions:25,name:props.name, subject,level:lev,classNumber,chapter})
+                props.fetchPaper({questions,noOfQuestions:25,name:props.name, subject,level:lev,classNumber,chapter,lastIndex:lastIndex[lev-1]})
 
                 //set Previously given answers for this level
                 if(answers["Level 0"+lev]){

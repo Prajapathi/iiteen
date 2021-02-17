@@ -14,6 +14,11 @@ import Col from 'react-bootstrap/Col'
 import Toast from 'react-bootstrap/Toast'
 import Button from 'react-bootstrap/Button'
 import BookmarkIcon from '@material-ui/icons/Bookmark';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
@@ -26,6 +31,7 @@ export function SubjectwiseChoiceSection(props) {
     const [correctAnswer,setCorrectAnswer]=React.useState('')
     const [selectOpt,setSelectOpt]=React.useState([false,false,false,false])
     const [show, setShow] = useState(false);
+    const [open,setOpen]=React.useState(false);
     const [wrongAttempt,setWrongAttempt]=useState(false)
     const [showSolution,setShowSolution]=useState(false)
     const [showHint,setShowHint]=useState(false)
@@ -195,7 +201,7 @@ console.log("kkk",props.stateAnswer[props.number-1])
                                     props.stateAnswer[props.number-1].answerType==4?"Single Correct Option"
                                     :"Multiple Correct Options":""}
                         <div >
-                            <ReportProblemOutlinedIcon style={{color:'#A6A5A5'}}/>
+                            <ReportProblemOutlinedIcon style={{color:'#A6A5A5',cursor:"pointer"}} onClick={()=>setOpen(true)}/>
                             <BookmarkIcon style={{color:props.stateAnswer[props.number-1]?props.stateAnswer[props.number-1].isBookmarked?'black':'#A6A5A5':'#A6A5A5',marginLeft:'8px',cursor:'pointer'}} 
                                 onClick={()=>props.bookmarkQuestion(props.number-1)}/>
                         </div>
@@ -402,6 +408,21 @@ console.log("kkk",props.stateAnswer[props.number-1])
                 Please enter a proper response before submitting.
             </div>
         </Snackbar>
+        <Dialog
+            open={open}
+            onClose={()=>setOpen(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            id="report-box"
+        >
+            <DialogTitle id="alert-dialog-title">{"Report"}</DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    <textarea style={{resize:"none"}} rows="4"/>
+                    <button id="report-button" onClick={()=>setOpen(false)}>Report</button>
+                </DialogContentText>
+            </DialogContent>
+        </Dialog>
     </>
     )
 }

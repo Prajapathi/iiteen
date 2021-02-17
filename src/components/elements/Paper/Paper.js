@@ -295,7 +295,7 @@ export function Paper(props) {
                 <div className="timer-bar" style={{justifyContent:showSummary?"center":"space-between"}}>
                     <div>
                         <div style={{marginRight:'10px'}}>Time Remaining: </div>
-                        <Timer duration={1} timeOver={setTimeOver}/>
+                        <Timer duration={5} timeOver={setTimeOver}/>
                     </div>
                     {showSummary?
                         null:
