@@ -4,8 +4,7 @@ import MockTestReducer from './reducer/MockTestReducer'
 import AuthReducer from './reducer/AuthReducer'
 
 const rootReducer= combineReducers({
-  MockTestReducer,
-  AuthReducer
+  MockTestReducer
 })
 
 const store=createStore(rootReducer, applyMiddleware(reduxThunk))
