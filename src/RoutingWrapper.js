@@ -7,6 +7,8 @@ import Footer from './components/Footer'
 import LeftMenu from './components/LeftMenu'
 import Routing from './Routing'
 import Loading from './components/elements/Loading'
+import AddPaper from './adminPanel/AddPaper'
+import Paper from './adminPanel/Paper'
 
 export function RoutingWrapper(props) {
     return (
@@ -14,6 +16,12 @@ export function RoutingWrapper(props) {
             <Loading/>
         :
         <Switch>
+            <Route path="/AddPaper">
+                <AddPaper/>
+            </Route>
+            <Route path="/Paper">
+                <Paper/>
+            </Route>
             <Route exact path="/">
                 {
                     props.isAuthenticated?

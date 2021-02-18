@@ -17,18 +17,17 @@ import Analysis from './components/elements/DetailedAnalysis/Analysis'
 
 
 function App() {
-  let login=false;
-  //store.dispatch(Actions.verifyAuth())
+  let login=true;
+  store.dispatch(Actions.verifyAuth())
   return (
     <>
     {/* <Landing/> */}
     {/* <Timer duration={150}/> */}
     <BrowserRouter>
-     {/* {login?
-      <><RoutingWrapper style={{minHeight:'80vh'}}/><RoutingAdmin/></>
+     {login?
+      <><RoutingWrapper style={{minHeight:'80vh'}}/></>
       :<RoutingAdmin/>
-    } */}
-    <RoutingAdmin/>
+    }
      </BrowserRouter> 
       {/* 
      <PaperInstruction/> */}
