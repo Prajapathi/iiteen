@@ -29,7 +29,7 @@ export function Paper(props) {
             a.push(0)
         }
         setPalleteArray(a);
-        setIndex(props.paper.lastIndex)
+        setIndex(props.paper.lastIndex?props.paper.lastIndex:0)
     }, [])
 
     const navigateQuestion=(ind)=>{

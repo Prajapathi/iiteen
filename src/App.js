@@ -17,7 +17,7 @@ import Analysis from './components/elements/DetailedAnalysis/Analysis'
 
 
 function App() {
-  let login=true;
+  let login=false;
   store.dispatch(Actions.verifyAuth())
   return (
     <>
