@@ -24,10 +24,11 @@ function App() {
     {/* <Landing/> */}
     {/* <Timer duration={150}/> */}
     <BrowserRouter>
-     {login?
+     {/* {login?
       <><RoutingWrapper style={{minHeight:'80vh'}}/><RoutingAdmin/></>
       :<RoutingAdmin/>
-    }
+    } */}
+    <RoutingAdmin/>
      </BrowserRouter> 
       {/* 
      <PaperInstruction/> */}
