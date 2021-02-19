@@ -26,6 +26,15 @@ export function Signin(props) {
     const [showError,setShowError]=React.useState(false)
     const [disableExit,setDisableExit]=React.useState(false)
 
+    const enterPhoneNo=(inp)=>{
+        if(isNaN(inp)){
+            return;
+        }
+        else{
+             setPhoneNo(inp)
+        }
+    }
+
     const onSignInSubmit = (e) => {
         e.preventDefault();
 
@@ -135,11 +144,13 @@ export function Signin(props) {
                                         label="Phone Number"
                                         id="outlined-start-adornment"
                                         value={phoneNo}
-                                        onChange={(e)=>setPhoneNo(e.target.value)}
+                                        onChange={(e)=>enterPhoneNo(e.target.value)}
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">+91</InputAdornment>,
                                         }}
                                         variant="outlined"
+                                        maxLength="10"
+                                        inputProps={{ maxLength: 10}}
                                     />
                                     :
                                     <TextField
@@ -173,7 +184,7 @@ export function Signin(props) {
                                     
                                         <Button 
                                             id="signin-button" 
-                                            disabled={showLoading} 
+                                            disabled={showLoading || (!showOTPInput && phoneNo.length<10)} 
                                             onClick={showOTPInput? onSubmitOtp: onSignInSubmit}
                                             style={{backgroundColor:showLoading?'grey':null}}
                                         >

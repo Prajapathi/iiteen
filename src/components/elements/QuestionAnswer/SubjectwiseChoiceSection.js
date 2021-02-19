@@ -112,6 +112,10 @@ console.log("kkk",props.stateAnswer[props.number-1])
                 console.log("Error saving option",err)
             })
     }
+    const bookMark=()=>{
+        props.bookmarkQuestion(props.number-1)
+        saveAttemptDatabase();
+    }
     const submitQuestionPre=()=>{
         setAnimate(false)
     }
@@ -203,7 +207,7 @@ console.log("kkk",props.stateAnswer[props.number-1])
                         <div >
                             <ReportProblemOutlinedIcon style={{color:'#A6A5A5',cursor:"pointer"}} onClick={()=>setOpen(true)}/>
                             <BookmarkIcon style={{color:props.stateAnswer[props.number-1]?props.stateAnswer[props.number-1].isBookmarked?'black':'#A6A5A5':'#A6A5A5',marginLeft:'8px',cursor:'pointer'}} 
-                                onClick={()=>props.bookmarkQuestion(props.number-1)}/>
+                                onClick={()=>bookMark()}/>
                         </div>
                      </div>
                     

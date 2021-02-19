@@ -25,6 +25,7 @@ import mains_adv_pack from '../assets/images/Landing/mains_adv_pack.png'
 import motive from '../assets/images/Landing/motive.png'
 
 export default function Landing() {
+    document.title="IITEENS"
     const [open,setOpen]=React.useState(true)
     const [openLogin,setOpenLogin]=React.useState(false)
 
