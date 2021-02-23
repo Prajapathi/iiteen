@@ -1,0 +1,18 @@
+.contact-title-sec{
+    color:#498E9C;
+    text-align:center;
+}
+#contact-title{
+    font-size:32px;
+}
+.contact-list{
+    color:#498E9C;
+    margin-bottom:0px;
+    margin-top:15px;
+}
+
+.dialog-content-contact {
+    text-align:center;
+    width:80%;
+    margin:0px 10%;
+}

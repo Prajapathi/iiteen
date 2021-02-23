@@ -42,3 +42,14 @@
   width: 190px; 
   overflow: hidden;
 }
+#signup-feature-list{
+  text-align:left;
+  font-size:16px;
+  width:90%;
+  margin:2% 5%;
+  margin-bottom:0px;
+  color:grey;
+}
+.signin-title{
+  color:#498E9C;
+}

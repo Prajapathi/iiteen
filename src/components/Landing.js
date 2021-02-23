@@ -28,11 +28,17 @@ export default function Landing() {
     document.title="IITEENS"
     const [open,setOpen]=React.useState(true)
     const [openLogin,setOpenLogin]=React.useState(false)
+    const [openSignup,setOpenSignup]=React.useState(false)
 
     return (
         <div id="landingpage" >
             {
-                openLogin?<Signin openLogin={openLogin} closeLogin={()=>setOpenLogin(false)}/>:null
+                (openLogin||openSignup)?
+                        <Signin openLogin={openLogin || openSignup}
+                            login={openLogin} 
+                            closeLogin={openLogin?()=>setOpenLogin(false):()=>setOpenSignup(false)}
+                        />
+                    :null
             }
             <div style={{transform: open ? 'translateX(0)' : 'translateX(180px)', transition: "all 0.5s linear"}}>
                 <div  id="app-bar">
@@ -61,9 +67,14 @@ export default function Landing() {
                     <p style={{fontSize:'20px'}}>IITeens conducts online Test Series for Concept Building,
                         Learning and Development of Basics of the JEE aspirants. 
                         In depth Technical Analysis accelerates the performance.</p>
-                    <div>
-                        <button className="landing-button" onClick={()=>setOpenLogin(true)}>Login/Signup</button>
-                        <button className="landing-button">Free Trial</button>
+                    <div id="section1-text-div">
+                        <div className="section1-button-sec">
+                            <button className="landing-button" id="section1-button1" onClick={()=>setOpenLogin(true)}>Login</button>
+                        </div>
+                        <div className="section1-button-sec">
+                            <button className="landing-button" id="section1-button2" onClick={()=>setOpenSignup(true)}>Signup</button>
+                            <div>10 Days of Free Trial!</div>
+                        </div>
                     </div>
                 </div>
             </div>

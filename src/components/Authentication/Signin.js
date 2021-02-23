@@ -126,17 +126,30 @@ export function Signin(props) {
                     onClose={props.closeLogin}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
-                    fullWidth={true}
+                    // fullWidth={true}
                     style= {{
                         backgroundColor: 'transparent',}}
                     disableBackdropClick={showOTPInput || disableExit?true:false}
                     disableEscapeKeyDown={showOTPInput|| disableExit?true:false}
                 >
-                    <DialogTitle id="alert-dialog-title" className="dialog-content-signin">
-                        {"Please enter your mobile number"}
+                    <DialogTitle id="alert-dialog-title" className="dialog-content-signin signin-title">
+                        {props.login?"Please enter your mobile number":
+                            <div>
+                                Free Trial for 30 Days!
+                                <ul id="signup-feature-list">
+                                    <li>Upto 30+ Previous Year Papers</li>
+                                    <li>6800+ Subjectwise Questions for Practice</li>
+                                    <li>15 Mock Test Papers according to latest JEE Pattern</li>
+                                </ul>
+                            </div>
+                        }
                     </DialogTitle>
                     <DialogContent className="dialog-content-signin">
                         <DialogContentText id="alert-dialog-description">
+                            {
+                                props.login?null
+                                    :<><div>Please enter your mobile number</div><br/></>
+                            }
                              <Form className="form" onSubmit={onSignInSubmit}>
                                 <div id="recaptcha-container"></div>
                                 {   !showOTPInput?

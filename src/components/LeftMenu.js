@@ -174,9 +174,9 @@ const useStyles = makeStyles((theme) => ({
         
     },
     navlogo:{
-        height:'64px',
+        height:'56px',
         [theme.breakpoints.down('sm')]: {
-            height:'56px'
+            height:'45px'
         },
         marginTop:"0px",
         marginBottom:"0px"
@@ -253,20 +253,32 @@ export function LeftMenu(props) {
                 style = {{ marginRight: '3%' }}
             >
                 <div className = { clsx(classes.tab) } >
-                    <Link to="/Home" className="menu-link">
-                        <Typography className = { clsx(classes.tabs) } >Home </Typography>
-                    </Link>
-                    <Typography className = { clsx(classes.tabs) } >Report </Typography> 
-                    <Typography className = { clsx(classes.tabs) } >IITeenCorner </Typography> 
-                    <Typography className = { clsx(classes.tabs) } >Plan </Typography>
-                    <Badge style={{}} className = { clsx(classes.notifBadge) }
-                            overlap="circle" 
-                            badgeContent={4} 
-                            color="primary">
-                                <NotificationsRoundedIcon className = { clsx(classes.notif) }/>
-                    </Badge>
-                    <img src = { avatar } className = { clsx(classes.navimg) }/>
-                    <Typography className = { clsx(classes.tabs) } onClick={()=>{signout()}}>Logout </Typography>
+                    {
+                        props.isAuthenticated?
+                        <>
+                            <Link to="/Home" className="menu-link">
+                            <Typography className = { clsx(classes.tabs) } >Home </Typography>
+                            </Link>
+                            <Typography className = { clsx(classes.tabs) } >Report </Typography> 
+                            <Typography className = { clsx(classes.tabs) } >IITeenCorner </Typography> 
+                            <Typography className = { clsx(classes.tabs) } >Plan </Typography>
+                            <Badge style={{}} className = { clsx(classes.notifBadge) }
+                                    overlap="circle" 
+                                    badgeContent={4} 
+                                    color="primary">
+                                        <NotificationsRoundedIcon className = { clsx(classes.notif) }/>
+                            </Badge>
+                            <img src = { avatar } className = { clsx(classes.navimg) }/>
+                            <Typography className = { clsx(classes.tabs) } onClick={()=>{signout()}}>Logout </Typography>
+                        </>
+                        :
+                        <>
+                            <Link href="/" hash="#section3" className="menu-link">
+                            <Typography className = { clsx(classes.tabs) } >Home </Typography>
+                            </Link>
+                        </>
+                    }
+                    
                 </div>
             </Grid>
             </Toolbar> 
@@ -293,7 +305,7 @@ export function LeftMenu(props) {
                         </div> 
                     </div>
                     <List>
-                        {['My Purchases', 'Ask Experts', 'Study Materials', 'How to Study'].map((text, index) => ( 
+                        {['My Purchases', 'Ask Experts', 'Study Materials'].map((text, index) => ( 
                             <ListItem button key = { text } >
                                 <ListItemText primary = { text }/> 
                             </ListItem>
@@ -301,7 +313,7 @@ export function LeftMenu(props) {
                     </List>
                     <Divider/>
                     <List> 
-                        {['About', 'Logout', 'Setting'].map((text, index) => ( 
+                        {['About', 'Logout'].map((text, index) => ( 
                             <ListItem button key = { text } >
                                 <ListItemText primary = { text }/>
                             </ListItem>

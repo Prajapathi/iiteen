@@ -35,6 +35,9 @@ export function Routing(props) {
         <>
         
         <Switch>
+            <Route exact path="/About">
+                <LeftMenu/><About/><Footer/>
+            </Route>
             <Route exact path="/Home">
                 <LeftMenu/><Home/><Footer/>
             </Route>

@@ -68,10 +68,25 @@
 #section1-text{
     width:40%;
 }
-#section1-text div{
+#section1-text-div{
     margin-top:10%;
     display:flex;
     justify-content:space-evenly;
+}
+.section1-button-sec{
+    display:block !important;
+    text-align:center;
+    width:50%;
+}
+.section1-button-sec div{
+    margin-top:10px;
+    color:#06BD1D;
+}
+#section1-button1{
+    width:70%;
+}
+#section1-button2{
+    width:70%;
 }
 .landing-button{
     background:white;
@@ -220,13 +235,13 @@
         width:80%;
         margin:0px 10%;
     }
-    #section1-text div{
-        margin-top:10%;
+    #section1-text-div{
+        margin-top:5%;
         display:flex;
         justify-content:space-evenly;
     }
-    #section1-text div button{
-        width:40%;
+    #section1-text-div button{
+        width:60%;
     }
 
     #section2{
@@ -271,6 +286,12 @@
     }
 }
 @media(max-width:760px){
+    #section1-button1{
+        width:80% !important;
+    }
+    #section1-button2{
+        width:80% !important;
+    }
     #section1-heading-line1{
         font-size:3rem;
     }
