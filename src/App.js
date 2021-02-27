@@ -10,18 +10,16 @@ import AddPaper from './adminPanel/AddPaper'
 import QuestionAdmin from './adminPanel/elements/Question'
 import RoutingAdmin from './adminPanel/Routing'
 import PaperInstruction from './components/elements/Paper/Instructions/PaperInstruction'
-import PaperAnalysis from './components/elements/Paper/PaperAnalysis'
 import Timer from './components/elements/Paper/Timer'
 import Paper from './components/elements/Paper/Subjectwise/Paper'
 import Analysis from './components/elements/DetailedAnalysis/Analysis'
-
+import ComingSoon from './components/screens/ComingSoon/ComingSoon'
 
 function App() {
   let login=true;
   store.dispatch(Actions.verifyAuth())
   return (
     <>
-    {/* <Landing/> */}
     {/* <Timer duration={150}/> */}
     <BrowserRouter>
      {login?
@@ -29,9 +27,7 @@ function App() {
       :<RoutingAdmin/>
     }
      </BrowserRouter> 
-      {/* 
-     <PaperInstruction/> */}
-     {/* <Landing/> */}
+     {/* <ComingSoon/> */}
     </>
   );
 }

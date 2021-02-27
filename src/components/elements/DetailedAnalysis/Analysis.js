@@ -1,52 +1,92 @@
 import React from 'react'
+import {connect} from 'react-redux'
 import firebase from 'firebase'
+import {useParams, useHistory} from "react-router-dom";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import PaperAnalysis from './PaperAnalysis'
 
-export default function Analysis() {
+export function Analysis(props) {
     const [loading,setLoading]=React.useState(false)
+    
+    const history=useHistory();
+
+    let {paperType,paperName}=useParams();
+    paperType=paperType.toUpperCase()
+
     const [data,setData]=React.useState(0)
     const [paper,setPaper]=React.useState(0)
     const [questions,setQuestions]=React.useState(0)
-console.log("-----",data,paper,questions,"------")
+
     React.useEffect(() => {
         setLoading(true);
-        
+
+        //set the paper route for path
+        let paperTypeRoute;
+        switch(paperType){
+            case "MOCKTEST":
+                paperTypeRoute="MOCK"
+                break;
+            case "PREVIOUSYEAR":
+                paperTypeRoute="PREVIOUS"
+        }
+
         const db = firebase.firestore();
-        db.collection("User").doc("Testing").get()
+
+        //fetch answers given by user
+        db.collection("User").doc(props.user.uid).collection(paperTypeRoute+"Papers").doc(paperName).get()
             .then(function(querySnapshot) {
-                console.log("here's the analysis:",querySnapshot.data())
-                setData(querySnapshot.data());
+                console.log("here's the questionPaper:",querySnapshot.data())
+                if(querySnapshot.data()==null){
+                    window.alert("Paper Does Not Exist!")
+                    history.push('/')
+                }
+                else setData(querySnapshot.data());
                 
             })
             .catch(function(error) {
                 console.log("Error getting documents: ", error);
+                history.push("/QuestionsError")
             });
 
-        db.collection("MOCK").doc("Testing").get()
+        //fetch paper details
+        db.collection(paperTypeRoute).doc(paperName).get()
             .then(function(querySnapshot) {
                 console.log("here's the questionPaper:",querySnapshot.data())
-                setPaper(querySnapshot.data())
+                if(querySnapshot.data()==null){
+                    window.alert("Paper Does Not Exist!")
+                    history.push('/')
+                }
+                else setPaper(querySnapshot.data())
             })
             .catch(function(error) {
                 console.log("Error getting documents: ", error);
+                history.push("/QuestionsError")
             });
 
-        db.collection("MOCK").doc("Testing").collection("Questions").get()
+        //fetch questions
+        db.collection(paperTypeRoute).doc(paperName).collection("Questions").get()
             .then(function(querySnapshot) {
                 let qs=[];
                 querySnapshot.forEach(function(doc) {
                     console.log(doc.id, " => ", doc.data());
                     qs.push(doc.data())
                 });
-                qs.sort(function(a,b){return a.number-b.number});
-                setQuestions(qs)
+                // if(!qs || qs.length){
+                //     window.alert("Paper Does Not Exist!")
+                //     history.push('/')
+                // }
+                // else{
+                    qs.sort(function(a,b){return a.number-b.number});
+                    setQuestions(qs)
+                // }
                 setLoading(false)
             })
             .catch(function(error) {
                 console.log("Error getting documents: ", error);
+                history.push("/QuestionsError")
             });
     }, [])
+
     return (
         loading?
         <CircularProgress style={{margin:'25% 48%'}}/>:
@@ -56,3 +96,12 @@ console.log("-----",data,paper,questions,"------")
         )
     )
 }
+
+
+const mapStateToProps=(state)=>{
+    return{
+        isAuthenticated:state.AuthReducer.isAuthenticated,
+        user:state.AuthReducer.user
+    }
+}
+export default connect(mapStateToProps)(Analysis)

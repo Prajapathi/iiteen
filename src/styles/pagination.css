@@ -1,0 +1,20 @@
+.report-cards-section{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:center;
+    width:80%;
+    margin:0px 10%;
+}
+
+.report-page-card{
+    margin:30px 5%;
+}
+
+.pagination-section{
+    padding:25px;
+    margin:auto;
+    text-align:center;
+    display: flex;
+    justify-content: center;
+}

@@ -1,3 +1,6 @@
+.analysis-page{
+    margin-top:100px;
+}
 .analysis-head{
     height:50px;
     background: -moz-linear-gradient(top,  #36698d 0%, #52a0a3 100%); /* FF3.6-15 */
@@ -7,6 +10,9 @@
     font-weight:500;
     font-size:28px;
     text-align:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 .report-card{
     width:20%;
@@ -38,8 +44,36 @@
     justify-content:space-between;
 }
 
-
+.detailed-analysis-button-sec{
+    background:white;
+    width:250px;
+    border-radius:10px;
+    box-shadow:0px 2px 5px 1px rgba(0,0,0,0.2);
+    margin:25px auto;
+    padding:10px 60px;
+}
+#detailed-analysis-button-icon{
+    font-size:42px;
+    color:grey;
+    margin:3px 42px;
+}
+.detailed-analysis-button{
+    color:#46889A;
+    border:none;
+    padding:10px;
+    background:#E6F4F8;
+    border-radius:5px;
+    box-shadow:0px 2px 2px 1px rgba(0,0,0,0.2);
+}
+.detailed-analysis-button:active{
+    outline:none;
+    box-shadow:none;
+}
+.detailed-analysis-button:focus{
+    outline:none;
+}
 .analysis-section{
+    background:white;
     width:80%;
     display:flex;
     border-radius:10px;
@@ -100,19 +134,47 @@
 }
 
 .subject-bar-card{
-    width:30%;
-    margin:1%;
-    padding:2%;
     border-radius:10px;
     box-shadow:0px 2px 5px 1px rgba(0,0,0,0.2);
+    width:90%;
+    margin:0px 5%;
+    margin-bottom:2%;
+    padding:10px;
+    display:flex;
+    justify-content:center;
+    overflow-x:auto;
 }
 .bar-section{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
 }
 .subject-bar{
     width:90%
+}
+.bargraph-sub-sec{
+    width:200px;
+}
+.bargraph-sub-sec div{
+    display:flex;
+    margin:0px;
+}
+.graph-bar{
+    width:150px;
+    transform: rotate(-90deg);
+    top:75px;
+    left:-10px;
+    padding:20px;
+    border-radius:10px;
+}
+.bargraph-sub-sec-hr{
+    background:grey;
+    margin-top:150px;
+    margin-bottom:5px;
+}
+.bargraph-sub-sec-title{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:0px 5px;
 }
 
 @media(max-width:1080px){

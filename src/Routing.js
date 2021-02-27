@@ -11,7 +11,9 @@ import PreviousYear from './components/screens/PreviousYear/PreviousYear'
 import Papers from './components/elements/Paper/Paper'
 import NoQuestionsError from './components/elements/Paper/NoQuestionsError'
 import SubjectwisePaper from './components/elements/Paper/Subjectwise/Paper'
-import PaperAnalysis from './components/elements/Paper/PaperAnalysis'
+import PaperAnalysis from './components/elements/PaperAnalysis/PaperAnalysis'
+import DetailedAnalysis from './components/elements/DetailedAnalysis/Analysis'
+import Report from './components/screens/Report/Report'
 import Footer from './components/Footer'
 import LeftMenu from './components/LeftMenu'
 import Signin from './components/signin'
@@ -61,6 +63,12 @@ export function Routing(props) {
             </Route>
             <Route exact path="/:paperType/Papers/Analysis/:paperName">
                 <LeftMenu/><PaperAnalysis/><Footer/>
+            </Route>
+            <Route exact path="/:paperType/Papers/Detailed_Analysis/:paperName">
+                <LeftMenu/><DetailedAnalysis/><Footer/>
+            </Route>
+            <Route exact path="/Report">
+                <LeftMenu/><Report/><Footer/>
             </Route>
             <Route exact path="/QuestionsError">
                 <LeftMenu/><NoQuestionsError/><Footer/>

@@ -81,7 +81,7 @@ export function MockTestCard(props) {
                         </button>
                         {
                             props.isAttempted?
-                                <Link to={"MockTest/Papers/Analysis/"+props.paper.name}>
+                                <Link to={"/MockTest/Papers/Analysis/"+props.paper.name}>
                                     <button>Analysis</button>
                                 </Link>
                             :null

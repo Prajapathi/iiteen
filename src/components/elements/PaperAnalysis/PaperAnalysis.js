@@ -1,8 +1,10 @@
 import React, {useState} from 'react'
 import firebase from 'firebase'
 import {connect} from 'react-redux'
-import {useLocation,useParams,useHistory} from "react-router-dom";
-import { Pie, Bar } from 'react-chartjs-2'
+import {Link,useLocation,useParams,useHistory} from "react-router-dom";
+import { Pie} from 'react-chartjs-2'
+import BarGraph from './BarGraph'
+import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import '../../../styles/paperAnalysis.css'
 
@@ -11,7 +13,7 @@ export function PaperAnalysis(props) {
     const location = useLocation();
     const history=useHistory();
     let {paperType,paperName}=useParams();
-    paperType=paperType.toUpperCase()
+    let paperTypeCaps=paperType.toUpperCase()
     const [loading, setLoading] = useState(true)
 
     const [data,setData]=useState([])
@@ -87,7 +89,7 @@ export function PaperAnalysis(props) {
     //data fetching
     React.useEffect(() => {
         let paperTypeRoute;
-        switch(paperType){
+        switch(paperTypeCaps){
             case "MOCKTEST":
                 paperTypeRoute="MOCK"
                 break;
@@ -148,7 +150,7 @@ export function PaperAnalysis(props) {
     return (
         loading==true?
         <CircularProgress style={{margin:'25% 50%'}}/>:
-        <div>
+        <div className="analysis-page">
             <div className="analysis-head">
                 Report Card
             </div>
@@ -395,7 +397,19 @@ export function PaperAnalysis(props) {
             <div className="analysis-head">
                 Analysis
             </div>
+
+            <div className="detailed-analysis-button-sec">
+                <DescriptionOutlinedIcon id="detailed-analysis-button-icon"/>
+                <br/>
+                <Link to={`/${paperType}/Papers/Detailed_Analysis/`+paperName}>
+                    <button className="detailed-analysis-button">
+                        Detailed Analysis
+                    </button>
+                </Link>
+            </div>
+
             <div className="analysis-section">
+
                 <div id="marks-analysis">
                     Subjectwise Marks
                     <div className="analysis-sub-section">
@@ -442,13 +456,15 @@ export function PaperAnalysis(props) {
             </div>
             <div className="bar-section">
                 <div className="subject-bar-card">
-                        <Bar data={dataBar}  />
+                        <BarGraph/>
+                        <BarGraph/>
+                        <BarGraph/>
                 </div>
                 <div className="subject-bar-card">
-                        <Bar data={dataBar}  />
+                        <BarGraph/>
                 </div>
                 <div className="subject-bar-card">
-                        <Bar data={dataBar}/>
+                        <BarGraph/>
                 </div>
             </div>
         </div>

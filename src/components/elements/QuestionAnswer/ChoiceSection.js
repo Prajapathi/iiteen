@@ -39,7 +39,7 @@ export function ChoiceSection(props) {
         props.setSeen(props.number-1)
     }, [props.number])
 
-console.log("kkk",props.stateAnswer[props.number-1])
+    console.log("kkk",props.stateAnswer[props.number-1])
 
     useEffect(() => {
         //if answer was already submitted then load this into local state for display

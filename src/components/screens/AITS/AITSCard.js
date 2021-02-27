@@ -1,14 +1,14 @@
 import React from 'react'
 import LockIcon from '@material-ui/icons/Lock';
 
-export default function AITSCard() {
+export default function AITSCard(props) {
 
     return (
         <div className="flip-card-mock">
             <div className="flip-card-inner-mock">
                 <div className="flip-card-front-mock">
                     <div id="card-title-mock">
-                        <div style={{fontSize:'26px'}}>JEE Mains</div>
+                        <div style={{fontSize:'26px'}}>{props.index}</div>
                     </div> 
                     <div id="card-content-mock">
                         <div style={{display:'flex',width:'100%',justifyContent:'space-between'}}>

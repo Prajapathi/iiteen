@@ -6,25 +6,75 @@ import HomeCard from './HomeCard'
 import HomeCarousel from './HomeCarousel'
 import banner from '../../../assets/images/mainbanner.png'
 
+
 export default function Home() {
     document.title="IITEENS | Home"
+
     const [timeElapsed,setTimeElapsed]=React.useState({})
+    const [creationTime,setCreationTime]=React.useState()
+    const [seconds,setSeconds]=React.useState(0)
 
     React.useEffect(() => {
-        let elapsed=((new Date())-new Date(firebase.auth().currentUser.metadata.creationTime))/1000;
-        const diff = {};
+        const userCreationTime=new Date(firebase.auth().currentUser.metadata.creationTime);
+        // const userCreationTime= new Date("February 17, 2021 11:13:00");
 
+        setCreationTime(userCreationTime)
+
+        let elapsed=((new Date())-userCreationTime)/1000;
+        const diff = {};
         diff.days    = Math.floor(elapsed / 86400);
         diff.hours   = Math.floor(elapsed / 3600 % 24);
         diff.minutes = Math.floor(elapsed / 60 % 60);
         diff.seconds = Math.floor(elapsed % 60);
-        console.log("yo?",diff.days,diff.hours,diff.minutes,diff.seconds)
+        console.log("Time elapsed from account creation:",diff.days,diff.hours,diff.minutes,diff.seconds)
+        
         setTimeElapsed(diff)
+
+        //if 10 days have passed since user creation, cancel free trial
+        if(diff>=10){
+            //do something to remove free trial
+        }
+        //else set interval to check every second
+        else{
+            let interval = setInterval(() => tick(), 1000);
+            return()=>{
+                clearInterval(interval);
+            }
+        }
     }, [])
+
+    const tick=()=>{
+        setSeconds(seconds+1);
+        if(!creationTime){
+            return
+        }
+        
+        let elapsed=((new Date())-creationTime)/1000;
+        const diff = {};
+        diff.days    = Math.floor(elapsed / 86400);
+        diff.hours   = Math.floor(elapsed / 3600 % 24);
+        diff.minutes = Math.floor(elapsed / 60 % 60);
+        diff.seconds = Math.floor(elapsed % 60);
+        if(diff.days>=10){
+            //do something to remove free trial
+        }
+        setTimeElapsed(diff)
+    }
+
     return (
         <div className="screen">
-            <div>
-                Time Elapsed:{timeElapsed.days}
+            <div id="time-left-strip">
+                {timeElapsed.days>=10?
+                    "Your free trial has expired":
+                    (timeElapsed.days==9?
+                        (
+                            timeElapsed.minutes==1?
+                                "Your free trial expires in "+(60-timeElapsed.seconds)+" seconds"
+                                :"Your free trial expires in "+(60-timeElapsed.minutes)+" minutes"
+                        )
+                        :"Your free trial expires in "+(10-timeElapsed.days)+" days"
+                    )
+                }
             </div>
             <div style={{height:'auto',width:'80%',margin:'auto'}}>
                 <HomeCarousel/>

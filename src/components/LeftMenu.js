@@ -27,6 +27,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import EditIcon from '@material-ui/icons/Edit';
 import avatar from '../assets/images/avatar.png'
 import logo from '../assets/images/iiteenslogo.png'
+import About from './elements/About/About'
 
 const drawerWidth = 300;
 
@@ -200,6 +201,7 @@ export function LeftMenu(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [openAbout,setOpenAbout]=React.useState(false)
 
     const signout=()=>{
         firebase.auth().signOut().then(() => {
@@ -218,111 +220,117 @@ export function LeftMenu(props) {
         setOpen(false);
     };
 
-    return ( 
-        <div className = { classes.root }>
-            <CssBaseline/>
-            <AppBar position = "fixed"
-                className = {
-                clsx(classes.appBar, {
-                    [classes.appBarShift]: open,
-                })}
-            >
-            <Toolbar className = { clsx(classes.mynav)}>
-            {
-                props.isAuthenticated?
-                <IconButton color = "inherit"
-                    aria-label = "open drawer"
-                    onClick = { handleDrawerOpen }
-                    edge = "start"
-                    className = { clsx(classes.menuButton, open && classes.hide)}
+    return (
+        <> 
+            {open?<About open={openAbout} close={()=>setOpenAbout(false)}/>:null}
+            <div className = { classes.root }>
+                <CssBaseline/>
+                <AppBar position = "fixed"
+                    className = {
+                    clsx(classes.appBar, {
+                        [classes.appBarShift]: open,
+                    })}
                 >
-                    <MenuIcon/>
-                </IconButton> 
-                :null
-            }
-            <Grid container alignItems = "flex-start"
-                justify = "flex-start"
-                direction = "row"
-            > 
-                    {!open ? <Link to="/"> <img src={logo} className={classes.navlogo}/> </Link>
-                           :null} 
-            </Grid> 
-            <Grid container alignItems = "flex-end"
-                justify = "flex-end"
-                direction = "row"
-                style = {{ marginRight: '3%' }}
-            >
-                <div className = { clsx(classes.tab) } >
-                    {
-                        props.isAuthenticated?
-                        <>
-                            <Link to="/Home" className="menu-link">
-                            <Typography className = { clsx(classes.tabs) } >Home </Typography>
-                            </Link>
-                            <Typography className = { clsx(classes.tabs) } >Report </Typography> 
-                            <Typography className = { clsx(classes.tabs) } >IITeenCorner </Typography> 
-                            <Typography className = { clsx(classes.tabs) } >Plan </Typography>
-                            <Badge style={{}} className = { clsx(classes.notifBadge) }
-                                    overlap="circle" 
-                                    badgeContent={4} 
-                                    color="primary">
-                                        <NotificationsRoundedIcon className = { clsx(classes.notif) }/>
-                            </Badge>
-                            <img src = { avatar } className = { clsx(classes.navimg) }/>
-                            <Typography className = { clsx(classes.tabs) } onClick={()=>{signout()}}>Logout </Typography>
-                        </>
-                        :
-                        <>
-                            <Link href="/" hash="#section3" className="menu-link">
-                            <Typography className = { clsx(classes.tabs) } >Home </Typography>
-                            </Link>
-                        </>
-                    }
-                    
-                </div>
-            </Grid>
-            </Toolbar> 
-            </AppBar>
-            { props.isAuthenticated?
-                <Drawer
-                    className = { classes.drawer }
-                    variant = "persistent"
-                    anchor = "left"
-                    open = { open }
-                    classes = {{paper: classes.drawerPaper,}}
+                <Toolbar className = { clsx(classes.mynav)}>
+                {
+                    props.isAuthenticated?
+                    <IconButton color = "inherit"
+                        aria-label = "open drawer"
+                        onClick = { handleDrawerOpen }
+                        edge = "start"
+                        className = { clsx(classes.menuButton, open && classes.hide)}
+                    >
+                        <MenuIcon/>
+                    </IconButton> 
+                    :null
+                }
+                <Grid container alignItems = "flex-start"
+                    justify = "flex-start"
+                    direction = "row"
+                > 
+                        {!open ? <Link to="/"> <img src={logo} className={classes.navlogo}/> </Link>
+                            :null} 
+                </Grid> 
+                <Grid container alignItems = "flex-end"
+                    justify = "flex-end"
+                    direction = "row"
+                    style = {{ marginRight: '3%' }}
                 >
-                    <div className = {classes.menuHead}>
-                        <div className = {classes.drawerHeader}>
-                            <img src={logo} className={classes.navlogo} style={{}}/>
-                            <IconButton onClick = { handleDrawerClose } > 
-                                        <MenuIcon/>
-                            </IconButton>
-                        </div> 
-                        <img src = { avatar }style = {{ marginLeft: '29%' }}className = { classes.profile }/>
-                        <div className = { classes.name } >
-                            <Badge overlap="circle" badgeContent={<EditIcon style={{ fontSize: '16px', marginLeft: '40px',marginTop:'40px'}}/>} color=""><Typography variant = "h6" > Anjali Patle </Typography></Badge> 
-                            {/* <EditIcon style = {{ fontSize: '16px', marginLeft: '5px'}}/> */}
-                        </div> 
+                    <div className = { clsx(classes.tab) } >
+                        {
+                            props.isAuthenticated?
+                            <>
+                                <Link to="/Home" className="menu-link">
+                                <Typography className = { clsx(classes.tabs) } >Home </Typography>
+                                </Link>
+                                <Link to="/Report" className="menu-link">
+                                    <Typography className = { clsx(classes.tabs) } >Report </Typography> 
+                                </Link>
+                                <Typography className = { clsx(classes.tabs) } >IITeenCorner </Typography> 
+                                <Typography className = { clsx(classes.tabs) } >Plan </Typography>
+                                <Badge style={{}} className = { clsx(classes.notifBadge) }
+                                        overlap="circle" 
+                                        badgeContent={4} 
+                                        color="primary">
+                                            <NotificationsRoundedIcon className = { clsx(classes.notif) }/>
+                                </Badge>
+                                <img src = { avatar } className = { clsx(classes.navimg) }/>
+                                <Typography className = { clsx(classes.tabs) } onClick={()=>{signout()}}>Logout </Typography>
+                            </>
+                            :
+                            <>
+                                <Link href="/" hash="#section3" className="menu-link">
+                                <Typography className = { clsx(classes.tabs) } >Home </Typography>
+                                </Link>
+                            </>
+                        }
+                        
                     </div>
-                    <List>
-                        {['My Purchases', 'Ask Experts', 'Study Materials'].map((text, index) => ( 
-                            <ListItem button key = { text } >
-                                <ListItemText primary = { text }/> 
-                            </ListItem>
-                        ))}
-                    </List>
-                    <Divider/>
-                    <List> 
-                        {['About', 'Logout'].map((text, index) => ( 
-                            <ListItem button key = { text } >
-                                <ListItemText primary = { text }/>
-                            </ListItem>
-                        ))}
-                    </List>
-                </Drawer>
-                :null
-            }
-            </div>
+                </Grid>
+                </Toolbar> 
+                </AppBar>
+                { props.isAuthenticated?
+                    <Drawer
+                        className = { classes.drawer }
+                        variant = "persistent"
+                        anchor = "left"
+                        open = { open }
+                        classes = {{paper: classes.drawerPaper,}}
+                    >
+                        <div className = {classes.menuHead}>
+                            <div className = {classes.drawerHeader}>
+                                <img src={logo} className={classes.navlogo} style={{}}/>
+                                <IconButton onClick = { handleDrawerClose } > 
+                                            <MenuIcon/>
+                                </IconButton>
+                            </div> 
+                            <img src = { avatar }style = {{ marginLeft: '29%' }}className = { classes.profile }/>
+                            <div className = { classes.name } >
+                                <Badge overlap="circle" badgeContent={<EditIcon style={{ fontSize: '16px', marginLeft: '40px',marginTop:'40px'}}/>} color=""><Typography variant = "h6" > Anjali Patle </Typography></Badge> 
+                                {/* <EditIcon style = {{ fontSize: '16px', marginLeft: '5px'}}/> */}
+                            </div> 
+                        </div>
+                        <List>
+                            {['My Purchases', 'Ask Experts', 'Study Materials'].map((text, index) => ( 
+                                <ListItem button key = { text } >
+                                    <ListItemText primary = { text }/> 
+                                </ListItem>
+                            ))}
+                        </List>
+                        <Divider/>
+                        <List> 
+                                <ListItem button  >
+                                    <ListItemText primary = { "About Us" } onClick={()=>setOpenAbout(true)}/>
+                                </ListItem>
+                                <ListItem button  >
+                                    <ListItemText primary = { "Logout" }/>
+                                </ListItem>
+                        </List>
+                    </Drawer>
+                    :null
+                }
+                </div>
+            </>
         );
     }
 

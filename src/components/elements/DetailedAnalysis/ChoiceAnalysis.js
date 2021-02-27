@@ -124,7 +124,7 @@ export default function ChoiceAnalysis(props) {
                                                                                 ?text.data
                                                                                 :(text.type==2
                                                                         ?<InlineMath>{text.data}</InlineMath>
-                                                                        :(text.type==3?<img src={text.data} style={{width:"100%"}}/>:null)
+                                                                        :(text.type==3?<img src={text.data} style={{width:"50%"}}/>:null)
                                                                     )
                                                                 )
                                                             }
