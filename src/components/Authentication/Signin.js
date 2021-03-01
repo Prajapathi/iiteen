@@ -10,6 +10,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -132,17 +134,24 @@ export function Signin(props) {
                     disableBackdropClick={showOTPInput || disableExit?true:false}
                     disableEscapeKeyDown={showOTPInput|| disableExit?true:false}
                 >
-                    <DialogTitle id="alert-dialog-title" className="dialog-content-signin signin-title">
+                    <DialogTitle id="alert-dialog-title" disableTypography className="dialog-content-signin signin-title">
+                        {
+                            (showOTPInput || disableExit)?null
+                               :<IconButton onClick={props.closeLogin} className="dialog-close-icon">
+                                    <CloseIcon />
+                                </IconButton>
+                        }
                         {props.login?"Please enter your mobile number":
                             <div>
-                                Free Trial for 30 Days!
+                                Free Trial for 10 Days!
                                 <ul id="signup-feature-list">
-                                    <li>Upto 30+ Previous Year Papers</li>
+                                    <li>Upto 48+ Previous Year Papers</li>
                                     <li>6800+ Subjectwise Questions for Practice</li>
                                     <li>15 Mock Test Papers according to latest JEE Pattern</li>
                                 </ul>
                             </div>
                         }
+                        
                     </DialogTitle>
                     <DialogContent className="dialog-content-signin">
                         <DialogContentText id="alert-dialog-description">

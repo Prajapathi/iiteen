@@ -33,6 +33,7 @@
 #about-ppr{
     padding:2%;
 }
+
 @media(max-width:900px){
     .about-img{
         height:500px;

@@ -2,9 +2,8 @@ import React from 'react'
 import PaginationComponent from './Pagination'
 import '../../../styles/report.css'
 
-document.title="Report | IITEENS"
-
 export default function Report() {
+    document.title="Report | IITEENS"
     return (
         <div  className="screen report-screen" id="AITS">
            <div id="mocktest-heading">

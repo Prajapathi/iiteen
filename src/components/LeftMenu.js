@@ -34,7 +34,7 @@ const drawerWidth = 300;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
-        marginBottom:'60px'
+        marginBottom:'55px'
     },
     appBar: {
         transition: theme.transitions.create(['margin', 'width'], {
@@ -260,7 +260,7 @@ export function LeftMenu(props) {
                         {
                             props.isAuthenticated?
                             <>
-                                <Link to="/Home" className="menu-link">
+                                <Link to="/mjki@123U" className="menu-link">
                                 <Typography className = { clsx(classes.tabs) } >Home </Typography>
                                 </Link>
                                 <Link to="/Report" className="menu-link">
@@ -279,7 +279,7 @@ export function LeftMenu(props) {
                             </>
                             :
                             <>
-                                <Link href="/" hash="#section3" className="menu-link">
+                                <Link href="/mjki@123U" hash="#section3" className="menu-link">
                                 <Typography className = { clsx(classes.tabs) } >Home </Typography>
                                 </Link>
                             </>

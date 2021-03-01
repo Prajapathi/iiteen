@@ -5,6 +5,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 export default function Contact(props) {
     return (
@@ -19,7 +21,10 @@ export default function Contact(props) {
                 style= {{
                     backgroundColor: 'transparent',}}
             >
-                <DialogTitle id="alert-dialog-title" className="contact-title-sec">
+                <DialogTitle id="alert-dialog-title" disableTypography className="contact-title-sec">
+                    <IconButton onClick={props.close} className="dialog-close-icon">
+                        <CloseIcon />
+                    </IconButton>
                     <div id="contact-title">Contact Us</div>
                 </DialogTitle>
                 <DialogContent className="dialog-content-contact">
@@ -27,12 +32,10 @@ export default function Contact(props) {
                        <h5 className="contact-list" style={{marginTop:"0px"}}>Need Help?</h5>
                        We are here to help you. You can call our support team or can just drop a mail to us.
                        <br/>
-                       <div className="contact-list">Customer Support</div>
-                       +91 9407981419
-                       <div className="contact-list">Customer Support</div>
-                       +91 9407981419
                        <div className="contact-list">Email</div>
                        iiteens.in@gmail.com
+                       <div className="contact-list">Customer Support</div>
+                       +91 6265188325
                     </DialogContentText>
                 </DialogContent>
             </Dialog>  

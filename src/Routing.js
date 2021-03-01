@@ -33,16 +33,16 @@ export function Routing(props) {
     return (
         isChecking?<Loading/>:
         ( !props.isAuthenticated )?
-           <Redirect to='/'/>:
+           <Redirect to='/mjki@123U'/>:
         <>
         
         <Switch>
             <Route exact path="/About">
                 <LeftMenu/><About/><Footer/>
             </Route>
-            <Route exact path="/Home">
+            {/* <Route exact path="/Home">
                 <LeftMenu/><Home/><Footer/>
-            </Route>
+            </Route> */}
             <Route exact path="/MockTest">
                  <LeftMenu/><MockTest/><Footer/>
             </Route>

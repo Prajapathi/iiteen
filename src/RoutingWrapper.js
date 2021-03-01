@@ -9,6 +9,7 @@ import Routing from './Routing'
 import Loading from './components/elements/Loading'
 import AddPaper from './adminPanel/AddPaper'
 import Paper from './adminPanel/Paper'
+import ComingSoon from './components/screens/ComingSoon/ComingSoon'
 
 export function RoutingWrapper(props) {
     return (
@@ -23,6 +24,9 @@ export function RoutingWrapper(props) {
                 <Paper/>
             </Route>
             <Route exact path="/">
+                <ComingSoon/>
+            </Route>
+            <Route exact path="/mjki@123U">
                 {
                     props.isAuthenticated?
                         <><LeftMenu/><Home/><Footer/></>:
