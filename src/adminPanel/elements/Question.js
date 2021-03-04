@@ -209,9 +209,9 @@ export default function QuestionInfo(props) {
                     >
                                 <MenuItem value="0"> Mechanics-1</MenuItem>
                                 <MenuItem value="1"> Mechanics-2</MenuItem>
-                                <MenuItem value="2"> Waves and Thermodynamics</MenuItem>
-                                <MenuItem value="3"> Magnetism and EMI</MenuItem>
-                                <MenuItem value="4"> Optics and Modern Phy</MenuItem>
+                                <MenuItem value="2"> Magnetism and EMI</MenuItem>
+                                <MenuItem value="4"> Waves and Thermodynamics</MenuItem>
+                                <MenuItem value="3"> Optics and Modern Phy</MenuItem>
                                 <MenuItem value="5"> Electrostatics and current electricity</MenuItem>
                     </TextField>
                     :(subject==2)?

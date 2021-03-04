@@ -24,7 +24,7 @@ export function MockTestCard(props) {
             let questions=[];
             querySnapshot.forEach(function(doc) {
                 console.log(doc.id, " => ", doc.data());
-                questions.push({...doc.data(),qid:doc.id})
+                questions.push({...doc.data(),uid:doc.id})
             });
 
             console.log("Here are the questions",questions)

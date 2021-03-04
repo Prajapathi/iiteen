@@ -22,6 +22,7 @@ export default function PaperSummary(props) {
         setSkipped(s);
         setBookmarked(b);
     }, [props.answers])
+
     return (
         <div id="paper-summary">
             <div id="summary-name">{props.name}</div>
@@ -42,7 +43,7 @@ export default function PaperSummary(props) {
                         Not-Attempted
                     </div>
                     <div className="summary-detail-info">
-                        {props.totalQ?props.totalQ-attempted:props.answers.length-attempted}
+                        {props.totalQ?(props.totalQ)-attempted:props.answers.length-attempted}
                     </div>
                 </div>
                 <hr/>

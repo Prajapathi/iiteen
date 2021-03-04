@@ -56,7 +56,7 @@ export function MockTest(props) {
     //function to check if particular paper has been attempted
     const checkAttempted=(id)=>{
         for(let i=0; i<attemptedPapers.length; i++){
-            if(attemptedPapers[i].uid==id)
+            if(attemptedPapers[i].quid==id)
                 return true;
         }
         return false;

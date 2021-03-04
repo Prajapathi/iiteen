@@ -64,19 +64,22 @@ export default function Home() {
     return (
         <div className="screen">
             <div id="time-left-strip">
-                {timeElapsed.days>=10?
-                    "Your free trial has expired":
-                    (timeElapsed.days==9?
-                        (
-                            timeElapsed.minutes==1?
-                                "Your free trial expires in "+(60-timeElapsed.seconds)+" seconds"
-                                :"Your free trial expires in "+(60-timeElapsed.minutes)+" minutes"
+                <h5>This is beta version of IITEENS</h5>
+                <div>
+                    {timeElapsed.days>=10?
+                        "Your free trial has expired":
+                        (timeElapsed.days==9?
+                            (
+                                timeElapsed.minutes==1?
+                                    "Your free trial expires in "+(60-timeElapsed.seconds)+" seconds"
+                                    :"Your free trial expires in "+(60-timeElapsed.minutes)+" minutes"
+                            )
+                            :"Your free trial expires in "+(10-timeElapsed.days)+" days"
                         )
-                        :"Your free trial expires in "+(10-timeElapsed.days)+" days"
-                    )
-                }
+                    }
+                </div>
             </div>
-            <div style={{height:'auto',width:'80%',margin:'auto'}}>
+            <div id="home-carousel">
                 <HomeCarousel/>
             </div>
             <div id="home-section">

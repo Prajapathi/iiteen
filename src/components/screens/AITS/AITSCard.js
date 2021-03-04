@@ -8,7 +8,7 @@ export default function AITSCard(props) {
             <div className="flip-card-inner-mock">
                 <div className="flip-card-front-mock">
                     <div id="card-title-mock">
-                        <div style={{fontSize:'26px'}}>{props.index}</div>
+                        <div style={{fontSize:'26px'}}>JEE Mains</div>
                     </div> 
                     <div id="card-content-mock">
                         <div style={{display:'flex',width:'100%',justifyContent:'space-between'}}>

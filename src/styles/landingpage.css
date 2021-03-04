@@ -1,9 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Courgette&display=swap');
+
 #landingpage{
     background:#F5F5F5;
     background-image:url(../assets/images/Landing/top-left-blob.png),url(../assets/images/Landing/top-right-blob.png),
                     url(../assets/images/Landing/bottom-left-blob.png),url(../assets/images/Landing/bottom-right-blob.png);
     background-size:60%,15%,15%,15%;
-    background-position: 0px -5px,100% -40%,-5% 165%,100% 125%;
+    background-position: 0px -5px,100% -30%,-5% 115%,100% 90%;
     background-repeat: no-repeat;
     background-origin: content-box;
     color:#498E9C;
@@ -159,7 +161,6 @@
 #section4{
     text-align:center;
     padding:25px;
-    margin-bottom:5%;
 }
 
 .sub-section4{
@@ -192,7 +193,7 @@
 }
 .sub-section4-list-section{
     text-align:left;
-    font-size:24px;
+    font-size:1.5rem;
 }
 .sub-section4-button-section{
     display:flex;
@@ -203,8 +204,28 @@
     padding:5px;
     margin:0px 25px;
 }
-
-
+#section5{
+    padding:25px;
+    margin:2% 10%;
+}
+#batchmates-title{
+    text-align:center;
+    font-size:1.5rem;
+    font-weight:600;
+    font-family: 'Courgette', cursive;
+}
+#batchmates-list{
+    margin-top:5%;
+    text-align:center;
+    list-style-position: inside;
+    font-size:1.25rem;
+}
+#batchmates-list ol{
+    padding:0px;
+}
+#batchmates-list li{
+    margin:25px 0px;
+}
 
 @media(max-width:1180px){
     #section1 img{

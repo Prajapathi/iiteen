@@ -94,8 +94,12 @@
     font-size:16px;
     padding:5%;
     text-align:center;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
 }
-#legend div{
+
+.legend-subject{
     width:90%;
     display:flex;
     align-items:center;
@@ -139,42 +143,59 @@
     width:90%;
     margin:0px 5%;
     margin-bottom:2%;
-    padding:10px;
-    display:flex;
-    justify-content:center;
+    color:#3B95C2;
+    padding-top:25px;
+    text-align:center;
+}
+.subject-bar-card-bar-wrapper{
     overflow-x:auto;
 }
-.bar-section{
+.subject-bar-card-bar-sec-head{
+    font-size:1.1rem;
+}
+.subject-bar-card-bar-sec{
+    padding:30px 10px;
+    display:flex;
+    justify-content:center;
+    min-width:min-content;
 }
 .subject-bar{
-    width:90%
+    width:90%;
 }
 .bargraph-sub-sec{
     width:200px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin:0px 25px;
 }
 .bargraph-sub-sec div{
     display:flex;
-    margin:0px;
-}
-.graph-bar{
-    width:150px;
-    transform: rotate(-90deg);
-    top:75px;
-    left:-10px;
-    padding:20px;
-    border-radius:10px;
 }
 .bargraph-sub-sec-hr{
     background:grey;
-    margin-top:150px;
-    margin-bottom:5px;
+    margin:10px 0px;
 }
 .bargraph-sub-sec-title{
     display:flex;
     justify-content:center;
     align-items:center;
     text-align:center;
-    padding:0px 5px;
+}
+.bargraph-element{
+    height:150px;
+    width:40px;
+    margin:0px 10px;
+    background:white;
+    box-shadow:1px 1px 3px 0px rgba(0,0,0,0.3);
+    border-radius:10px;
+    display:flex;
+    align-items:flex-end;
+}
+.bargraph-element-progress{
+    background:red;
+    width:100%;
+    border-radius:10px;
 }
 
 @media(max-width:1080px){
@@ -223,7 +244,11 @@
         justify-content:space-around;
         padding:2%;
     }
-    #legend div{
+    #legend-sub-sec{
+        display:flex;
+        justify-content:center;
+    }
+    #legend-subject{
         margin:5px;
         justify-content:center;
     }

@@ -8,19 +8,51 @@ import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import '../../../styles/paperAnalysis.css'
 
+const tagMap={
+    physics:{
+        0:"Mechanics-1",
+        1: "Mechanics-2",
+        2: "Magnetism and EMI",
+        3: "Waves and Thermodynamics",
+        4: "Optics and Modern Physics",
+        5: "Electrostatics and current electricity"
+    },
+    chemistry:{
+        0:"Organic Chemistry-11",
+        1:"Physical Chemistry-11",
+        2:"Inorganic Chemistry-11",
+        3:"Organic Chemistry-12",
+        4:"Physical Chemistry-12",
+        5:"Inorganic Chemistry-12"
+    },
+    maths:{
+        0:"Trignometry",
+        1:"Calculus",
+        2:"Algebra",
+        3:"Coordinate Geometry",
+        4:"Vectors and 3D Geometry"
+    }
+}
+
 export function PaperAnalysis(props) {
 
     const location = useLocation();
     const history=useHistory();
+
     let {paperType,paperName}=useParams();
     let paperTypeCaps=paperType.toUpperCase()
+    
     const [loading, setLoading] = useState(true)
 
     const [data,setData]=useState([])
     const [paperInfo,setPaperInfo]=useState([])
-
     const [percent, setPercent] = useState({physics:0,chemistry:0,maths:0})
 
+    //function for rounding off numbers
+    const roundOff=(num)=>{
+        return Math.round( (num+ Number.EPSILON ) * 100 ) / 100
+    }
+    
     const blankData={
         labels: ['Not attempted'],
         datasets: [
@@ -32,6 +64,7 @@ export function PaperAnalysis(props) {
             },
         ],
     }
+
     const marksDataChart = {
         labels: ['Physics', 'Chemistry', 'Maths'],
         datasets: [
@@ -51,11 +84,13 @@ export function PaperAnalysis(props) {
             },
         ],
     }
-     const quesDataChart = {
+
+    const quesDataChart = {
         labels: ['Correct', 'Wrong'],
         datasets: [
         {
-        data: data?(data.totalAttempted==0?[0,0]:[(data.totalCorrect/data.totalAttempted)*100,100-((data.totalCorrect/data.totalAttempted))]):[],
+        data: data?
+            (data.totalAttempted==0?[0,0]:[data.totalCorrect,(data.totalAttempted-data.totalCorrect)]):[],
             backgroundColor: [
                 '#2AD586',
                 '#FF4A4F',
@@ -69,22 +104,6 @@ export function PaperAnalysis(props) {
             },
         ],
     }
-    const dataBar = {
-        labels: ['1', '2', '3', '4', '5', '6'],
-        datasets: [
-            {
-            label: 'Correct',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: 'rgb(255, 99, 132)',
-            },
-            {
-            label: 'Incorrect',
-            data: [2, 3, 20, 5, 1, 4],
-            backgroundColor: 'rgb(54, 162, 235)',
-            },
-        ],
-    }
-
     
     //data fetching
     React.useEffect(() => {
@@ -97,6 +116,7 @@ export function PaperAnalysis(props) {
                 paperTypeRoute="PREVIOUS"
         }
         console.log("POP",paperTypeRoute,paperType)
+
         const db = firebase.firestore();
         console.log("ppp",paperName)
         db.collection("User").doc(props.user.uid).collection(paperTypeRoute+"Papers").doc(paperName).collection("LeaderBoard").doc("Analysis").get()
@@ -132,15 +152,15 @@ export function PaperAnalysis(props) {
         //setting % marks
         let total=Math.abs(data.mathsMarks)+Math.abs(data.chemistryMarks)+Math.abs(data.physicsMarks);
         let p=0,c=0,m=0;
-        if(data.totalMarks!==0){
+        if(total!==0){
             if(data.physicsMarks!==0){
-                p=(data.physicsMarks/data.totalMarks)*100
+                p=roundOff((data.physicsMarks/total)*100)
             }
             if(data.chemistryMarks!==0){
-                c=(data.chemistryMarks/data.totalMarks)*100
+                c=roundOff((data.chemistryMarks/total)*100)
             }
             if(data.mathsMarks!==0){
-                m=(data.mathsMarks/data.totalMarks)*100
+                m=roundOff((data.mathsMarks/total)*100)
             }
         }
         setPercent({physics:p,chemistry:c,maths:m})
@@ -203,7 +223,7 @@ export function PaperAnalysis(props) {
                                     Accuracy
                                 </div>
                                 <div>
-                                    {data.totalAttempted==0?0:<>{(data.totalCorrect/data.totalAttempted)*100}%</>}
+                                    {data.totalAttempted==0?0:<>{roundOff((data.totalCorrect/data.totalAttempted)*100)}%</>}
                                 </div>
                         </div>
                         <div className="report-card-sections">
@@ -211,7 +231,7 @@ export function PaperAnalysis(props) {
                                     Percentage
                                 </div>
                                 <div>
-                                    {paperInfo.totalMarks==0?0:<>{(data.totalMarks/paperInfo.totalMarks)*100}%</>}
+                                    {paperInfo.totalMarks==0?0:<>{roundOff((data.totalMarks/paperInfo.totalMarks)*100)}%</>}
                                 </div>
                         </div>
                     </div>
@@ -262,7 +282,7 @@ export function PaperAnalysis(props) {
                                     Accuracy
                                 </div>
                                 <div>
-                                    {data.physicsAttempted==0?0:<>{(data.physicsCorrect/data.physicsAttempted)*100}%</>}
+                                    {data.physicsAttempted==0?0:<>{roundOff((data.physicsCorrect/data.physicsAttempted)*100)}%</>}
                                 </div>
                         </div>
                         <div className="report-card-sections">
@@ -270,7 +290,7 @@ export function PaperAnalysis(props) {
                                     Percentage
                                 </div>
                                 <div>
-                                    {paperInfo.totalMarks==0?0:<>{(data.physicsMarks/(paperInfo.totalMarks/3))*100}%</>}
+                                    {paperInfo.totalMarks==0?0:<>{roundOff((data.physicsMarks/(paperInfo.totalMarks/3))*100)}%</>}
                                 </div>
                         </div>
                     </div>
@@ -322,7 +342,7 @@ export function PaperAnalysis(props) {
                                     Accuracy
                                 </div>
                                 <div>
-                                    {data.chemistryAttempted==0?0:<>{(data.chemistryCorrect/data.chemistryAttempted)*100}%</>}
+                                    {data.chemistryAttempted==0?0:<>{roundOff((data.chemistryCorrect/data.chemistryAttempted)*100)}%</>}
                                 </div>
                         </div>
                         <div className="report-card-sections">
@@ -330,7 +350,7 @@ export function PaperAnalysis(props) {
                                     Percentage
                                 </div>
                                 <div>
-                                    {paperInfo.totalMarks==0?0:<>{(data.chemistryMarks/(paperInfo.totalMarks/3))*100}%</>}
+                                    {paperInfo.totalMarks==0?0:<>{roundOff((data.chemistryMarks/(paperInfo.totalMarks/3))*100)}%</>}
                                 </div>
                         </div>
                     </div>
@@ -381,7 +401,7 @@ export function PaperAnalysis(props) {
                                     Accuracy
                                 </div>
                                 <div>
-                                    {data.mathsAttempted==0?0:<>{(data.mathsCorrect/data.mathsAttempted)*100}%</>}
+                                    {data.mathsAttempted==0?0:<>{roundOff((data.mathsCorrect/data.mathsAttempted)*100)}%</>}
                                 </div>
                         </div>
                         <div className="report-card-sections">
@@ -389,7 +409,7 @@ export function PaperAnalysis(props) {
                                     Percentage
                                 </div>
                                 <div>
-                                     {paperInfo.totalMarks==0?0:<>{(data.mathsMarks/(paperInfo.totalMarks/3))*100}%</>}
+                                     {paperInfo.totalMarks==0?0:<>{roundOff((data.mathsMarks/(paperInfo.totalMarks/3))*100)}%</>}
                                 </div>
                         </div>
                     </div>
@@ -397,7 +417,6 @@ export function PaperAnalysis(props) {
             <div className="analysis-head">
                 Analysis
             </div>
-
             <div className="detailed-analysis-button-sec">
                 <DescriptionOutlinedIcon id="detailed-analysis-button-icon"/>
                 <br/>
@@ -426,17 +445,19 @@ export function PaperAnalysis(props) {
                 </div>
 
                 <div id="legend">
-                    <div style={{color:'#3B95C2'}}>
-                        <div className="legend-circle" style={{background:'#3B95C2'}}></div>
-                        Physics
-                    </div>
-                    <div style={{color:'#FF4A4F'}}>
-                        <div className="legend-circle" style={{background:'#FF4A4F'}}></div>
-                        Chemistry
-                    </div>
-                    <div style={{color:'#2AD586'}}>
-                        <div className="legend-circle" style={{background:'#2AD586'}}></div>
-                        Maths
+                    <div id="legend-sub-sec">
+                        <div className="legend-subject" style={{color:'#3B95C2'}}>
+                            <div className="legend-circle" style={{background:'#3B95C2'}}></div>
+                            Physics
+                        </div>
+                        <div className="legend-subject" style={{color:'#FF4A4F'}}>
+                            <div className="legend-circle" style={{background:'#FF4A4F'}}></div>
+                            Chemistry
+                        </div>
+                        <div className="legend-subject" style={{color:'#2AD586'}}>
+                            <div className="legend-circle" style={{background:'#2AD586'}}></div>
+                            Maths
+                        </div>
                     </div>
                 </div>
 
@@ -444,8 +465,14 @@ export function PaperAnalysis(props) {
                     Question Distribution
                     <div className="analysis-sub-section">
                         <div id="analysis-chart-legend">
-                            <div style={{color:'#2AD586'}}>Correct: {data.totalAttempted==0?0:((data.totalCorrect/data.totalAttempted)*100)}%</div>
-                            <div style={{color:'#FF4A4F'}}>Wrong: {data.totalAttempted==0?0:100-((data.totalCorrect/data.totalAttempted)*100)}%</div>
+                            <div style={{color:'#2AD586'}}>
+                                Correct: {data.totalAttempted==0?0
+                                            :data.totalCorrect}
+                            </div>
+                            <div style={{color:'#FF4A4F'}}>
+                                Wrong: {data.totalAttempted==0?0
+                                            :data.totalAttempted-data.totalCorrect}
+                            </div>
                         </div>
                         <div id="analysis-chart">
                             <Pie data={data.totalAttempted==0?blankData:quesDataChart}
@@ -455,16 +482,60 @@ export function PaperAnalysis(props) {
                 </div>
             </div>
             <div className="bar-section">
-                <div className="subject-bar-card">
-                        <BarGraph/>
-                        <BarGraph/>
-                        <BarGraph/>
+                {/* physics section */}
+                <div className="subject-bar-card" style={{background:"#D8F3FD"}}>
+                    <div className="subject-bar-card-bar-sec-head">Physics</div>
+                    <div className="subject-bar-card-bar-wrapper">
+                        <div className="subject-bar-card-bar-sec">
+                            {
+                                [0,1,2,3,4,5].map((index,i)=>(
+                                    (data && data.physicsTags[i+'e'])?
+                                        <BarGraph 
+                                            correct={data.physicsTags[i+'a']==0?0:roundOff((data.physicsTags[i+'c']/data.physicsTags[i+'a'])*100)}
+                                            wrong={data.physicsTags[i+'a']==0?0:100-roundOff((data.physicsTags[i+'c']/data.physicsTags[i+'a'])*100)}
+                                            name={tagMap.physics[i]}
+                                        />
+                                        :null
+                                ))
+                            }
+                        </div>
+                    </div>
                 </div>
-                <div className="subject-bar-card">
-                        <BarGraph/>
+                <div className="subject-bar-card" style={{background:"#FCFDD8"}}>
+                    <div className="subject-bar-card-bar-sec-head">Chemistry</div>
+                    <div className="subject-bar-card-bar-wrapper">
+                        <div className="subject-bar-card-bar-sec">
+                            {
+                                [0,1,2,3,4,5].map((index,i)=>(
+                                    (data && data.chemistryTags[i+'e'])?
+                                        <BarGraph 
+                                            correct={data.chemistryTags[i+'a']==0?0:roundOff((data.chemistryTags[i+'c']/data.chemistryTags[i+'a'])*100)}
+                                            wrong={data.chemistryTags[i+'a']==0?0:100-roundOff((data.chemistryTags[i+'c']/data.chemistryTags[i+'a'])*100)}
+                                            name={tagMap.chemistry[i]}
+                                        />
+                                        :null
+                                ))
+                            }
+                        </div>
+                    </div>
                 </div>
-                <div className="subject-bar-card">
-                        <BarGraph/>
+                <div className="subject-bar-card" style={{background:"#FDEDD8"}}>
+                    <div className="subject-bar-card-bar-sec-head">Mathematics</div>
+                    <div className="subject-bar-card-bar-wrapper">
+                        <div className="subject-bar-card-bar-sec">
+                            {
+                                [0,1,2,3,4,5].map((index,i)=>(
+                                    (data && data.mathsTags[i+'e'])?
+                                        <BarGraph 
+                                            correct={data.mathsTags[i+'a']==0?0:roundOff((data.mathsTags[i+'c']/data.mathsTags[i+'a'])*100)}
+                                            wrong={data.mathsTags[i+'a']==0?0:100-roundOff((data.mathsTags[i+'c']/data.mathsTags[i+'a'])*100)}
+                                            name={tagMap.maths[i]}
+                                        />
+                                        :null
+                                ))
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

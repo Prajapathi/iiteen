@@ -61,6 +61,7 @@ export default function Landing() {
             <div id="section1">
                 <img src={banner}/>
                 <div id="section1-text">
+                    <div className="signup-offer"style={{textAlign:"right",fontSize:"1.2rem"}}>Inaugral Price Offer Re. 1/- per day only</div>
                     <h1 id="section1-heading-line1">Are you Preparing for <b>JEE</b>?</h1>
                     <h1 id="section1-heading-line2"><b>CRACK</b> IIT JEE with <b>IITeens</b></h1>
                     <p style={{fontSize:'20px'}}>IITeens conducts online Test Series for Concept Building,
@@ -155,6 +156,22 @@ export default function Landing() {
                         </div>
                         <img src={mains_adv_pack} className="section4-img"/>
                     </div>
+                </div>
+            </div>
+            
+            <div id="section5">
+                <div id="batchmates-title">
+                    In loving memory of our beloved 1988 JEE Qualified IIT Kharagpur batchmates who left us early for heavenly abode
+                </div>
+                <div id="batchmates-list">
+                    <ol>
+                        <li> Anustup Bhattacharya, Metallurgical Engineering</li>
+                        <li> Nina Saxena, Electronics and Electrical Communication Engineering</li>
+                        <li> Nilanjan Ganguly, Electronics and Electrical Communication Engineering</li>
+                        <li> Rajiv Sinha, Mining Engineering</li>
+                        <li> Sourav Jha, Mining Engineering</li>
+                        <li>Jitendra Jha, Mining Engineering</li>
+                    </ol>
                 </div>
             </div>
         </div>

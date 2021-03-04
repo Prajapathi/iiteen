@@ -149,6 +149,7 @@ export function Signin(props) {
                                     <li>6800+ Subjectwise Questions for Practice</li>
                                     <li>15 Mock Test Papers according to latest JEE Pattern</li>
                                 </ul>
+                                <div className="signup-offer">Inaugral Price Offer Re. 1/- per day only </div>
                             </div>
                         }
                         

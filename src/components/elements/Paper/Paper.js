@@ -85,7 +85,7 @@ export function Paper(props) {
     const submitPaperFinal=()=>{
         const UserQuestionModel={
             answers:props.answers,
-            uid:props.paper.name,
+            quid:props.paper.name,
             attempted:true
         }
         let paperTypeRoute;
@@ -127,7 +127,10 @@ export function Paper(props) {
                     '3e':false,
                     '4c': 0,
                     '4a': 0,
-                    '4e':false
+                    '4e':false,
+                    '5c': 0,
+                    '5a': 0,
+                    '5e':false
                 };
                 let chemistryTags = {
                     '1c': 0,

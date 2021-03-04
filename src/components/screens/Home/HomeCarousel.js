@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Carousel from 'react-bootstrap/Carousel'
-import banner1 from '../../../assets/images/bg.png'
-import banner2 from '../../../assets/images/bg2.png'
-import banner3 from '../../../assets/images/bg3.png'
+import banner1 from '../../../assets/images/banner1.png'
+import banner2 from '../../../assets/images/banner2.png'
+import banner3 from '../../../assets/images/banner3.png'
+import banner4 from '../../../assets/images/banner4.png'
+
 export default function HomeCarousel() {
   const [vpWidth,setvpWidth]=useState(window.innerWidth);
   const [showIndicator, setshowIndicator] = useState(true)
@@ -20,11 +22,19 @@ export default function HomeCarousel() {
 
   return (
     <div>
-      <Carousel interval="3000" indicators={showIndicator}>
+      <Carousel interval="3000" indicators={showIndicator} >
+        
         <Carousel.Item>
           <img
             className="d-block w-100"
             src={banner1}
+            alt="Third slide"
+          />
+        </Carousel.Item>
+        <Carousel.Item>
+          <img
+            className="d-block w-100"
+            src={banner2}
             alt="First slide"
           />
         </Carousel.Item>
@@ -38,7 +48,7 @@ export default function HomeCarousel() {
         <Carousel.Item>
           <img
             className="d-block w-100"
-            src={banner2}
+            src={banner4}
             alt="Third slide"
           />
         </Carousel.Item>

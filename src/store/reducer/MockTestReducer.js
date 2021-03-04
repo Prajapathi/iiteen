@@ -30,7 +30,7 @@ const fetchPaper=(state,action)=>{
     //after fetching paper, set the answers[]
     for(let i=0;i<action.payload.noOfQuestions;i++){
         ans.push({
-            qid:action.payload.questions[i].qid,
+            uid:action.payload.questions[i].uid,
             number:i,
             answer:action.payload.questions[i].answer,
             answerGiven:action.payload.questions[i].answerType==5?[]:null,

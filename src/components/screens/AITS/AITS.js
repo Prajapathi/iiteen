@@ -2,6 +2,7 @@ import React from 'react'
 import '../../../styles/AITS.css'
 import CardSection from '../../elements/CardSection'
 import icon from '../../../assets/images/AITSicon.png'
+import ComingSoon from '../ComingSoon/ComingSoon'
 export default function AITS() {
     return (
         <div  className="screen" id="AITS">
@@ -9,7 +10,7 @@ export default function AITS() {
                 <img src={icon} id="aitsicon" alt=""/>
                 <div class="section-heading">ALL INDIA TEST SERIES</div>
             </div>
-            <div>
+            {/* <div>
                 <div className="bar">
                     <h2>Upcoming Tests</h2>
                 </div>
@@ -20,7 +21,8 @@ export default function AITS() {
                     <h2>Past Tests</h2>
                 </div>
                 <CardSection section="AITS"/>
-            </div>
+            </div> */}
+            <ComingSoon/>
         </div>
     )
 }
