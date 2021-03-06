@@ -114,32 +114,43 @@ export function PaperAnalysis(props) {
                 break;
             case "PREVIOUSYEAR":
                 paperTypeRoute="PREVIOUS"
+            default :
+                paperTypeRoute="undefined"
         }
-        console.log("POP",paperTypeRoute,paperType)
+
+        //if the URL does not have correct paper type
+        if(paperTypeRoute=="undefined"){
+            //404 page
+            history.push('/')
+        }
 
         const db = firebase.firestore();
-        console.log("ppp",paperName)
+
+        //Fetch the analysis of the attempted paper
         db.collection("User").doc(props.user.uid).collection(paperTypeRoute+"Papers").doc(paperName).collection("LeaderBoard").doc("Analysis").get()
             .then(function(querySnapshot) {
                 console.log("here's the analysis:",querySnapshot.data())
                 setData(querySnapshot.data());
                 if(querySnapshot.data()==null){
                     window.alert("Paper Does Not Exist!")
+                    //404 page
                     history.push('/')
                 }
             })
             .catch(function(error) {
                 console.log("Error getting documents: ", error);
             });
+        
+        //Fetch the details of the paper
         db.collection(paperTypeRoute).doc(paperName).get()
             .then(function(querySnapshot) {
                 console.log("here's the paper:",querySnapshot.data())
                 setPaperInfo(querySnapshot.data());
                 if(querySnapshot.data()==null){
                     window.alert("Paper Does Not Exist!")
+                    //404 page
                     history.push('/')
                 }
-                
                 setLoading(false)
             })
             .catch(function(error) {

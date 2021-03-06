@@ -3,6 +3,7 @@
 }
 #signin-dialog{
     text-align:center;
+
 }
 #signin-button{
     margin:0px 20px;
@@ -57,6 +58,9 @@
 .signin-title{
   color:#498E9C;
   font-size:18px;
+}
+#signin-data-rate-warning{
+  width:50%;
 }
 .dialog-close-icon{
   float:right;

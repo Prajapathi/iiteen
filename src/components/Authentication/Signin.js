@@ -152,7 +152,6 @@ export function Signin(props) {
                                 <div className="signup-offer">Inaugral Price Offer Re. 1/- per day only </div>
                             </div>
                         }
-                        
                     </DialogTitle>
                     <DialogContent className="dialog-content-signin">
                         <DialogContentText id="alert-dialog-description">
@@ -217,6 +216,9 @@ export function Signin(props) {
                                 </div>
                             </Form>
                         </DialogContentText>
+                        <div id="signin-data-rate-warning">
+                            By continuing you may receive a SMS for verification. Message and data rates may apply.
+                        </div>
                     </DialogContent>
                 </Dialog>
         </div>
