@@ -252,7 +252,7 @@ export function PaperAnalysis(props) {
                                 Physics
                             </div>
                             <div>
-                                {data.physicsMarks}/{paperInfo.totalMarks/3}
+                                {data.physicsMarks}/{roundOff(paperInfo.totalMarks/3)}
                             </div>
                         </div>
                         <div className="report-card-sections">
@@ -311,7 +311,7 @@ export function PaperAnalysis(props) {
                                 Chemistry
                             </div>
                             <div>
-                                {data.chemistryMarks}/{paperInfo.totalMarks/3}
+                                {data.chemistryMarks}/{roundOff(paperInfo.totalMarks/3)}
                             </div>
                         </div>
                         <div className="report-card-sections">
@@ -371,7 +371,7 @@ export function PaperAnalysis(props) {
                                 Maths
                             </div>
                             <div>
-                                {data.mathsMarks}/{paperInfo.totalMarks/3}
+                                {data.mathsMarks}/{roundOff(paperInfo.totalMarks/3)}
                             </div>
                         </div>
                         <div className="report-card-sections">

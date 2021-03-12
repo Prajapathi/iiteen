@@ -3,7 +3,8 @@
 }
 #signin-dialog{
     text-align:center;
-
+    max-width:400px;
+    margin:auto;
 }
 #signin-button{
     margin:0px 20px;
@@ -60,10 +61,19 @@
   font-size:18px;
 }
 #signin-data-rate-warning{
-  width:50%;
+  display:flex;
+  justify-content:center;
+  margin:0px;
 }
 .dialog-close-icon{
   float:right;
   margin:0px !important;
   padding:0px !important;
+}
+
+.user-info-input{
+  margin:25px 0px;
+  display:flex;
+  align-items:center;
+  justify-content:space-evenly;
 }

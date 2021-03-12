@@ -3,6 +3,7 @@ import firebase from 'firebase'
 import {Link} from "react-router-dom";
 import '../../../styles/homeStyle.css'
 import HomeCard from './HomeCard'
+import UserInfo from "../../Authentication/UserInfo"
 import HomeCarousel from './HomeCarousel'
 import banner from '../../../assets/images/mainbanner.png'
 
@@ -13,9 +14,15 @@ export default function Home() {
     const [timeElapsed,setTimeElapsed]=React.useState({})
     const [creationTime,setCreationTime]=React.useState()
     const [seconds,setSeconds]=React.useState(0)
+    const [openUserInfo,setOpenUserInfo]=React.useState(false)
 
     React.useEffect(() => {
-        const userCreationTime=new Date(firebase.auth().currentUser.metadata.creationTime);
+        const user=firebase.auth().currentUser
+        if(user.creationTime==user.lastSignInTime && (user.displayName==null && user.email==null)){
+            setOpenUserInfo(true)
+            console.log("Khula")
+        }
+        const userCreationTime=new Date(user.metadata.creationTime);
         // const userCreationTime= new Date("February 17, 2021 11:13:00");
 
         setCreationTime(userCreationTime)
@@ -41,6 +48,7 @@ export default function Home() {
                 clearInterval(interval);
             }
         }
+        
     }, [])
 
     const tick=()=>{
@@ -63,6 +71,7 @@ export default function Home() {
 
     return (
         <div className="screen">
+            {openUserInfo?<UserInfo closeDialog={()=>setOpenUserInfo(false)}/>:null}
             <div id="time-left-strip">
                 <h5>This is beta version of IITEENS</h5>
                 <div>

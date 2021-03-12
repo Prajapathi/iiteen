@@ -15,7 +15,7 @@ import PaperAnalysis from './components/elements/PaperAnalysis/PaperAnalysis'
 import DetailedAnalysis from './components/elements/DetailedAnalysis/Analysis'
 import Report from './components/screens/Report/Report'
 import Footer from './components/Footer'
-import LeftMenu from './components/LeftMenu'
+import LeftMenu from './components/NavigationLeftMenu/LeftMenu'
 import Signin from './components/signin'
 import Loading from './components/elements/Loading'
 

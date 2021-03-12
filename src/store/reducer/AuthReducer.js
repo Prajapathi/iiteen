@@ -25,6 +25,14 @@ const checkingAuthenticatedUser=(state,action)=>{
     }
 }
 
+const updateUserProfile=(state,action)=>{
+    console.log("User updated")
+    return{
+        ...state,
+        user:action.payload
+    }
+}
+
 const signOut=(state,action)=>{
     console.log("SIGNOUT FROM REDUCER")
     return {
@@ -42,6 +50,8 @@ const AuthReducer=(state=initValues,action)=>{
             return checkingAuthenticatedUser(state,action)
         case actionTypes.SIGN_OUT:
             return signOut(state,action)
+        case actionTypes.UPDATE_USER_PROFILE:
+            return updateUserProfile(state,action)
         default:
             return state
     }

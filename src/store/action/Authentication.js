@@ -36,3 +36,10 @@ export const verifyAuth = () => dispatch => {
       }
     });
 };
+
+export const updateUserProfile=(user)=>{
+    return{
+        type:actionTypes.UPDATE_USER_PROFILE,
+        payload:user
+    }
+}

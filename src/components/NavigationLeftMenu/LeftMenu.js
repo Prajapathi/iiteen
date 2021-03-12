@@ -1,14 +1,16 @@
 import React from 'react';
 import {connect} from 'react-redux'
-import {signOut} from '../store/action/Authentication'
+import {signOut} from '../../store/action/Authentication'
 import firebase from 'firebase'
 import clsx from 'clsx';
 import {Link} from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme, createMuiTheme} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
@@ -25,16 +27,18 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import EditIcon from '@material-ui/icons/Edit';
-import avatar from '../assets/images/avatar.png'
-import logo from '../assets/images/iiteenslogo.png'
-import About from './elements/About/About'
+import avatar from '../../assets/images/avatar.png'
+import logo from '../../assets/images/iiteenslogo.png'
+import About from '../elements/About/About'
+import EditName from './EditName'
+import EditImage from './EditImage'
 
 const drawerWidth = 300;
 
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
-        marginBottom:'55px'
+        marginBottom:'55px',
     },
     appBar: {
         transition: theme.transitions.create(['margin', 'width'], {
@@ -50,9 +54,9 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
+    // menuButton: {
+    //     marginRight: theme.spacing(2),
+    // },
     hide: {
         display: 'none',
     },
@@ -99,13 +103,6 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('sm')]: {
             display: 'none'
         },
-    },
-    profile: {
-        margin: '10px auto',
-        height: '120px',
-        width: '120px',
-        border: '1px solid grey',
-        borderRadius: '50%'
     },
     name: {
         display: 'flex',
@@ -185,6 +182,9 @@ const useStyles = makeStyles((theme) => ({
     navimg: {
         height: '35px',
         width: '35px',
+        objectFit: "cover",
+        objectPosition: "center center",
+        background:"grey",
         border: '1px solid grey',
         borderRadius: '50%',
         marginRight: "1.5%",
@@ -192,8 +192,13 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('sm')]: {
             marginRight:'15px'
         },
+    },
+    logoutConfirmMessage:{
+        padding:"5px 10px"
+    },
+    logoutConfirmOption:{
+        textAlign:"center"
     }
-
 }));
 
 export function LeftMenu(props) {
@@ -202,6 +207,21 @@ export function LeftMenu(props) {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [openAbout,setOpenAbout]=React.useState(false)
+    const [openEditName,setOpenEditName]=React.useState(false)
+    const [openEditImage,setOpenEditImage]=React.useState(false)
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const logoutConfirm = Boolean(anchorEl);
+
+    console.log(props.user,"??")
+    //for confirm logout
+    const handleMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
 
     const signout=()=>{
         firebase.auth().signOut().then(() => {
@@ -223,13 +243,14 @@ export function LeftMenu(props) {
     return (
         <> 
             {open?<About open={openAbout} close={()=>setOpenAbout(false)}/>:null}
-            <div className = { classes.root }>
+            <div className = { classes.root } style={{background:"white !important"}}>
                 <CssBaseline/>
                 <AppBar position = "fixed"
                     className = {
                     clsx(classes.appBar, {
                         [classes.appBarShift]: open,
                     })}
+                    
                 >
                 <Toolbar className = { clsx(classes.mynav)}>
                 {
@@ -274,8 +295,27 @@ export function LeftMenu(props) {
                                         color="primary">
                                             <NotificationsRoundedIcon className = { clsx(classes.notif) }/>
                                 </Badge>
-                                <img src = { avatar } className = { clsx(classes.navimg) }/>
-                                <Typography className = { clsx(classes.tabs) } onClick={()=>{signout()}}>Logout </Typography>
+                                <img src = { props.user.photoURL?props.user.photoURL:avatar } className = { clsx(classes.navimg) }/>
+                                <Typography className = { clsx(classes.tabs) } onClick={handleMenu}>Logout </Typography>
+                                <Menu
+                                    id="menu-appbar"
+                                    anchorEl={anchorEl}
+                                    anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'center',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'center',
+                                    }}
+                                    open={logoutConfirm}
+                                    onClose={handleClose}
+                                >
+                                    <div className = { clsx(classes.logoutConfirmMessage) }>Are you Sure?</div>
+                                    <MenuItem onClick={()=>{signout()}} >Yes</MenuItem>
+                                    <MenuItem onClick={handleClose} >No</MenuItem>
+                                </Menu>
                             </>
                             :
                             <>
@@ -301,13 +341,33 @@ export function LeftMenu(props) {
                             <div className = {classes.drawerHeader}>
                                 <img src={logo} className={classes.navlogo} style={{}}/>
                                 <IconButton onClick = { handleDrawerClose } > 
-                                            <MenuIcon/>
+                                    <MenuIcon/>
                                 </IconButton>
                             </div> 
-                            <img src = { avatar }style = {{ marginLeft: '29%' }}className = { classes.profile }/>
+                            <div className="profile-pic-container">
+                                <img src = { props.user.photoURL?props.user.photoURL:avatar } className="left-menu-profile-pic" />
+                                {
+                                    openEditImage?
+                                    null
+                                    :
+                                    <div className="profile-pic-edit-overlay">
+                                        <EditIcon className="edit-image-icon" style={{fontSize:"36px"}} onClick={()=>setOpenEditImage(true)}/>
+                                    </div>
+                                }
+                            </div>
+                            {
+                                openEditImage?<EditImage closeEdit={()=>setOpenEditImage(false)}/>:null
+                            }
+                            
                             <div className = { classes.name } >
-                                <Badge overlap="circle" badgeContent={<EditIcon style={{ fontSize: '16px', marginLeft: '40px',marginTop:'40px'}}/>} color=""><Typography variant = "h6" > Anjali Patle </Typography></Badge> 
-                                {/* <EditIcon style = {{ fontSize: '16px', marginLeft: '5px'}}/> */}
+                                {  openEditName?
+                                    <EditName closeEdit={()=>setOpenEditName(false)} data={props.user?props.user.displayName:null}/>
+                                    :
+                                    <Typography variant = "h6" style={{width:"60%",margin:"0px 20%",textAlign:"center"}}> 
+                                        {(props.user && props.user.displayName)?props.user.displayName:"Unnamed User"}
+                                        <EditIcon style={{ fontSize: '16px',marginTop:"15px",cursor:"pointer"}} onClick={()=>setOpenEditName(true)}/>
+                                    </Typography>
+                                }
                             </div> 
                         </div>
                         <List>

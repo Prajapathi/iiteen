@@ -14,6 +14,8 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 
@@ -21,12 +23,14 @@ export function Signin(props) {
     const [showLoading,setShowLoading]=React.useState(false)
     const [recaptchaSetOnce,setRecaptchaSetOnce]=React.useState(false)
     const [showOTPInput,setShowOTPInput]=React.useState(false);
+    const [countryCode,setCountryCode]=React.useState("+91")
     const [phoneNo,setPhoneNo]=React.useState('');
     const [otp,setOTP]=React.useState('')
     const [showIncorrectOTPError,setShowIncorrectOTPError]=React.useState(false)
     const [showInvalidNumber,setShowInvalidNumber]=React.useState(false)
     const [showError,setShowError]=React.useState(false)
     const [disableExit,setDisableExit]=React.useState(false)
+    
 
     const enterPhoneNo=(inp)=>{
         if(isNaN(inp)){
@@ -52,7 +56,7 @@ export function Signin(props) {
             setRecaptchaSetOnce(true)
         }
 
-        let phoneNumber = "+91" + phoneNo;
+        let phoneNumber = countryCode + phoneNo;
         console.log(phoneNumber);
         let appVerifier = window.recaptchaVerifier;
         firebase
@@ -130,7 +134,7 @@ export function Signin(props) {
                     aria-describedby="alert-dialog-description"
                     // fullWidth={true}
                     style= {{
-                        backgroundColor: 'transparent',}}
+                        backgroundColor: 'transparent'}}
                     disableBackdropClick={showOTPInput || disableExit?true:false}
                     disableEscapeKeyDown={showOTPInput|| disableExit?true:false}
                 >
@@ -154,7 +158,7 @@ export function Signin(props) {
                         }
                     </DialogTitle>
                     <DialogContent className="dialog-content-signin">
-                        <DialogContentText id="alert-dialog-description">
+                        <DialogContentText id="alert-dialog-description" >
                             {
                                 props.login?null
                                     :<><div>Please enter your mobile number</div><br/></>
@@ -168,7 +172,16 @@ export function Signin(props) {
                                         value={phoneNo}
                                         onChange={(e)=>enterPhoneNo(e.target.value)}
                                         InputProps={{
-                                            startAdornment: <InputAdornment position="start">+91</InputAdornment>,
+                                            startAdornment: <InputAdornment position="start">
+                                                <Select
+                                                    select
+                                                    value={countryCode}
+                                                    onChange={(event) =>setCountryCode(event.target.value)}
+                                                >
+                                                    <MenuItem value="+91">+91</MenuItem>
+                                                    <MenuItem value="+1">+1</MenuItem>
+                                                </Select>
+                                                </InputAdornment>,
                                         }}
                                         variant="outlined"
                                         maxLength="10"
@@ -215,10 +228,13 @@ export function Signin(props) {
                                     }
                                 </div>
                             </Form>
+                            {   !showOTPInput?
+                                <div id="signin-data-rate-warning">
+                                    By continuing you may receive a SMS for verification. Message and data rates may apply.
+                                </div>
+                                :null
+                            }
                         </DialogContentText>
-                        <div id="signin-data-rate-warning">
-                            By continuing you may receive a SMS for verification. Message and data rates may apply.
-                        </div>
                     </DialogContent>
                 </Dialog>
         </div>

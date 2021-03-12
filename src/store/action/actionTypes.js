@@ -9,7 +9,7 @@ export const SIGN_OUT="SIGN_OUT"
 export const SIGNOUT_SUCCESS = "SIGNOUT_SUCCESS";
 export const SIGNOUT_ERROR = "SIGNOUT_ERROR";
 
-
+export const UPDATE_USER_PROFILE="UPDATE_USER_PROFILE"
 
 //for Attempting Paper
 export const FETCH_PAPER="FETCH_PAPER"
