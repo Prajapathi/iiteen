@@ -6,30 +6,50 @@ body{
    max-width:100%;
    height:auto;
 }
+#upcoming-tests-heading{
+    color:#EBB620;
+    text-align:center;
+    font-size:1.5rem;
+    text-align:left;
+    width:90%;
+    margin:0px 5%;
+    margin-top:50px;
+}
+#upcoming-tests-heading div{
+    width:34%;
+    text-align:center;
+}
 #home-section{
+    width:90%;
+    margin:0px 5%;
+    margin-bottom:3%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+#aits-carousel{
+    width:60%;
 }
 #home{
-    width:80%;
-    margin:auto;
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
     margin-bottom:10px;
 }
-#home-img-div{
-    text-align:center;
-    padding:5% 0%;
-    width:50%;
-    height:auto;
-}
+
 #home-image{
-    width:70%;
+    width:50%;
     height:auto;
 }
+
 #homeContent{
+    background:#E0F2F3;
+    border-radius:30px;
+    border-top-left-radius:0px;
+    border-bottom-left-radius:0px;
     width:50%;
-    margin-top:1%;
-    margin-bottom:3%;
+    padding:10px 0px;
+    padding-left:50px;
     display:flex;
     flex-wrap:wrap;
     align-items:center;
@@ -53,6 +73,11 @@ body{
     margin:0px 25px;
     font-weight:600;
 }
+
+#homeContent a{
+    text-decoration:none;
+}
+
 #home-carousel{
     height:auto;
     width:80%;
@@ -66,7 +91,7 @@ body{
     bottom:-15px !important;
 }
 .carousel-control-next {
-    right: -5% !important;
+    width:6%;
 }
 .carousel-control-prev {
     left: -5% !important;
@@ -76,30 +101,56 @@ body{
     color:#498E9C;
 }
 
-@media(min-width:750px){
-    #homeBanner{
-        margin:1% 10%;
-        width:80%;
+@media(max-width:1280px){
+    #home-section{
+        display:block;
     }
-}
-@media(max-width:1300px){
-    #home-image-div{
+    #aits-carousel{
         width:100%;
     }
-    #home-image{
-        width:120%;
-        height:auto;
+    #home{
+        width:100%;
     }
-    #homeContent{
+    #upcoming-tests-heading div{
         width:100%;
     }
 }
-#homeContent a{
-    text-decoration:none;
-}
+
 @media(max-width:950px){
     #home-carousel{
         width:95%;
         margin:2.5%;
+    }
+}
+@media(max-width:890px){
+    #homeContent{
+        padding-left:0px;
+    }
+}
+@media(max-width:800px){
+    #homeBanner{
+        margin:1% 10%;
+        width:80%;
+    }
+    #home-section{
+        width:100%;
+        margin:3% 0px;
+    }
+    #home{
+        display:block;
+        margin-top:25px;
+    }
+    #home-image{
+        width:80%;
+        margin:0px 10%;
+    }
+    #homeContent{
+        padding-left:0px;
+        width:80%;
+        margin:0px 10%;
+        border-top-left-radius:0px;
+        border-top-right-radius:0px;
+        border-bottom-left-radius:30px;
+        border-bottom-left-radius:30px;
     }
 }

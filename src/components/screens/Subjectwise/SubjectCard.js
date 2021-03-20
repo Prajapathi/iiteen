@@ -3,7 +3,7 @@ import firebase from 'firebase'
 import '../../../styles/subjectCard.css'
 import {Link,useLocation,useHistory} from "react-router-dom";
 import {connect} from 'react-redux'
-import {fetchPaper,fetchPreviousAnswers} from '../../../store/action/Paper'
+import {fetchPaper,fetchPreviousSubjectwiseAnswers} from '../../../store/action/Paper'
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
@@ -143,7 +143,7 @@ export function SubjectCard(props) {
                 //set Previously given answers for this level
                 if(answers["Level 0"+lev]){
                     console.log("Yaha",chapter,answers["Level 0"+lev])
-                    props.fetchPreviousAnswers(answers["Level 0"+lev])
+                    props.fetchPreviousSubjectwiseAnswers(answers["Level 0"+lev])
                 }
 
                 //to check if user is navigating through SubjectCard
@@ -190,7 +190,7 @@ const mapStateToProps=(state)=>{
 const mapDispatchToProps=dispatch=>{
     return{
         fetchPaper:(paper)=>dispatch(fetchPaper(paper)),
-        fetchPreviousAnswers:(answers)=>dispatch(fetchPreviousAnswers(answers))
+        fetchPreviousSubjectwiseAnswers:(answers)=>dispatch(fetchPreviousSubjectwiseAnswers(answers))
     }
 }
 

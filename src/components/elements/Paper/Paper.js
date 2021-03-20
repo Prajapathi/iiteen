@@ -2,6 +2,7 @@ import React from 'react'
 import {Link,useLocation,useHistory,useParams} from "react-router-dom";
 import firebase from 'firebase'
 import {connect} from 'react-redux'
+import {setNewAttemptTime} from '../../../store/action/Paper'
 import '../../../styles/choiceSection.css'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -51,6 +52,10 @@ export function Paper(props) {
             phy:a
         }
         setPalleteArray(t);
+
+        if(props.storeAnswers==true && props.time==null)
+            props.setNewAttemptTime()
+
     }, [])
 
     //function to change subject if the user enters next subject using "Submit and next" button
@@ -404,9 +409,16 @@ const mapStateToProps=(state)=>{
     return{
         paper:state.MockTestReducer.paper,
         answers:state.MockTestReducer.answers,
+        time:state.MockTestReducer.time,
+        storeAnswers:state.MockTestReducer.storeAnswers,
         user:state.AuthReducer.user
+    }
+}
+const mapDispatchToProps=dispatch=>{
+    return{
+        setNewAttemptTime:()=>dispatch(setNewAttemptTime())
     }
 }
 
 
-export default connect(mapStateToProps)(Paper)
+export default connect(mapStateToProps,mapDispatchToProps)(Paper)

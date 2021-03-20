@@ -18,8 +18,9 @@ export function EditImage(props) {
             (snapShot) => {
             }, (err) => {
             //catches the errors
-            setShowError(true)
-            console.log("upload error",err)
+                setLoading(false)
+                setShowError(true)
+                console.log("upload error",err)
             }, () => {
             storage.ref(`/UserProfileImages/${user.uid}`).child("photoURL").getDownloadURL()
             .then(fireBaseUrl => {
@@ -33,6 +34,7 @@ export function EditImage(props) {
                     props.closeEdit()
                 })
                 .catch(function(error) {
+                    setLoading(false)
                     setShowError(true)
                     console.log("error",error)
                 });
@@ -51,6 +53,7 @@ export function EditImage(props) {
             props.closeEdit()
         })
         .catch(function(error) {
+            setLoading(false)
             setShowError(true)
             console.log("error",error)
         });

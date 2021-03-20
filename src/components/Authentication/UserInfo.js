@@ -24,6 +24,8 @@ export function UserInfo(props) {
     const [name,setName]=React.useState('')
     const [emailValid,setEmailValid]=React.useState(false)
     const [allowSubmit,setAllowSubmit]=React.useState(false)
+    const [loading,setLoading]=React.useState(false)
+    const [showError,setShowError]=React.useState(false)
 
     React.useEffect(() => {
         if(new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/g).test(email)==true){
@@ -39,6 +41,7 @@ export function UserInfo(props) {
     }, [email,name])
 
     const setUserDetails=()=>{
+        setLoading(true)
         let user = firebase.auth().currentUser;
         user.updateEmail(email).then(function() {
             user.updateProfile({
@@ -47,12 +50,17 @@ export function UserInfo(props) {
             .then(function() {
                 props.updateUserProfile(user)
                 console.log("Updated")
+                setLoading(false)
                 props.closeDialog()
             })
             .catch(function(error) {
+                setShowError(true)
+                setLoading(false)
                 console.log("error",error)
             });
         }).catch(function(error) {
+            setShowError(true)
+            setLoading(false)
             console.log("error happened:",error)
         });
         
@@ -95,14 +103,27 @@ export function UserInfo(props) {
                                 />
                                 <div style={{color:"#FF1E1E"}}>*</div>
                             </div>
-
-                            <Button 
-                                id="signin-button" 
-                                disabled={!allowSubmit} 
-                                onClick={setUserDetails}
-                            >
-                                Submit
-                            </Button>
+                            {loading?
+                                <CircularProgress/>
+                                :
+                                showError?
+                                <>
+                                    <div className="edit-name-error">
+                                        <div>An error occured. <br/>Please Try again later.</div>
+                                        <button className="edit-button" onClick={props.closeDialog}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </>
+                                :
+                                <Button 
+                                    id="signin-button" 
+                                    disabled={!allowSubmit} 
+                                    onClick={setUserDetails}
+                                >
+                                    Submit
+                                </Button>
+                            }
                         </DialogContentText>
                     </DialogContent>
                 </Dialog>

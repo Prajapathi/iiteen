@@ -1,5 +1,17 @@
 import * as actionTypes from './actionTypes'
 
+export const restorePreviousAttempt=(previousPaperDetails)=>{
+    return{
+        type:actionTypes.RESTORE_PREVIOUS_ATTEMPT,
+        payload:previousPaperDetails
+    }
+}
+
+export const setNewAttemptTime=()=>{
+    return{
+        type:actionTypes.SET_NEW_ATTEMPT_TIME
+    }
+}
 
 export const fetchPaper=(paper)=>{
     return{
@@ -7,7 +19,8 @@ export const fetchPaper=(paper)=>{
         payload:paper
     }
 }
-export const fetchPreviousAnswers=(answers)=>{
+
+export const fetchPreviousSubjectwiseAnswers=(answers)=>{
     return{
         type:actionTypes.FETCH_PREVIOUS_ANSWERS,
         payload:answers

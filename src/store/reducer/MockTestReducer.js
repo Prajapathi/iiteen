@@ -3,18 +3,51 @@ import * as actionTypes from '../action/actionTypes'
 
 // Contents:
 //     1. Initial values
-//     2. Fetching Paper
-//     3. Fetching previous answers
-//     4. Setting seen to true
-//     5. Setting and evaluating answers
-//     6. Clear Answer
-//     7. Bookmark Questions
-//     8. Attempt question for subjective question
+//     2. Restore Previous Attempt of user 
+//     3. Fetching Paper
+//     4. Fetching previous answers
+//     5. Setting seen to true
+//     6. Setting and evaluating answers
+//     7. Clear Answer
+//     8. Bookmark Questions
+//     9. Attempt question for subjective question
 
 //initial values
 const initValues={
     paper:{},
     answers:[],
+    previousAttemptExists:false, //if this is true then we will not create new answers[] in fetchPaper()
+    time:null,
+    storeAnswers:false, //true for Mock tests and Previous year papers
+    uid:null
+}
+
+//If user wants to continue with a previous unfinished attempt then store this in the state and set previousAttemptExists to true
+const restorePreviousAttempt=(state,action)=>{
+    if(action.payload.answers==false)
+        return {
+            ...state,
+            previousAttemptExists:false,
+            storeAnswers:true,
+            uid:action.payload.uid
+        }
+    else
+        return{
+            ...state,
+            answers:action.payload.answers.answers,
+            previousAttemptExists:true,
+            time:action.payload.answers.time,
+            storeAnswers:true,
+            uid:action.payload.uid
+        }
+}
+
+//if this is a fresh attempt then set the time in state
+const setNewAttemptTime=(state,action)=>{
+    return {
+        ...state,
+        time:new Date()
+    }
 }
 
 //store paper inside intital values and create answers[]
@@ -26,31 +59,36 @@ const fetchPaper=(state,action)=>{
             ...state,
             paper:action.payload,
         }
+
     let ans=[];
-    //after fetching paper, set the answers[]
-    for(let i=0;i<action.payload.noOfQuestions;i++){
-        ans.push({
-            uid:action.payload.questions[i].uid,
-            number:i,
-            answer:action.payload.questions[i].answer,
-            answerGiven:action.payload.questions[i].answerType==5?[]:null,
-            answerType:action.payload.questions[i].answerType,
-            marks:action.payload.questions[i].marks,
-            isSeen:false,
-            isBookmarked:false,
-            isAnsweredWrong:false,
-            isAnswered:false
-        })
+
+    //if there is no previous unfinished attempt to continue with, create a new answers array
+    if(state.previousAttemptExists==false){
+        //after fetching paper, set the answers[]
+        for(let i=0;i<action.payload.noOfQuestions;i++){
+            ans.push({
+                uid:action.payload.questions[i].uid,
+                number:i,
+                answer:action.payload.questions[i].answer,
+                answerGiven:action.payload.questions[i].answerType==5?[]:null,
+                answerType:action.payload.questions[i].answerType,
+                marks:action.payload.questions[i].marks,
+                isSeen:false,
+                isBookmarked:false,
+                isAnsweredWrong:false,
+                isAnswered:false
+            })
+        }
     }
-    console.log(ans,"ooop",state.answers)
+
     return{
         ...state,
         paper:action.payload,
-        answers:ans.length==0?state.answers:ans
+        answers:(state.previousAttemptExists==true)?state.answers: (ans.length==0?state.answers:ans)
     }
 }
 
-const fetchPreviousAnswers=(state,action)=>{
+const fetchPreviousSubjectwiseAnswers=(state,action)=>{
     return{
         ...state,
         answers:action.payload
@@ -63,6 +101,19 @@ const setSeen=(state,action)=>{
         return state
     const ans=[...state.answers]
     ans[action.payload.index].isSeen=true
+
+    //if paper is a MOCKTEST or PREVIOUS YEAR, store it in local storage
+    // if(state.storeAnswers==true) {
+    //     let paperToStore={
+    //         time:state.time,
+    //         answers:ans
+    //     }
+    //     let papersFromLocalStorage={...JSON.parse(localStorage.getItem(state.uid))}
+    //     papersFromLocalStorage[state.paper.name]=paperToStore
+    //     localStorage.setItem(state.uid, JSON.stringify(papersFromLocalStorage))
+    //     console.log("local one",state.uid,papersFromLocalStorage)
+    // }
+    
     return{
         ...state,
         answers:ans
@@ -118,7 +169,18 @@ const setAnswer=(state,action)=>{
 
         }
     }
-    console.log("kkk",ans)
+
+    //if paper is a MOCKTEST or PREVIOUS YEAR, store it in local storage
+    // if(state.storeAnswers==true) {
+    //     let paperToStore={
+    //         time:state.time,
+    //         answers:ans
+    //     }
+    //     let papersFromLocalStorage={...JSON.parse(localStorage.getItem(state.uid))}
+    //     papersFromLocalStorage[state.paper.name]=paperToStore
+    //     localStorage.setItem(state.uid, JSON.stringify(papersFromLocalStorage))
+    // }
+
     return{
         ...state,
         answers:ans
@@ -131,7 +193,18 @@ const clearAnswer=(state,action)=>{
     ans[action.payload.index].isAnswered=false
     ans[action.payload.index].isAnsweredWrong=false
     ans[action.payload.index].answerGiven=''
-    console.log("popo",ans)
+
+    //if paper is a MOCKTEST or PREVIOUS YEAR, store it in local storage
+    // if(state.storeAnswers==true) {
+    //     let paperToStore={
+    //         time:state.time,
+    //         answers:ans
+    //     }
+    //     let papersFromLocalStorage={...JSON.parse(localStorage.getItem(state.uid))}
+    //     papersFromLocalStorage[state.paper.name]=paperToStore
+    //     localStorage.setItem(state.uid, JSON.stringify(papersFromLocalStorage))
+    // }
+
     return{
         ...state,
         answers:ans
@@ -142,7 +215,18 @@ const clearAnswer=(state,action)=>{
 const bookmarkQuestion=(state,action)=>{
     const ans=[...state.answers]
     ans[action.payload.index].isBookmarked=!ans[action.payload.index].isBookmarked
-    console.log("po",ans)
+
+    //if paper is a MOCKTEST or PREVIOUS YEAR, store it in local storage
+    // if(state.storeAnswers==true) {
+    //     let paperToStore={
+    //         time:state.time,
+    //         answers:ans
+    //     }
+    //     let papersFromLocalStorage={...JSON.parse(localStorage.getItem(state.uid))}
+    //     papersFromLocalStorage[state.paper.name]=paperToStore
+    //     localStorage.setItem(state.uid, JSON.stringify(papersFromLocalStorage))
+    // }
+
     return{
         ...state,
         answers:ans
@@ -163,10 +247,14 @@ const attemptSubjective=(state,action)=>{
 
 const MockTestReducer=(state=initValues,action)=>{
     switch(action.type){
+        case actionTypes.RESTORE_PREVIOUS_ATTEMPT:
+            return restorePreviousAttempt(state,action)
+        case actionTypes.SET_NEW_ATTEMPT_TIME:
+            return setNewAttemptTime(state,action)
         case actionTypes.FETCH_PAPER:
             return fetchPaper(state,action)
         case actionTypes.FETCH_PREVIOUS_ANSWERS:
-            return fetchPreviousAnswers(state,action)
+            return fetchPreviousSubjectwiseAnswers(state,action)
         case actionTypes.SET_SEEN:
             return setSeen(state,action)
         case actionTypes.SET_ANSWER:

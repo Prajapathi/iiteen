@@ -11,8 +11,8 @@ import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import ReplayIcon from '@material-ui/icons/Replay';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-      margin:'20px 20px',
+  card: {
+      margin:'10px',
       textAlign:'center',
       background: '#36698d', /* Old browsers */
       background: '-moz-linear-gradient(top,  #36698d 0%, #52a0a3 100%)', /* FF3.6-15 */
@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
       filter: 'progid:DXImageTransform.Microsoft.gradient( startColorstr="#36698d", endColorstr="#52a0a3",GradientType=0 )', /* IE6-9 */
       color:'white',
       display:'flex',
+      flexDirection:"column",
       flexWrap:'wrap',
       alignItems:'center',
       justifyContent:'center',
@@ -28,19 +29,19 @@ const useStyles = makeStyles((theme) => ({
       '&:hover': {
       boxShadow:'2px 2px 10px #838587',
       },
-        width:'200px',
-        height:'200px',
-        padding:'5px',
+      width:'150px',
+      height:'150px',
+      padding:'5px',
    
   },
   icon:{
-    width:'100px',
-    height:'100px'
+    width:'70px',
+    height:'70px'
   },
   title: {
       wordWrap: 'normal',
-      margin:'0px 20px',
-      fontSize:'24px'
+      margin:'0px 10px',
+      fontSize:'20px'
   },
   pos: {
     marginBottom: 12,
@@ -52,8 +53,8 @@ export default function HomeCard(props) {
   const bull = <span className={classes.bullet}>•</span>;
 
   return (
-    <Card className={classes.root}>
-      <CardContent>
+    <Card className={classes.card}>
+      <CardContent style={{padding:"0px"}}>
       {(props.icon=='mock')?
         <ImportContactsIcon className={classes.icon}/>
         :((props.icon=='subject-wise')?

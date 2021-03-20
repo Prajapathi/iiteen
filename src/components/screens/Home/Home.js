@@ -5,6 +5,7 @@ import '../../../styles/homeStyle.css'
 import HomeCard from './HomeCard'
 import UserInfo from "../../Authentication/UserInfo"
 import HomeCarousel from './HomeCarousel'
+import AITSCarousel from './AITSCarousel'
 import banner from '../../../assets/images/mainbanner.png'
 
 
@@ -18,9 +19,8 @@ export default function Home() {
 
     React.useEffect(() => {
         const user=firebase.auth().currentUser
-        if(user.creationTime==user.lastSignInTime && (user.displayName==null && user.email==null)){
+        if((user.creationTime==user.lastSignInTime && (user.displayName==null && user.email==null))||(user.displayName==null && user.email==null)){
             setOpenUserInfo(true)
-            console.log("Khula")
         }
         const userCreationTime=new Date(user.metadata.creationTime);
         // const userCreationTime= new Date("February 17, 2021 11:13:00");
@@ -91,11 +91,15 @@ export default function Home() {
             <div id="home-carousel">
                 <HomeCarousel/>
             </div>
+            <div id="upcoming-tests-heading">
+                <div>Upcoming Tests</div>
+            </div>
             <div id="home-section">
+                <div id="aits-carousel">
+                    <AITSCarousel/>
+                </div>
                 <div id="home">
-                    <div id="home-img-div">
-                        <img src={banner} id="home-image" alt=""/>
-                    </div>
+                    <img src={banner} id="home-image" alt=""/>
                     <div id="homeContent">
                             <Link to="/MockTest"><HomeCard title="Mock Test" icon="mock"/></Link>
                             <Link to="/Subjectwise"><HomeCard title="Subject-wise Test" icon="subject-wise"/></Link>

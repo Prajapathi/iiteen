@@ -22,6 +22,7 @@ export function EditName(props) {
             props.closeEdit()
         })
         .catch(function(error) {
+            setLoading(false)
             setShowError(true)
             console.log("error",error)
         });
