@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter} from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import store from './store/config'
 import * as Actions from './store/action/Authentication'
 import RoutingWrapper from './RoutingWrapper'
@@ -14,20 +14,22 @@ import Timer from './components/elements/Paper/Timer'
 import Paper from './components/elements/Paper/Subjectwise/Paper'
 import Analysis from './components/elements/DetailedAnalysis/Analysis'
 import ComingSoon from './components/screens/ComingSoon/ComingSoon'
+import QuestionSection from './components/screens/QuestionCard/QuestionSection';
 
 function App() {
-  let login=true;
+  let login = true;
   store.dispatch(Actions.verifyAuth())
   return (
     <>
-    {/* <Timer duration={150}/> */}
-    <BrowserRouter>
-     {login?
+      {/* <Timer duration={150}/> */}
+      {/* <BrowserRouter>
+      {login?
       <><RoutingWrapper style={{minHeight:'80vh'}}/></>
       :<RoutingAdmin/>
     }
-     </BrowserRouter> 
-     {/* <ComingSoon/> */}
+     </BrowserRouter>  */}
+      {/* <ComingSoon/> */}
+      <QuestionSection />
     </>
   );
 }
