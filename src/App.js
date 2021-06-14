@@ -22,14 +22,13 @@ function App() {
   return (
     <>
       {/* <Timer duration={150}/> */}
-      {/* <BrowserRouter>
-      {login?
-      <><RoutingWrapper style={{minHeight:'80vh'}}/></>
-      :<RoutingAdmin/>
-    }
-     </BrowserRouter>  */}
+      <BrowserRouter>
+        {login ?
+          <><RoutingWrapper style={{ minHeight: '80vh' }} /></>
+          : <RoutingAdmin />
+        }
+      </BrowserRouter>
       {/* <ComingSoon/> */}
-      <QuestionSection />
     </>
   );
 }
