@@ -10,50 +10,49 @@ import Loading from '../../elements/Loading'
 import SubjectSection from './SubjectSection'
 
 export default function Subjectwise() {
-    const [open,setOpen]=React.useState(true)
-    const [classNumber,setClassNumber]=React.useState("11")
-    const [loading,setLoading]=React.useState(false)
+    const [open, setOpen] = React.useState(true)
+    const [classNumber, setClassNumber] = React.useState("11")
+    const [loading, setLoading] = React.useState(false)
 
-    const selectClass=(n)=>{
+    const selectClass = (n) => {
         setClassNumber(n)
         setOpen(false)
     }
-    document.title="Subjectwise | IITEENS"
+    document.title = "Subjectwise | IITEENS"
     return (
         <div className="screen" id="subjectwise">
-            {loading?<Loading />:
-            open?
-                <Dialog
-                    disableBackdropClick 
-                    disableEscapeKeyDown 
-                    open={open}
-                    onClose={()=>setOpen(false)}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    fullWidth={true}
-                    id="class-select-dialog"
-                >
-                    <DialogTitle id="alert-dialog-title">{"Please select your class"}</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                            <Button onClick={()=>selectClass("11")}>
-                                Class 11
-                            </Button>
-                            <Button onClick={()=>selectClass("12")}>
-                                Class 12
-                            </Button>
-                        </DialogContentText>
-                    </DialogContent>
-                </Dialog>
-            :
-                <>
-                    <h1 style={{textAlign:'center',fontWeight:'800',letterSpacing:'5px',wordSpacing:'15px',color:'#3F7B94',padding:'15px 0px'}}>SUBJECT-WISE QUESTIONS</h1>
-                    <div id="phy"><SubjectSection subject="physics" classNumber={classNumber} loadingStart={setLoading}/></div>
-                    <div id="chem"><SubjectSection subject="chemistry" classNumber={classNumber} loadingStart={setLoading}/></div>
-                    <div id="mat"><SubjectSection subject="maths" classNumber={classNumber} loadingStart={setLoading}/></div>
-                </>
+            {loading ? <Loading /> :
+                open ?
+                    <Dialog
+                        disableBackdropClick
+                        disableEscapeKeyDown
+                        open={open}
+                        onClose={() => setOpen(false)}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                        fullWidth={true}
+                        id="class-select-dialog"
+                    >
+                        <DialogTitle id="alert-dialog-title">{"Please select your class"}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                <Button onClick={() => selectClass("11")}>
+                                    Class 11
+                                </Button>
+                                <Button onClick={() => selectClass("12")}>
+                                    Class 12
+                                </Button>
+                            </DialogContentText>
+                        </DialogContent>
+                    </Dialog>
+                    :
+                    <>
+                        <h1 style={{ textAlign: 'center', fontWeight: '800', letterSpacing: '5px', wordSpacing: '15px', color: '#3F7B94', padding: '15px 0px' }}>SUBJECT-WISE QUESTIONS</h1>
+                        <div id="phy"><SubjectSection subject="physics" classNumber={classNumber} loadingStart={setLoading} /></div>
+                        <div id="chem"><SubjectSection subject="chemistry" classNumber={classNumber} loadingStart={setLoading} /></div>
+                        <div id="mat"><SubjectSection subject="maths" classNumber={classNumber} loadingStart={setLoading} /></div>
+                    </>
             }
         </div>
-       
     )
 }

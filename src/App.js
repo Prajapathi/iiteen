@@ -14,7 +14,6 @@ import Timer from './components/elements/Paper/Timer'
 import Paper from './components/elements/Paper/Subjectwise/Paper'
 import Analysis from './components/elements/DetailedAnalysis/Analysis'
 import ComingSoon from './components/screens/ComingSoon/ComingSoon'
-import QuestionSection from './components/screens/QuestionCard/QuestionSection';
 
 function App() {
   let login = true;

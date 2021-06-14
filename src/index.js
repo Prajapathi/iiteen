@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux'
+import { Provider } from 'react-redux'
 import Firebase, { FirebaseContext } from './Firebase';
 import './index.css';
 import App from './App';
@@ -10,11 +10,11 @@ import store from './store/config'
 
 ReactDOM.render(
   <React.StrictMode>
-  <Provider store={store}>
-    <FirebaseContext.Provider value={new Firebase()}>
-      <App />
-    </FirebaseContext.Provider>
-  </Provider>
+    <Provider store={store}>
+      <FirebaseContext.Provider value={new Firebase()}>
+        <App />
+      </FirebaseContext.Provider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
