@@ -184,7 +184,7 @@ export default function PaperInfo(props) {
                                                 <MenuItem value="Chapter 05">Centre of mass and collisions</MenuItem>
                                                 <MenuItem value="Chapter 06">Rotational Motion</MenuItem>
                                                 <MenuItem value="Chapter 07">Gravitation</MenuItem>
-                                                <MenuItem value="Chapter 08">Properties of Solids and Liquids</MenuItem>
+                                                <MenuItem value="Chapter 08">Properties of Matter</MenuItem>
                                                 <MenuItem value="Chapter 09">Thermodynamics</MenuItem>
                                                 <MenuItem value="Chapter 10">Kinetic Theory of Gases</MenuItem>
                                                 <MenuItem value="Chapter 11">Simple Harmonic Motion</MenuItem>
