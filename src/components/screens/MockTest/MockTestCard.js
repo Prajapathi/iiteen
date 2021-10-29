@@ -21,7 +21,7 @@ export function MockTestCard(props) {
     const checkPreviousAttempt=()=>{
         //retrieve previous attempt from local storage for this particular user using uid
          let previousAttempt=localStorage.getItem(props.user.uid)
-        console.log("hm?",props.user.uid,previousAttempt,previousAttempt[0])
+        // console.log("hm?",props.user.uid,previousAttempt,previousAttempt[0])
         // //if any previous attempt for this paper exists, then ask user if they want to continue
         if(previousAttempt!=null && previousAttempt[0]=='{' && JSON.parse(previousAttempt)[props.paper.name]!=null){
             setOpenContinuePreviousAttempt(true)

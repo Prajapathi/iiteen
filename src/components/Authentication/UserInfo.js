@@ -1,6 +1,7 @@
 import React from 'react'
 import '../../styles/signin.css'
 import firebase from 'firebase/app'
+import { getAuth, updateEmail,  } from "firebase/auth";
 import {updateUserProfile} from '../../store/action/Authentication'
 import {connect} from 'react-redux'
 import Form from "react-bootstrap/Form";
@@ -43,6 +44,8 @@ export function UserInfo(props) {
     const setUserDetails=()=>{
         setLoading(true)
         let user = firebase.auth().currentUser;
+        
+
         user.updateEmail(email).then(function() {
             user.updateProfile({
                 displayName: name
@@ -116,13 +119,25 @@ export function UserInfo(props) {
                                     </div>
                                 </>
                                 :
-                                <Button 
+                               <div>
+                                    <Button 
                                     id="signin-button" 
                                     disabled={!allowSubmit} 
                                     onClick={setUserDetails}
                                 >
                                     Submit
                                 </Button>
+                                <Button 
+                                    id="signin-button" 
+                                    
+                                    onClick={()=>{
+                                        props.closeDialog();
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                               </div>
+                                
                             }
                         </DialogContentText>
                     </DialogContent>

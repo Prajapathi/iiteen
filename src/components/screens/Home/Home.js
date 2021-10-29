@@ -91,13 +91,15 @@ export default function Home() {
             <div id="home-carousel">
                 <HomeCarousel />
             </div>
-            <div id="upcoming-tests-heading">
+            {/* <div id="upcoming-tests-heading">
                 <div>Upcoming Tests</div>
-            </div>
+            </div> */}
+            <br/>
+            <br/>
             <div id="home-section">
-                <div id="aits-carousel">
+                {/* <div id="aits-carousel">
                     <AITSCarousel />
-                </div>
+                </div> */}
                 <div id="home">
                     <img src={banner} id="home-image" alt="" />
                     <div id="homeContent">

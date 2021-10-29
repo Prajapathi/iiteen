@@ -14,8 +14,13 @@ export default function Report() {
            <div id="mocktest-heading">
                 <div class="section-heading" style={{color:'white'}}>AITS REPORT</div>
             </div>
-            <div>
+            {/* ============================Don't Delete this========================= */}
+            {/* <div>
                 <PaginationComponent/>
+            </div> */}
+
+            <div >
+            <div class="section-heading">No AITS Till Now</div>
             </div>
         </div>
         

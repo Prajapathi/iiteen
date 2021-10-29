@@ -19,6 +19,7 @@ import LeftMenu from './components/NavigationLeftMenu/LeftMenu'
 import Signin from './components/signin'
 import Loading from './components/elements/Loading'
 import PreviousYearSubjectwise from './components/screens/PreviousYear/PreviousYearSubjectwise'
+import Soon from './components/elements/Soon'
 
 
 export function Routing(props) {
@@ -75,6 +76,11 @@ export function Routing(props) {
                         </Route>
                         <Route exact path="/Signin">
                             <LeftMenu /><Signin /><Footer />
+                        </Route>
+                        <Route exact path="/soon">
+                            <LeftMenu />
+                            <Soon />
+                            <Footer />
                         </Route>
                     </Switch>
 

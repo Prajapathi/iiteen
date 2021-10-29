@@ -22,6 +22,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import InstructionDropdown from '../Paper/InstructionDropdown'
+import Latex from "react-latex-next";
 
 export function ChoiceSection(props) {
     const [palleteSub,setPalleteSub]=React.useState(1);
@@ -199,22 +200,24 @@ export function ChoiceSection(props) {
                                         />
                                     </div>
                                     :props.data.answerType==5||props.data.answerType==4?
-                                        <div className="options">
+                                        <div className="options" style={{ wordWrap: "break-word"}}>
                                             {props.data?props.data.option.map((text, index) =>
                                                 <div className="option"
                                                     onClick={props.stateAnswer[props.number-1]&&props.stateAnswer[props.number-1].isAnswered?null:(props.data.answerType==5?()=>changeOptMultiple(index):()=>changeOptSingle(index))}
-                                                    style={{border:selectOpt[index]==true?'2px solid rgb(59, 149, 194)':'1px solid white'}}
+                                                    style={{border:selectOpt[index]==true?'2px solid rgb(59, 149, 194)':'1px solid white',  wordWrap: "break-word" }}
                                                 > 
                                                         {index===0?'A.  ':(index===1?'B.  ':(index===2?'C. ':'D. '))} 
                                                         
+                                                            <div className="babay" style={{ wordWrap: "break-word"}}>
                                                             {text.type==0?<br/>:(text.type==1
                                                                                 ?text.data
                                                                                 :(text.type==2
-                                                                        ?<InlineMath>{text.data}</InlineMath>
+                                                                        ?<Latex>{text.data}</Latex>
                                                                         :(text.type==3?<img src={text.data} style={{width:"50%"}}/>:null)
                                                                     )
                                                                 )
                                                             }
+                                                            </div>
                                                 </div>
                                             ):null}
                                         </div>

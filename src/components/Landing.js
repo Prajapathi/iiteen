@@ -49,11 +49,11 @@ export default function Landing() {
                     </div>
                     <div id="app-bar-button">
                         <h5>Get Our App</h5>
-                        <a href="">
-                            <img src={googlePlay} />
+                        <a href="https://play.google.com/store/apps/details?id=com.iiteen.iiteen_app" target="_blank" rel="noopener noreferrer">
+                            <img src={googlePlay} alt="google play"/>
                         </a>
-                        <a href="">
-                            <img src={iosStore}/>
+                        <a href="/soon" >
+                            <img src={iosStore} alt="app store"/>
                         </a>
                     </div>
                 </div>
