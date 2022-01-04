@@ -11,7 +11,7 @@ export default function QuestionSection(props) {
                 <div id="question-text">
         {
             props.data?props.data.map((item,index)=>
-                < >
+                <div key={index} style={{overflowWrap:'anywhere'}}>
                 {item.type==0?<br/>:(item.type==1
                                     ?item.data
                                     :(item.type==2
@@ -20,7 +20,7 @@ export default function QuestionSection(props) {
                                      )
                                     )
                 }
-                </>
+                </div>
             ):null}
                     {/* <InlineMath>{str}</InlineMath> */}
                 </div>
