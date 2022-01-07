@@ -50,7 +50,7 @@ export function Routing(props) {
                             <LeftMenu /><SubjectWise /><Footer />
                         </Route>
                         <Route exact path="/PreviousYear">
-                            <LeftMenu /><PreviousYear /><Footer />
+                            <LeftMenu /><PreviousYearSubjectwise /><Footer />
                         </Route>
                         <Route path="/AITS">
                             <LeftMenu /><AITS /><Footer />

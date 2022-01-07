@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-loop-func */
 import React,{useEffect} from 'react'
 import firebase from 'firebase'
 import {Link, useLocation,useHistory } from "react-router-dom";
