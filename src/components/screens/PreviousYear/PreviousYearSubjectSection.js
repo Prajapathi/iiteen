@@ -51,6 +51,7 @@ export default function PreviousYearSubjectSection(props) {
                     : maths
                 }
                 id="subject-img"
+                alt={subject}
               />
             </div>
           </div>

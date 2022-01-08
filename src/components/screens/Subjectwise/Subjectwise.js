@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import "../../../styles/subjectwise.css";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -16,14 +16,24 @@ export default function Subjectwise() {
   const [loading, setLoading] = React.useState(false);
   let history = useHistory();
   window.onpopstate = function (e) {
-    if (!open) {
+    if (!open || localStorage.getItem("dialog")===null) {
       setOpen(true);
-      history.push("/PreviousYear");
+      history.push("/Subjectwise");
     }
+    localStorage.removeItem("dialog");
   };
+
+  useEffect(()=>{
+    if(localStorage.getItem("dialog")!==null){
+      setOpen(localStorage.getItem("dialog"));
+    }else{
+      localStorage.setItem("dialog",true);
+    }
+  },[])
 
   const selectClass = (n) => {
     setClassNumber(n);
+    localStorage.setItem("dialog",false);
     setOpen(false);
   };
   document.title = "Subjectwise | IITEENS";
@@ -31,7 +41,7 @@ export default function Subjectwise() {
     <div className="screen" id="subjectwise">
       {loading ? (
         <Loading />
-      ) : open ? (
+      ) : open===true ? (
         <Dialog
           disableBackdropClick
           disableEscapeKeyDown

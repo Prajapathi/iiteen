@@ -166,16 +166,34 @@ export default React.memo(function SubjectCardSection(props) {
 
   const refreshChapters = (number) => {
     console.log("number", number);
-    setChapterIndex(cardNumbers*(number-1));
     if (chapterIndex === 0) {
       setDisableLeft("gray");
     }
-    setChapters(
-      initialItems.slice(
-        (number - 1) * cardNumbers,
-        (number - 1) * cardNumbers + cardNumbers
-      )
-    );
+    if((chapterIndex/cardNumbers+1)===number){
+      return;
+    }else if((chapterIndex/cardNumbers+1)<number){
+      setSlideDirection("right");
+      setSlideIn(false);
+      setTimeout(() => {
+        setDisableLeft("black");
+        setChapterIndex(cardNumbers*(number-1));
+        setStl("blue");
+        setSlideDirection("left");
+        setSlideIn(true);
+      }, 300);
+    }else{
+      setSlideDirection("left");
+      setSlideIn(false);
+      setTimeout(() => {
+        setDisableLeft("black");
+        setChapterIndex(cardNumbers*(number-1));
+        if (cardNumbers*(number-1) === 0) {
+          setDisableLeft("gray");
+        }
+        setSlideDirection("right");
+        setSlideIn(true);
+      }, 300);
+    }
   };
 
   return loading == true ? (
