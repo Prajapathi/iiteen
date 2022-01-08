@@ -162,7 +162,7 @@ export function PreviousYearSubjectCard(props) {
               value={0}
               style={{ boxShadow: "1px 1px 3px 0px rgba(0,0,0,0.3)" }}
             />
-            <div style={{ color: "#448698", marginTop: "5px" }}> {0}/75</div>
+            <div style={{ color: "#448698", marginTop: "5px" }}> {0}/25</div>
             <button onClick={() => selectLevel(1)} className="prev-card-button">
               Attempt
             </button>

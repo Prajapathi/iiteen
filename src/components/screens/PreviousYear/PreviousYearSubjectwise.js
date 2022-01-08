@@ -8,7 +8,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Loading from "../../elements/Loading";
 import PreviousYearSubjectSection from "./PreviousYearSubjectSection";
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 export default function PreviousYearSubjectwise() {
   const [open, setOpen] = React.useState(true);
@@ -16,14 +16,29 @@ export default function PreviousYearSubjectwise() {
   const [loading, setLoading] = React.useState(false);
   let history = useHistory();
   window.onpopstate = function (e) {
-    if (!open) {
+    if (!open || localStorage.getItem("dialog")===null) {
       setOpen(true);
       history.push("/PreviousYear");
     }
+    localStorage.removeItem("dialog");
   };
+
+  useEffect(()=>{
+    if(localStorage.getItem("dialog")!==null){
+      setOpen(localStorage.getItem("dialog"));
+    }else{
+      localStorage.setItem("dialog",true);
+    }
+  },[])
+
+  console.log("dialog",open);
+  // useEffect(() => {
+  //   localStorage.setItem("dialog",open);
+  // }, [open])
 
   const selectClass = (n) => {
     setClassNumber(n);
+    localStorage.setItem("dialog",false);
     setOpen(false);
   };
   document.title = "PreviousYearSubjectwise | IITEENS";
@@ -32,7 +47,7 @@ export default function PreviousYearSubjectwise() {
     <div className="screen" id="PreviousYearsubjectwise">
       {loading ? (
         <Loading />
-      ) : open ? (
+      ) : open===true ? (
         <Dialog
           disableBackdropClick
           disableEscapeKeyDown
@@ -43,6 +58,7 @@ export default function PreviousYearSubjectwise() {
           fullWidth={true}
           id="class-select-dialog"
         >
+          {console.log("dialog",open)}
           <DialogTitle id="alert-dialog-title">
             {"Please select your class"}
           </DialogTitle>

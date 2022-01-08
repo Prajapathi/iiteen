@@ -41,9 +41,7 @@
 }
 #subject-img {
   height: 40px;
-  border: 1px solid rgba(256, 256, 256, 0.4);
   padding: 3px;
-  border-radius: 5px;
 }
 .search-chapter {
   border: 1px solid rgba(256, 256, 256, 0.4);
