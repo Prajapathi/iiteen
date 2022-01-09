@@ -75,8 +75,8 @@ export function MockTest(props) {
                         <div className="mocktestcardsection">
                             {/* rendering each paper in a card and passing the paper info to the individual card */}
                             {
-                                mockTestPapers.map((item) =>
-                                        <div style={{margin:'20px'}}>
+                                mockTestPapers.map((item,index) =>
+                                        <div key={index} style={{margin:'20px'}}>
                                             <MockTestCard isAttempted={checkAttempted(item.name)} paper={item} setLoading={setLoading}/>
                                         </div>
                                     )}
