@@ -34,6 +34,7 @@ export default function Subjectwise() {
   const selectClass = (n) => {
     setClassNumber(n);
     localStorage.setItem("dialog",false);
+    console.log("dia",localStorage.getItem("dialog"));
     setOpen(false);
   };
   document.title = "Subjectwise | IITEENS";
