@@ -16,6 +16,7 @@ import firebase from "firebase";
 import "../components/css/myCss.css";
 import yeardata from "../components/data/year";
 import { render } from "@testing-library/react";
+import { Link } from "react-router-dom";
 
 const SetQuestion = (props) => {
   var [type, setType] = useState("1");
@@ -52,9 +53,12 @@ const SetQuestion = (props) => {
   const QuestionNo = props.location.state.QuestionNo;
   const Subject = props.location.state.Subject;
   const Chapter = props.location.state.Chapter;
+  const allQuestions = props.location.state.allQuestions;
   useEffect(() => {
     fetchPaper();
   }, []);
+
+  console.log("allQuestions", allQuestions);
 
   const submitPaper = (e) => {
     const db = firebase.firestore();
@@ -74,6 +78,7 @@ const SetQuestion = (props) => {
         hint: hint,
         solution: solution,
         year: year,
+        college:college,
         questionNumber: `${QuestionNo}`,
       })
       .then(() => {
@@ -101,6 +106,8 @@ const SetQuestion = (props) => {
         correct: correct,
         solution: solution,
         hint: hint,
+        year: year,
+        college:college,
         questionNumber: `${QuestionNo}`,
       })
       .then(() => {
@@ -242,6 +249,7 @@ const SetQuestion = (props) => {
       setQuestionType(editPaper.questionType);
       setCorrect(editPaper.correct);
       setYear(editPaper.year);
+      setCollege(editPaper.college);
       setHint(editPaper.hint);
       setSolution(editPaper.solution);
       // render();
@@ -506,19 +514,45 @@ const SetQuestion = (props) => {
       </Container>
       <Container>
         <Row>
+          {allQuestions && 
           <Col>
-            <Button
-              className="shadow-btn"
-              style={{
-                margin: "30px",
-                width: "30%",
-                background:
-                  "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-              }}
-            >
-              back
-            </Button>
-          </Col>
+          <Button
+            className="shadow-btn"
+            style={{
+              margin: "30px",
+              width: "30%",
+              background:
+                "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+            }}
+            onClick={()=>{
+              window.location.reload();
+            }}
+          >
+            {allQuestions[QuestionNo-2] !== undefined ? (
+              <Link
+                to={{
+                  pathname: "/PreviousYearSubjectwise/setQuestion",
+                  state: {
+                    id: allQuestions[QuestionNo-2].id,
+                    Class: Class,
+                    Subject: Subject,
+                    Chapter: Chapter,
+                    QuestionNo: QuestionNo - 1,
+                    allQuestions: allQuestions,
+                  },
+                }}
+              >
+                back
+              </Link>
+            ) : (
+              <Link>
+                back
+              </Link>
+            )}
+          </Button>
+        </Col>
+        }
+          
           <Col>
             {Id ? (
               <Button
@@ -548,20 +582,57 @@ const SetQuestion = (props) => {
               </Button>
             )}
           </Col>
+          {allQuestions && 
           <Col>
-            <Button
-              className="shadow-btn"
-              style={{
-                margin: "30px",
-                width: "30%",
-                background:
-                  "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-              }}
-            >
-              
-              next
-            </Button>
-          </Col>
+          <Button
+            className="shadow-btn"
+            style={{
+              margin: "30px",
+              width: "30%",
+              background:
+                "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+            }}
+            onClick={()=>{
+              window.location.reload();
+            }}
+          >
+            {/* {console.log("id", allQuestions[QuestionNo].id)} */}
+            {allQuestions[QuestionNo] !== undefined ? (
+              <Link
+                to={{
+                  pathname: "/PreviousYearSubjectwise/setQuestion",
+                  state: {
+                    id: allQuestions[QuestionNo].id,
+                    Class: Class,
+                    Subject: Subject,
+                    Chapter: Chapter,
+                    QuestionNo: QuestionNo + 1,
+                    allQuestions: allQuestions,
+                  },
+                }}
+              >
+                next
+              </Link>
+            ) : (
+              <Link
+                to={{
+                  pathname: "/PreviousYearSubjectwise/setQuestion",
+                  state: {
+                    Class: Class,
+                    Subject: Subject,
+                    Chapter: Chapter,
+                    QuestionNo: allQuestions.length + 1,
+                    allQuestions: allQuestions,
+                  },
+                }}
+              >
+                next
+              </Link>
+            )}
+          </Button>
+        </Col>
+          }
+          
         </Row>
       </Container>
     </div>
