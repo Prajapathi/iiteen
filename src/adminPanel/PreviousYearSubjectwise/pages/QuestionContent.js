@@ -1,5 +1,5 @@
 import { MenuItem, TextField, Button, Switch } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Syllabus from "../components/data/syllabus";
 // import { db } from "../components/firebase";
 import firebase from "firebase";
@@ -19,6 +19,7 @@ const QuestionContent = (props) => {
   const [questionNo, setQuestionNo] = useState("1");
   const [Id, setId] = useState("0");
   const [sub, setSub] = useState("11");
+  // const selfRef = useRef();
 
   function SetQuestionBtn(no, id) {
     setQuestionNo(no);
@@ -27,21 +28,49 @@ const QuestionContent = (props) => {
     console.log(Id, questionNo, editBtn);
   }
   var index = props.match.params.subject;
+
+  const subj = ["physics", "chemistry", "maths"];
+
   useEffect(() => {
     if (index == 0) {
+      // console.log("yes");
+      // console.log(sub);
       setSub("physics");
+      // console.log(sub);
     } else if (index == 1) {
       console.log("chemistry");
+      setSub("chemistry");
     } else if (index == 2) {
       setSub("maths");
     }
   }, [index]);
 
+  useEffect(() => {
+    if (localStorage.getItem("Class") !== null) {
+      setClass(localStorage.getItem("Class"));
+      setChapter(localStorage.getItem("chapter"));
+      // let button = document.getElementById("getquestions");
+      // if (button) {
+      //   button.click();
+      // }
+      console.log(
+        "class",
+        localStorage.getItem("Class"),
+        localStorage.getItem("chapter")
+      );
+      fetchPaper(
+        localStorage.getItem("Class"),
+        localStorage.getItem("chapter")
+      );
+      // selfRef.current.click();
+    }
+  }, []);
+
   function fetchPaper(selClass, selChapter) {
     const db = firebase.firestore();
     db.collection("PYSV")
       .doc(selClass)
-      .collection(sub)
+      .collection(subj[index])
       .doc(selChapter)
       .collection("question")
       .orderBy("questionNumber")
@@ -49,6 +78,7 @@ const QuestionContent = (props) => {
         setAllQuestions(
           querySnapshot.docs.map((doc) => ({
             id: doc.id,
+            year: doc.data().year,
             questions: doc.data().question,
           }))
         );
@@ -64,18 +94,17 @@ const QuestionContent = (props) => {
       const db = firebase.firestore();
       db.collection("PYSV")
         .doc(Class)
-        .collection(sub)
+        .collection(subj[index])
         .doc(chapter)
         .collection("question")
         .doc(id)
         .delete()
-        .then(
-          function () {
-            console.log("Document successfully deleted!");
-          }.catch(function (error) {
-            console.error("Error removing document: ", error);
-          })
-        );
+        .then(function () {
+          console.log("Document successfully deleted!");
+        })
+        .catch(function (error) {
+          console.error("Error removing document: ", error);
+        });
     } else {
       console.log("not deleted");
     }
@@ -100,8 +129,11 @@ const QuestionContent = (props) => {
             select
             label="Select Class"
             value={Class}
-            style={{ width: "200px", marginRight: "20px" }}
-            onChange={(event) => setClass(event.target.value)}
+            style={{ width: "140px", marginRight: "20px" }}
+            onChange={(event) => {
+              setClass(event.target.value);
+              localStorage.setItem("Class", event.target.value);
+            }}
           >
             <MenuItem value="class11">Class 11</MenuItem>
             <MenuItem value="class12">Class 12</MenuItem>
@@ -112,8 +144,11 @@ const QuestionContent = (props) => {
             select
             label="Chapter Name"
             value={chapter}
-            style={{ width: "200px", marginRight: "20px" }}
-            onChange={(event) => setChapter(event.target.value)}
+            style={{ width: "250px", marginRight: "20px" }}
+            onChange={(event) => {
+              setChapter(event.target.value);
+              localStorage.setItem("chapter", event.target.value);
+            }}
           >
             {Class === "class11" ? (
               Syllabus[index].class11 &&
@@ -139,17 +174,19 @@ const QuestionContent = (props) => {
               <MenuItem value={""}>Select Class</MenuItem>
             )}
           </TextField>
-          {Class !== "" && chapter !== "" && (
-            <Button
-              className="shadow-btn"
-              style={{ marginTop: "5px" }}
-              onClick={() => {
-                fetchPaper(Class, chapter);
-              }}
-            >
-              next
-            </Button>
-          )}
+          {/* {Class !== "" && chapter !== "" && ( */}
+          <Button
+            id="getquestions"
+            className="shadow-btn"
+            style={{ marginTop: "5px" }}
+            onClick={() => {
+              fetchPaper(Class, chapter);
+            }}
+            // ref={selfRef}
+          >
+            next
+          </Button>
+          {/* )} */}
         </div>
       </Container>
 
@@ -165,7 +202,7 @@ const QuestionContent = (props) => {
             <Row>
               <Col>
                 {" "}
-                <h4>Total Questions- {allQuestions.length}</h4>
+                <h4>Total Questions: {allQuestions.length}</h4>
               </Col>
 
               <Col>
@@ -176,6 +213,7 @@ const QuestionContent = (props) => {
                     setQuestionNo(allQuestions.length + 1);
                     alert(questionNo);
                   }}
+                  style={{ marginLeft: "300px" }}
                 >
                   <Link
                     to={{
@@ -188,16 +226,24 @@ const QuestionContent = (props) => {
                       },
                     }}
                   >
-                    Add New Question {questionNo}
+                    Add New Question
                   </Link>
                 </Button>{" "}
               </Col>
             </Row>
-                    {console.log("allquestions",allQuestions)};
+            {console.log("allquestions", allQuestions)}
             {allQuestions.map((e, index) => {
-              var { id, questions } = e;
+              var { id, yr, questions } = e;
+              console.log("year", allQuestions[index].year);
               return (
-                <div className="shadow-card" style={{ marginTop: "40px" }}>
+                <div
+                  className="shadow-card"
+                  style={{
+                    marginTop: "20px",
+                    marginBottom: "20px",
+                    position: "relative",
+                  }}
+                >
                   <h4>Question No: {index + 1} </h4>
                   <span />
                   <div style={{ wordWrap: "break-word" }}>
@@ -213,7 +259,15 @@ const QuestionContent = (props) => {
                               <Latex>{LaTeX}</Latex>
                             ) : type === "3" ? (
                               <div>
-                                <img src={data} alt="img" />
+                                <img
+                                  src={data}
+                                  alt="img"
+                                  style={{
+                                    display: "block",
+                                    marginLeft: "auto",
+                                    marginRight: "auto",
+                                  }}
+                                />
                               </div>
                             ) : (
                               <div>
@@ -244,30 +298,45 @@ const QuestionContent = (props) => {
                           Subject: sub,
                           Chapter: chapter,
                           QuestionNo: index + 1,
-                          allQuestions:allQuestions
+                          allQuestions: allQuestions,
                         },
                       }}
+                      style={{ textDecoration: "none" }}
                     >
                       Edit Question
                     </Link>
                     {/* <a href={`/edit/${Class}/${chapter}/${subject}/${questionNo}/${Id}`}>Edit</a> */}
                   </Button>
 
-                  <div>
-                    <Button
-                      className="shadow-btn"
+                  <Row>
+                    <Col>
+                      <Button
+                        className="shadow-btn"
+                        style={{
+                          marginTop: "19px",
+                          backgroundColor: "white",
+                          color: "red",
+                        }}
+                        onClick={() => {
+                          deleteQuestion(id);
+                          console.log("it is getting clicked");
+                        }}
+                      >
+                        Delete Question
+                      </Button>
+                    </Col>
+
+                    <Col
                       style={{
-                        marginTop: "19px",
-                        backgroundColor: "white",
-                        color: "red",
-                      }}
-                      onClick={() => {
-                        deleteQuestion(id);
+                        textAlign: "right",
+                        position: "absolute",
+                        bottom: "20px",
+                        left: "0",
                       }}
                     >
-                      Delete Question
-                    </Button>
-                  </div>
+                      {allQuestions[index].year}
+                    </Col>
+                  </Row>
                 </div>
               );
             })}

@@ -10,6 +10,10 @@ import {
   Button,
   TextField,
   MenuItem,
+  Radio,
+  FormGroup,
+  RadioGroup,
+  FormControl,
 } from "@material-ui/core";
 // import { db } from "./firebase";
 import firebase from "firebase";
@@ -78,11 +82,11 @@ const SetQuestion = (props) => {
         hint: hint,
         solution: solution,
         year: year,
-        college:college,
+        college: college,
         questionNumber: `${QuestionNo}`,
       })
       .then(() => {
-        alert("Your message has been submitted👍");
+        alert("Your question has been uploaded to database");
       })
       .catch((error) => {
         alert(error.message);
@@ -107,11 +111,11 @@ const SetQuestion = (props) => {
         solution: solution,
         hint: hint,
         year: year,
-        college:college,
+        college: college,
         questionNumber: `${QuestionNo}`,
       })
       .then(() => {
-        alert("Updated paper");
+        alert("Your question has been uploaded to database");
       })
       .catch((error) => {
         alert(error.message);
@@ -119,19 +123,24 @@ const SetQuestion = (props) => {
   };
 
   const handleCheck = (index) => {
-    const ans = [...multiOption];
-    // if(ans[index]===true){
+    if (questionType == 2) {
+      const ans = [...multiOption];
+      // if(ans[index]===true){
 
-    // }
-    ans[index] = !ans[index];
-    setMultiOption(ans);
-    // setCorrect(...correct,index)
-    if (ans[index] === true) {
-      setCorrect((current) => [...current, index]);
-    } else {
-      setCorrect(correct.filter((item) => item !== index));
+      // }
+      ans[index] = !ans[index];
+      setMultiOption(ans);
+      // setCorrect(...correct,index)
+      if (ans[index] === true) {
+        setCorrect((current) => [...current, index]);
+      } else {
+        setCorrect(correct.filter((item) => item !== index));
+      }
+      console.log(correct);
+    } else if (questionType == 1) {
+      setCorrect([index]);
+      console.log(correct);
     }
-    console.log(correct);
   };
 
   function handleOnDragEnd(array, result) {
@@ -255,6 +264,15 @@ const SetQuestion = (props) => {
       // render();
     }
   }, [correct, editPaper]);
+
+  // useEffect(()=>{
+  //   let a=[];
+  //   for(let i=0;i<=3;i++){
+  //     a.push(correct.includes(i));
+  //   }
+  //   setMultiOption(a);
+  // },[correct])
+
   const DragContain = (props) => {
     console.log("aya bab");
     return (
@@ -339,7 +357,10 @@ const SetQuestion = (props) => {
               justifyContent: "space-evenly",
               width: "100%",
             }}
-            onChange={(e) => setQuestionType(e.target.value)}
+            onChange={(e) => {
+              setQuestionType(e.target.value);
+              setCorrect([]);
+            }}
           >
             <input
               type="radio"
@@ -349,12 +370,7 @@ const SetQuestion = (props) => {
             />
             Single Correct
             <br />
-            <input
-              type="radio"
-              value="2"
-              name="questionType"
-              // defaultChecked={ questionType==="2"?"true":"false" }
-            />
+            <input type="radio" value="2" name="questionType" />
             Multiple Correct
             <br />
             <input type="radio" value="3" name="questionType" />
@@ -433,30 +449,61 @@ const SetQuestion = (props) => {
                 <FormLabel component="legend" style={{ color: "black" }}>
                   Select Options
                 </FormLabel>
-                <FormControlLabel
-                  checked={multiOption[0]}
-                  onChange={() => handleCheck(0)}
-                  control={<Checkbox />}
-                  label="1"
-                />
-                <FormControlLabel
-                  checked={multiOption[1]}
-                  onChange={() => handleCheck(1)}
-                  control={<Checkbox />}
-                  label="2"
-                />
-                <FormControlLabel
-                  checked={multiOption[2]}
-                  onChange={() => handleCheck(2)}
-                  control={<Checkbox />}
-                  label="3"
-                />
-                <FormControlLabel
-                  checked={multiOption[3]}
-                  onChange={() => handleCheck(3)}
-                  control={<Checkbox />}
-                  label="4"
-                />
+                {questionType === "1" ? (
+                  <RadioGroup name="radio-buttons-group">
+                    <FormControlLabel
+                      value="1"
+                      onChange={() => handleCheck(0)}
+                      control={<Radio />}
+                      label="1"
+                    />
+                    <FormControlLabel
+                      value="2"
+                      onChange={() => handleCheck(1)}
+                      control={<Radio />}
+                      label="2"
+                    />
+                    <FormControlLabel
+                      value="3"
+                      onChange={() => handleCheck(2)}
+                      control={<Radio />}
+                      label="3"
+                    />
+                    <FormControlLabel
+                      value="4"
+                      onChange={() => handleCheck(3)}
+                      control={<Radio />}
+                      label="4"
+                    />
+                  </RadioGroup>
+                ) : questionType === "2" ? (
+                  <FormGroup>
+                    <FormControlLabel
+                      checked={multiOption[0]}
+                      onChange={() => handleCheck(0)}
+                      control={<Checkbox />}
+                      label="1"
+                    />
+                    <FormControlLabel
+                      checked={multiOption[1]}
+                      onChange={() => handleCheck(1)}
+                      control={<Checkbox />}
+                      label="2"
+                    />
+                    <FormControlLabel
+                      checked={multiOption[2]}
+                      onChange={() => handleCheck(2)}
+                      control={<Checkbox />}
+                      label="3"
+                    />
+                    <FormControlLabel
+                      checked={multiOption[3]}
+                      onChange={() => handleCheck(3)}
+                      control={<Checkbox />}
+                      label="4"
+                    />
+                  </FormGroup>
+                ) : null}
               </div>
             </div>
           ) : (
@@ -514,45 +561,41 @@ const SetQuestion = (props) => {
       </Container>
       <Container>
         <Row>
-          {allQuestions && 
-          <Col>
-          <Button
-            className="shadow-btn"
-            style={{
-              margin: "30px",
-              width: "30%",
-              background:
-                "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-            }}
-            onClick={()=>{
-              window.location.reload();
-            }}
-          >
-            {allQuestions[QuestionNo-2] !== undefined ? (
-              <Link
-                to={{
-                  pathname: "/PreviousYearSubjectwise/setQuestion",
-                  state: {
-                    id: allQuestions[QuestionNo-2].id,
-                    Class: Class,
-                    Subject: Subject,
-                    Chapter: Chapter,
-                    QuestionNo: QuestionNo - 1,
-                    allQuestions: allQuestions,
-                  },
+          {allQuestions && allQuestions[QuestionNo - 2] !== undefined && (
+            <Col>
+              <Button
+                className="shadow-btn"
+                style={{
+                  margin: "30px",
+                  width: "30%",
+                  background:
+                    "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+                }}
+                onClick={() => {
+                  window.location.reload();
                 }}
               >
-                back
-              </Link>
-            ) : (
-              <Link>
-                back
-              </Link>
-            )}
-          </Button>
-        </Col>
-        }
-          
+                {allQuestions[QuestionNo - 2] !== undefined ? (
+                  <Link
+                    to={{
+                      pathname: "/PreviousYearSubjectwise/setQuestion",
+                      state: {
+                        id: allQuestions[QuestionNo - 2].id,
+                        Class: Class,
+                        Subject: Subject,
+                        Chapter: Chapter,
+                        QuestionNo: QuestionNo - 1,
+                        allQuestions: allQuestions,
+                      },
+                    }}
+                  >
+                    back
+                  </Link>
+                ) : null}
+              </Button>
+            </Col>
+          )}
+
           <Col>
             {Id ? (
               <Button
@@ -582,57 +625,56 @@ const SetQuestion = (props) => {
               </Button>
             )}
           </Col>
-          {allQuestions && 
-          <Col>
-          <Button
-            className="shadow-btn"
-            style={{
-              margin: "30px",
-              width: "30%",
-              background:
-                "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-            }}
-            onClick={()=>{
-              window.location.reload();
-            }}
-          >
-            {/* {console.log("id", allQuestions[QuestionNo].id)} */}
-            {allQuestions[QuestionNo] !== undefined ? (
-              <Link
-                to={{
-                  pathname: "/PreviousYearSubjectwise/setQuestion",
-                  state: {
-                    id: allQuestions[QuestionNo].id,
-                    Class: Class,
-                    Subject: Subject,
-                    Chapter: Chapter,
-                    QuestionNo: QuestionNo + 1,
-                    allQuestions: allQuestions,
-                  },
+          {allQuestions && (
+            <Col>
+              <Button
+                className="shadow-btn"
+                style={{
+                  margin: "30px",
+                  width: "30%",
+                  background:
+                    "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+                }}
+                onClick={() => {
+                  window.location.reload();
                 }}
               >
-                next
-              </Link>
-            ) : (
-              <Link
-                to={{
-                  pathname: "/PreviousYearSubjectwise/setQuestion",
-                  state: {
-                    Class: Class,
-                    Subject: Subject,
-                    Chapter: Chapter,
-                    QuestionNo: allQuestions.length + 1,
-                    allQuestions: allQuestions,
-                  },
-                }}
-              >
-                next
-              </Link>
-            )}
-          </Button>
-        </Col>
-          }
-          
+                {/* {console.log("id", allQuestions[QuestionNo].id)} */}
+                {allQuestions[QuestionNo] !== undefined ? (
+                  <Link
+                    to={{
+                      pathname: "/PreviousYearSubjectwise/setQuestion",
+                      state: {
+                        id: allQuestions[QuestionNo].id,
+                        Class: Class,
+                        Subject: Subject,
+                        Chapter: Chapter,
+                        QuestionNo: QuestionNo + 1,
+                        allQuestions: allQuestions,
+                      },
+                    }}
+                  >
+                    next
+                  </Link>
+                ) : (
+                  <Link
+                    to={{
+                      pathname: "/PreviousYearSubjectwise/setQuestion",
+                      state: {
+                        Class: Class,
+                        Subject: Subject,
+                        Chapter: Chapter,
+                        QuestionNo: allQuestions.length + 1,
+                        allQuestions: allQuestions,
+                      },
+                    }}
+                  >
+                    next
+                  </Link>
+                )}
+              </Button>
+            </Col>
+          )}
         </Row>
       </Container>
     </div>
