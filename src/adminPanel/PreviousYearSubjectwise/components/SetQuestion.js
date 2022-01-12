@@ -20,7 +20,7 @@ import firebase from "firebase";
 import "../components/css/myCss.css";
 import yeardata from "../components/data/year";
 import { render } from "@testing-library/react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const SetQuestion = (props) => {
   var [type, setType] = useState("1");
@@ -37,12 +37,15 @@ const SetQuestion = (props) => {
   var [hint, setHint] = useState("");
   var [year, setYear] = useState("");
   var [college, setCollege] = useState("");
+  var history = useHistory();
   const [multiOption, setMultiOption] = React.useState([
     false,
     false,
     false,
     false,
   ]);
+
+  const numarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   // const Class = props.match.params.Class
   // const Id = props.match.params.Id
@@ -61,6 +64,14 @@ const SetQuestion = (props) => {
   useEffect(() => {
     fetchPaper();
   }, []);
+
+  window.onpopstate = function (e) {
+    history.push(
+      `${
+        Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2
+      }`
+    );
+  };
 
   console.log("allQuestions", allQuestions);
 
@@ -383,23 +394,35 @@ const SetQuestion = (props) => {
         </div>
         <div>
           {questionType === "4" ? (
-            <div style={{ margin: "50px" }}>
+            <div style={{ marginTop: "70px" }}>
               <h4>Enter Answer</h4>
-              <input
+              {/* <input
                 placeholder="Answer"
                 value={correct}
                 onChange={(e) => setCorrect(e.target.value)}
-              ></input>
+              ></input> */}
+              <TextField
+                label="Answer"
+                value={correct}
+                onChange={(e) => setCorrect(e.target.value)}
+              >
+                {correct}
+              </TextField>
             </div>
           ) : questionType === "3" ? (
             <div>
               <h4>Enter Answer</h4>
-              <Form.Control
-                size="lg"
-                type="text"
-                placeholder="Answer"
+              <TextField
+                label="Answer"
+                select
+                value={correct}
                 onChange={(e) => setCorrect(e.target.value)}
-              />
+                style={{ width: "100px", marginRight: "20px" }}
+              >
+                {numarr.map((a) => {
+                  return <MenuItem value={a}>{a}</MenuItem>;
+                })}
+              </TextField>
               <br />
             </div>
           ) : questionType === "1" || questionType === "2" ? (
@@ -669,7 +692,7 @@ const SetQuestion = (props) => {
                       },
                     }}
                   >
-                    next
+                     Add New Question
                   </Link>
                 )}
               </Button>
