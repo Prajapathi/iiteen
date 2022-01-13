@@ -55,7 +55,7 @@ const Typer = (props) => {
           <div>
             <h4>{props.title}</h4>
             <br />
-            <div style={{ wordWrap: "break-word" }}>
+            <div style={{ wordWrap: "break-word"}}>
               {props.info !== "" ? (
                 props.info.map((e, index) => {
                   var { data, type } = e;
@@ -68,7 +68,7 @@ const Typer = (props) => {
                         <Latex>{LaTeX}</Latex>
                       ) : type === "3" ? (
                         <div>
-                          <img src={data} alt="img" />
+                          <img src={data} alt="img" style={{display:'block',marginLeft:"auto",marginRight:"auto"}}/>
                         </div>
                       ) : (
                         <div>{data}</div>
