@@ -344,7 +344,7 @@ const QuestionContent = (props) => {
         )}
       </Container>
 
-      {editBtn === true ? (
+      {/* {editBtn === true ? (
         //   <Router>
         //   <Switch>
         //     <Route path="/edit" exact component={()=>{
@@ -361,7 +361,7 @@ const QuestionContent = (props) => {
         />
       ) : (
         <></>
-      )}
+      )} */}
     </div>
   );
 };

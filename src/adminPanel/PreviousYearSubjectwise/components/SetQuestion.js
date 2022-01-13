@@ -38,6 +38,7 @@ const SetQuestion = (props) => {
   var [year, setYear] = useState("");
   var [college, setCollege] = useState("");
   var history = useHistory();
+  var [count,setCount]=useState(0);
   const [multiOption, setMultiOption] = React.useState([
     false,
     false,
@@ -61,15 +62,25 @@ const SetQuestion = (props) => {
   const Subject = props.location.state.Subject;
   const Chapter = props.location.state.Chapter;
   const allQuestions = props.location.state.allQuestions;
+
   useEffect(() => {
+    // console.log("fetch paper started");
     fetchPaper();
+    // console.log("fetch paper ended");
   }, []);
+
+  // useEffect(()=>{
+  //   async function fetchData(){
+  //     console.log("fetch paper started");
+  //     await fetchPaper();
+  //     console.log("fetch paper ended");
+  //   }
+  //   fetchData();
+  // },[])
 
   window.onpopstate = function (e) {
     history.push(
-      `${
-        Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2
-      }`
+      `${Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2}`
     );
   };
 
@@ -235,6 +246,7 @@ const SetQuestion = (props) => {
   }
 
   async function fetchPaper() {
+    // console.log("fetching data");
     if (Id) {
       const db = firebase.firestore();
       db.collection("PYSV")
@@ -247,6 +259,7 @@ const SetQuestion = (props) => {
         .then((snap) => {
           if (snap.exists) {
             setEditPaper(snap.data());
+            // console.log("data fetched");
           } else {
             alert("no");
           }
@@ -256,11 +269,25 @@ const SetQuestion = (props) => {
           console.log(error);
         });
     }
+    // console.log("came here after fetching data");
+    // console.log(" not inside editpaper",editPaper);
+    // setQuestionDetail(editPaper.question);
+    //   setOption1(editPaper.option1);
+    //   setOption2(editPaper.option2);
+    //   setOption3(editPaper.option3);
+    //   setOption4(editPaper.option4);
+    //   setQuestionType(editPaper.questionType);
+    //   setCorrect(editPaper.correct);
+    //   setYear(editPaper.year);
+    //   setCollege(editPaper.college);
+    //   setHint(editPaper.hint);
+    //   setSolution(editPaper.solution);
   }
 
   useEffect(() => {
-    if (editPaper !== "") {
-      console.log(editPaper);
+    // console.log("inside editpaper but not complete inside");
+    if (editPaper !== "" && count==0) {
+      console.log("inside editpaper",editPaper,count);
       setQuestionDetail(editPaper.question);
       setOption1(editPaper.option1);
       setOption2(editPaper.option2);
@@ -272,9 +299,13 @@ const SetQuestion = (props) => {
       setCollege(editPaper.college);
       setHint(editPaper.hint);
       setSolution(editPaper.solution);
+      // console.log(count);
+      setCount(1);
       // render();
     }
-  }, [correct, editPaper]);
+  }, [
+    correct, editPaper,count
+  ]);
 
   // useEffect(()=>{
   //   let a=[];
@@ -285,7 +316,6 @@ const SetQuestion = (props) => {
   // },[correct])
 
   const DragContain = (props) => {
-    console.log("aya bab");
     return (
       <Container>
         <DragDropContext
@@ -373,7 +403,7 @@ const SetQuestion = (props) => {
               setCorrect([]);
             }}
           >
-            <input
+            {/* <input
               type="radio"
               value="1"
               name="questionType"
@@ -389,12 +419,47 @@ const SetQuestion = (props) => {
             <br />
             <input type="radio" value="4" name="questionType" />
             Numerical
-            <br />
+            <br /> */}
+            <RadioGroup name="radio-buttons-group" row style={{
+              display: "flex",
+              justifyContent: "space-around",
+              width: "100%",
+            }}>
+              <FormControlLabel
+                value="1"
+                // onChange={() => handleCheck(0)}
+                control={<Radio />}
+                label="Single Correct"
+                checked={"1"===questionType}
+                defaultChecked="true"
+              />
+              <FormControlLabel
+                value="2"
+                // onChange={() => handleCheck(1)}
+                control={<Radio />}
+                label="Multiple Correct"
+                checked={"2"===questionType}
+              />
+              <FormControlLabel
+                value="3"
+                // onChange={() => handleCheck(2)}
+                control={<Radio />}
+                label="Integers"
+                checked={"3"===questionType}
+              />
+              <FormControlLabel
+                value="4"
+                // onChange={() => handleCheck(3)}
+                control={<Radio />}
+                label="Numerical"
+                checked={"4"===questionType}
+              />
+            </RadioGroup>
           </div>
         </div>
         <div>
           {questionType === "4" ? (
-            <div style={{ marginTop: "70px" }}>
+            <div>
               <h4>Enter Answer</h4>
               {/* <input
                 placeholder="Answer"
@@ -473,7 +538,7 @@ const SetQuestion = (props) => {
                   Select Options
                 </FormLabel>
                 {questionType === "1" ? (
-                  <RadioGroup name="radio-buttons-group">
+                  <RadioGroup name="radio-buttons-group" row>
                     <FormControlLabel
                       value="1"
                       onChange={() => handleCheck(0)}
@@ -500,7 +565,7 @@ const SetQuestion = (props) => {
                     />
                   </RadioGroup>
                 ) : questionType === "2" ? (
-                  <FormGroup>
+                  <FormGroup row>
                     <FormControlLabel
                       checked={multiOption[0]}
                       onChange={() => handleCheck(0)}
@@ -692,7 +757,7 @@ const SetQuestion = (props) => {
                       },
                     }}
                   >
-                     Add New Question
+                    Add New Question
                   </Link>
                 )}
               </Button>
