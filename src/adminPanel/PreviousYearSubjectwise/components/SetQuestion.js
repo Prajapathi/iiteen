@@ -38,7 +38,7 @@ const SetQuestion = (props) => {
   var [year, setYear] = useState("");
   var [college, setCollege] = useState("");
   var history = useHistory();
-  var [count,setCount]=useState(0);
+  var [count, setCount] = useState(0);
   const [multiOption, setMultiOption] = React.useState([
     false,
     false,
@@ -79,19 +79,19 @@ const SetQuestion = (props) => {
   // },[])
 
   window.onpopstate = function (e) {
-    if(Chapter!==undefined){
+    if (Chapter !== undefined) {
       history.push(
         `${Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2}`
       );
     }
-    
   };
 
-  console.log("allQuestions", allQuestions);
+  // console.log("allQuestions", allQuestions);
 
-  const submitPaper = (e) => {
+  const submitPaper = async (e) => {
     const db = firebase.firestore();
-    db.collection("PYSV")
+    await db
+      .collection("PYSV")
       .doc(Class)
       .collection(Subject)
       .doc(Chapter)
@@ -117,9 +117,11 @@ const SetQuestion = (props) => {
         alert(error.message);
       });
   };
-  const updatePaper = (e) => {
+  const updatePaper = async (e) => {
+    console.log("inside update paper");
     const db = firebase.firestore();
-    db.collection("PYSV")
+    await db
+      .collection("PYSV")
       .doc(Class)
       .collection(Subject)
       .doc(Chapter)
@@ -140,11 +142,13 @@ const SetQuestion = (props) => {
         questionNumber: `${QuestionNo}`,
       })
       .then(() => {
-        alert("Your question has been uploaded to database");
+        alert("Your question has been updated to database");
+        console.log("outside update paper");
       })
       .catch((error) => {
         alert(error.message);
       });
+      // console.log("end of update paper");
   };
 
   const handleCheck = (index) => {
@@ -249,10 +253,10 @@ const SetQuestion = (props) => {
   }
 
   async function fetchPaper() {
-    // console.log("fetching data");
+    console.log("inside fetchPaper");
     if (Id) {
       const db = firebase.firestore();
-      db.collection("PYSV")
+      await db.collection("PYSV")
         .doc(Class)
         .collection(Subject)
         .doc(Chapter)
@@ -272,6 +276,7 @@ const SetQuestion = (props) => {
           console.log(error);
         });
     }
+    console.log("outside fetchPaper");
     // console.log("came here after fetching data");
     // console.log(" not inside editpaper",editPaper);
     // setQuestionDetail(editPaper.question);
@@ -289,8 +294,8 @@ const SetQuestion = (props) => {
 
   useEffect(() => {
     // console.log("inside editpaper but not complete inside");
-    if (editPaper !== "" && count==0) {
-      console.log("inside editpaper",editPaper,count);
+    if (editPaper !== "" && count == 0) {
+      console.log("inside editpaper", editPaper, count);
       setQuestionDetail(editPaper.question);
       setOption1(editPaper.option1);
       setOption2(editPaper.option2);
@@ -306,9 +311,7 @@ const SetQuestion = (props) => {
       setCount(1);
       // render();
     }
-  }, [
-    correct, editPaper,count
-  ]);
+  }, [correct, editPaper, count]);
 
   // useEffect(()=>{
   //   let a=[];
@@ -317,6 +320,15 @@ const SetQuestion = (props) => {
   //   }
   //   setMultiOption(a);
   // },[correct])
+
+  // async function doit(){
+  //   console.log("inside do it");
+  //   const x=await updatePaper();
+  //   const y=await setCount(0);
+  //   const z=await fetchPaper();
+  //   window.location.reload();
+  //   console.log("outside do it");
+  // }
 
   const DragContain = (props) => {
     return (
@@ -423,17 +435,21 @@ const SetQuestion = (props) => {
             <input type="radio" value="4" name="questionType" />
             Numerical
             <br /> */}
-            <RadioGroup name="radio-buttons-group" row style={{
-              display: "flex",
-              justifyContent: "space-around",
-              width: "100%",
-            }}>
+            <RadioGroup
+              name="radio-buttons-group"
+              row
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                width: "100%",
+              }}
+            >
               <FormControlLabel
                 value="1"
                 // onChange={() => handleCheck(0)}
                 control={<Radio />}
                 label="Single Correct"
-                checked={"1"===questionType}
+                checked={"1" === questionType}
                 defaultChecked="true"
               />
               <FormControlLabel
@@ -441,21 +457,21 @@ const SetQuestion = (props) => {
                 // onChange={() => handleCheck(1)}
                 control={<Radio />}
                 label="Multiple Correct"
-                checked={"2"===questionType}
+                checked={"2" === questionType}
               />
               <FormControlLabel
                 value="3"
                 // onChange={() => handleCheck(2)}
                 control={<Radio />}
                 label="Integers"
-                checked={"3"===questionType}
+                checked={"3" === questionType}
               />
               <FormControlLabel
                 value="4"
                 // onChange={() => handleCheck(3)}
                 control={<Radio />}
                 label="Numerical"
-                checked={"4"===questionType}
+                checked={"4" === questionType}
               />
             </RadioGroup>
           </div>
@@ -544,18 +560,21 @@ const SetQuestion = (props) => {
                   <RadioGroup name="radio-buttons-group" row>
                     <FormControlLabel
                       value="1"
+                      checked={correct.includes(0)}
                       onChange={() => handleCheck(0)}
                       control={<Radio />}
                       label="1"
                     />
                     <FormControlLabel
                       value="2"
+                      checked={correct.includes(1)}
                       onChange={() => handleCheck(1)}
                       control={<Radio />}
                       label="2"
                     />
                     <FormControlLabel
                       value="3"
+                      checked={correct.includes(2)}
                       onChange={() => handleCheck(2)}
                       control={<Radio />}
                       label="3"
@@ -570,25 +589,29 @@ const SetQuestion = (props) => {
                 ) : questionType === "2" ? (
                   <FormGroup row>
                     <FormControlLabel
-                      checked={multiOption[0]}
+                      // checked={multiOption[0]}
+                      checked={correct.includes(0)}
                       onChange={() => handleCheck(0)}
                       control={<Checkbox />}
                       label="1"
                     />
                     <FormControlLabel
-                      checked={multiOption[1]}
+                      // checked={multiOption[1]}
+                      checked={correct.includes(1)}
                       onChange={() => handleCheck(1)}
                       control={<Checkbox />}
                       label="2"
                     />
                     <FormControlLabel
-                      checked={multiOption[2]}
+                      // checked={multiOption[2]}
+                      checked={correct.includes(2)}
                       onChange={() => handleCheck(2)}
                       control={<Checkbox />}
                       label="3"
                     />
                     <FormControlLabel
-                      checked={multiOption[3]}
+                      // checked={multiOption[3]}
+                      checked={correct.includes(3)}
                       onChange={() => handleCheck(3)}
                       control={<Checkbox />}
                       label="4"
@@ -654,19 +677,33 @@ const SetQuestion = (props) => {
         <Row>
           {allQuestions && allQuestions[QuestionNo - 2] !== undefined && (
             <Col>
+            {allQuestions[QuestionNo - 2] !== undefined ? (
               <Button
                 className="shadow-btn"
+                component={Link}
+                to={{
+                  pathname: "/PreviousYearSubjectwise/setQuestion",
+                  state: {
+                    id: allQuestions[QuestionNo - 2].id,
+                    Class: Class,
+                    Subject: Subject,
+                    Chapter: Chapter,
+                    QuestionNo: QuestionNo - 1,
+                    allQuestions: allQuestions,
+                  },
+                }}
                 style={{
                   margin: "30px",
                   width: "30%",
                   background:
                     "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
                 }}
-                onClick={() => {
+                onClick={async() => {
+                  await updatePaper();
                   window.location.reload();
                 }}
               >
-                {allQuestions[QuestionNo - 2] !== undefined ? (
+                {/* {allQuestions[QuestionNo - 2] !== undefined ? (
                   <Link
                     to={{
                       pathname: "/PreviousYearSubjectwise/setQuestion",
@@ -679,12 +716,12 @@ const SetQuestion = (props) => {
                         allQuestions: allQuestions,
                       },
                     }}
-                    style={{textDecoration:"none"}}
-                  >
+                    style={{ textDecoration: "none" }}
+                  > */}
                     back
-                  </Link>
-                ) : null}
-              </Button>
+                  {/* </Link>
+                ) : null} */}
+              </Button>) : null} 
             </Col>
           )}
 
@@ -700,7 +737,7 @@ const SetQuestion = (props) => {
                     "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
                 }}
               >
-                Update Paper
+                Update this Question
               </Button>
             ) : (
               <Button
@@ -713,7 +750,7 @@ const SetQuestion = (props) => {
                     "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
                 }}
               >
-                Create New Paper
+                Create this Question
               </Button>
             )}
           </Col>
@@ -721,51 +758,70 @@ const SetQuestion = (props) => {
             <Col>
               <Button
                 className="shadow-btn"
+                component={Link}
+                to={{
+                  pathname: "/PreviousYearSubjectwise/setQuestion",
+                  state: {
+                    id: allQuestions[QuestionNo] !== undefined?allQuestions[QuestionNo].id:undefined,
+                    Class: Class,
+                    Subject: Subject,
+                    Chapter: Chapter,
+                    QuestionNo: allQuestions[QuestionNo] !== undefined?(QuestionNo + 1):(allQuestions.length + 1),
+                    allQuestions: allQuestions,
+                  },
+                }}
                 style={{
                   margin: "30px",
                   width: "30%",
                   background:
                     "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
                 }}
-                onClick={() => {
+                onClick={
+                  async() => {
+                  await updatePaper();
                   window.location.reload();
-                }}
+                }
+              }
               >
                 {/* {console.log("id", allQuestions[QuestionNo].id)} */}
-                {allQuestions[QuestionNo] !== undefined ? (
-                  <Link
-                    to={{
-                      pathname: "/PreviousYearSubjectwise/setQuestion",
-                      state: {
-                        id: allQuestions[QuestionNo].id,
-                        Class: Class,
-                        Subject: Subject,
-                        Chapter: Chapter,
-                        QuestionNo: QuestionNo + 1,
-                        allQuestions: allQuestions,
-                      },
-                    }}
-                    style={{textDecoration:"none"}}
-                  >
-                    next
-                  </Link>
-                ) : (
-                  <Link
-                    to={{
-                      pathname: "/PreviousYearSubjectwise/setQuestion",
-                      state: {
-                        Class: Class,
-                        Subject: Subject,
-                        Chapter: Chapter,
-                        QuestionNo: allQuestions.length + 1,
-                        allQuestions: allQuestions,
-                      },
-                    }}
-                    style={{textDecoration:"none"}}
-                  >
-                    Add New Question
-                  </Link>
-                )}
+                {allQuestions[QuestionNo] !== undefined ? 
+                // (
+                  // <Link
+                  //   to={{
+                  //     pathname: "/PreviousYearSubjectwise/setQuestion",
+                  //     state: {
+                  //       id: allQuestions[QuestionNo].id,
+                  //       Class: Class,
+                  //       Subject: Subject,
+                  //       Chapter: Chapter,
+                  //       QuestionNo: QuestionNo + 1,
+                  //       allQuestions: allQuestions,
+                  //     },
+                  //   }}
+                  //   style={{ textDecoration: "none" }}
+                  // >
+                    "next"
+                  // </Link> 
+                // ) 
+                :
+                //  (
+                  // <Link
+                  //   to={{
+                  //     pathname: "/PreviousYearSubjectwise/setQuestion",
+                  //     state: {
+                  //       Class: Class,
+                  //       Subject: Subject,
+                  //       Chapter: Chapter,
+                  //       QuestionNo: allQuestions.length + 1,
+                  //       allQuestions: allQuestions,
+                  //     },
+                  //   }}
+                  //   style={{ textDecoration: "none" }}
+                  // >
+                    "Add New Question"
+                  // </Link>
+                // )
+                }
               </Button>
             </Col>
           )}
