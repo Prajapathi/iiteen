@@ -182,6 +182,7 @@ const QuestionContent = (props) => {
             onClick={() => {
               fetchPaper(Class, chapter);
             }}
+            
             // ref={selfRef}
           >
             next
@@ -211,7 +212,7 @@ const QuestionContent = (props) => {
                   className="shadow-btn"
                   onClick={() => {
                     setQuestionNo(allQuestions.length + 1);
-                    alert(questionNo);
+                    // alert(questionNo);
                   }}
                   style={{ marginLeft: "300px" }}
                 >
@@ -223,8 +224,10 @@ const QuestionContent = (props) => {
                         Subject: sub,
                         Chapter: chapter,
                         QuestionNo: allQuestions.length + 1,
+                        allQuestions: allQuestions,
                       },
                     }}
+                    style={{textDecoration:"none"}}
                   >
                     Add New Question
                   </Link>
@@ -232,114 +235,134 @@ const QuestionContent = (props) => {
               </Col>
             </Row>
             {console.log("allquestions", allQuestions)}
-            {allQuestions.map((e, index) => {
-              var { id, yr, questions } = e;
-              console.log("year", allQuestions[index].year);
-              return (
-                <div
-                  className="shadow-card"
-                  style={{
-                    marginTop: "20px",
-                    marginBottom: "20px",
-                    position: "relative",
-                  }}
-                >
-                  <h4>Question No: {index + 1} </h4>
-                  <span />
-                  <div style={{ wordWrap: "break-word" }}>
-                    {questions !== "" ? (
-                      questions.map((e, index) => {
-                        var { data, type } = e;
-                        const LaTeX = "$" + data + "$ ";
-                        return (
-                          <div style={{ display: "inline" }}>
-                            {type === "1" ? (
-                              <text>{data} </text>
-                            ) : type === "2" ? (
-                              <Latex>{LaTeX}</Latex>
-                            ) : type === "3" ? (
-                              <div>
-                                <img
-                                  src={data}
-                                  alt="img"
-                                  style={{
-                                    display: "block",
-                                    marginLeft: "auto",
-                                    marginRight: "auto",
-                                  }}
-                                />
-                              </div>
-                            ) : (
-                              <div>
-                                <br />
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-
-                  <Button
-                    className="shadow-btn"
-                    style={{ marginTop: "19px" }}
-                    onClick={() => {
-                      return SetQuestionBtn(index + 1, id);
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              {allQuestions.map((e, index) => {
+                var { id, yr, questions } = e;
+                console.log("year", allQuestions[index].year);
+                return (
+                  <div
+                    className="shadow-card"
+                    style={{
+                      margin: "15px",
+                      position: "relative",
+                      width: "340px",
+                      // minHeight:"260px"
+                      height: "300px",
                     }}
                   >
-                    <Link
-                      to={{
-                        pathname: "/PreviousYearSubjectwise/setQuestion",
-                        state: {
-                          id: id,
-                          Class: Class,
-                          Subject: sub,
-                          Chapter: chapter,
-                          QuestionNo: index + 1,
-                          allQuestions: allQuestions,
-                        },
-                      }}
-                      style={{ textDecoration: "none" }}
-                    >
-                      Edit Question
-                    </Link>
-                    {/* <a href={`/edit/${Class}/${chapter}/${subject}/${questionNo}/${Id}`}>Edit</a> */}
-                  </Button>
+                    <h4>Question No: {index + 1} </h4>
+                    <span />
+                    <div style={{ 
+                      // wordWrap: "break-word",
+                    height:"180px",
+                    overflow:"hidden",
+                    }}>
+                      {questions !== "" ? (
+                        questions.map((e, index) => {
+                          var { data, type } = e;
+                          const LaTeX = "$" + data + "$ ";
+                          return (
+                            <div style={{ display: "inline" }}>
+                              {type === "1" ? (
+                                <text style={{textOverflow:"ellipsis"}}>{data} </text>
+                              ) : type === "2" ? (
+                                <Latex>{LaTeX}</Latex>
+                              ) : type === "3" ? (
+                                <div>
+                                  <img
+                                    src={data}
+                                    alt="img"
+                                    style={{
+                                      display: "block",
+                                      marginLeft: "auto",
+                                      marginRight: "auto",
+                                      height: "100px",
+                                      marginTop: "10px",
+                                    }}
+                                  />
+                                </div>
+                              ) : (
+                                <div>
+                                  <br />
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{position:"relative",height:"30px",position:"absolute",bottom:"14px"}}>
+                      <Button
+                        className="shadow-btn"
+                        style={{
+                          marginTop: "19px",
+                          position: "absolute",
+                          backgroundColor: "white",
+                          bottom: "0px",
+                          left: "0px",
+                        }}
+                        onClick={() => {
+                          return SetQuestionBtn(index + 1, id);
+                        }}
+                      >
+                        <Link
+                          to={{
+                            pathname: "/PreviousYearSubjectwise/setQuestion",
+                            state: {
+                              id: id,
+                              Class: Class,
+                              Subject: sub,
+                              Chapter: chapter,
+                              QuestionNo: index + 1,
+                              allQuestions: allQuestions,
+                            },
+                          }}
+                          style={{ textDecoration: "none" }}
+                        >
+                          Edit
+                        </Link>
+                        {/* <a href={`/edit/${Class}/${chapter}/${subject}/${questionNo}/${Id}`}>Edit</a> */}
+                      </Button>
 
-                  <Row>
-                    <Col>
+                      {/* <Row>
+                      <Col> */}
                       <Button
                         className="shadow-btn"
                         style={{
                           marginTop: "19px",
                           backgroundColor: "white",
                           color: "red",
+                          position: "absolute",
+                          bottom: "0px",
+                          left: "80px",
                         }}
                         onClick={() => {
                           deleteQuestion(id);
                           console.log("it is getting clicked");
                         }}
                       >
-                        Delete Question
+                        Delete
                       </Button>
-                    </Col>
+                      {/* </Col> */}
 
-                    <Col
-                      style={{
-                        textAlign: "right",
-                        position: "absolute",
-                        bottom: "20px",
-                        left: "0",
-                      }}
-                    >
-                      {allQuestions[index].year}
-                    </Col>
-                  </Row>
-                </div>
-              );
-            })}
+                      <div
+                        style={{
+                          textAlign: "right",
+                          position: "absolute",
+                          bottom: "0px",
+                          left: "270px",
+                        }}
+                      >
+                        {allQuestions[index].year}
+                      </div>
+                      {/* </Row> */}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
       </Container>

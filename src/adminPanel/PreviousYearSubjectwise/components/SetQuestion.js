@@ -79,9 +79,12 @@ const SetQuestion = (props) => {
   // },[])
 
   window.onpopstate = function (e) {
-    history.push(
-      `${Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2}`
-    );
+    if(Chapter!==undefined){
+      history.push(
+        `${Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2}`
+      );
+    }
+    
   };
 
   console.log("allQuestions", allQuestions);
@@ -263,7 +266,7 @@ const SetQuestion = (props) => {
           } else {
             alert("no");
           }
-          alert(`${Chapter}, ${Class}, ${Id}`);
+          // alert(`${Chapter}, ${Class}, ${Id}`);
         })
         .catch((error) => {
           console.log(error);
@@ -676,6 +679,7 @@ const SetQuestion = (props) => {
                         allQuestions: allQuestions,
                       },
                     }}
+                    style={{textDecoration:"none"}}
                   >
                     back
                   </Link>
@@ -741,6 +745,7 @@ const SetQuestion = (props) => {
                         allQuestions: allQuestions,
                       },
                     }}
+                    style={{textDecoration:"none"}}
                   >
                     next
                   </Link>
@@ -756,6 +761,7 @@ const SetQuestion = (props) => {
                         allQuestions: allQuestions,
                       },
                     }}
+                    style={{textDecoration:"none"}}
                   >
                     Add New Question
                   </Link>
