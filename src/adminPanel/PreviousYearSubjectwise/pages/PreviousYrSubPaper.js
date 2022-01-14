@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import styl from "../components/css/QuePaper.module.css";
 import "../components/css/myCss.css";
+import { useHistory } from "react-router-dom";
+
+
 
 const PreviousYrSubPaper = () => {
   localStorage.removeItem("Class");
   localStorage.removeItem("chapter");
+  localStorage.removeItem("a");
 
   return (
     <div>

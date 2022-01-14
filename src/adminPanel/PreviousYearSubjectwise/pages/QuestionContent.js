@@ -9,7 +9,8 @@ import Latex from "react-latex-next";
 import { Container, Row, Col } from "react-bootstrap";
 import "../components/css/myCss.css";
 import { Route, Router } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
 
 const QuestionContent = (props) => {
   const [chapter, setChapter] = useState("");
@@ -19,6 +20,7 @@ const QuestionContent = (props) => {
   const [questionNo, setQuestionNo] = useState("1");
   const [Id, setId] = useState("0");
   const [sub, setSub] = useState("11");
+  const history = useHistory();
   // const selfRef = useRef();
 
   function SetQuestionBtn(no, id) {
@@ -182,7 +184,7 @@ const QuestionContent = (props) => {
             onClick={() => {
               fetchPaper(Class, chapter);
             }}
-            
+
             // ref={selfRef}
           >
             next
@@ -227,7 +229,7 @@ const QuestionContent = (props) => {
                         allQuestions: allQuestions,
                       },
                     }}
-                    style={{textDecoration:"none"}}
+                    style={{ textDecoration: "none" }}
                   >
                     Add New Question
                   </Link>
@@ -238,7 +240,7 @@ const QuestionContent = (props) => {
             <div style={{ display: "flex", flexWrap: "wrap" }}>
               {allQuestions.map((e, index) => {
                 var { id, yr, questions } = e;
-                console.log("year", allQuestions[index].year);
+                // console.log("year", allQuestions[index].year);
                 return (
                   <div
                     className="shadow-card"
@@ -252,19 +254,23 @@ const QuestionContent = (props) => {
                   >
                     <h4>Question No: {index + 1} </h4>
                     <span />
-                    <div style={{ 
-                      // wordWrap: "break-word",
-                    height:"180px",
-                    overflow:"hidden",
-                    }}>
+                    <div
+                      style={{
+                        // wordWrap: "break-word",
+                        height: "180px",
+                        overflow: "hidden",
+                      }}
+                    >
                       {questions !== "" ? (
                         questions.map((e, index) => {
                           var { data, type } = e;
                           const LaTeX = "$" + data + "$ ";
                           return (
-                            <div style={{ display: "inline" }}>
+                            <div style={{ display: "inline" }} key={index}>
                               {type === "1" ? (
-                                <text style={{textOverflow:"ellipsis"}}>{data} </text>
+                                <text style={{ textOverflow: "ellipsis" }}>
+                                  {data}{" "}
+                                </text>
                               ) : type === "2" ? (
                                 <Latex>{LaTeX}</Latex>
                               ) : type === "3" ? (
@@ -293,7 +299,14 @@ const QuestionContent = (props) => {
                         <></>
                       )}
                     </div>
-                    <div style={{position:"relative",height:"30px",position:"absolute",bottom:"14px"}}>
+                    <div
+                      style={{
+                        position: "relative",
+                        height: "30px",
+                        position: "absolute",
+                        bottom: "14px",
+                      }}
+                    >
                       <Button
                         className="shadow-btn"
                         style={{

@@ -14,6 +14,8 @@ import {
   FormGroup,
   RadioGroup,
   FormControl,
+  Snackbar,
+  IconButton
 } from "@material-ui/core";
 // import { db } from "./firebase";
 import firebase from "firebase";
@@ -21,6 +23,13 @@ import "../components/css/myCss.css";
 import yeardata from "../components/data/year";
 import { render } from "@testing-library/react";
 import { Link, useHistory } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import 'react-notifications/lib/notifications.css';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+
+
 
 const SetQuestion = (props) => {
   var [type, setType] = useState("1");
@@ -38,6 +47,7 @@ const SetQuestion = (props) => {
   var [year, setYear] = useState("");
   var [college, setCollege] = useState("");
   var history = useHistory();
+  var [editable, setEditable] = useState([]);
   var [count, setCount] = useState(0);
   const [multiOption, setMultiOption] = React.useState([
     false,
@@ -45,6 +55,7 @@ const SetQuestion = (props) => {
     false,
     false,
   ]);
+  // const [a,setA]=useState(false);
 
   const numarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -62,6 +73,7 @@ const SetQuestion = (props) => {
   const Subject = props.location.state.Subject;
   const Chapter = props.location.state.Chapter;
   const allQuestions = props.location.state.allQuestions;
+  
 
   useEffect(() => {
     // console.log("fetch paper started");
@@ -79,11 +91,16 @@ const SetQuestion = (props) => {
   // },[])
 
   window.onpopstate = function (e) {
-    if (Chapter !== undefined) {
+    console.log("pop");
+    if(!localStorage.getItem("a")){
+      // setA(!a);
+      localStorage.setItem("a",true);
+      console.log("just popped");
       history.push(
         `${Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2}`
       );
     }
+    
   };
 
   // console.log("allQuestions", allQuestions);
@@ -111,14 +128,14 @@ const SetQuestion = (props) => {
         questionNumber: `${QuestionNo}`,
       })
       .then(() => {
-        alert("Your question has been uploaded to database");
+        prompt("Your question has been uploaded to database");
       })
       .catch((error) => {
         alert(error.message);
       });
   };
   const updatePaper = async (e) => {
-    console.log("inside update paper");
+    // console.log("inside update paper");
     const db = firebase.firestore();
     await db
       .collection("PYSV")
@@ -142,13 +159,14 @@ const SetQuestion = (props) => {
         questionNumber: `${QuestionNo}`,
       })
       .then(() => {
-        alert("Your question has been updated to database");
-        console.log("outside update paper");
+        // alert("Your question has been updated to database");
+
+        // console.log("outside update paper");
       })
       .catch((error) => {
         alert(error.message);
       });
-      // console.log("end of update paper");
+    // console.log("end of update paper");
   };
 
   const handleCheck = (index) => {
@@ -253,10 +271,11 @@ const SetQuestion = (props) => {
   }
 
   async function fetchPaper() {
-    console.log("inside fetchPaper");
+    // console.log("inside fetchPaper");
     if (Id) {
       const db = firebase.firestore();
-      await db.collection("PYSV")
+      await db
+        .collection("PYSV")
         .doc(Class)
         .collection(Subject)
         .doc(Chapter)
@@ -276,7 +295,8 @@ const SetQuestion = (props) => {
           console.log(error);
         });
     }
-    console.log("outside fetchPaper");
+    // console.log("outside fetchPaper");
+    
     // console.log("came here after fetching data");
     // console.log(" not inside editpaper",editPaper);
     // setQuestionDetail(editPaper.question);
@@ -313,24 +333,64 @@ const SetQuestion = (props) => {
     }
   }, [correct, editPaper, count]);
 
-  // useEffect(()=>{
-  //   let a=[];
-  //   for(let i=0;i<=3;i++){
-  //     a.push(correct.includes(i));
-  //   }
-  //   setMultiOption(a);
-  // },[correct])
+  function Handle(index){
+    if(editable.includes(index)){
+      let arr=[];
+      for(let i=0;i<=editable.length;i++){
+        if(editable[i]!==index){
+          arr.push(editable[i]);
+        }
+      }
+      setEditable(arr);
+    }else{
+      setEditable([...editable,index]);
+    }
+    console.log("editable",editable)
+  }
 
-  // async function doit(){
-  //   console.log("inside do it");
-  //   const x=await updatePaper();
-  //   const y=await setCount(0);
-  //   const z=await fetchPaper();
-  //   window.location.reload();
-  //   console.log("outside do it");
-  // }
-
+  async function Save(droptype,field,index,value){
+    // if(dropType==="question"){
+      console.log("inside save droptype")
+      const temp=[];
+      for(let i=0;i<field.length;i++){
+        if(i===index){
+          var {data,type}=field[i];
+          console.log(data,type,field[i])
+          data=value;
+          temp.push({data,type});
+        }else{
+          temp.push(field[i]);
+        }
+      }
+      if (droptype === "question") {
+        setQuestionDetail(temp);
+      }
+      if (droptype === "option1") {
+        setOption1(temp);
+      }
+      if (droptype === "option2") {
+        setOption2(temp);
+      }
+      if (droptype === "option3") {
+        setOption3(temp);
+      }
+      if (droptype === "option4") {
+        setOption4(temp);
+      }
+      if (droptype === "solution") {
+        setSolution(temp);
+      }
+      if (droptype === "hint") {
+        setHint(temp);
+      }
+      console.log(temp);
+      // console.log(questionDetail);
+    // }
+    console.log("outside save droptype")
+  }
+  
   const DragContain = (props) => {
+    var t=0;
     return (
       <Container>
         <DragDropContext
@@ -347,6 +407,7 @@ const SetQuestion = (props) => {
                 ref={provided.innerRef}
                 style={{ marginTop: "50px" }}
               >
+                {console.log("prop.filed", props.filed)}
                 {props.filed !== "" ? (
                   props.filed.map((e, index) => {
                     var { data } = e;
@@ -357,6 +418,7 @@ const SetQuestion = (props) => {
                         draggableId={keyBla}
                         index={index}
                       >
+                        
                         {(provided) => (
                           <li
                             ref={provided.innerRef}
@@ -364,7 +426,19 @@ const SetQuestion = (props) => {
                             {...provided.dragHandleProps}
                           >
                             <div className="drag-card">
-                              {data}
+                              {/* {console.log(index)} */}
+                              {editable.includes(props.dropType+index) ? (
+                                <input type="text" autoFocus value={data} onChange={(e)=>{
+                                  // setCount(0);
+                                  Save(props.dropType,props.filed,index,e.target.value)
+                                }}></input>
+                              ) : (
+                                data
+                              )}
+                              <button onClick={()=>{Handle(props.dropType+index)}}>
+                                {editable.includes(props.dropType+index)?"save":"edit"}
+                              </button>
+
                               <button
                                 onClick={() =>
                                   deleteElement(index, props.filed)
@@ -390,9 +464,78 @@ const SetQuestion = (props) => {
     );
   };
 
+  // const [open, setOpen] = React.useState(false);
+
+  // const handleClick = () => {
+  //   setOpen(true);
+  // };
+
+  // const handleClose = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
+
+  //   setOpen(false);
+  // };
+
+  // const action = (
+  //   <React.Fragment>
+  //     <Button color="secondary" size="small" onClick={handleClose}>
+  //       UNDO
+  //     </Button>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleClose}
+  //     >
+  //     </IconButton>
+  //   </React.Fragment>
+  // );
+
+  // const notify = () => toast("Your question has been updated to database");
+
+  // const createNotification = (type) => {
+  //     switch (type) {
+  //       case 'info':
+  //         NotificationManager.info('Info message');
+  //         break;
+  //       case 'success':
+  //         NotificationManager.success('Success message', 'Title here');
+  //         break;
+  //       case 'warning':
+  //         NotificationManager.warning('Warning message', 'Close after 3000ms', 3000);
+  //         break;
+  //       case 'error':
+  //         NotificationManager.error('Error message', 'Click me!', 5000, () => {
+  //           alert('callback');
+  //         });
+  //         break;
+      
+  //   }
+  // };
+
   return (
     <div>
       <h1 style={{ textAlign: "center" }}> Question No. - {QuestionNo} </h1>
+      {/* <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Note archived"
+        action={action}
+      /> */}
+      {/* <ToastContainer 
+        position="bottom-left"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      /> */}
       <br />
       <Typer
         info={questionDetail}
@@ -400,7 +543,7 @@ const SetQuestion = (props) => {
         title="question"
       />
 
-      <DragContain filed={questionDetail} />
+      <DragContain filed={questionDetail} dropType="question"/>
 
       {/* ---------------------------------------Question End------------------------------------- */}
 
@@ -517,7 +660,7 @@ const SetQuestion = (props) => {
                   <Typer info={option1} setInfo={setOption1} title="option 1" />
                 </Col>
                 <Col>
-                  <DragContain filed={option1} />
+                  <DragContain filed={option1} dropType="option1"/>
                 </Col>
               </Row>
               <hr />
@@ -526,7 +669,7 @@ const SetQuestion = (props) => {
                   <Typer info={option2} setInfo={setOption2} title="option 2" />
                 </Col>
                 <Col>
-                  <DragContain filed={option2} />
+                  <DragContain filed={option2} dropType="option2"/>
                 </Col>
               </Row>
               <hr />
@@ -535,7 +678,7 @@ const SetQuestion = (props) => {
                   <Typer info={option3} setInfo={setOption3} title="option 3" />
                 </Col>
                 <Col>
-                  <DragContain filed={option3} />
+                  <DragContain filed={option3} dropType="option3"/>
                 </Col>
               </Row>
               <hr />
@@ -544,7 +687,7 @@ const SetQuestion = (props) => {
                   <Typer info={option4} setInfo={setOption4} title="option 4" />
                 </Col>
                 <Col>
-                  <DragContain filed={option4} />
+                  <DragContain filed={option4} dropType="option4"/>
                 </Col>
               </Row>
               <hr />
@@ -633,7 +776,7 @@ const SetQuestion = (props) => {
             <Typer info={solution} setInfo={setSolution} title="Solution" />
           </Col>
           <Col>
-            <DragContain filed={solution} />
+            <DragContain filed={solution} dropType="solution"/>
           </Col>
         </Row>
         <hr />
@@ -642,7 +785,7 @@ const SetQuestion = (props) => {
             <Typer info={hint} setInfo={setHint} title="Hint" />
           </Col>
           <Col>
-            <DragContain filed={hint} />
+            <DragContain filed={hint} dropType="hint"/>
           </Col>
         </Row>
         <hr />
@@ -677,33 +820,34 @@ const SetQuestion = (props) => {
         <Row>
           {allQuestions && allQuestions[QuestionNo - 2] !== undefined && (
             <Col>
-            {allQuestions[QuestionNo - 2] !== undefined ? (
-              <Button
-                className="shadow-btn"
-                component={Link}
-                to={{
-                  pathname: "/PreviousYearSubjectwise/setQuestion",
-                  state: {
-                    id: allQuestions[QuestionNo - 2].id,
-                    Class: Class,
-                    Subject: Subject,
-                    Chapter: Chapter,
-                    QuestionNo: QuestionNo - 1,
-                    allQuestions: allQuestions,
-                  },
-                }}
-                style={{
-                  margin: "30px",
-                  width: "30%",
-                  background:
-                    "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-                }}
-                onClick={async() => {
-                  await updatePaper();
-                  window.location.reload();
-                }}
-              >
-                {/* {allQuestions[QuestionNo - 2] !== undefined ? (
+              {allQuestions[QuestionNo - 2] !== undefined ? (
+                <Button
+                  className="shadow-btn"
+                  component={Link}
+                  to={{
+                    pathname: "/PreviousYearSubjectwise/setQuestion",
+                    state: {
+                      id: allQuestions[QuestionNo - 2].id,
+                      Class: Class,
+                      Subject: Subject,
+                      Chapter: Chapter,
+                      QuestionNo: QuestionNo - 1,
+                      allQuestions: allQuestions,
+                    },
+                  }}
+                  style={{
+                    margin: "30px",
+                    width: "30%",
+                    background:
+                      "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+                  }}
+                  onClick={async () => {
+                    // this.createNotification('success')
+                    await updatePaper();
+                    window.location.reload();
+                  }}
+                >
+                  {/* {allQuestions[QuestionNo - 2] !== undefined ? (
                   <Link
                     to={{
                       pathname: "/PreviousYearSubjectwise/setQuestion",
@@ -718,10 +862,11 @@ const SetQuestion = (props) => {
                     }}
                     style={{ textDecoration: "none" }}
                   > */}
-                    back
+                  back
                   {/* </Link>
                 ) : null} */}
-              </Button>) : null} 
+                </Button>
+              ) : null}
             </Col>
           )}
 
@@ -762,11 +907,17 @@ const SetQuestion = (props) => {
                 to={{
                   pathname: "/PreviousYearSubjectwise/setQuestion",
                   state: {
-                    id: allQuestions[QuestionNo] !== undefined?allQuestions[QuestionNo].id:undefined,
+                    id:
+                      allQuestions[QuestionNo] !== undefined
+                        ? allQuestions[QuestionNo].id
+                        : undefined,
                     Class: Class,
                     Subject: Subject,
                     Chapter: Chapter,
-                    QuestionNo: allQuestions[QuestionNo] !== undefined?(QuestionNo + 1):(allQuestions.length + 1),
+                    QuestionNo:
+                      allQuestions[QuestionNo] !== undefined
+                        ? QuestionNo + 1
+                        : allQuestions.length + 1,
                     allQuestions: allQuestions,
                   },
                 }}
@@ -776,51 +927,49 @@ const SetQuestion = (props) => {
                   background:
                     "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
                 }}
-                onClick={
-                  async() => {
+                onClick={async () => {
                   await updatePaper();
                   window.location.reload();
-                }
-              }
+                }}
               >
                 {/* {console.log("id", allQuestions[QuestionNo].id)} */}
-                {allQuestions[QuestionNo] !== undefined ? 
-                // (
-                  // <Link
-                  //   to={{
-                  //     pathname: "/PreviousYearSubjectwise/setQuestion",
-                  //     state: {
-                  //       id: allQuestions[QuestionNo].id,
-                  //       Class: Class,
-                  //       Subject: Subject,
-                  //       Chapter: Chapter,
-                  //       QuestionNo: QuestionNo + 1,
-                  //       allQuestions: allQuestions,
-                  //     },
-                  //   }}
-                  //   style={{ textDecoration: "none" }}
-                  // >
-                    "next"
-                  // </Link> 
-                // ) 
-                :
-                //  (
-                  // <Link
-                  //   to={{
-                  //     pathname: "/PreviousYearSubjectwise/setQuestion",
-                  //     state: {
-                  //       Class: Class,
-                  //       Subject: Subject,
-                  //       Chapter: Chapter,
-                  //       QuestionNo: allQuestions.length + 1,
-                  //       allQuestions: allQuestions,
-                  //     },
-                  //   }}
-                  //   style={{ textDecoration: "none" }}
-                  // >
-                    "Add New Question"
+                {
+                  allQuestions[QuestionNo] !== undefined
+                    ? // (
+                      // <Link
+                      //   to={{
+                      //     pathname: "/PreviousYearSubjectwise/setQuestion",
+                      //     state: {
+                      //       id: allQuestions[QuestionNo].id,
+                      //       Class: Class,
+                      //       Subject: Subject,
+                      //       Chapter: Chapter,
+                      //       QuestionNo: QuestionNo + 1,
+                      //       allQuestions: allQuestions,
+                      //     },
+                      //   }}
+                      //   style={{ textDecoration: "none" }}
+                      // >
+                      "next"
+                    : // </Link>
+                      // )
+                      //  (
+                      // <Link
+                      //   to={{
+                      //     pathname: "/PreviousYearSubjectwise/setQuestion",
+                      //     state: {
+                      //       Class: Class,
+                      //       Subject: Subject,
+                      //       Chapter: Chapter,
+                      //       QuestionNo: allQuestions.length + 1,
+                      //       allQuestions: allQuestions,
+                      //     },
+                      //   }}
+                      //   style={{ textDecoration: "none" }}
+                      // >
+                      "Add New Question"
                   // </Link>
-                // )
+                  // )
                 }
               </Button>
             </Col>
