@@ -13,9 +13,6 @@ import {
   Radio,
   FormGroup,
   RadioGroup,
-  FormControl,
-  Snackbar,
-  IconButton,
 } from "@material-ui/core";
 // import { db } from "./firebase";
 import firebase from "firebase";
@@ -23,8 +20,9 @@ import "../components/css/myCss.css";
 import yeardata from "../components/data/year";
 import { render } from "@testing-library/react";
 import { Link, useHistory } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { browserHistory } from 'react-router';
+
+
 
 const SetQuestion = (props) => {
   var [type, setType] = useState("1");
@@ -50,7 +48,8 @@ const SetQuestion = (props) => {
     false,
     false,
   ]);
-  // const [a,setA]=useState(false);
+  const [allQuestions, setAllQuestions] = useState("");
+  
 
   const numarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -67,12 +66,11 @@ const SetQuestion = (props) => {
   const QuestionNo = props.location.state.QuestionNo;
   const Subject = props.location.state.Subject;
   const Chapter = props.location.state.Chapter;
-  const allQuestions = props.location.state.allQuestions;
+  // const allQuestions = props.location.state.allQuestions;
 
   useEffect(() => {
-    // console.log("fetch paper started");
     fetchPaper();
-    // console.log("fetch paper ended");
+    fetchAllQuestions();
   }, []);
 
   // useEffect(()=>{
@@ -84,17 +82,17 @@ const SetQuestion = (props) => {
   //   fetchData();
   // },[])
 
-  window.onpopstate = function (e) {
-    console.log("pop");
-    if (!localStorage.getItem("a")) {
-      // setA(!a);
-      localStorage.setItem("a", true);
-      console.log("just popped");
-      history.push(
-        `${Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2}`
-      );
-    }
-  };
+  // window.onpopstate = function (e) {
+  //   console.log("pop");
+  //   if (!localStorage.getItem("a")) {
+  //     // setA(!a);
+  //     localStorage.setItem("a", true);
+  //     console.log("just popped");
+  //     history.push(
+  //       `${Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2}`
+  //     );
+  //   }
+  // };
 
   // window.addEventListener(
   //   "popstate",
@@ -323,6 +321,30 @@ const SetQuestion = (props) => {
     //   setSolution(editPaper.solution);
   }
 
+  async function fetchAllQuestions() {
+    const db = firebase.firestore();
+    await db
+      .collection("PYSV")
+      .doc(Class)
+      .collection(Subject)
+      .doc(Chapter)
+      .collection("question")
+      .orderBy("questionNumber")
+      .onSnapshot(function (querySnapshot) {
+        var array = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          year: doc.data().year,
+          questions: doc.data().question,
+          quesno:doc.data().questionNumber,
+        }));
+        array.sort((a, b) => {
+          return a.quesno - b.quesno;
+      });
+      setAllQuestions(array);
+      });
+    console.log(allQuestions);
+  }
+
   useEffect(() => {
     // console.log("inside editpaper but not complete inside");
     if (editPaper !== "" && count == 0) {
@@ -418,7 +440,7 @@ const SetQuestion = (props) => {
                 ref={provided.innerRef}
                 style={{ marginTop: "50px" }}
               >
-                {console.log("prop.filed", props.filed)}
+                {/* {console.log("prop.filed", props.filed)} */}
                 {props.filed !== "" ? (
                   props.filed.map((e, index) => {
                     var { data } = e;
@@ -451,7 +473,7 @@ const SetQuestion = (props) => {
                                       e.target.value
                                     );
                                   }}
-                                  style={{width:"100%"}}
+                                  style={{ width: "100%" }}
                                 ></textarea>
                               ) : (
                                 data
@@ -461,7 +483,7 @@ const SetQuestion = (props) => {
                                 onClick={() => {
                                   Handle(props.dropType + index);
                                 }}
-                                style={{ margin: "5px", }}
+                                style={{ margin: "5px" }}
                               >
                                 {editable.includes(props.dropType + index)
                                   ? "save"
@@ -473,7 +495,7 @@ const SetQuestion = (props) => {
                                 onClick={() =>
                                   deleteElement(index, props.filed)
                                 }
-                                style={{ margin: "5px", }}
+                                style={{ margin: "5px" }}
                               >
                                 Delete
                               </button>
@@ -797,7 +819,7 @@ const SetQuestion = (props) => {
                       Subject: Subject,
                       Chapter: Chapter,
                       QuestionNo: QuestionNo - 1,
-                      allQuestions: allQuestions,
+                      // allQuestions: allQuestions,
                     },
                   }}
                   style={{
@@ -807,41 +829,11 @@ const SetQuestion = (props) => {
                       "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
                   }}
                   onClick={async () => {
-                    // this.createNotification('success')
-                    toast.success(
-                      "Your question has been updated to database",
-                      {
-                        position: "top-right",
-                        autoClose: 6000,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                      }
-                    );
                     await updatePaper();
                     window.location.reload();
                   }}
                 >
-                  {/* {allQuestions[QuestionNo - 2] !== undefined ? (
-                  <Link
-                    to={{
-                      pathname: "/PreviousYearSubjectwise/setQuestion",
-                      state: {
-                        id: allQuestions[QuestionNo - 2].id,
-                        Class: Class,
-                        Subject: Subject,
-                        Chapter: Chapter,
-                        QuestionNo: QuestionNo - 1,
-                        allQuestions: allQuestions,
-                      },
-                    }}
-                    style={{ textDecoration: "none" }}
-                  > */}
                   back
-                  {/* </Link>
-                ) : null} */}
                 </Button>
               ) : null}
             </Col>
@@ -885,18 +877,18 @@ const SetQuestion = (props) => {
                 to={{
                   pathname: "/PreviousYearSubjectwise/setQuestion",
                   state: {
-                    id:
-                      allQuestions[QuestionNo] !== undefined
-                        ? allQuestions[QuestionNo].id
-                        : undefined,
+                    id: allQuestions[QuestionNo],
+                    // allQuestions[QuestionNo] !== undefined
+                    //   ? allQuestions[QuestionNo].id
+                    //   : undefined,
                     Class: Class,
                     Subject: Subject,
                     Chapter: Chapter,
-                    QuestionNo:
-                      allQuestions[QuestionNo] !== undefined
-                        ? QuestionNo + 1
-                        : allQuestions.length + 1,
-                    allQuestions: allQuestions,
+                    QuestionNo: QuestionNo + 1,
+                    // allQuestions[QuestionNo] !== undefined
+                    //   ? QuestionNo + 1
+                    //   : allQuestions.length + 2,
+                    // allQuestions: allQuestions,
                   },
                 }}
                 style={{
@@ -906,49 +898,17 @@ const SetQuestion = (props) => {
                     "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
                 }}
                 onClick={async () => {
-                  (allQuestions[QuestionNo] !== undefined)?await updatePaper():await submitPaper()
+                  if (Id !== undefined) {
+                    await updatePaper();
+                  } else {
+                    await submitPaper();
+                  }
+                  // props.setQuestionNo(allQuestions.length + 1);
+                  // setQuestionNo(allQuestions.length + 1);
                   window.location.reload();
                 }}
               >
-                {/* {console.log("id", allQuestions[QuestionNo].id)} */}
-                {
-                  allQuestions[QuestionNo] !== undefined
-                    ? // (
-                      // <Link
-                      //   to={{
-                      //     pathname: "/PreviousYearSubjectwise/setQuestion",
-                      //     state: {
-                      //       id: allQuestions[QuestionNo].id,
-                      //       Class: Class,
-                      //       Subject: Subject,
-                      //       Chapter: Chapter,
-                      //       QuestionNo: QuestionNo + 1,
-                      //       allQuestions: allQuestions,
-                      //     },
-                      //   }}
-                      //   style={{ textDecoration: "none" }}
-                      // >
-                      "next"
-                    : // </Link>
-                      // )
-                      //  (
-                      // <Link
-                      //   to={{
-                      //     pathname: "/PreviousYearSubjectwise/setQuestion",
-                      //     state: {
-                      //       Class: Class,
-                      //       Subject: Subject,
-                      //       Chapter: Chapter,
-                      //       QuestionNo: allQuestions.length + 1,
-                      //       allQuestions: allQuestions,
-                      //     },
-                      //   }}
-                      //   style={{ textDecoration: "none" }}
-                      // >
-                      "Add New Question"
-                  // </Link>
-                  // )
-                }
+                {Id !== undefined ? "next" : "Add New Question"}
               </Button>
             </Col>
           )}

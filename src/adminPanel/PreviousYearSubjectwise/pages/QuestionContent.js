@@ -10,7 +10,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import "../components/css/myCss.css";
 import { Route, Router } from "react-router";
 import { Link, useHistory } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 
 const QuestionContent = (props) => {
   const [chapter, setChapter] = useState("");
@@ -77,13 +77,16 @@ const QuestionContent = (props) => {
       .collection("question")
       .orderBy("questionNumber")
       .onSnapshot(function (querySnapshot) {
-        setAllQuestions(
-          querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            year: doc.data().year,
-            questions: doc.data().question,
-          }))
-        );
+        var array = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          year: doc.data().year,
+          questions: doc.data().question,
+          quesno: doc.data().questionNumber,
+        }));
+        array.sort((a, b) => {
+          return a.quesno - b.quesno;
+        });
+        setAllQuestions(array);
       });
     console.log(allQuestions);
   }
@@ -226,7 +229,8 @@ const QuestionContent = (props) => {
                         Subject: sub,
                         Chapter: chapter,
                         QuestionNo: allQuestions.length + 1,
-                        allQuestions: allQuestions,
+                        // allQuestions: allQuestions,
+                        // setQuestionNo:setQuestionNo,
                       },
                     }}
                     style={{ textDecoration: "none" }}
@@ -329,7 +333,7 @@ const QuestionContent = (props) => {
                               Subject: sub,
                               Chapter: chapter,
                               QuestionNo: index + 1,
-                              allQuestions: allQuestions,
+                              // allQuestions: allQuestions,
                             },
                           }}
                           style={{ textDecoration: "none" }}
