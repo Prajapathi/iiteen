@@ -35,6 +35,9 @@ export default function Question(props) {
         setQuestion(props.question?props.question.question:sampleQues)
     }, [props.question])
 
+    console.log(question,solution,hint)
+    console.log("props.questions",props.question)
+
     return (
         <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
             <Row noGutters  >
@@ -42,6 +45,7 @@ export default function Question(props) {
                         <QuestionSection number={props.number} data={question}/>
                     </Col>
                     <Col xs={6}>
+                        {console.log("in question.js",props.number)}
                         {props.type=="subjectwise"?
                             <SubjectwiseChoiceSection
                                 data={props.question} 

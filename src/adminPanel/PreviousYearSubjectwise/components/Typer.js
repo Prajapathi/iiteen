@@ -61,7 +61,7 @@ const Typer = (props) => {
                   var { data, type } = e;
                   const LaTeX = "$" + data + "$ ";
                   return (
-                    <div style={{ display: "inline" }}>
+                    <div style={{ display: "inline" }} key={index}>
                       {type === "1" ? (
                         <text>{data} </text>
                       ) : type === "2" ? (

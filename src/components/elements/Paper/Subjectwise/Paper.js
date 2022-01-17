@@ -12,20 +12,23 @@ export function Paper(props) {
     const history = useHistory();
     const [palleteArray, setPalleteArray] = React.useState([])
     const [questions, setQuestions] = React.useState([])
+    const [answers, setAnswers] = React.useState([])
     const [index, setIndex] = React.useState(0)
 
+    console.log(props);
     React.useEffect(() => {
         //if user is not navigating through MockTestCard then redirect to home
         let verifyPaper = localStorage.getItem("PaperName")
-        if (verifyPaper == null || verifyPaper != "Subjectwise") {
+        if (verifyPaper == null || (verifyPaper != "Subjectwise" && verifyPaper!="previousyearSubjectwise")) {
             history.push('/Subjectwise')
         }
-        localStorage.removeItem("PaperName")
+        // localStorage.removeItem("PaperName")
 
         console.log("lll", props.paper)
         setQuestions(props.paper.questions)
+        setAnswers(props.answers)
         const a = [];
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < props.answers.length; i++) {
             a.push(0)
         }
         setPalleteArray(a);
@@ -46,11 +49,14 @@ export function Paper(props) {
                 <div noGutters style={{ marginLeft: 0, marginRight: 0, display: 'flex' }} >
 
                     <div style={{ width: '80%' }} >
+                        {console.log("props",props
+                        // ,questions[index].number,questions[index].Questionnumber
+                        )}
                         <Question key={index}
                             type={"subjectwise"}
                             question={questions ? questions[index] : []}
                             noOfQuestions={25}
-                            number={questions && questions[index] ? questions[index].number : 0}
+                            number={answers && answers[index] ? answers[index].number+1 : 0}
                             goToPrevQuestion={() => setIndex(index - 1)}
                             goToNextQuestion={() => setIndex(index + 1)}
                         />
@@ -61,7 +67,7 @@ export function Paper(props) {
                             {
                                 palleteArray.map((text, ind) => (
                                     <div className="page-no"
-                                        style={{
+                                    style={{
                                             background: props.answers[ind].isBookmarked ? '#ff9700' :
                                                 ((props.answers[ind].isAnswered) ? '#3B95C2' : 'white'),
                                             color: props.answers[ind].isBookmarked || (props.answers[ind].isAnswered) ? "white" : "black",

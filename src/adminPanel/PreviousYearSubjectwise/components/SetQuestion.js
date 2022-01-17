@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import Latex from "react-latex-next";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -13,6 +13,7 @@ import {
   Radio,
   FormGroup,
   RadioGroup,
+  TextareaAutosize,
 } from "@material-ui/core";
 // import { db } from "./firebase";
 import firebase from "firebase";
@@ -20,9 +21,7 @@ import "../components/css/myCss.css";
 import yeardata from "../components/data/year";
 import { render } from "@testing-library/react";
 import { Link, useHistory } from "react-router-dom";
-import { browserHistory } from 'react-router';
-
-
+import { browserHistory } from "react-router";
 
 const SetQuestion = (props) => {
   var [type, setType] = useState("1");
@@ -32,7 +31,7 @@ const SetQuestion = (props) => {
   var [option2, setOption2] = useState("");
   var [option3, setOption3] = useState("");
   var [option4, setOption4] = useState("");
-  var [questionType, setQuestionType] = useState("1");
+  var [questionType, setQuestionType] = useState("4");
   var [correct, setCorrect] = useState([]);
   var [editPaper, setEditPaper] = useState("");
   var [solution, setSolution] = useState("");
@@ -49,7 +48,11 @@ const SetQuestion = (props) => {
     false,
   ]);
   const [allQuestions, setAllQuestions] = useState("");
-  
+
+  const [locationKeys, setLocationKeys] = useState([]);
+
+  const ref = useRef();
+  // const [data2,setData2]=useState("");
 
   const numarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -63,9 +66,11 @@ const SetQuestion = (props) => {
   // console.log(props.location.state);
   const Class = props.location.state.Class;
   const Id = props.location.state.id;
+  // this QuestionNo here is like index to the allQuestion array it is not the questionNo of the database
   const QuestionNo = props.location.state.QuestionNo;
   const Subject = props.location.state.Subject;
   const Chapter = props.location.state.Chapter;
+  // console.log(Class,Id,QuestionNo,Subject,Chapter);
   // const allQuestions = props.location.state.allQuestions;
 
   useEffect(() => {
@@ -94,6 +99,36 @@ const SetQuestion = (props) => {
   //   }
   // };
 
+  useEffect(() => {
+    return history.listen((location) => {
+      if (history.action === "PUSH") {
+        setLocationKeys([location.key]);
+      }
+
+      if (history.action === "POP") {
+        if (locationKeys[1] === location.key) {
+          setLocationKeys(([_, ...keys]) => keys);
+
+          // Handle forward event
+        } else {
+          setLocationKeys((keys) => [location.key, ...keys]);
+
+          // Handle back event
+
+          // console.log("pop");
+          // if (!localStorage.getItem("a")) {
+          //   // setA(!a);
+          //   localStorage.setItem("a", true);
+          //   console.log("just popped");
+          history.push(
+            `${Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2}`
+          );
+          // }
+        }
+      }
+    });
+  }, [locationKeys, Subject]);
+
   // window.addEventListener(
   //   "popstate",
   //   (event) => {
@@ -116,6 +151,7 @@ const SetQuestion = (props) => {
   // console.log("allQuestions", allQuestions);
 
   const submitPaper = async (e) => {
+    // const option=[option1,option2,option3,option4];
     const db = firebase.firestore();
     await db
       .collection("PYSV")
@@ -125,26 +161,31 @@ const SetQuestion = (props) => {
       .collection("question")
       .add({
         question: questionDetail,
-        questionType: questionType,
+        answerType: questionType,
         option2: option2,
         option1: option1,
         option3: option3,
         option4: option4,
-        correct: correct,
+        // option:option,
+        answer: correct,
         hint: hint,
         solution: solution,
         year: year,
         college: college,
-        questionNumber: `${QuestionNo}`,
+        number: `${QuestionNo}`,
       })
       .then(() => {
-        alert("Your question has been uploaded to database");
+        console.log(
+          "SUBMITTED",
+          "     Your question has been uploaded to database"
+        );
       })
       .catch((error) => {
         alert(error.message);
       });
   };
   const updatePaper = async (e) => {
+    // const option=[option1,option2,option3,option4];
     // console.log("inside update paper");
     const db = firebase.firestore();
     await db
@@ -155,22 +196,38 @@ const SetQuestion = (props) => {
       .collection("question")
       .doc(Id)
       .update({
+        // question: questionDetail,
+        // questionType: questionType,
+        // option2: option2,
+        // option1: option1,
+        // option3: option3,
+        // option4: option4,
+        // correct: correct,
+        // solution: solution,
+        // hint: hint,
+        // year: year,
+        // college: college,
+        // questionNumber: `${QuestionNo}`,
+
         question: questionDetail,
-        questionType: questionType,
+        answerType: questionType,
         option2: option2,
         option1: option1,
         option3: option3,
         option4: option4,
-        correct: correct,
-        solution: solution,
+        // option:option,
+        answer: correct,
         hint: hint,
+        solution: solution,
         year: year,
         college: college,
-        questionNumber: `${QuestionNo}`,
+        number: `${QuestionNo}`,
       })
       .then(() => {
-        // alert("Your question has been updated to database");
-        // console.log("outside update paper");
+        console.log(
+          "UPDATED",
+          "     Your question has been updated to database"
+        );
       })
       .catch((error) => {
         alert(error.message);
@@ -179,7 +236,7 @@ const SetQuestion = (props) => {
   };
 
   const handleCheck = (index) => {
-    if (questionType == 2) {
+    if (questionType == 5) {
       const ans = [...multiOption];
       // if(ans[index]===true){
 
@@ -193,7 +250,7 @@ const SetQuestion = (props) => {
         setCorrect(correct.filter((item) => item !== index));
       }
       console.log(correct);
-    } else if (questionType == 1) {
+    } else if (questionType == 4) {
       setCorrect([index]);
       console.log(correct);
     }
@@ -329,18 +386,18 @@ const SetQuestion = (props) => {
       .collection(Subject)
       .doc(Chapter)
       .collection("question")
-      .orderBy("questionNumber")
+      .orderBy("number")
       .onSnapshot(function (querySnapshot) {
         var array = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           year: doc.data().year,
           questions: doc.data().question,
-          quesno:doc.data().questionNumber,
+          quesno: doc.data().number,
         }));
         array.sort((a, b) => {
           return a.quesno - b.quesno;
-      });
-      setAllQuestions(array);
+        });
+        setAllQuestions(array);
       });
     console.log(allQuestions);
   }
@@ -354,8 +411,8 @@ const SetQuestion = (props) => {
       setOption2(editPaper.option2);
       setOption3(editPaper.option3);
       setOption4(editPaper.option4);
-      setQuestionType(editPaper.questionType);
-      setCorrect(editPaper.correct);
+      setQuestionType(editPaper.answerType);
+      setCorrect(editPaper.answer);
       setYear(editPaper.year);
       setCollege(editPaper.college);
       setHint(editPaper.hint);
@@ -395,6 +452,7 @@ const SetQuestion = (props) => {
         temp.push(field[i]);
       }
     }
+
     if (droptype === "question") {
       setQuestionDetail(temp);
     }
@@ -420,7 +478,18 @@ const SetQuestion = (props) => {
     // console.log(questionDetail);
     // }
     console.log("outside save droptype");
+    // return temp;
   }
+  //
+  //   function boldText() {
+  //     var start = ref.selectionStart;
+  //     var end = ref.selectionEnd;
+  //     var sel = ref.value.substring(start, end);
+  //     var finText = ref.value.substring(0, start) + '[b]' + sel + '[/b]' + ref.value.substring(end);
+  //     ref.value = finText;
+  //     ref.focus();
+  // }
+  //
 
   const DragContain = (props) => {
     var t = 0;
@@ -444,11 +513,12 @@ const SetQuestion = (props) => {
                 {props.filed !== "" ? (
                   props.filed.map((e, index) => {
                     var { data } = e;
-                    var keyBla = data + index;
+                    var keyBla = props.dropType + index;
+                    // setData2(data);
                     return (
                       <Draggable
-                        key={keyBla}
-                        draggableId={keyBla}
+                        key={index}
+                        draggableId="draggableid"
                         index={index}
                       >
                         {(provided) => (
@@ -458,47 +528,94 @@ const SetQuestion = (props) => {
                             {...provided.dragHandleProps}
                           >
                             <div className="drag-card">
-                              {/* {console.log(index)} */}
-                              {editable.includes(props.dropType + index) ? (
-                                <textarea
-                                  type="text"
-                                  autoFocus
-                                  value={data}
-                                  onChange={(e) => {
-                                    // setCount(0);
-                                    Save(
-                                      props.dropType,
-                                      props.filed,
-                                      index,
-                                      e.target.value
-                                    );
-                                  }}
-                                  style={{ width: "100%" }}
-                                ></textarea>
-                              ) : (
-                                data
-                              )}
-                              <button
-                                className="dragButton"
-                                onClick={() => {
-                                  Handle(props.dropType + index);
+                              {/* <form
+                                onSubmit={(elm) => {
+                                  elm.preventDefault();
+                                  Save(
+                                    props.dropType,
+                                    props.filed,
+                                    index,
+                                    e.target.value
+                                  );
                                 }}
-                                style={{ margin: "5px" }}
-                              >
-                                {editable.includes(props.dropType + index)
-                                  ? "save"
-                                  : "edit"}
-                              </button>
+                              > */}
+                                {/* {console.log(index)} */}
+                                {editable.includes(props.dropType + index) ? (
+                                  <input
+                                    ref={ref}
+                                    value={data}
+                                    onChange={(e) => {
+                                      // setCount(0);
 
-                              <button
-                                className="dragButton"
-                                onClick={() =>
-                                  deleteElement(index, props.filed)
-                                }
-                                style={{ margin: "5px" }}
-                              >
-                                Delete
-                              </button>
+                                      // const temp=await
+                                      // if (
+                                      //   !editable.includes(
+                                      //     props.dropType + index
+                                      //   )
+                                      // ) {
+                                        Save(
+                                          props.dropType,
+                                          props.filed,
+                                          index,
+                                          e.target.value
+                                        );
+                                      // }
+
+                                      // console.log(temp);
+
+                                      //
+                                      // if (props.droptype === "question") {
+                                      //   setQuestionDetail(temp);
+                                      // }
+                                      // if (props.droptype === "option1") {
+                                      //   setOption1(temp);
+                                      // }
+                                      // if (props.droptype === "option2") {
+                                      //   setOption2(temp);
+                                      // }
+                                      // if (props.droptype === "option3") {
+                                      //   setOption3(temp);
+                                      // }
+                                      // if (props.droptype === "option4") {
+                                      //   setOption4(temp);
+                                      // }
+                                      // if (props.droptype === "solution") {
+                                      //   setSolution(temp);
+                                      // }
+                                      // if (props.droptype === "hint") {
+                                      //   setHint(temp);
+                                      // }
+                                      //
+                                      // boldText();
+                                    }}
+                                    style={{ width: "100%" }}
+                                  ></input>
+                                ) : (
+                                  data
+                                )}
+                                <button
+                                  className="dragButton"
+                                  // type="submit"
+                                  onClick={() => {
+                                    Handle(props.dropType + index);
+                                  }}
+                                  style={{ margin: "5px" }}
+                                >
+                                  {editable.includes(props.dropType + index)
+                                    ? "save"
+                                    : "edit"}
+                                </button>
+
+                                <button
+                                  className="dragButton"
+                                  onClick={() =>
+                                    deleteElement(index, props.filed)
+                                  }
+                                  style={{ margin: "5px" }}
+                                >
+                                  Delete
+                                </button>
+                              {/* </form> */}
                             </div>
                           </li>
                         )}
@@ -572,39 +689,39 @@ const SetQuestion = (props) => {
               }}
             >
               <FormControlLabel
-                value="1"
+                value="4"
                 // onChange={() => handleCheck(0)}
                 control={<Radio />}
                 label="Single Correct"
-                checked={"1" === questionType}
+                checked={"4" === questionType}
                 defaultChecked="true"
               />
               <FormControlLabel
-                value="2"
+                value="5"
                 // onChange={() => handleCheck(1)}
                 control={<Radio />}
                 label="Multiple Correct"
-                checked={"2" === questionType}
+                checked={"5" === questionType}
               />
               <FormControlLabel
-                value="3"
+                value="1"
                 // onChange={() => handleCheck(2)}
                 control={<Radio />}
                 label="Integers"
-                checked={"3" === questionType}
+                checked={"1" === questionType}
               />
               <FormControlLabel
-                value="4"
+                value="2"
                 // onChange={() => handleCheck(3)}
                 control={<Radio />}
                 label="Numerical"
-                checked={"4" === questionType}
+                checked={"2" === questionType}
               />
             </RadioGroup>
           </div>
         </div>
         <div>
-          {questionType === "4" ? (
+          {questionType === "2" ? (
             <div>
               <h4>Enter Answer</h4>
               {/* <input
@@ -623,7 +740,7 @@ const SetQuestion = (props) => {
                 {correct}
               </TextField>
             </div>
-          ) : questionType === "3" ? (
+          ) : questionType === "1" ? (
             <div>
               <h4>Enter Answer</h4>
               <TextField
@@ -633,13 +750,17 @@ const SetQuestion = (props) => {
                 onChange={(e) => setCorrect(e.target.value)}
                 style={{ width: "100px", marginRight: "20px" }}
               >
-                {numarr.map((a) => {
-                  return <MenuItem value={a}>{a}</MenuItem>;
+                {numarr.map((a, index) => {
+                  return (
+                    <MenuItem value={a} key={index}>
+                      {a}
+                    </MenuItem>
+                  );
                 })}
               </TextField>
               <br />
             </div>
-          ) : questionType === "1" || questionType === "2" ? (
+          ) : questionType === "4" || questionType === "5" ? (
             <div>
               <hr />
               <Row>
@@ -686,7 +807,7 @@ const SetQuestion = (props) => {
                 <FormLabel component="legend" style={{ color: "black" }}>
                   Select Options
                 </FormLabel>
-                {questionType === "1" ? (
+                {questionType === "4" ? (
                   <RadioGroup name="radio-buttons-group" row>
                     <FormControlLabel
                       value="1"
@@ -716,7 +837,7 @@ const SetQuestion = (props) => {
                       label="4"
                     />
                   </RadioGroup>
-                ) : questionType === "2" ? (
+                ) : questionType === "5" ? (
                   <FormGroup row>
                     <FormControlLabel
                       // checked={multiOption[0]}
@@ -786,8 +907,12 @@ const SetQuestion = (props) => {
               onChange={(e) => setYear(e.target.value)}
               style={{ width: "100px", marginRight: "20px" }}
             >
-              {yeardata.map((a) => {
-                return <MenuItem value={a}>{a}</MenuItem>;
+              {yeardata.map((a, index) => {
+                return (
+                  <MenuItem value={a} key={index}>
+                    {a}
+                  </MenuItem>
+                );
               })}
             </TextField>
           </Col>
@@ -829,7 +954,11 @@ const SetQuestion = (props) => {
                       "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
                   }}
                   onClick={async () => {
-                    await updatePaper();
+                    if (Id !== undefined) {
+                      await updatePaper();
+                    } else {
+                      await submitPaper();
+                    }
                     window.location.reload();
                   }}
                 >
@@ -877,10 +1006,10 @@ const SetQuestion = (props) => {
                 to={{
                   pathname: "/PreviousYearSubjectwise/setQuestion",
                   state: {
-                    id: allQuestions[QuestionNo],
-                    // allQuestions[QuestionNo] !== undefined
-                    //   ? allQuestions[QuestionNo].id
-                    //   : undefined,
+                    id:
+                      allQuestions[QuestionNo] !== undefined
+                        ? allQuestions[QuestionNo].id
+                        : undefined,
                     Class: Class,
                     Subject: Subject,
                     Chapter: Chapter,
@@ -908,7 +1037,9 @@ const SetQuestion = (props) => {
                   window.location.reload();
                 }}
               >
-                {Id !== undefined ? "next" : "Add New Question"}
+                {allQuestions[QuestionNo] !== undefined
+                  ? "next"
+                  : "Add New Question"}
               </Button>
             </Col>
           )}

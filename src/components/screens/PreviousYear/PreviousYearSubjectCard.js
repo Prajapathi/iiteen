@@ -47,19 +47,20 @@ export function PreviousYearSubjectCard(props) {
     if (props.subject == "physics") sub = "Physics";
     else if (props.subject == "chemistry") sub = "Chemistry";
     else sub = "Maths";
-    setSubject(sub);
+    setSubject(props.subject);
 
     //fetch attempted answers to show in progress bar
     const db = firebase.firestore();
     db.collection("User")
       .doc(props.user.uid)
-      .collection("SUBJECTWISEPapers")
+      .collection("previousyearSUBJECTWISEPapers")
       .doc("Class " + props.classNumber)
       .collection(sub)
       .doc("Chapter " + ch)
       .get()
-      .then((doc) => {
+      .then((doc) => {  
         if (doc.data() == null) {
+          console.log("it has gone to null")
           setLastIndex([0]);
           setTotalAttempted(0);
           setProgress(0);
@@ -95,17 +96,17 @@ export function PreviousYearSubjectCard(props) {
 
   const selectLevel = (lev) => {
     setLevel(lev);
-    localStorage.setItem("dialog",false);
-    console.log("ohh", "Class " + classNumber, lev, subject, chapter);
+    localStorage.setItem("dialog", false);
+    console.log("ohh", "class" + classNumber, subject, chapter);
     props.loadingStart(true);
 
     //Access question to pass as prop
     const db = firebase.firestore();
-    db.collection("PREVIOUSYEARSUBJECTWISE")
-      .doc("Class " + classNumber)
+    db.collection("PYSV")
+      .doc("class" + classNumber)
       .collection(subject)
       .doc("Chapter " + chapter)
-      .collection("Level 0" + lev)
+      .collection("question")
       .orderBy("number")
       .get()
       .then(function (querySnapshot) {
@@ -123,7 +124,7 @@ export function PreviousYearSubjectCard(props) {
           //put into redux store
           props.fetchPaper({
             questions,
-            noOfQuestions: 25,
+            noOfQuestions: questions.length,
             name: props.name,
             subject,
             level: lev,
@@ -139,7 +140,7 @@ export function PreviousYearSubjectCard(props) {
           }
 
           //to check if user is navigating through SubjectCard
-          localStorage.setItem("PaperName", "PreviousYear");
+          localStorage.setItem("PaperName", "previousyearSubjectwise");
           history.push("Subjectwise/Papers/" + chapter);
         }
       })

@@ -21,6 +21,7 @@ const QuestionContent = (props) => {
   const [Id, setId] = useState("0");
   const [sub, setSub] = useState("11");
   const history = useHistory();
+  // const [idarray,setIdarray]=useState([]);
   // const selfRef = useRef();
 
   function SetQuestionBtn(no, id) {
@@ -75,13 +76,13 @@ const QuestionContent = (props) => {
       .collection(subj[index])
       .doc(selChapter)
       .collection("question")
-      .orderBy("questionNumber")
+      .orderBy("number")
       .onSnapshot(function (querySnapshot) {
         var array = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           year: doc.data().year,
           questions: doc.data().question,
-          quesno: doc.data().questionNumber,
+          quesno: doc.data().number,
         }));
         array.sort((a, b) => {
           return a.quesno - b.quesno;
@@ -91,12 +92,95 @@ const QuestionContent = (props) => {
     console.log(allQuestions);
   }
 
-  function deleteQuestion(id) {
+  function deleteQuestion(id, questno) {
     //sure want to delete yes or no
     //if yes then delete
     //if no then do nothing
     if (window.confirm("Are you sure want to delete this question?")) {
       const db = firebase.firestore();
+      //
+      // var q = db
+      //   .collection("PYSV")
+      //   .doc(Class)
+      //   .collection(subj[index])
+      //   .doc(chapter)
+
+      // var newq=q  
+      //   .collection("question")
+      //   .doc();
+      // return db.runTransaction((t)=>{
+      //   return t.get(q).then((res)=>{
+      //     console.log(res.data());
+      //   })
+      // })
+
+
+      // const idarr = [];
+      // db.collection("PYSV")
+      //   .doc(Class)
+      //   .collection(subj[index])
+      //   .doc(chapter)
+      //   .collection("question")
+      //   .orderBy("number")
+      //   .onSnapshot(function (querySnapshot) {
+      //     // console.log(querySnapshot);
+      //     querySnapshot.forEach(async function (doc) {
+      //       // console.log(doc.id, " => ", doc.data());
+      //       if (doc.data().number > questno) {
+      //         console.log(doc.data().number);
+      //         idarr.push(doc.id);
+      //         // db.collection("PYSV")
+      //         //   .doc(Class)
+      //         //   .collection(subj[index])
+      //         //   .doc(chapter)
+      //         //   .collection("question")
+      //         //   .doc(doc.id)
+      //         //   .update({ number:doc.data().number-1 });
+      //         // doc.update({number:doc.data().number-1});
+      //       }
+      //       // doc.update({number: number-1})
+      //     });
+      //   });
+
+        // const q = db
+        //   .collection("PYSV")
+        //   .doc(Class)
+        //   .collection(subj[index])
+        //   .doc(chapter)
+        //   .collection("question")
+        //   // .doc("tDFKGjZJqDc8oX6wha67");
+        //   .doc(id);
+        // try {
+        //   await db.runTransaction(async (t) => {
+        //     const doc = await t.get(q);
+
+        //     // Add one person to the city population.
+        //     // Note: this could be done without a transaction
+        //     //       by updating the population using FieldValue.increment()
+        //     console.log(doc.data().number);
+        //     const newnumber = doc.data().number - 1;
+        //     if (doc.data().number > questno) t.update(q, { number: newnumber });
+        //     // t.update(cityRef, {population: newPopulation});
+        //   });
+
+        //   console.log("Transaction success!");
+        // } catch (e) {
+        //   console.log("Transaction failure:", e);
+        // }
+
+
+
+      // await db
+      // .collection("PYSV")
+      // .doc(Class)
+      // .collection(subj[index])
+      // .doc(chapter)
+      // .collection("question")
+      // .doc(id)
+      // .update({
+      //   number: firebase.firestore.FieldValue>questno && firebase.firestore.FieldValue.increment(-1),
+      // })
+
       db.collection("PYSV")
         .doc(Class)
         .collection(subj[index])
@@ -114,6 +198,24 @@ const QuestionContent = (props) => {
       console.log("not deleted");
     }
   }
+
+  // function updateDB(idarray) {
+  //   const db = firebase.firestore();
+  //   console.log("inside updateDB");
+  //   console.log(idarray);
+  //   console.log(idarray.length);
+  //   console.log(idarray[0],idarray[1],idarray);
+  //   for(let i=0;i<idarray.length;i++){
+  //     console.log(idarray[i]);
+  //     db.collection("PYSV")
+  //       .doc(Class)
+  //       .collection(subj[index])
+  //       .doc(chapter)
+  //       .collection("question")
+  //       .doc(idarray[i])
+  //       .update({ number: "1" });
+  //   }
+  // }
 
   return (
     <div>
@@ -255,6 +357,7 @@ const QuestionContent = (props) => {
                       // minHeight:"260px"
                       height: "300px",
                     }}
+                    key={index}
                   >
                     <h4>Question No: {index + 1} </h4>
                     <span />
@@ -313,18 +416,31 @@ const QuestionContent = (props) => {
                     >
                       <Button
                         className="shadow-btn"
+                        component={Link}
+                        to={{
+                          pathname: "/PreviousYearSubjectwise/setQuestion",
+                          state: {
+                            id: id,
+                            Class: Class,
+                            Subject: sub,
+                            Chapter: chapter,
+                            QuestionNo: index + 1,
+                            // allQuestions: allQuestions,
+                          },
+                        }}
                         style={{
                           marginTop: "19px",
                           position: "absolute",
                           backgroundColor: "white",
                           bottom: "0px",
                           left: "0px",
+                          color: "blue",
                         }}
                         onClick={() => {
                           return SetQuestionBtn(index + 1, id);
                         }}
                       >
-                        <Link
+                        {/* <Link
                           to={{
                             pathname: "/PreviousYearSubjectwise/setQuestion",
                             state: {
@@ -337,9 +453,9 @@ const QuestionContent = (props) => {
                             },
                           }}
                           style={{ textDecoration: "none" }}
-                        >
-                          Edit
-                        </Link>
+                        > */}
+                        Edit
+                        {/* </Link> */}
                         {/* <a href={`/edit/${Class}/${chapter}/${subject}/${questionNo}/${Id}`}>Edit</a> */}
                       </Button>
 
@@ -355,8 +471,22 @@ const QuestionContent = (props) => {
                           bottom: "0px",
                           left: "80px",
                         }}
-                        onClick={() => {
-                          deleteQuestion(id);
+                        onClick={async () => {
+                          await deleteQuestion(id, index + 1);
+                          // console.log("idarray", idarr);
+                          // setIdarray(idarr)
+                          // const db = firebase.firestore();
+                          // for(let i=0;i<idarr.length;i++){
+                          //   console.log(idarr[i]);
+                          //   db.collection("PYSV")
+                          //     .doc(Class)
+                          //     .collection(subj[index])
+                          //     .doc(chapter)
+                          //     .collection("question")
+                          //     .doc(idarray[i])
+                          //     .update({ number: "1" });
+                          // }
+                          // updateDB(idarr);
                           console.log("it is getting clicked");
                         }}
                       >

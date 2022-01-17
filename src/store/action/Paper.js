@@ -14,6 +14,7 @@ export const setNewAttemptTime=()=>{
 }
 
 export const fetchPaper=(paper)=>{
+    console.log(paper);
     return{
         type:actionTypes.FETCH_PAPER,
         payload:paper
@@ -21,6 +22,7 @@ export const fetchPaper=(paper)=>{
 }
 
 export const fetchPreviousSubjectwiseAnswers=(answers)=>{
+    console.log(answers);
     return{
         type:actionTypes.FETCH_PREVIOUS_ANSWERS,
         payload:answers
