@@ -46,11 +46,15 @@ export function SubjectwiseChoiceSection(props) {
   const [showHint, setShowHint] = useState(false);
   const [checked, setChecked] = React.useState(false);
   const [animate, setAnimate] = React.useState(false);
+  const [data,setData]=React.useState("");
 
   const handleChange = () => {
     setChecked((prev) => !prev);
   };
-  console.log("props", props);
+  console.log("props", props, props.user.uid);
+
+  // console.log("filtered",props.stateAnswer.filter((qid)=>qid==props.data.qid))
+  // console.log("filtered",data.qid);
 
   console.log(
     "kkk",
@@ -58,46 +62,51 @@ export function SubjectwiseChoiceSection(props) {
     props.number,
     props.data && localStorage.getItem("PaperName"),
     localStorage.getItem("PaperName") == "previousyearSubjectwise",
-    props.data
+    props.data,
+    props.qid,
+    props.stateAnswer.filter((a)=>(a.qid==props.qid))
   );
 
   useEffect(() => {
     //if answer given was wrong initially and solution was not shown, don't display previously given answer
+    setData(props.stateAnswer.filter((a)=>(a.qid==props.qid))[0]);
+    console.log(props.stateAnswer.filter((a)=>(a.qid==props.qid))[0]);
+    console.log(data);
     if (
-      props.stateAnswer[props.number - 1] &&
-      props.stateAnswer[props.number - 1].isAnsweredWrong &&
-      props.stateAnswer[props.number - 1].isAnswered
+      props.stateAnswer.filter((a)=>(a.qid==props.qid))[0] &&
+      props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].isAnsweredWrong &&
+      props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].isAnswered
     )
       return;
     //if answer was already submitted then load this into local state for display
     if (
-      props.stateAnswer[props.number - 1] &&
-      props.stateAnswer[props.number - 1].answerGiven != null
+      props.stateAnswer.filter((a)=>(a.qid==props.qid))[0] &&
+      props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answerGiven != null
     ) {
       let opt = [false, false, false, false];
       //for multi-correct questions
-      if (props.stateAnswer[props.number - 1].answerType == 5)
+      if (props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answerType == 5)
         for (
           let i = 0;
-          i < props.stateAnswer[props.number - 1].answerGiven.length;
+          i < props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answerGiven.length;
           i++
         ) {
-          opt[props.stateAnswer[props.number - 1].answerGiven[i]] = true;
+          opt[props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answerGiven[i]] = true;
         }
       //for single-correct questions
-      else if (props.stateAnswer[props.number - 1].answerType == 4)
-        opt[props.stateAnswer[props.number - 1].answerGiven] = true;
+      else if (props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answerType == 4)
+        opt[props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answerGiven] = true;
 
       setSelectOpt(opt);
-      setAnswer(props.stateAnswer[props.number - 1].answerGiven);
+      setAnswer(props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answerGiven);
     }
     if (
-      props.stateAnswer[props.number - 1] &&
-      !props.stateAnswer[props.number - 1].isAnsweredWrong &&
-      props.stateAnswer[props.number - 1].isAnswered
+      props.stateAnswer.filter((a)=>(a.qid==props.qid))[0] &&
+      !props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].isAnsweredWrong &&
+      props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].isAnswered
     )
       setShowSolution(true);
-  }, [props.stateAnswer[props.number - 1]]);
+  }, [props.stateAnswer[props.number-1]]);
 
   const changeOptSingle = (ind) => {
     const opts = [false, false, false, false];
@@ -128,15 +137,15 @@ export function SubjectwiseChoiceSection(props) {
     //when user clicks on show Solution or gives correct answer, update it in DB
     let lev = "Level 0" + props.paper.level;
     const db = firebase.firestore();
-    db.collection("User")
+    console.log("it is saving");
+    console.log("filtered",props.stateAnswer.filter((a)=>a.qid==props.data.qid))
+    if(localStorage.getItem("PaperName") == "Subjectwise"){
+      console.log("inside ",localStorage.getItem("PaperName"));
+      console.log(props.user.uid,props.paper.classNumber,props.paper.subject,props.paper.chapter,lev,props.stateAnswer);
+      db.collection("User")
       .doc(props.user.uid)
-      // SUBJECTWISEPapers
       .collection(
-        `${
-          localStorage.getItem("PaperName") == "Subjectwise"
-            ? "SUBJECTWISEPapers"
-            : "previousyearSUBJECTWISEPapers"
-        }`
+        "SUBJECTWISEPapers"
       )
       .doc("Class " + props.paper.classNumber)
       .collection(props.paper.subject)
@@ -153,6 +162,30 @@ export function SubjectwiseChoiceSection(props) {
       .catch((err) => {
         console.log("Error saving option", err);
       });
+    }else{
+      console.log("inside ",localStorage.getItem("PaperName"));
+      console.log(props.user.uid,props.paper.classNumber,props.paper.subject,props.paper.chapter,lev,props.stateAnswer);
+      db.collection("User")
+      .doc(props.user.uid)
+      .collection(
+        "previousyearSUBJECTWISEPapers"
+      )
+      .doc("Class " + props.paper.classNumber)
+      .collection(props.paper.subject)
+      .doc("Chapter " + props.paper.chapter)
+      .set(
+        {
+          [lev]: [...props.stateAnswer],
+        },
+        { merge: true }
+      )
+      .then((res) => {
+        console.log("Saved");
+      })
+      .catch((err) => {
+        console.log("Error saving option", err);
+      });
+    }
   };
   const bookMark = () => {
     props.bookmarkQuestion(props.number - 1);
@@ -177,14 +210,15 @@ export function SubjectwiseChoiceSection(props) {
     }
     //if the answer given was in acceptable format
     if (flag == 0) {
-      console.log("got inside submit question")
-      let previouslyAnswered = props.stateAnswer[props.number - 1].isAnswered;
-      props.setAnswer(props.number - 1, answer);
+      console.log("got inside submit question");
+      let previouslyAnswered = props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].isAnswered;
+      props.setAnswer(props.qid, answer);
       //if it was not answered before, save the new first attempt in database
 
       console.log(answer);
+      console.log(props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].isAnsweredWrong);
       //if the answer was wrong
-      if (props.stateAnswer[props.number - 1].isAnsweredWrong) {
+      if (props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].isAnsweredWrong) {
         setWrongAttempt(true);
         setShowHint(true);
         submitQuestionPre();
@@ -211,26 +245,26 @@ export function SubjectwiseChoiceSection(props) {
   const giveUp = () => {
     setShowSolution(true);
     setShowHint(false);
-    setAnswer(props.stateAnswer[props.number - 1].answer);
+    setAnswer(props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answer);
     props.setAnswer(
-      props.number - 1,
-      props.stateAnswer[props.number - 1].answer
+      props.qid,
+      props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answer
     );
 
     let opt = [false, false, false, false];
 
     //for multi-correct questions
-    if (props.stateAnswer[props.number - 1].answerType == 5)
+    if (props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answerType == 5)
       for (
         let i = 0;
-        i < props.stateAnswer[props.number - 1].answer.length;
+        i < props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answer.length;
         i++
       ) {
-        opt[props.stateAnswer[props.number - 1].answer[i]] = true;
+        opt[props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answer[i]] = true;
       }
     //for single-correct questions
-    else if (props.stateAnswer[props.number - 1].answerType == 4)
-      opt[props.stateAnswer[props.number - 1].answer] = true;
+    else if (props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answerType == 4)
+      opt[props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].answer] = true;
 
     setSelectOpt(opt);
 
@@ -238,7 +272,7 @@ export function SubjectwiseChoiceSection(props) {
   };
   console.log(
     props.stateAnswer,
-    props.stateAnswer[props.number - 1],
+    props.stateAnswer.filter((a)=>(a.qid==props.qid))[0],
     props.data
   );
 
@@ -248,12 +282,13 @@ export function SubjectwiseChoiceSection(props) {
         <Row noGutters>
           <Col id="choice-sec">
             <div className="heading">
-              {props.stateAnswer[props.number - 1]
-                ? props.stateAnswer[props.number - 1].answerType == 1
+              {console.log(data && data.answerType)}
+              {data
+                ? data.answerType == 1
                   ? "Integer Type"
-                  : props.stateAnswer[props.number - 1].answerType == 2
+                  : data.answerType == 2
                   ? "Numerical Type"
-                  : props.stateAnswer[props.number - 1].answerType == 4
+                  : data.answerType == 4
                   ? "Single Correct Option"
                   : "Multiple Correct Options"
                 : ""}
@@ -264,8 +299,8 @@ export function SubjectwiseChoiceSection(props) {
                 />
                 <BookmarkIcon
                   style={{
-                    color: props.stateAnswer[props.number - 1]
-                      ? props.stateAnswer[props.number - 1].isBookmarked
+                    color: data
+                      ? data.isBookmarked
                         ? "black"
                         : "#A6A5A5"
                       : "#A6A5A5",
@@ -281,39 +316,39 @@ export function SubjectwiseChoiceSection(props) {
             {showSolution ? (
               <div className="answer-analysis" style={{ paddingTop: "5%" }}>
                 <div>
-                  {props.stateAnswer[props.number - 1] ? (
-                    props.stateAnswer[props.number - 1].answerType == 1 ? (
+                  {data ? (
+                    data.answerType == 1 ? (
                       <>
                         {" "}
                         The correct answer is{" "}
-                        {props.stateAnswer[props.number - 1].answer}{" "}
+                        {data.answer}{" "}
                       </>
-                    ) : props.stateAnswer[props.number - 1].answerType == 2 ? (
+                    ) : data.answerType == 2 ? (
                       <>
                         {" "}
                         The correct answer is between{" "}
-                        {props.stateAnswer[props.number - 1].answer[0]}-
-                        {props.stateAnswer[props.number - 1].answer[1]}{" "}
+                        {data.answer[0]}-
+                        {data.answer[1]}{" "}
                       </>
-                    ) : props.stateAnswer[props.number - 1].answerType == 4 ? (
+                    ) : data.answerType == 4 ? (
                       <>
                         {" "}
                         The correct answer is option{" "}
-                        {props.stateAnswer[props.number - 1].answer == 0
+                        {data.answer == 0
                           ? "A."
-                          : props.stateAnswer[props.number - 1].answer == 1
+                          : data.answer == 1
                           ? "B."
-                          : props.stateAnswer[props.number - 1].answer == 2
+                          : data.answer == 2
                           ? "C."
                           : "D."}
                       </>
                     ) : (
                       <>
                         The correct answer is option
-                        {props.stateAnswer[props.number - 1].answer.length == 1
+                        {data.answer.length == 1
                           ? " "
                           : "s "}
-                        {props.stateAnswer[props.number - 1].answer.map(
+                        {data.answer.map(
                           (opt, i) => (
                             <>
                               {opt == 0
@@ -324,7 +359,7 @@ export function SubjectwiseChoiceSection(props) {
                                 ? "C"
                                 : "D"}
                               {i ==
-                              props.stateAnswer[props.number - 1].answer
+                              data.answer
                                 .length -
                                 1
                                 ? "."
@@ -394,7 +429,7 @@ export function SubjectwiseChoiceSection(props) {
                 >
                   {props.data ? (
                     localStorage.getItem("PaperName") == "Subjectwise" ? (
-                      props.data.option.map((text, index) => (
+                      props.data.option && props.data.option.map((text, index) => (
                         <div
                           className="option"
                           onClick={
@@ -427,7 +462,11 @@ export function SubjectwiseChoiceSection(props) {
                           ) : text.type == 2 ? (
                             <InlineMath>{text.data}</InlineMath>
                           ) : text.type == 3 ? (
-                            <img alt="img" src={text.data} style={{ width: "50%" }} />
+                            <img
+                              alt="img"
+                              src={text.data}
+                              style={{ width: "50%" }}
+                            />
                           ) : null}
                         </div>
                       ))
@@ -452,25 +491,23 @@ export function SubjectwiseChoiceSection(props) {
                         >
                           {console.log("i got inside")}
                           {"A.  "}
-                          {props.data.option1.map((item)=>
+                          {props.data.option1 && props.data.option1.map((item) => (
                             <div>
                               {item.type == 0 ? (
-                            <br />
-                          ) : item.type == 1 ? (
-                            item.data
-                          ) : item.type == 2 ? (
-                            <InlineMath>
-                              {item.data}
-                            </InlineMath>
-                          ) : item.type == 3 ? (
-                            <img
-                              alt="img"
-                              src={item.data}
-                              style={{ width: "50%" }}
-                            />
-                          ) : null}
+                                <br />
+                              ) : item.type == 1 ? (
+                                item.data
+                              ) : item.type == 2 ? (
+                                <InlineMath>{item.data}</InlineMath>
+                              ) : item.type == 3 ? (
+                                <img
+                                  alt="img"
+                                  src={item.data}
+                                  style={{ width: "50%" }}
+                                />
+                              ) : null}
                             </div>
-                          )}
+                          ))}
                           {/* {props.data.option1[0].type == 0 ? (
                             <br />
                           ) : props.data.option1[0].type == 1 ? (
@@ -505,25 +542,23 @@ export function SubjectwiseChoiceSection(props) {
                         >
                           {console.log("i got inside")}
                           {"B.  "}
-                          {props.data.option2.map((item)=>
+                          {props.data.option2 && props.data.option2.map((item) => (
                             <div>
                               {item.type == 0 ? (
-                            <br />
-                          ) : item.type == 1 ? (
-                            item.data
-                          ) : item.type == 2 ? (
-                            <InlineMath>
-                              {item.data}
-                            </InlineMath>
-                          ) : item.type == 3 ? (
-                            <img
-                              alt="img"
-                              src={item.data}
-                              style={{ width: "50%" }}
-                            />
-                          ) : null}
+                                <br />
+                              ) : item.type == 1 ? (
+                                item.data
+                              ) : item.type == 2 ? (
+                                <InlineMath>{item.data}</InlineMath>
+                              ) : item.type == 3 ? (
+                                <img
+                                  alt="img"
+                                  src={item.data}
+                                  style={{ width: "50%" }}
+                                />
+                              ) : null}
                             </div>
-                          )}
+                          ))}
                         </div>
                         <div
                           className="option"
@@ -544,25 +579,23 @@ export function SubjectwiseChoiceSection(props) {
                           {console.log("i got inside")}
                           {"C. "}
 
-                          {props.data.option3.map((item)=>
+                          {props.data.option3 && props.data.option3.map((item) => (
                             <div>
                               {item.type == 0 ? (
-                            <br />
-                          ) : item.type == 1 ? (
-                            item.data
-                          ) : item.type == 2 ? (
-                            <InlineMath>
-                              {item.data}
-                            </InlineMath>
-                          ) : item.type == 3 ? (
-                            <img
-                              alt="img"
-                              src={item.data}
-                              style={{ width: "50%" }}
-                            />
-                          ) : null}
+                                <br />
+                              ) : item.type == 1 ? (
+                                item.data
+                              ) : item.type == 2 ? (
+                                <InlineMath>{item.data}</InlineMath>
+                              ) : item.type == 3 ? (
+                                <img
+                                  alt="img"
+                                  src={item.data}
+                                  style={{ width: "50%" }}
+                                />
+                              ) : null}
                             </div>
-                          )}
+                          ))}
                         </div>
                         <div
                           className="option"
@@ -583,25 +616,23 @@ export function SubjectwiseChoiceSection(props) {
                           {console.log("i got inside")}
                           {"D. "}
 
-                          {props.data.option4.map((item)=>
+                          {props.data.option4 && props.data.option4.map((item) => (
                             <div>
                               {item.type == 0 ? (
-                            <br />
-                          ) : item.type == 1 ? (
-                            item.data
-                          ) : item.type == 2 ? (
-                            <InlineMath>
-                              {item.data}
-                            </InlineMath>
-                          ) : item.type == 3 ? (
-                            <img
-                              alt="img"
-                              src={item.data}
-                              style={{ width: "50%" }}
-                            />
-                          ) : null}
+                                <br />
+                              ) : item.type == 1 ? (
+                                item.data
+                              ) : item.type == 2 ? (
+                                <InlineMath>{item.data}</InlineMath>
+                              ) : item.type == 3 ? (
+                                <img
+                                  alt="img"
+                                  src={item.data}
+                                  style={{ width: "50%" }}
+                                />
+                              ) : null}
                             </div>
-                          )}
+                          ))}
                         </div>
                       </div>
                     ) : null
@@ -679,8 +710,8 @@ export function SubjectwiseChoiceSection(props) {
                 ></ArrowBackIosIcon>
               </div>
 
-              {props.stateAnswer[props.number - 1] &&
-              props.stateAnswer[props.number - 1].isAnswered ? (
+              {data &&
+              data.isAnswered ? (
                 wrongAttempt && !showSolution ? (
                   <button
                     style={{ background: "red" }}
@@ -688,10 +719,10 @@ export function SubjectwiseChoiceSection(props) {
                   >
                     Retry
                   </button>
-                ) : props.stateAnswer[props.number - 1] &&
+                ) : data &&
                   props.number != props.noOfQuestions &&
-                  !props.stateAnswer[props.number - 1].isAnsweredWrong &&
-                  props.stateAnswer[props.number - 1].isAnswered &&
+                  !data.isAnsweredWrong &&
+                  data.isAnswered &&
                   props.number != props.noOfQuestions ? (
                   <button
                     style={{ background: "#3B95C2" }}

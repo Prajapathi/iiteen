@@ -50,6 +50,7 @@ const SetQuestion = (props) => {
   const [allQuestions, setAllQuestions] = useState("");
 
   const [locationKeys, setLocationKeys] = useState([]);
+  // const [value, setValue] = useState("");
 
   const ref = useRef();
   // const [data2,setData2]=useState("");
@@ -438,7 +439,7 @@ const SetQuestion = (props) => {
     console.log("editable", editable);
   }
 
-  async function Save(droptype, field, index, value) {
+  async function Save(droptype, field, index,value) {
     // if(dropType==="question"){
     console.log("inside save droptype");
     const temp = [];
@@ -515,12 +516,9 @@ const SetQuestion = (props) => {
                     var { data } = e;
                     var keyBla = props.dropType + index;
                     // setData2(data);
+                    // setValue(data);
                     return (
-                      <Draggable
-                        key={index}
-                        draggableId="draggableid"
-                        index={index}
-                      >
+                      <Draggable key={index} draggableId={props.dropType+data} index={index}>
                         {(provided) => (
                           <li
                             ref={provided.innerRef}
@@ -531,62 +529,23 @@ const SetQuestion = (props) => {
                               {/* <form
                                 onSubmit={(elm) => {
                                   elm.preventDefault();
-                                  Save(
-                                    props.dropType,
-                                    props.filed,
-                                    index,
-                                    e.target.value
-                                  );
+                                  Save(props.dropType, props.filed, index);
                                 }}
                               > */}
                                 {/* {console.log(index)} */}
                                 {editable.includes(props.dropType + index) ? (
                                   <input
+                                    autoFocus
                                     ref={ref}
                                     value={data}
                                     onChange={(e) => {
-                                      // setCount(0);
-
-                                      // const temp=await
-                                      // if (
-                                      //   !editable.includes(
-                                      //     props.dropType + index
-                                      //   )
-                                      // ) {
-                                        Save(
-                                          props.dropType,
-                                          props.filed,
-                                          index,
-                                          e.target.value
-                                        );
-                                      // }
-
-                                      // console.log(temp);
-
-                                      //
-                                      // if (props.droptype === "question") {
-                                      //   setQuestionDetail(temp);
-                                      // }
-                                      // if (props.droptype === "option1") {
-                                      //   setOption1(temp);
-                                      // }
-                                      // if (props.droptype === "option2") {
-                                      //   setOption2(temp);
-                                      // }
-                                      // if (props.droptype === "option3") {
-                                      //   setOption3(temp);
-                                      // }
-                                      // if (props.droptype === "option4") {
-                                      //   setOption4(temp);
-                                      // }
-                                      // if (props.droptype === "solution") {
-                                      //   setSolution(temp);
-                                      // }
-                                      // if (props.droptype === "hint") {
-                                      //   setHint(temp);
-                                      // }
-                                      //
-                                      // boldText();
+                                      Save(
+                                        props.dropType,
+                                        props.filed,
+                                        index,
+                                        e.target.value
+                                      );
+                                      // setValue(e.target.value);
                                     }}
                                     style={{ width: "100%" }}
                                   ></input>
@@ -595,9 +554,11 @@ const SetQuestion = (props) => {
                                 )}
                                 <button
                                   className="dragButton"
-                                  // type="submit"
+                                  type="submit"
                                   onClick={() => {
                                     Handle(props.dropType + index);
+                                    // if(!editable.includes(props.dropType + index))
+                                    // Save(props.dropType, props.filed, index);
                                   }}
                                   style={{ margin: "5px" }}
                                 >
@@ -605,6 +566,7 @@ const SetQuestion = (props) => {
                                     ? "save"
                                     : "edit"}
                                 </button>
+                                {/* </form> */}
 
                                 <button
                                   className="dragButton"
@@ -615,7 +577,6 @@ const SetQuestion = (props) => {
                                 >
                                   Delete
                                 </button>
-                              {/* </form> */}
                             </div>
                           </li>
                         )}
@@ -693,7 +654,7 @@ const SetQuestion = (props) => {
                 // onChange={() => handleCheck(0)}
                 control={<Radio />}
                 label="Single Correct"
-                checked={"4" === questionType}
+                checked={"4" == questionType}
                 defaultChecked="true"
               />
               <FormControlLabel
@@ -701,21 +662,21 @@ const SetQuestion = (props) => {
                 // onChange={() => handleCheck(1)}
                 control={<Radio />}
                 label="Multiple Correct"
-                checked={"5" === questionType}
+                checked={"5" == questionType}
               />
               <FormControlLabel
                 value="1"
                 // onChange={() => handleCheck(2)}
                 control={<Radio />}
                 label="Integers"
-                checked={"1" === questionType}
+                checked={"1" == questionType}
               />
               <FormControlLabel
                 value="2"
                 // onChange={() => handleCheck(3)}
                 control={<Radio />}
                 label="Numerical"
-                checked={"2" === questionType}
+                checked={"2" == questionType}
               />
             </RadioGroup>
           </div>
@@ -762,6 +723,77 @@ const SetQuestion = (props) => {
             </div>
           ) : questionType === "4" || questionType === "5" ? (
             <div>
+              <div>
+                <h4>
+                  <h4>Correct Answer</h4>
+                </h4>
+                <FormLabel component="legend" style={{ color: "black" }}>
+                  Select Options
+                </FormLabel>
+                {questionType === "4" ? (
+                  <RadioGroup name="radio-buttons-group" row>
+                    <FormControlLabel
+                      value="1"
+                      checked={correct.includes(0) || correct.includes("0")}
+                      onChange={() => handleCheck(0)}
+                      control={<Radio />}
+                      label="1"
+                    />
+                    <FormControlLabel
+                      value="2"
+                      checked={correct.includes(1) || correct.includes("1")}
+                      onChange={() => handleCheck(1)}
+                      control={<Radio />}
+                      label="2"
+                    />
+                    <FormControlLabel
+                      value="3"
+                      checked={correct.includes(2) || correct.includes("2")}
+                      onChange={() => handleCheck(2)}
+                      control={<Radio />}
+                      label="3"
+                    />
+                    <FormControlLabel
+                      value="4"
+                      checked={correct.includes(3) || correct.includes("3")}
+                      onChange={() => handleCheck(3)}
+                      control={<Radio />}
+                      label="4"
+                    />
+                  </RadioGroup>
+                ) : questionType === "5" ? (
+                  <FormGroup row>
+                    <FormControlLabel
+                      // checked={multiOption[0]}
+                      checked={correct.includes(0) || correct.includes("0")}
+                      onChange={() => handleCheck(0)}
+                      control={<Checkbox />}
+                      label="1"
+                    />
+                    <FormControlLabel
+                      // checked={multiOption[1]}
+                      checked={correct.includes(1) || correct.includes("1")}
+                      onChange={() => handleCheck(1)}
+                      control={<Checkbox />}
+                      label="2"
+                    />
+                    <FormControlLabel
+                      // checked={multiOption[2]}
+                      checked={correct.includes(2) || correct.includes("2")}
+                      onChange={() => handleCheck(2)}
+                      control={<Checkbox />}
+                      label="3"
+                    />
+                    <FormControlLabel
+                      // checked={multiOption[3]}
+                      checked={correct.includes(3) || correct.includes("3")}
+                      onChange={() => handleCheck(3)}
+                      control={<Checkbox />}
+                      label="4"
+                    />
+                  </FormGroup>
+                ) : null}
+              </div>
               <hr />
               <Row>
                 <Col>
@@ -798,9 +830,8 @@ const SetQuestion = (props) => {
                   <DragContain filed={option4} dropType="option4" />
                 </Col>
               </Row>
-              <hr />
 
-              <div>
+              {/* <div>
                 <h4>
                   <h4>Correct Answer</h4>
                 </h4>
@@ -869,7 +900,7 @@ const SetQuestion = (props) => {
                     />
                   </FormGroup>
                 ) : null}
-              </div>
+              </div> */}
             </div>
           ) : (
             <></>

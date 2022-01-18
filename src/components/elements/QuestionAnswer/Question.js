@@ -49,6 +49,7 @@ export default function Question(props) {
                         {props.type=="subjectwise"?
                             <SubjectwiseChoiceSection
                                 data={props.question} 
+                                qid={props.qid}
                                 solution={solution}
                                 hint={hint}
                                 noOfQuestions={props.noOfQuestions} 

@@ -66,14 +66,16 @@ const fetchPaper = (state, action) => {
   //if there is no previous unfinished attempt to continue with, create a new answers array
   if (state.previousAttemptExists == false) {
     //after fetching paper, set the answers[]
+    console.log(action.payload.noOfQuestions)
     for (let i = 0; i < action.payload.noOfQuestions; i++) {
       ans.push({
-        uid: action.payload.questions[i].uid,
+        qid:action.payload.questions[i] && action.payload.questions[i].qid?action.payload.questions[i].qid:"",
+        uid: action.payload.questions[i] && action.payload.questions[i].uid?action.payload.questions[i].uid:"",
         number: i,
-        answer: action.payload.questions[i].answer,
-        answerGiven: action.payload.questions[i].answerType == 5 ? [] : null,
-        answerType: action.payload.questions[i].answerType,
-        marks: action.payload.questions[i].marks,
+        answer: action.payload.questions[i] ? action.payload.questions[i].answer:null,
+        answerGiven: action.payload.questions[i] && action.payload.questions[i].answerType == 5 ? [] : null,
+        answerType: action.payload.questions[i] ? action.payload.questions[i].answerType:null,
+        marks: action.payload.questions[i] && action.payload.questions[i].marks?action.payload.questions[i].marks:null,
         isSeen: false,
         isBookmarked: false,
         isAnsweredWrong: false,
@@ -129,48 +131,85 @@ const setSeen = (state, action) => {
 //setting answerGiven and isAnswered fields and evaluating isAnsweredWrong
 const setAnswer = (state, action) => {
   const ans = [...state.answers];
-  ans[action.payload.index].answerGiven = action.payload.answer;
-  ans[action.payload.index].isAnswered = true;
+  console.log(ans);
+  console.log(action.payload.index)
+  console.log(state, action);
+  const data=ans.filter((a)=>(a.qid==action.payload.index))[0];
+  data.answerGiven = action.payload.answer;
+  data.isAnswered = true;
 
-  console.log(state,action);
 
-  switch (ans[action.payload.index].answerType) {
-    case 1: {
-      if (ans[action.payload.index].answer === action.payload.answer)
-        ans[action.payload.index].isAnsweredWrong = false;
-      else ans[action.payload.index].isAnsweredWrong = true;
-      break;
-    }
-    case 2: {
-      if (
-        ans[action.payload.index].answer[0] <= action.payload.answer &&
-        ans[action.payload.index].answer[1] >= action.payload.answer
-      ) {
-        ans[action.payload.index].isAnsweredWrong = false;
-      } else ans[action.payload.index].isAnsweredWrong = true;
-      break;
-    }
-    case 4: {
-      console.log(ans[action.payload.index].answer, action.payload.answer);
-      if (ans[action.payload.index].answer === action.payload.answer) {
-        console.log("kyu");
-        ans[action.payload.index].isAnsweredWrong = false;
-      } else {
-        console.log("yo");
-        ans[action.payload.index].isAnsweredWrong = true;
-      }
+  //   switch (ans[action.payload.index].answerType) {
+  //     case 1: {
+  //       if (ans[action.payload.index].answer === action.payload.answer)
+  //         ans[action.payload.index].isAnsweredWrong = false;
+  //       else ans[action.payload.index].isAnsweredWrong = true;
+  //       break;
+  //     }
+  //     case 2: {
+  //       if (
+  //         ans[action.payload.index].answer[0] <= action.payload.answer &&
+  //         ans[action.payload.index].answer[1] >= action.payload.answer
+  //       ) {
+  //         ans[action.payload.index].isAnsweredWrong = false;
+  //       } else ans[action.payload.index].isAnsweredWrong = true;
+  //       break;
+  //     }
+  //     case 4: {
+  //       console.log(ans[action.payload.index].answer, action.payload.answer);
+  //       if (ans[action.payload.index].answer === action.payload.answer) {
+  //         console.log("kyu");
+  //         ans[action.payload.index].isAnsweredWrong = false;
+  //       } else {
+  //         console.log("yo");
+  //         ans[action.payload.index].isAnsweredWrong = true;
+  //       }
 
-      break;
+  //       break;
+  //     }
+  //     case 5: {
+  //       let flag = 0;
+  //       for (let i = 0; i < 4; i++) {
+  //         if (ans[action.payload.index].answer[i] != action.payload.answer[i])
+  //           flag = 1;
+  //       }
+  //       if (flag == 0) ans[action.payload.index].isAnsweredWrong = false;
+  //       else ans[action.payload.index].isAnsweredWrong = true;
+  //     }
+  //   }
+//   const an=ans[action.payload.index].answer.toString().split(',');
+
+
+
+
+  if (data.answerType == 1) {
+    if (data.answer == action.payload.answer)
+      data.isAnsweredWrong = false;
+    else data.isAnsweredWrong = true;
+  } else if (data.answerType == 2) {
+    if (
+        data.answer[0] <= action.payload.answer &&
+        data.answer[1] >= action.payload.answer
+    ) {
+      data.isAnsweredWrong = false;
+    } else data.isAnsweredWrong = true;
+  } else if (data.answerType == 4) {
+    console.log(data.answer, action.payload.answer);
+    if (data.answer == action.payload.answer || data.answer[0] == action.payload.answer) {
+      console.log("kyu");
+      data.isAnsweredWrong = false;
+    } else {
+      console.log("yo");
+      data.isAnsweredWrong = true;
     }
-    case 5: {
-      let flag = 0;
-      for (let i = 0; i < 4; i++) {
-        if (ans[action.payload.index].answer[i] != action.payload.answer[i])
-          flag = 1;
-      }
-      if (flag == 0) ans[action.payload.index].isAnsweredWrong = false;
-      else ans[action.payload.index].isAnsweredWrong = true;
+  } else if (data.answerType == 5) {
+    let flag = 0;
+    for (let i = 0; i < 4; i++) {
+      if (data.answer[i] != action.payload.answer[i])
+        flag = 1;
     }
+    if (flag == 0) data.isAnsweredWrong = false;
+    else data.isAnsweredWrong = true;
   }
 
   //if paper is a MOCKTEST or PREVIOUS YEAR, store it in local storage

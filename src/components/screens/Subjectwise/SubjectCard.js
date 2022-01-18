@@ -109,6 +109,11 @@ export function SubjectCard(props) {
           setAnswers(doc.data());
           setTotalAttempted(totalQAttempted);
           setProgress((totalQAttempted / 75) * 100);
+
+          // setLastIndex([0, 0, 0]);
+          // setTotalAttempted(0);
+          // setProgress(0);
+          // setAnswers({});
         }
       })
       .catch(function (error) {

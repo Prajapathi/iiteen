@@ -49,16 +49,18 @@ export function PreviousYearSubjectCard(props) {
     else sub = "Maths";
     setSubject(props.subject);
 
+    console.log(props.user.uid,props.classNumber,sub,ch)
     //fetch attempted answers to show in progress bar
     const db = firebase.firestore();
     db.collection("User")
       .doc(props.user.uid)
       .collection("previousyearSUBJECTWISEPapers")
       .doc("Class " + props.classNumber)
-      .collection(sub)
+      .collection(props.subject)
       .doc("Chapter " + ch)
       .get()
       .then((doc) => {  
+        console.log(doc.data());
         if (doc.data() == null) {
           console.log("it has gone to null")
           setLastIndex([0]);
@@ -82,10 +84,16 @@ export function PreviousYearSubjectCard(props) {
               }
             }
           }
+          console.log([lastInd1],doc.data(),totalQAttempted)
           setLastIndex([lastInd1]);
           setAnswers(doc.data());
           setTotalAttempted(totalQAttempted);
           setProgress((totalQAttempted / 25) * 100);
+
+          // setLastIndex([0]);
+          // setTotalAttempted(0);
+          // setProgress(0);
+          // setAnswers({});
         }
       })
       .catch(function (error) {
@@ -124,7 +132,7 @@ export function PreviousYearSubjectCard(props) {
           //put into redux store
           props.fetchPaper({
             questions,
-            noOfQuestions: questions.length,
+            noOfQuestions: 25,
             name: props.name,
             subject,
             level: lev,
@@ -161,10 +169,10 @@ export function PreviousYearSubjectCard(props) {
           <div style={{ width: "80%" }}>
             <BorderLinearProgress
               variant="determinate"
-              value={0}
+              value={progress}
               style={{ boxShadow: "1px 1px 3px 0px rgba(0,0,0,0.3)" }}
             />
-            <div style={{ color: "#448698", marginTop: "5px" }}> {0}/25</div>
+            <div style={{ color: "#448698", marginTop: "5px" }}> {totalAttemped}/25</div>
             <button onClick={() => selectLevel(1)} className="prev-card-button">
               Attempt
             </button>

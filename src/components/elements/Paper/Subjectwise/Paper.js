@@ -56,7 +56,9 @@ export function Paper(props) {
                             type={"subjectwise"}
                             question={questions ? questions[index] : []}
                             noOfQuestions={25}
-                            number={answers && answers[index] ? answers[index].number+1 : 0}
+                            qid={answers && answers[index] ? questions[answers[index].number] ? questions[answers[index].number].qid:0:0}
+                            number={localStorage.getItem("PaperName")=="Subjectwise" && questions && questions[index] ? questions[index].number : 
+                            localStorage.getItem("PaperName")=="previousyearSubjectwise" && answers && answers[index] ? answers[index].number+1:0}
                             goToPrevQuestion={() => setIndex(index - 1)}
                             goToNextQuestion={() => setIndex(index + 1)}
                         />
