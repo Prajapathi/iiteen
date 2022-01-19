@@ -69,6 +69,12 @@ export function SubjectwiseChoiceSection(props) {
 
   useEffect(() => {
     //if answer given was wrong initially and solution was not shown, don't display previously given answer
+    // if(localStorage.getItem("props")===undefined){
+    //   localStorage.setItem("props",JSON.stringify(props));
+    // }
+    // if(props==null || props==undefined || props==""){
+    //   props=JSON.parse(localStorage.getItem("props"));
+    // }
     setData(props.stateAnswer.filter((a)=>(a.qid==props.qid))[0]);
     console.log(props.stateAnswer.filter((a)=>(a.qid==props.qid))[0]);
     console.log(data);

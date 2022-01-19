@@ -53,6 +53,7 @@ const SetQuestion = (props) => {
   // const [value, setValue] = useState("");
 
   const ref = useRef();
+  const cursorPosition = 2;
   // const [data2,setData2]=useState("");
 
   const numarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -477,6 +478,13 @@ const SetQuestion = (props) => {
     }
     console.log(temp);
     // console.log(questionDetail);
+    var start = ref.current.selectionStart;
+    var end = ref.current.selectionEnd;
+    var sel = ref.current.value.substring(start, end);
+    var finText = ref.current.value.substring(0, start) + '[b]' + sel + '[/b]' + ref.current.value.substring(end);
+    ref.current.value = finText;
+    ref.current.focus();
+    ref.current.selectionEnd= end + 7;
     // }
     console.log("outside save droptype");
     // return temp;
@@ -534,10 +542,11 @@ const SetQuestion = (props) => {
                               > */}
                                 {/* {console.log(index)} */}
                                 {editable.includes(props.dropType + index) ? (
-                                  <input
+                                  <textarea
                                     autoFocus
                                     ref={ref}
                                     value={data}
+                                    // onBlur={() => ref.current.setSelectionRange(cursorPosition, cursorPosition)}
                                     onChange={(e) => {
                                       Save(
                                         props.dropType,
@@ -548,7 +557,7 @@ const SetQuestion = (props) => {
                                       // setValue(e.target.value);
                                     }}
                                     style={{ width: "100%" }}
-                                  ></input>
+                                  ></textarea>
                                 ) : (
                                   data
                                 )}

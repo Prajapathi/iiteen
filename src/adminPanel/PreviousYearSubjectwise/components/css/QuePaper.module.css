@@ -3,6 +3,8 @@
   width: 300px;
   box-shadow: 0 10px 18px rgba(0, 0, 0, 0.192);
   padding: 20px;
+  margin-bottom: 25px;
+  margin-top: 25px;
   border-radius: 15px;
   text-decoration: double !important;
   color: rgb(107, 107, 107);
@@ -17,4 +19,31 @@
 .subjects h4 {
   margin-top: auto;
   margin-bottom: auto;
+}
+
+.plusbutton{
+  height: 50px;
+  width: 50px;
+  margin-left: 150px;
+  font-size: 30px;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.192);
+  padding: 20px;
+  border-radius: 10px;
+  text-decoration: double !important;
+  color: rgb(107, 107, 107);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.syllabusbutton{
+  height: 50px;
+  width: 150px;
+}
+
+.syllabush3tag{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
 }
