@@ -1,4 +1,4 @@
-export const chemistry = [
+const chemistry = [
   "Some Basic Concept of Chemistry",
   "Atomic Structure",
   "States Of Matter",
@@ -33,3 +33,5 @@ export const chemistry = [
   "Biomolecules, Polymers and Chemistry in Everyday Life",
   "Principles Related to Practical Chemistry",
 ];
+
+export default chemistry

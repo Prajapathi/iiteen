@@ -1,4 +1,4 @@
-export const maths = [
+const maths = [
   "SETS",
   "Fundamentals of Relations and Functions",
   "Sequence and Series",
@@ -37,3 +37,5 @@ export const maths = [
   "Linear Programming",
   "Advanced Probability",
 ];
+
+export default maths;

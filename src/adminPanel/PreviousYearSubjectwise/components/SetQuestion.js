@@ -50,11 +50,11 @@ const SetQuestion = (props) => {
   const [allQuestions, setAllQuestions] = useState("");
 
   const [locationKeys, setLocationKeys] = useState([]);
-  // const [value, setValue] = useState("");
+  const [saveposition, setSaveposition] = useState(0);
 
   const ref = useRef();
   const cursorPosition = 2;
-  // const [data2,setData2]=useState("");
+  const [data2,setData2]=useState("");
 
   const numarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -440,7 +440,7 @@ const SetQuestion = (props) => {
     console.log("editable", editable);
   }
 
-  async function Save(droptype, field, index,value) {
+  async function Save(droptype, field, index, value=data2) {
     // if(dropType==="question"){
     console.log("inside save droptype");
     const temp = [];
@@ -478,13 +478,18 @@ const SetQuestion = (props) => {
     }
     console.log(temp);
     // console.log(questionDetail);
-    var start = ref.current.selectionStart;
-    var end = ref.current.selectionEnd;
-    var sel = ref.current.value.substring(start, end);
-    var finText = ref.current.value.substring(0, start) + '[b]' + sel + '[/b]' + ref.current.value.substring(end);
-    ref.current.value = finText;
-    ref.current.focus();
-    ref.current.selectionEnd= end + 7;
+    // var start = ref.current.selectionStart;
+    // var end = ref.current.selectionEnd;
+    // var sel = ref.current.value.substring(start, end);
+    // var finText =
+    //   ref.current.value.substring(0, start) +
+    //   "[b]" +
+    //   sel +
+    //   "[/b]" +
+    //   ref.current.value.substring(end);
+    // ref.current.value = finText;
+    // ref.current.focus();
+    // ref.current.selectionEnd = end + 7;
     // }
     console.log("outside save droptype");
     // return temp;
@@ -518,15 +523,18 @@ const SetQuestion = (props) => {
                 ref={provided.innerRef}
                 style={{ marginTop: "50px" }}
               >
-                {/* {console.log("prop.filed", props.filed)} */}
+                {console.log("prop.filed", props.filed)}
                 {props.filed !== "" ? (
                   props.filed.map((e, index) => {
                     var { data } = e;
                     var keyBla = props.dropType + index;
                     // setData2(data);
-                    // setValue(data);
                     return (
-                      <Draggable key={index} draggableId={props.dropType+data} index={index}>
+                      <Draggable
+                        key={index}
+                        draggableId={props.dropType + data}
+                        index={index}
+                      >
                         {(provided) => (
                           <li
                             ref={provided.innerRef}
@@ -540,52 +548,71 @@ const SetQuestion = (props) => {
                                   Save(props.dropType, props.filed, index);
                                 }}
                               > */}
-                                {/* {console.log(index)} */}
-                                {editable.includes(props.dropType + index) ? (
-                                  <textarea
-                                    autoFocus
-                                    ref={ref}
-                                    value={data}
-                                    // onBlur={() => ref.current.setSelectionRange(cursorPosition, cursorPosition)}
-                                    onChange={(e) => {
-                                      Save(
-                                        props.dropType,
-                                        props.filed,
-                                        index,
-                                        e.target.value
-                                      );
-                                      // setValue(e.target.value);
-                                    }}
-                                    style={{ width: "100%" }}
-                                  ></textarea>
-                                ) : (
-                                  data
-                                )}
-                                <button
-                                  className="dragButton"
-                                  type="submit"
-                                  onClick={() => {
-                                    Handle(props.dropType + index);
-                                    // if(!editable.includes(props.dropType + index))
-                                    // Save(props.dropType, props.filed, index);
+                              {/* {console.log(index)} */}
+                              {data}
+                              {/* {editable.includes(props.dropType + index) ? (
+                                <input
+                                  autoFocus
+                                  ref={ref}
+                                  value={data}
+                                  onBlur={() => ref.current.setSelectionRange(cursorPosition, cursorPosition)}
+                                  onChange={(e) => {
+                                    // setSaveposition(this.input.selectionStart)
+                                    console.log(ref.current.selectionStart);
+                                    const a = ref.current.selectionStart;
+                                    setSaveposition(ref.current.selectionStart);
+                                    console.log(saveposition);
+                                    console.log(a);
+                                    Save(
+                                      props.dropType,
+                                      props.filed,
+                                      index,
+                                      e.target.value
+                                    );
+                                    console.log(saveposition);
+                                    console.log(a);
                                   }}
-                                  style={{ margin: "5px" }}
-                                >
-                                  {editable.includes(props.dropType + index)
-                                    ? "save"
-                                    : "edit"}
-                                </button>
-                                {/* </form> */}
+                                  style={{ width: "100%" }}
+                                ></input>
+                              ) : (
+                                null
+                              )} */}
+                              {editable.includes(props.dropType + index) ? (
+                                <input
+                                  autoFocus
+                                  ref={ref}
+                                  value={data2}
+                                  onChange={(e)=>setData2(e.target.value)}
+                                  style={{ width: "100%" }}
+                                ></input>
+                              ) : (
+                                null
+                              )}
+                              <button
+                                className="dragButton"
+                                type="submit"
+                                onClick={() => {
+                                  // if(!editable.includes(props.dropType + index))setData2(data)
+                                  if(editable.includes(props.dropType + index))Save(props.dropType, props.filed, index);
+                                  Handle(props.dropType + index);
+                                }}
+                                style={{ margin: "5px" }}
+                              >
+                                {editable.includes(props.dropType + index)
+                                  ? "save"
+                                  : "edit"}
+                              </button>
+                              {/* </form> */}
 
-                                <button
-                                  className="dragButton"
-                                  onClick={() =>
-                                    deleteElement(index, props.filed)
-                                  }
-                                  style={{ margin: "5px" }}
-                                >
-                                  Delete
-                                </button>
+                              <button
+                                className="dragButton"
+                                onClick={() =>
+                                  deleteElement(index, props.filed)
+                                }
+                                style={{ margin: "5px" }}
+                              >
+                                Delete
+                              </button>
                             </div>
                           </li>
                         )}
@@ -632,23 +659,6 @@ const SetQuestion = (props) => {
               setCorrect([]);
             }}
           >
-            {/* <input
-              type="radio"
-              value="1"
-              name="questionType"
-              defaultChecked="true"
-            />
-            Single Correct
-            <br />
-            <input type="radio" value="2" name="questionType" />
-            Multiple Correct
-            <br />
-            <input type="radio" value="3" name="questionType" />
-            Integers
-            <br />
-            <input type="radio" value="4" name="questionType" />
-            Numerical
-            <br /> */}
             <RadioGroup
               name="radio-buttons-group"
               row
@@ -839,77 +849,6 @@ const SetQuestion = (props) => {
                   <DragContain filed={option4} dropType="option4" />
                 </Col>
               </Row>
-
-              {/* <div>
-                <h4>
-                  <h4>Correct Answer</h4>
-                </h4>
-                <FormLabel component="legend" style={{ color: "black" }}>
-                  Select Options
-                </FormLabel>
-                {questionType === "4" ? (
-                  <RadioGroup name="radio-buttons-group" row>
-                    <FormControlLabel
-                      value="1"
-                      checked={correct.includes(0)}
-                      onChange={() => handleCheck(0)}
-                      control={<Radio />}
-                      label="1"
-                    />
-                    <FormControlLabel
-                      value="2"
-                      checked={correct.includes(1)}
-                      onChange={() => handleCheck(1)}
-                      control={<Radio />}
-                      label="2"
-                    />
-                    <FormControlLabel
-                      value="3"
-                      checked={correct.includes(2)}
-                      onChange={() => handleCheck(2)}
-                      control={<Radio />}
-                      label="3"
-                    />
-                    <FormControlLabel
-                      value="4"
-                      onChange={() => handleCheck(3)}
-                      control={<Radio />}
-                      label="4"
-                    />
-                  </RadioGroup>
-                ) : questionType === "5" ? (
-                  <FormGroup row>
-                    <FormControlLabel
-                      // checked={multiOption[0]}
-                      checked={correct.includes(0)}
-                      onChange={() => handleCheck(0)}
-                      control={<Checkbox />}
-                      label="1"
-                    />
-                    <FormControlLabel
-                      // checked={multiOption[1]}
-                      checked={correct.includes(1)}
-                      onChange={() => handleCheck(1)}
-                      control={<Checkbox />}
-                      label="2"
-                    />
-                    <FormControlLabel
-                      // checked={multiOption[2]}
-                      checked={correct.includes(2)}
-                      onChange={() => handleCheck(2)}
-                      control={<Checkbox />}
-                      label="3"
-                    />
-                    <FormControlLabel
-                      // checked={multiOption[3]}
-                      checked={correct.includes(3)}
-                      onChange={() => handleCheck(3)}
-                      control={<Checkbox />}
-                      label="4"
-                    />
-                  </FormGroup>
-                ) : null}
-              </div> */}
             </div>
           ) : (
             <></>

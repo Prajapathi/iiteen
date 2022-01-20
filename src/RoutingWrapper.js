@@ -19,6 +19,7 @@ import Mains from "./adminPanel/MockTest/Mains";
 import Advance from "./adminPanel/MockTest/Advance";
 import MainsPaper from "./adminPanel/MockTest/MainsPaper";
 import SelectSyllabus from "./adminPanel/MockTest/SelectSyllabus";
+import Syllabussummary from "./adminPanel/MockTest/Syllabussummary";
 
 export function RoutingWrapper(props) {
   return props.isCheckingAuth ? (
@@ -50,7 +51,9 @@ export function RoutingWrapper(props) {
       <Route path="/mocktestadminmain/mains/selectsyllabus/:number" exact>
         <SelectSyllabus />
       </Route>
-      
+      <Route path="/mocktestadminmain/mains/syllabussummary/:number" exact>
+        <Syllabussummary />
+      </Route>
       {/* // */}
       {/* //new code for prevousyearsubjectwise*/}
       <Route path="/PreviousYearSubjectwise" exact component={PreviousYrSubPaper} />

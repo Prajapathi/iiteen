@@ -1,13 +1,14 @@
 import {
-  Checkbox,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
+  Box,
+  Chip,
+  FormControl,
+  InputLabel,
   MenuItem,
-  TextField,
+  OutlinedInput,
+  Select,
+  Button,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
 import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css";
 import CommentIcon from "@mui/icons-material/Comment";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -15,20 +16,90 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import physics from "./data/physics";
 import chemistry from "./data/chemistry";
 import maths from "./data/maths";
+import { useTheme } from "@mui/material/styles";
+import { Link, useParams } from "react-router-dom";
+import firebase from "firebase";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+function getStyles(name, personName, theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
 const SelectSyllabus = () => {
-  const [checked, setChecked] = React.useState([0]);
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+  const theme = useTheme();
+  const [phy, setPhy] = React.useState([]);
+  const [che, setChe] = React.useState([]);
+  const [math, setMath] = React.useState([]);
+  const [syllabustype, setSyllabustype] = React.useState("");
+  const paperno = useParams();
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
+  useEffect(() => {
+    console.log(paperno.number);
+    console.log(paperno.number + 1);
+    console.log(Number(paperno.number) + 1);
+    setSyllabustype(localStorage.getItem("syllabustype"));
+    // setPhy(localStorage.getItem("phy"))
+    // setChe(localStorage.getItem("che"))
+    // setMath(localStorage.getItem("math"))
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("syllabustype", syllabustype);
+    // localStorage.setItem("phy", phy);
+    // localStorage.setItem("che", che);
+    // localStorage.setItem("math", math);
+  }, [syllabustype]);
+
+  const handleChange = (value, sub) => {
+    // const {
+    //   target: { value },
+    // } = event;
+    if (sub == "phy") {
+      setPhy(
+        // On autofill we get a stringified value.
+        typeof value === "string" ? value.split(",") : value
+      );
+    } else if (sub == "che") {
+      setChe(
+        // On autofill we get a stringified value.
+        typeof value === "string" ? value.split(",") : value
+      );
+    } else if (sub == "math") {
+      setMath(
+        // On autofill we get a stringified value.
+        typeof value === "string" ? value.split(",") : value
+      );
     }
+  };
 
-    setChecked(newChecked);
+  const savetodatabase = () => {
+    const db = firebase.firestore();
+    db.collection("MOCK")
+      .doc("MAINS")
+      .collection("PAPER")
+      .doc(`PAPER${Number(paperno.number) + 1}`)
+      .update({ syllabustype: syllabustype, phy: phy, che: che, math: math })
+      .then(() => {
+        console.log("saved");
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   };
   return (
     <div
@@ -36,6 +107,7 @@ const SelectSyllabus = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-evenly",
+        height: "1000px",
       }}
     >
       <div
@@ -43,7 +115,7 @@ const SelectSyllabus = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "space-evenly",
+          justifyContent: "flex-start",
           textAlign: "center",
           height: "500px",
           width: "1500px",
@@ -54,83 +126,228 @@ const SelectSyllabus = () => {
             display: "flex",
             justifyContent: "space-evenly",
             alignItems: "center",
+            width: "1200px",
+            marginBottom: "100px",
           }}
         >
-          <h3 className={styl.syllabush3tag}>selectsyllabus</h3>
-          <button className={styl.syllabusbutton}>full syllabus</button>
-          <button className={styl.syllabusbutton}>class 11</button>
-          <button className={styl.syllabusbutton}>class 12</button>
-          <button className={styl.syllabusbutton}>part syllabus</button>
-        </div>
-        <div
-        style={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-          }}
-        >
-          <h3 className={styl.syllabush3tag}>syllabus</h3>
-          {/* <TextField
-            select
-            label="Chapter Name"
-            style={{
-              width: "100px",
+          <h3 className={styl.syllabush3tag}>Select Syllabus</h3>
+          <Button
+            className={styl.syllabusbutton}
+            component={Link}
+            to={{
+              pathname: "/mocktestadminmain/mains/syllabussummary/0",
+            }}
+            onClick={() => {
+              setSyllabustype("fullsyllabus");
+              alert("Are you sure?, you selected full syllabus");
+              savetodatabase();
             }}
           >
-            {physics.map((e, index) => {
-              return (
-                <MenuItem value={e} key={index} style={{
-                    width: "100px",height:"100px"
-                  }}>
-                  {e}
-                </MenuItem>
-              );
-            })}
-          </TextField>
-          <List
-            sx={{ width: "100px", maxWidth: 60, bgcolor: "background.paper" }}
+            full syllabus
+          </Button>
+          <Button
+            className={styl.syllabusbutton}
+            component={Link}
+            to={{
+              pathname: "/mocktestadminmain/mains/syllabussummary/0",
+            }}
+            onClick={() => {
+              setSyllabustype("class 11");
+              alert("Are you sure?, you selected class 11 syllabus");
+              savetodatabase();
+            }}
           >
-            {[0, 1, 2, 3].map((value) => {
-              const labelId = `checkbox-list-label-${value}`;
-
-              return (
-                <ListItem
-                  key={value}
-                  secondaryAction={
-                    <IconButton edge="end" aria-label="comments"> */}
-
-                      {/* <CommentIcon /> */}
-                    {/* </IconButton>
-                  }
-                  disablePadding
+            class 11
+          </Button>
+          <Button
+            className={styl.syllabusbutton}
+            component={Link}
+            to={{
+              pathname: "/mocktestadminmain/mains/syllabussummary/0",
+            }}
+            onClick={() => {
+              setSyllabustype("class 12");
+              alert("Are you sure?, you selected class 12 syllabus");
+              savetodatabase();
+            }}
+          >
+            class 12
+          </Button>
+          <Button
+            className={styl.syllabusbutton}
+            onClick={() => setSyllabustype("partsyllabus")}
+          >
+            Part Syllabus
+          </Button>
+        </div>
+        {syllabustype == "partsyllabus" && (
+          <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                width: "1200px",
+                marginBottom: "100px",
+              }}
+            >
+              <h3 className={styl.syllabush3tag}>Syllabus</h3>
+              <FormControl sx={{ m: 1, width: 300 }} style={{ width: "200px" }}>
+                <InputLabel
+                  id="demo-multiple-chip-label"
+                  style={{ paddingLeft: "20px" }}
                 >
-                  <ListItemButton
-                    role={undefined}
-                    onClick={handleToggle(value)}
-                    dense
-                  >
-                    <ListItemIcon>
-                      <Checkbox
-                        edge="start"
-                        checked={checked.indexOf(value) !== -1}
-                        tabIndex={-1}
-                        disableRipple
-                        inputProps={{ "aria-labelledby": labelId }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      id={labelId}
-                      primary={`Line item ${value + 1}`}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
-          </List> */}
-        </div>
-        <div>
-          <h3 className={styl.syllabush3tag}>chapters selected</h3>
-        </div>
+                  Physics
+                </InputLabel>
+                <Select
+                  labelId="demo-multiple-chip-label"
+                  id="demo-multiple-chip"
+                  multiple
+                  value={phy}
+                  onChange={(e) => handleChange(e.target.value, "phy")}
+                  input={
+                    <OutlinedInput id="select-multiple-chip" label="Chip" />
+                  }
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {physics.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, phy, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl sx={{ m: 1, width: 300 }} style={{ width: "200px" }}>
+                <InputLabel
+                  id="demo-multiple-chip-label"
+                  style={{ paddingLeft: "20px" }}
+                >
+                  chemistry
+                </InputLabel>
+                <Select
+                  labelId="demo-multiple-chip-label"
+                  id="demo-multiple-chip"
+                  multiple
+                  value={che}
+                  onChange={(e) => handleChange(e.target.value, "che")}
+                  input={
+                    <OutlinedInput id="select-multiple-chip" label="Chip" />
+                  }
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {chemistry.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, che, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl sx={{ m: 1, width: 300 }} style={{ width: "200px" }}>
+                <InputLabel
+                  id="demo-multiple-chip-label"
+                  style={{ paddingLeft: "20px" }}
+                >
+                  Maths
+                </InputLabel>
+                <Select
+                  labelId="demo-multiple-chip-label"
+                  id="demo-multiple-chip"
+                  multiple
+                  value={math}
+                  onChange={(e) => handleChange(e.target.value, "math")}
+                  input={
+                    <OutlinedInput id="select-multiple-chip" label="Chip" />
+                  }
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {maths.map((name) => (
+                    <MenuItem
+                      key={name}
+                      value={name}
+                      style={getStyles(name, math, theme)}
+                    >
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                width: "1200px",
+                marginBottom: "100px",
+              }}
+            >
+              <h3
+                className={styl.syllabush3tag}
+                style={{ paddingLeft: "145px" }}
+              >
+                Chapters Selected
+              </h3>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <div
+                  className={styl.partsyllabussubjects}
+                  style={{ width: "200px" }}
+                >
+                  {phy.toString()}
+                </div>
+                <div style={{ width: "200px" }}>{che.toString()}</div>
+                <div style={{ width: "200px" }}>{math.toString()}</div>
+              </div>
+            </div>
+            <Button
+              component={Link}
+              to={{
+                pathname: "/mocktestadminmain/mains/syllabussummary/0",
+              }}
+              onClick={() => {
+                alert("Are you sure?, you selected part syllabus");
+                savetodatabase();
+              }}
+            >
+              proceed for part syllabus
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
