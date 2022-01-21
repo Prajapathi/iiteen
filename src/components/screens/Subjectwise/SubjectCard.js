@@ -163,8 +163,8 @@ export function SubjectCard(props) {
 
           //set Previously given answers for this level
           if (answers["Level 0" + lev]) {
-            console.log("Yaha", chapter, answers["Level 0" + lev]);
-            props.fetchPreviousSubjectwiseAnswers(answers["Level 0" + lev]);
+            console.log("Yaha", chapter, answers["Level 0" + lev],questions);
+            props.fetchPreviousSubjectwiseAnswers({answers,questions,level: lev});
           }
 
           //to check if user is navigating through SubjectCard

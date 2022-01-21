@@ -98,9 +98,39 @@ const fetchPaper = (state, action) => {
 };
 
 const fetchPreviousSubjectwiseAnswers = (state, action) => {
+  // new code
+  let answer=action.payload.answers["Level 0" + action.payload.level]
+  let ques=action.payload.questions
+  console.log(answer,ques,action.payload.level);
+  let ans=[];
+  for (let i = 0; i < 25; i++) {
+    ques[i] && console.log(answer.filter((t)=>(t.qid==ques[i].qid)))
+    if(ques[i] && ques[i].qid  && answer.filter((t)=>(t.qid==ques[i].qid))!=undefined && answer.filter((t)=>(t.qid==ques[i].qid)).length!=0 && answer.filter((t)=>(t.qid==ques[i].qid))!=null){
+      console.log("included",answer.filter((t)=>(t.qid==ques[i].qid)))
+      answer.filter((t)=>(t.qid==ques[i].qid))[0].number=i;
+      ans.push(answer.filter((t)=>(t.qid==ques[i].qid))[0])
+    }else{
+      ques[i] && console.log("not included",answer.filter((t)=>(t.qid==ques[i].qid)))
+      ans.push({
+        qid:ques[i] && ques[i].qid?ques[i].qid:"",
+        uid: ques[i] && ques[i].uid?ques[i].uid:"",
+        number: i,
+        answer: ques[i] ? ques[i].answer:null,
+        answerGiven: ques[i] && ques[i].answerType == 5 ? [] : null,
+        answerType: ques[i] ? ques[i].answerType:null,
+        marks: ques[i] && ques[i].marks?ques[i].marks:null,
+        isSeen: false,
+        isBookmarked: false,
+        isAnsweredWrong: false,
+        isAnswered: false,
+      });
+    }
+  }
+  console.log(ans)
+  
   return {
     ...state,
-    answers: action.payload,
+    answers: ans
   };
 };
 

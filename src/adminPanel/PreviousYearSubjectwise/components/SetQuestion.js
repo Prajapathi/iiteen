@@ -577,7 +577,7 @@ const SetQuestion = (props) => {
                                 }}
                               > */}
                               {/* {console.log(index)} */}
-                              {data}
+                              {/* {data} */}
                               {/* {editable.includes(props.dropType + index) ? (
                                 <input
                                   autoFocus
@@ -614,7 +614,7 @@ const SetQuestion = (props) => {
                                   style={{ width: "100%" }}
                                 ></input>
                               ) : (
-                                null
+                                data
                               )}
                               <button
                                 className="dragButton"
