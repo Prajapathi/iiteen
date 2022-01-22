@@ -61,7 +61,7 @@ export function RoutingWrapper(props) {
       <Route
         path="/PreviousYearSubjectwise/:subject"
         exact
-        component={QuestionContent}
+        component={QuestionContent} 
       />
       <Route
         path="/edit/:Class/:Chapter/:Subject/:QuestionNo/:Id"

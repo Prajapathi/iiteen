@@ -1,5 +1,5 @@
 import { MenuItem, TextField, Button, Switch } from "@material-ui/core";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useParams } from "react";
 import Syllabus from "../components/data/syllabus";
 // import { db } from "../components/firebase";
 import firebase from "firebase";
@@ -19,7 +19,7 @@ const QuestionContent = (props) => {
   const [editBtn, setEditBtn] = useState(false);
   const [questionNo, setQuestionNo] = useState("1");
   const [Id, setId] = useState("0");
-  const [sub, setSub] = useState("11");
+  const [sub, setSub] = useState(null);
   const history = useHistory();
   // const [idarray,setIdarray]=useState([]);
   // const selfRef = useRef();
@@ -31,6 +31,7 @@ const QuestionContent = (props) => {
     console.log(Id, questionNo, editBtn);
   }
   var index = props.match.params.subject;
+  var mockpaperno = props.location.state ? props.location.state.papernumber:null;
 
   const subj = ["physics", "chemistry", "maths"];
 
@@ -45,6 +46,9 @@ const QuestionContent = (props) => {
       setSub("chemistry");
     } else if (index == 2) {
       setSub("maths");
+    } else {
+      setSub("mocktest");
+      fetchPaper("", "");
     }
   }, [index]);
 
@@ -71,24 +75,35 @@ const QuestionContent = (props) => {
 
   function fetchPaper(selClass, selChapter) {
     const db = firebase.firestore();
-    db.collection("PYSV")
-      .doc(selClass)
-      .collection(subj[index])
-      .doc(selChapter)
-      .collection("question")
-      .orderBy("number")
-      .onSnapshot(function (querySnapshot) {
-        var array = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          year: doc.data().year,
-          questions: doc.data().question,
-          quesno: doc.data().number,
-        }));
-        array.sort((a, b) => {
-          return a.quesno - b.quesno;
-        });
-        setAllQuestions(array);
+    console.log(sub,selClass);
+    if (selClass === "") {
+      var q = db
+        .collection("MOCK")
+        .doc("MAINS")
+        .collection("PAPER")
+        .doc(`PAPER${Number(mockpaperno)}`)
+        .collection("question");
+    } else {
+      var q = db
+        .collection("PYSV")
+        .doc(selClass)
+        .collection(subj[index])
+        .doc(selChapter)
+        .collection("question");
+    }
+    q.orderBy("number").onSnapshot(function (querySnapshot) {
+      var array = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        year: doc.data().year,
+        questions: doc.data().question,
+        quesno: doc.data().number,
+      }));
+      array.sort((a, b) => {
+        return a.quesno - b.quesno;
       });
+      setAllQuestions(array);
+    });
+
     console.log(allQuestions);
   }
 
@@ -98,95 +113,22 @@ const QuestionContent = (props) => {
     //if no then do nothing
     if (window.confirm("Are you sure want to delete this question?")) {
       const db = firebase.firestore();
-      //
-      // var q = db
-      //   .collection("PYSV")
-      //   .doc(Class)
-      //   .collection(subj[index])
-      //   .doc(chapter)
-
-      // var newq=q  
-      //   .collection("question")
-      //   .doc();
-      // return db.runTransaction((t)=>{
-      //   return t.get(q).then((res)=>{
-      //     console.log(res.data());
-      //   })
-      // })
-
-
-      // const idarr = [];
-      // db.collection("PYSV")
-      //   .doc(Class)
-      //   .collection(subj[index])
-      //   .doc(chapter)
-      //   .collection("question")
-      //   .orderBy("number")
-      //   .onSnapshot(function (querySnapshot) {
-      //     // console.log(querySnapshot);
-      //     querySnapshot.forEach(async function (doc) {
-      //       // console.log(doc.id, " => ", doc.data());
-      //       if (doc.data().number > questno) {
-      //         console.log(doc.data().number);
-      //         idarr.push(doc.id);
-      //         // db.collection("PYSV")
-      //         //   .doc(Class)
-      //         //   .collection(subj[index])
-      //         //   .doc(chapter)
-      //         //   .collection("question")
-      //         //   .doc(doc.id)
-      //         //   .update({ number:doc.data().number-1 });
-      //         // doc.update({number:doc.data().number-1});
-      //       }
-      //       // doc.update({number: number-1})
-      //     });
-      //   });
-
-        // const q = db
-        //   .collection("PYSV")
-        //   .doc(Class)
-        //   .collection(subj[index])
-        //   .doc(chapter)
-        //   .collection("question")
-        //   // .doc("tDFKGjZJqDc8oX6wha67");
-        //   .doc(id);
-        // try {
-        //   await db.runTransaction(async (t) => {
-        //     const doc = await t.get(q);
-
-        //     // Add one person to the city population.
-        //     // Note: this could be done without a transaction
-        //     //       by updating the population using FieldValue.increment()
-        //     console.log(doc.data().number);
-        //     const newnumber = doc.data().number - 1;
-        //     if (doc.data().number > questno) t.update(q, { number: newnumber });
-        //     // t.update(cityRef, {population: newPopulation});
-        //   });
-
-        //   console.log("Transaction success!");
-        // } catch (e) {
-        //   console.log("Transaction failure:", e);
-        // }
-
-
-
-      // await db
-      // .collection("PYSV")
-      // .doc(Class)
-      // .collection(subj[index])
-      // .doc(chapter)
-      // .collection("question")
-      // .doc(id)
-      // .update({
-      //   number: firebase.firestore.FieldValue>questno && firebase.firestore.FieldValue.increment(-1),
-      // })
-
-      db.collection("PYSV")
-        .doc(Class)
-        .collection(subj[index])
-        .doc(chapter)
-        .collection("question")
-        .doc(id)
+      if (sub == "mocktest") {
+        var q = db
+          .collection("MOCK")
+          .doc("MAINS")
+          .collection("PAPER")
+          .doc(`PAPER${Number(mockpaperno)}`)
+          .collection("question");
+      } else {
+        var q = db
+          .collection("PYSV")
+          .doc(Class)
+          .collection(subj[index])
+          .doc(chapter)
+          .collection("question");
+      }
+      q.doc(id)
         .delete()
         .then(function () {
           console.log("Document successfully deleted!");
@@ -199,103 +141,92 @@ const QuestionContent = (props) => {
     }
   }
 
-  // function updateDB(idarray) {
-  //   const db = firebase.firestore();
-  //   console.log("inside updateDB");
-  //   console.log(idarray);
-  //   console.log(idarray.length);
-  //   console.log(idarray[0],idarray[1],idarray);
-  //   for(let i=0;i<idarray.length;i++){
-  //     console.log(idarray[i]);
-  //     db.collection("PYSV")
-  //       .doc(Class)
-  //       .collection(subj[index])
-  //       .doc(chapter)
-  //       .collection("question")
-  //       .doc(idarray[i])
-  //       .update({ number: "1" });
-  //   }
-  // }
-
   return (
     <div>
       <Container
         className="shadow-card"
         style={{ marginTop: "50px", textAlign: "center" }}
       >
-        <h4>Select Portions</h4>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "15px",
-          }}
-        >
-          <TextField
-            id="standard-number"
-            select
-            label="Select Class"
-            value={Class}
-            style={{ width: "140px", marginRight: "20px" }}
-            onChange={(event) => {
-              setClass(event.target.value);
-              localStorage.setItem("Class", event.target.value);
-            }}
-          >
-            <MenuItem value="class11">Class 11</MenuItem>
-            <MenuItem value="class12">Class 12</MenuItem>
-          </TextField>
+        {sub !== "mocktest" && (
+          <>
+            <h4>Select Portions</h4>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "15px",
+              }}
+            >
+              <TextField
+                id="standard-number"
+                select
+                label="Select Class"
+                value={Class}
+                style={{ width: "140px", marginRight: "20px" }}
+                onChange={(event) => {
+                  setClass(event.target.value);
+                  localStorage.setItem("Class", event.target.value);
+                }}
+              >
+                <MenuItem value="class11">Class 11</MenuItem>
+                <MenuItem value="class12">Class 12</MenuItem>
+              </TextField>
 
-          <TextField
-            id="standard-number"
-            select
-            label="Chapter Name"
-            value={chapter}
-            style={{ width: "250px", marginRight: "20px" }}
-            onChange={(event) => {
-              setChapter(event.target.value);
-              localStorage.setItem("chapter", event.target.value);
-            }}
-          >
-            {Class === "class11" ? (
-              Syllabus[index].class11 &&
-              Syllabus[index].class11.map((e, index) => {
-                var { value, chapter } = e;
-                return (
-                  <MenuItem value={value} key={index}>
-                    {chapter}
-                  </MenuItem>
-                );
-              })
-            ) : Class === "class12" ? (
-              Syllabus[index].class12 &&
-              Syllabus[index].class12.map((e, index) => {
-                var { value, chapter } = e;
-                return (
-                  <MenuItem value={value} key={index}>
-                    {chapter}
-                  </MenuItem>
-                );
-              })
-            ) : (
-              <MenuItem value={""}>Select Class</MenuItem>
-            )}
-          </TextField>
-          {/* {Class !== "" && chapter !== "" && ( */}
-          <Button
-            id="getquestions"
-            className="shadow-btn"
-            style={{ marginTop: "5px" }}
-            onClick={() => {
-              fetchPaper(Class, chapter);
-            }}
+              <TextField
+                id="standard-number"
+                select
+                label="Chapter Name"
+                value={chapter}
+                style={{ width: "250px", marginRight: "20px" }}
+                onChange={(event) => {
+                  setChapter(event.target.value);
+                  localStorage.setItem("chapter", event.target.value);
+                }}
+              >
+                {Class === "class11" ? (
+                  Syllabus[index].class11 &&
+                  Syllabus[index].class11.map((e, index) => {
+                    var { value, chapter } = e;
+                    return (
+                      <MenuItem value={value} key={index}>
+                        {chapter}
+                      </MenuItem>
+                    );
+                  })
+                ) : Class === "class12" ? (
+                  Syllabus[index].class12 &&
+                  Syllabus[index].class12.map((e, index) => {
+                    var { value, chapter } = e;
+                    return (
+                      <MenuItem value={value} key={index}>
+                        {chapter}
+                      </MenuItem>
+                    );
+                  })
+                ) : (
+                  <MenuItem value={""}>Select Class</MenuItem>
+                )}
+              </TextField>
+              {/* {Class !== "" && chapter !== "" && ( */}
+              <Button
+                id="getquestions"
+                className="shadow-btn"
+                style={{ marginTop: "5px" }}
+                onClick={() => {
+                  fetchPaper(Class, chapter);
+                }}
 
-            // ref={selfRef}
-          >
-            next
-          </Button>
-          {/* )} */}
-        </div>
+                // ref={selfRef}
+              >
+                next
+              </Button>
+              {/* )} */}
+            </div>
+          </>
+        )}
+        {sub === "mocktest" && (
+          <h1>{`MOCK TEST PAPER ${Number(mockpaperno)}`}</h1>
+        )}
       </Container>
 
       {/* <PaperContent/> */}
@@ -331,6 +262,7 @@ const QuestionContent = (props) => {
                         Subject: sub,
                         Chapter: chapter,
                         QuestionNo: allQuestions.length + 1,
+                        mockpaperno: mockpaperno,
                         // allQuestions: allQuestions,
                         // setQuestionNo:setQuestionNo,
                       },
@@ -425,6 +357,7 @@ const QuestionContent = (props) => {
                             Subject: sub,
                             Chapter: chapter,
                             QuestionNo: index + 1,
+                            mockpaperno: mockpaperno,
                             // allQuestions: allQuestions,
                           },
                         }}

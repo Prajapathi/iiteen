@@ -15,7 +15,9 @@ export default function Subjectwise() {
   const [classNumber, setClassNumber] = React.useState("11");
   const [loading, setLoading] = React.useState(false);
   let history = useHistory();
+
   window.onpopstate = function (e) {
+    console.log("called")
     if (!open || localStorage.getItem("dialog")===null) {
       setOpen(true);
       history.push("/Subjectwise");
@@ -30,6 +32,12 @@ export default function Subjectwise() {
       localStorage.setItem("dialog",true);
     }
   },[])
+
+  // useEffect(()=>{
+  //   if(localStorage.getItem("reloaded")===true){
+  //     console.log("reload detected")
+  //   }
+  // },[])
 
   const selectClass = (n) => {
     setClassNumber(n);

@@ -105,11 +105,13 @@ const SelectSyllabus = () => {
     <div
       style={{
         display: "flex",
+        flexDirection:"column",
         alignItems: "center",
         justifyContent: "space-evenly",
-        height: "1000px",
+        height: "900px",
       }}
     >
+      <h1>Select Syllabus</h1>
       <div
         style={{
           display: "flex",
@@ -121,6 +123,7 @@ const SelectSyllabus = () => {
           width: "1500px",
         }}
       >
+        
         <div
           style={{
             display: "flex",
@@ -130,7 +133,7 @@ const SelectSyllabus = () => {
             marginBottom: "100px",
           }}
         >
-          <h3 className={styl.syllabush3tag}>Select Syllabus</h3>
+          
           <Button
             className={styl.syllabusbutton}
             component={Link}
@@ -139,7 +142,7 @@ const SelectSyllabus = () => {
             }}
             onClick={() => {
               setSyllabustype("fullsyllabus");
-              alert("Are you sure?, you selected full syllabus");
+              window.confirm("Are you sure?, you selected full syllabus");
               savetodatabase();
             }}
           >
@@ -153,7 +156,7 @@ const SelectSyllabus = () => {
             }}
             onClick={() => {
               setSyllabustype("class 11");
-              alert("Are you sure?, you selected class 11 syllabus");
+              window.confirm("Are you sure?, you selected class 11 syllabus");
               savetodatabase();
             }}
           >
@@ -167,7 +170,7 @@ const SelectSyllabus = () => {
             }}
             onClick={() => {
               setSyllabustype("class 12");
-              alert("Are you sure?, you selected class 12 syllabus");
+              window.confirm("Are you sure?, you selected class 12 syllabus");
               savetodatabase();
             }}
           >
@@ -340,11 +343,12 @@ const SelectSyllabus = () => {
                 pathname: "/mocktestadminmain/mains/syllabussummary/0",
               }}
               onClick={() => {
-                alert("Are you sure?, you selected part syllabus");
+                window.confirm("Are you sure?, you selected part syllabus");
                 savetodatabase();
               }}
+              style={{boxShadow: "0 7px 18px rgba(0, 0, 0, 0.192)"}}
             >
-              proceed for part syllabus
+              proceed with part syllabus
             </Button>
           </div>
         )}

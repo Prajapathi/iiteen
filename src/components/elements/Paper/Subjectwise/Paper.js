@@ -15,9 +15,23 @@ export function Paper(props) {
   const [answers, setAnswers] = React.useState([]);
   const [index, setIndex] = React.useState(0);
 
+  function checkFirstVisit() {
+    // if(localStorage.getItem("reloaded")===null) {
+    //   // cookie doesn't exist, create it now
+    //   localStorage.setItem("reloaded",true)
+    // }
+    // else {
+    //   // not first visit, so alert
+    //   // alert('You refreshed!');
+    // }
+  }
+
   console.log(props);
   React.useEffect(() => {
     //if user is not navigating through MockTestCard then redirect to home
+    //new code
+    // localStorage.setItem("fromPaper",true);
+    //
     let verifyPaper = localStorage.getItem("PaperName");
     if (
       verifyPaper == null ||
@@ -44,7 +58,7 @@ export function Paper(props) {
 
   return (
     <>
-      <div className="timer-bar subjectwise-title-bar">
+      <div className="timer-bar subjectwise-title-bar" onload={checkFirstVisit()}>
         <div>{props.paper.name} </div>
         <div>Level {props.paper.level} </div>
       </div>

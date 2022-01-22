@@ -56,15 +56,15 @@ const SetQuestion = (props) => {
 
   const [locationKeys, setLocationKeys] = useState([]);
   const [saveposition, setSaveposition] = useState(0);
-  const [open,setOpen]=useState(false);
-  const [droptype,setDroptype]=useState("");
-  const [field,setField]=useState("");
-  const [v,setV]=useState("");
-  const [index,setIndex]=useState("");
+  const [open, setOpen] = useState(false);
+  const [droptype, setDroptype] = useState("");
+  const [field, setField] = useState("");
+  const [v, setV] = useState("");
+  const [index, setIndex] = useState("");
 
   const ref = useRef();
   const cursorPosition = 2;
-  const [data2,setData2]=useState("");
+  const [data2, setData2] = useState("");
 
   const numarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -82,6 +82,7 @@ const SetQuestion = (props) => {
   const QuestionNo = props.location.state.QuestionNo;
   const Subject = props.location.state.Subject;
   const Chapter = props.location.state.Chapter;
+  const mockpaperno = props.location.state.mockpaperno;
   // console.log(Class,Id,QuestionNo,Subject,Chapter);
   // const allQuestions = props.location.state.allQuestions;
 
@@ -133,7 +134,15 @@ const SetQuestion = (props) => {
           //   localStorage.setItem("a", true);
           //   console.log("just popped");
           history.push(
-            `${Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2}`
+            `${
+              Subject === "physics"
+                ? 0
+                : Subject === "chemistry"
+                ? 1
+                : Subject === "maths"
+                ? 2
+                : 3
+            }`
           );
           // }
         }
@@ -160,16 +169,26 @@ const SetQuestion = (props) => {
   //   false
   // );
 
-  // console.log("allQuestions", allQuestions);
+  console.log("allQuestions", allQuestions);
 
   const submitPaper = async (e) => {
     // const option=[option1,option2,option3,option4];
     const db = firebase.firestore();
-    await db
-      .collection("PYSV")
-      .doc(Class)
-      .collection(Subject)
-      .doc(Chapter)
+    if (Subject === "mocktest") {
+      var q = await db
+        .collection("MOCK")
+        .doc("MAINS")
+        .collection("PAPER")
+        .doc(`PAPER${Number(mockpaperno)}`);
+    } else {
+      var q = await db
+        .collection("PYSV")
+        .doc(Class)
+        .collection(Subject)
+        .doc(Chapter);
+    }
+    await q.update({ noofques: QuestionNo });
+    await q
       .collection("question")
       .add({
         question: questionDetail,
@@ -200,12 +219,22 @@ const SetQuestion = (props) => {
     // const option=[option1,option2,option3,option4];
     // console.log("inside update paper");
     const db = firebase.firestore();
-    await db
-      .collection("PYSV")
-      .doc(Class)
-      .collection(Subject)
-      .doc(Chapter)
-      .collection("question")
+    if (Subject === "mocktest") {
+      var q = await db
+        .collection("MOCK")
+        .doc("MAINS")
+        .collection("PAPER")
+        .doc(`PAPER${Number(mockpaperno)}`)
+        .collection("question");
+    } else {
+      var q = await db
+        .collection("PYSV")
+        .doc(Class)
+        .collection(Subject)
+        .doc(Chapter)
+        .collection("question");
+    }
+    await q
       .doc(Id)
       .update({
         // question: questionDetail,
@@ -268,7 +297,7 @@ const SetQuestion = (props) => {
     }
   };
 
-  function handleOnDragEnd(field, result,droptype) {
+  function handleOnDragEnd(field, result, droptype) {
     if (droptype === "option1") {
       const items = Array.from(field);
       const [reorderedItem] = items.splice(result.source.index, 1);
@@ -319,7 +348,7 @@ const SetQuestion = (props) => {
     }
   }
 
-  function deleteElement(index, field,droptype) {
+  function deleteElement(index, field, droptype) {
     const updateItems = field.filter((elm, ind) => {
       return index !== ind;
     });
@@ -352,15 +381,27 @@ const SetQuestion = (props) => {
     // console.log("inside fetchPaper");
     if (Id) {
       const db = firebase.firestore();
-      await db
-        .collection("PYSV")
-        .doc(Class)
-        .collection(Subject)
-        .doc(Chapter)
-        .collection("question")
+      if (Subject === "mocktest") {
+        var q = await db
+          .collection("MOCK")
+          .doc("MAINS")
+          .collection("PAPER")
+          .doc(`PAPER${Number(mockpaperno)}`)
+          .collection("question");
+      } else {
+        var q = await db
+          .collection("PYSV")
+          .doc(Class)
+          .collection(Subject)
+          .doc(Chapter)
+          .collection("question");
+      }
+      console.log(Id);
+      await q
         .doc(Id)
         .get()
         .then((snap) => {
+          console.log(snap.data());
           if (snap.exists) {
             setEditPaper(snap.data());
             // console.log("data fetched");
@@ -392,14 +433,25 @@ const SetQuestion = (props) => {
 
   async function fetchAllQuestions() {
     const db = firebase.firestore();
-    await db
-      .collection("PYSV")
-      .doc(Class)
-      .collection(Subject)
-      .doc(Chapter)
-      .collection("question")
-      .orderBy("number")
-      .onSnapshot(function (querySnapshot) {
+    if (Subject === "mocktest") {
+      console.log("mocktest", `PAPER${Number(mockpaperno)}`);
+      var q = await db
+        .collection("MOCK")
+        .doc("MAINS")
+        .collection("PAPER")
+        .doc(`PAPER${Number(mockpaperno)}`)
+        .collection("question");
+    } else {
+      var q = await db
+        .collection("PYSV")
+        .doc(Class)
+        .collection(Subject)
+        .doc(Chapter)
+        .collection("question");
+    }
+    await q.orderBy("number").onSnapshot(
+      function (querySnapshot) {
+        console.log(querySnapshot.docs);
         var array = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           year: doc.data().year,
@@ -409,8 +461,13 @@ const SetQuestion = (props) => {
         array.sort((a, b) => {
           return a.quesno - b.quesno;
         });
+        console.log(array);
         setAllQuestions(array);
-      });
+      },
+      function (error) {
+        console.log(error);
+      }
+    );
     console.log(allQuestions);
   }
 
@@ -436,8 +493,8 @@ const SetQuestion = (props) => {
   }, [correct, editPaper, count]);
 
   function Handle(index) {
-    console.log(index)
-    console.log(editable.includes(index))
+    console.log(index);
+    console.log(editable.includes(index));
     if (editable.includes(index)) {
       let arr = [];
       for (let i = 0; i <= editable.length; i++) {
@@ -447,7 +504,7 @@ const SetQuestion = (props) => {
       }
       setEditable(arr);
     } else {
-      console.log([...editable, index])
+      console.log([...editable, index]);
       setEditable([...editable, index]);
       console.log("editable", editable);
     }
@@ -459,7 +516,7 @@ const SetQuestion = (props) => {
   async function Save(droptype, field, index, value) {
     // if(dropType==="question"){
     console.log("inside save droptype");
-    console.log(droptype,index,field,value)
+    console.log(droptype, index, field, value);
     const temp = [];
     for (let i = 0; i < field.length; i++) {
       if (i === index) {
@@ -495,7 +552,7 @@ const SetQuestion = (props) => {
       setHint(temp);
     }
     console.log(temp);
-    setOpen(false)
+    setOpen(false);
     // console.log(questionDetail);
     // var start = ref.current.selectionStart;
     // var end = ref.current.selectionEnd;
@@ -523,62 +580,63 @@ const SetQuestion = (props) => {
   //     ref.focus();
   // }
   //
-  const handleClose=()=>{
-    setOpen(false)
-  }
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-  const DragContain = React.useCallback((props) => {
-    var t = 0;
-    // console.log(props)
-    props.filed && props.filed.map((e,index)=>{
-      props.filed[index].id="part "+index;
-    })
-    // console.log(props)
-    return (
-      <Container>
-        
-        <DragDropContext
-          onDragEnd={(result) => {
-            if (!result.destination) return;
-            handleOnDragEnd(props.filed, result,props.dropType);
-          }}
-        >
-          <Droppable droppableId="characters">
-            {(provided) => (
-              <ul
-                className="characters"
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                style={{ marginTop: "50px" }}
-              >
-                {console.log("prop.filed", props.filed)}
-                {props.filed !== "" ? (
-                  props.filed.map((e, index) => {
-                    var { data } = e;
-                    var keyBla = props.dropType + index;
-                    // setData2(data);
-                    return (
-                      <Draggable
-                        key={index}
-                        draggableId={props.filed[index].id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <li
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <div className="drag-card">
-                              {/* <form
+  const DragContain = React.useCallback(
+    (props) => {
+      var t = 0;
+      // console.log(props)
+      props.filed &&
+        props.filed.map((e, index) => {
+          props.filed[index].id = "part " + index;
+        });
+      // console.log(props)
+      return (
+        <Container>
+          <DragDropContext
+            onDragEnd={(result) => {
+              if (!result.destination) return;
+              handleOnDragEnd(props.filed, result, props.dropType);
+            }}
+          >
+            <Droppable droppableId="characters">
+              {(provided) => (
+                <ul
+                  className="characters"
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  style={{ marginTop: "50px" }}
+                >
+                  {console.log("prop.filed", props.filed)}
+                  {props.filed !== "" ? (
+                    props.filed.map((e, index) => {
+                      var { data } = e;
+                      var keyBla = props.dropType + index;
+                      // setData2(data);
+                      return (
+                        <Draggable
+                          key={index}
+                          draggableId={props.filed[index].id}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <li
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <div className="drag-card">
+                                {/* <form
                                 onSubmit={(elm) => {
                                   elm.preventDefault();
                                   Save(props.dropType, props.filed, index);
                                 }}
                               > */}
-                              {/* {console.log(index)} */}
-                              {/* {data} */}
-                              {/* {editable.includes(props.dropType + index) ? (
+                                {/* {console.log(index)} */}
+                                {/* {data} */}
+                                {/* {editable.includes(props.dropType + index) ? (
                                 <input
                                   autoFocus
                                   ref={ref}
@@ -605,67 +663,80 @@ const SetQuestion = (props) => {
                               ) : (
                                 null
                               )} */}
-                              {editable.includes(props.dropType + index) ? (
-                                <input
-                                  autoFocus
-                                  // ref={ref}
-                                  value={data}
-                                  onChange={(e)=>Save(props.dropType,props.filed,index,e.target.value)}
-                                  style={{ width: "100%" }}
-                                ></input>
-                              ) : (
-                                data
-                              )}
-                              <button
-                                className="dragButton"
-                                type="submit"
-                                onClick={() => {
-                                  // if(!editable.includes(props.dropType + index))setData2(data)
+                                {editable.includes(props.dropType + index) ? (
+                                  <input
+                                    autoFocus
+                                    // ref={ref}
+                                    value={data}
+                                    onChange={(e) =>
+                                      Save(
+                                        props.dropType,
+                                        props.filed,
+                                        index,
+                                        e.target.value
+                                      )
+                                    }
+                                    style={{ width: "100%" }}
+                                  ></input>
+                                ) : (
+                                  data
+                                )}
+                                <button
+                                  className="dragButton"
+                                  type="submit"
+                                  onClick={() => {
+                                    // if(!editable.includes(props.dropType + index))setData2(data)
 
-                                  // if(editable.includes(props.dropType + index))Save(props.dropType, props.filed, index);
-                                  Handle(props.dropType + index);
-                                  console.log(editable)
-                                  // setDroptype(props.dropType)
-                                  // setIndex(index)
-                                  // setField(props.filed)
-                                  // console.log(data)
-                                  // setData2(data)
-                                  // setOpen(true)
-                                }}
-                                style={{ margin: "5px" }}
-                              >
-                                {editable.includes(props.dropType + index)
-                                  ? "save"
-                                  : "edit"}
-                              </button>
-                              {/* </form> */}
+                                    // if(editable.includes(props.dropType + index))Save(props.dropType, props.filed, index);
+                                    Handle(props.dropType + index);
+                                    console.log(editable);
+                                    // setDroptype(props.dropType)
+                                    // setIndex(index)
+                                    // setField(props.filed)
+                                    // console.log(data)
+                                    // setData2(data)
+                                    // setOpen(true)
+                                  }}
+                                  style={{ margin: "5px" }}
+                                >
+                                  {editable.includes(props.dropType + index)
+                                    ? "save"
+                                    : "edit"}
+                                </button>
+                                {/* </form> */}
 
-                              <button
-                                className="dragButton"
-                                onClick={() =>
-                                  deleteElement(index, props.filed,props.dropType)
-                                }
-                                style={{ margin: "5px" }}
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </li>
-                        )}
-                      </Draggable>
-                    );
-                  })
-                ) : (
-                  <></>
-                )}
-                {provided.placeholder}
-              </ul>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </Container>
-    );
-  },[editable]);
+                                <button
+                                  className="dragButton"
+                                  onClick={() =>
+                                    deleteElement(
+                                      index,
+                                      props.filed,
+                                      props.dropType
+                                    )
+                                  }
+                                  style={{ margin: "5px" }}
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </li>
+                          )}
+                        </Draggable>
+                      );
+                    })
+                  ) : (
+                    <></>
+                  )}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </Container>
+      );
+    },
+    [editable]
+  );
 
   return (
     <div>
@@ -700,8 +771,8 @@ const SetQuestion = (props) => {
         title="question"
       />
 
-{console.log("hello")}
-      <DragContain filed={questionDetail} dropType="question"/>
+      {console.log("hello")}
+      <DragContain filed={questionDetail} dropType="question" />
       {console.log("hello")}
       {/* ---------------------------------------Question End------------------------------------- */}
 
@@ -983,6 +1054,7 @@ const SetQuestion = (props) => {
                       Subject: Subject,
                       Chapter: Chapter,
                       QuestionNo: QuestionNo - 1,
+                      mockpaperno: mockpaperno,
                       // allQuestions: allQuestions,
                     },
                   }}
@@ -1053,6 +1125,7 @@ const SetQuestion = (props) => {
                     Subject: Subject,
                     Chapter: Chapter,
                     QuestionNo: QuestionNo + 1,
+                    mockpaperno: mockpaperno,
                     // allQuestions[QuestionNo] !== undefined
                     //   ? QuestionNo + 1
                     //   : allQuestions.length + 2,
@@ -1066,6 +1139,7 @@ const SetQuestion = (props) => {
                     "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
                 }}
                 onClick={async () => {
+                  console.log(Id);
                   if (Id !== undefined) {
                     await updatePaper();
                   } else {

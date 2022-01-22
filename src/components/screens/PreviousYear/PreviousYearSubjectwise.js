@@ -15,6 +15,8 @@ export default function PreviousYearSubjectwise() {
   const [classNumber, setClassNumber] = React.useState("11");
   const [loading, setLoading] = React.useState(false);
   let history = useHistory();
+
+
   window.onpopstate = function (e) {
     if (!open || localStorage.getItem("dialog")===null) {
       setOpen(true);

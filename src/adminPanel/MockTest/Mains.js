@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css";
 import firebase from "firebase";
+import { Link } from "react-router-dom";
 
 const Mains = () => {
   const [paper, setPaper] = useState([]);
@@ -18,6 +19,8 @@ const Mains = () => {
         setPaper(
           snap.docs.map((doc) => ({
             number: doc.data().number,
+            syllabusCreated: doc.data().syllabusCreated,
+            noofques:doc.data().noofques
           }))
         );
         console.log(snap.docs.length);
@@ -32,7 +35,7 @@ const Mains = () => {
       .doc("MAINS")
       .collection("PAPER")
       .doc(`PAPER${paper.length + 1}`)
-      .set({ exist: true, number: paper.length + 1 ,syllabusSelected:false})
+      .set({ exist: true, number: paper.length + 1, syllabusSelected: false })
       .then(() => {
         console.log("saved");
       })
@@ -49,7 +52,7 @@ const Mains = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          alignItems:"center",
+          alignItems: "center",
           textAlign: "center",
           color: "rgb(88, 88, 88)",
         }}
@@ -61,21 +64,42 @@ const Mains = () => {
             justifyContent: "flex-start",
             alignItems: "center",
             width: "1100px",
-            flexWrap:"wrap"
+            flexWrap: "wrap",
           }}
         >
           {paper.map((p) => (
             <div
               style={{
                 width: "300px",
-                margin: "30px"
+                margin: "30px",
               }}
             >
-              <a href={"/mocktestadminmain/mains/selectsyllabus/0"}>
+              {/* <a
+                href={`${
+                  p.syllabusCreated
+                    ? ""
+                    : "/mocktestadminmain/mains/selectsyllabus/0"
+                }`}
+              >
                 <div className={styl.subjects}>
                   <h4>Mains Paper {p.number}</h4>
                 </div>
-              </a>
+              </a> */}
+              <Link
+                to={{
+                  pathname: `${
+                    p.syllabusCreated
+                      ? "/PreviousYearSubjectwise/3"
+                      : "/mocktestadminmain/mains/selectsyllabus/0"
+                  }`,
+                  state: { papernumber: Number(p.number) },
+                }}
+              >
+                <div className={styl.subjects} style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+                  <h4>Mains Paper {p.number}</h4>
+                  <h6>No. of Questions :{p.noofques?p.noofques:"0"}</h6>
+                </div>
+              </Link>
             </div>
           ))}
           <div>
