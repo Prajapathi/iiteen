@@ -66,6 +66,8 @@ const SetQuestion = (props) => {
   const cursorPosition = 2;
   const [data2, setData2] = useState("");
 
+  const [mocksingletype,setMocksingletype]=useState();
+
   const numarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   // const Class = props.match.params.Class
@@ -89,6 +91,15 @@ const SetQuestion = (props) => {
   useEffect(() => {
     fetchPaper();
     fetchAllQuestions();
+    if(Subject==="mocktest"){
+      if((QuestionNo>=1 && QuestionNo<=20) || (QuestionNo>=31 && QuestionNo<=50) || (QuestionNo>=61 && QuestionNo<=80)){
+        // setMocksingletype("singletype");
+        setQuestionType("4")
+      }else{
+        // setMocksingletype("numericaltype")
+        setQuestionType("2")
+      }
+    }
   }, []);
 
   // useEffect(()=>{
@@ -740,7 +751,7 @@ const SetQuestion = (props) => {
 
   return (
     <div>
-      <h1 style={{ textAlign: "center" }}> Question No. - {QuestionNo} </h1>
+      <h1 style={{ textAlign: "center" }}> Question No. - {QuestionNo} {`${Subject==="mocktest" ? questionType==4?"(Single Correct Type)":"(Numerical Correct Type)":"" }`}</h1>
       {/* <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Edit and Save</DialogTitle>
         <DialogContent>
@@ -777,60 +788,63 @@ const SetQuestion = (props) => {
       {/* ---------------------------------------Question End------------------------------------- */}
 
       <Container>
+        {!(Subject==="mocktest") && 
         <div>
-          <h4>Select Question type</h4>
-          <div
+        <h4>Select Question type</h4>
+        <div
+          style={{
+            display: "inline-flex",
+            justifyContent: "space-evenly",
+            width: "100%",
+          }}
+          onChange={(e) => {
+            setQuestionType(e.target.value);
+            setCorrect([]);
+          }}
+        >
+          <RadioGroup
+            name="radio-buttons-group"
+            row
             style={{
-              display: "inline-flex",
-              justifyContent: "space-evenly",
+              display: "flex",
+              justifyContent: "space-around",
               width: "100%",
             }}
-            onChange={(e) => {
-              setQuestionType(e.target.value);
-              setCorrect([]);
-            }}
           >
-            <RadioGroup
-              name="radio-buttons-group"
-              row
-              style={{
-                display: "flex",
-                justifyContent: "space-around",
-                width: "100%",
-              }}
-            >
-              <FormControlLabel
-                value="4"
-                // onChange={() => handleCheck(0)}
-                control={<Radio />}
-                label="Single Correct"
-                checked={"4" == questionType}
-                defaultChecked="true"
-              />
-              <FormControlLabel
-                value="5"
-                // onChange={() => handleCheck(1)}
-                control={<Radio />}
-                label="Multiple Correct"
-                checked={"5" == questionType}
-              />
-              <FormControlLabel
-                value="1"
-                // onChange={() => handleCheck(2)}
-                control={<Radio />}
-                label="Integers"
-                checked={"1" == questionType}
-              />
-              <FormControlLabel
-                value="2"
-                // onChange={() => handleCheck(3)}
-                control={<Radio />}
-                label="Numerical"
-                checked={"2" == questionType}
-              />
-            </RadioGroup>
-          </div>
+            <FormControlLabel
+              value="4"
+              // onChange={() => handleCheck(0)}
+              control={<Radio />}
+              label="Single Correct"
+              checked={"4" == questionType}
+              defaultChecked="true"
+            />
+            <FormControlLabel
+              value="5"
+              // onChange={() => handleCheck(1)}
+              control={<Radio />}
+              label="Multiple Correct"
+              checked={"5" == questionType}
+            />
+            <FormControlLabel
+              value="1"
+              // onChange={() => handleCheck(2)}
+              control={<Radio />}
+              label="Integers"
+              checked={"1" == questionType}
+            />
+            <FormControlLabel
+              value="2"
+              // onChange={() => handleCheck(3)}
+              control={<Radio />}
+              label="Numerical"
+              checked={"2" == questionType}
+            />
+          </RadioGroup>
         </div>
+      </div>
+        }
+        
         <div>
           {questionType === "2" ? (
             <div>
