@@ -31,7 +31,9 @@ const QuestionContent = (props) => {
     console.log(Id, questionNo, editBtn);
   }
   var index = props.match.params.subject;
-  var mockpaperno = props.location.state ? props.location.state.papernumber:null;
+  var mockpaperno = props.location.state
+    ? props.location.state.papernumber
+    : null;
 
   const subj = ["physics", "chemistry", "maths"];
 
@@ -53,7 +55,7 @@ const QuestionContent = (props) => {
   }, [index]);
 
   useEffect(() => {
-    if (localStorage.getItem("Class") !== null) {
+    if (localStorage.getItem("Class") !== null && index!=='3') {
       setClass(localStorage.getItem("Class"));
       setChapter(localStorage.getItem("chapter"));
       // let button = document.getElementById("getquestions");
@@ -75,7 +77,7 @@ const QuestionContent = (props) => {
 
   function fetchPaper(selClass, selChapter) {
     const db = firebase.firestore();
-    console.log(sub,selClass);
+    console.log(sub, selClass);
     if (selClass === "") {
       var q = db
         .collection("MOCK")
@@ -118,17 +120,17 @@ const QuestionContent = (props) => {
           .collection("MOCK")
           .doc("MAINS")
           .collection("PAPER")
-          .doc(`PAPER${Number(mockpaperno)}`)
-          .collection("question");
+          .doc(`PAPER${Number(mockpaperno)}`);
       } else {
         var q = db
           .collection("PYSV")
           .doc(Class)
           .collection(subj[index])
-          .doc(chapter)
-          .collection("question");
+          .doc(chapter);
       }
-      q.doc(id)
+      q.update({noofques:firebase.firestore.FieldValue.increment(-1)})
+      q.collection("question")
+        .doc(id)
         .delete()
         .then(function () {
           console.log("Document successfully deleted!");

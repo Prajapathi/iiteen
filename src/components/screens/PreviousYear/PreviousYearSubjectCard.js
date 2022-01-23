@@ -49,6 +49,9 @@ export function PreviousYearSubjectCard(props) {
     else sub = "Maths";
     setSubject(props.subject);
 
+    //new code
+    localStorage.removeItem("palleteindex");
+    //
     console.log(props.user.uid,props.classNumber,sub,ch)
     //fetch attempted answers to show in progress bar
     const db = firebase.firestore();
@@ -107,6 +110,11 @@ export function PreviousYearSubjectCard(props) {
     localStorage.setItem("dialog", false);
     console.log("ohh", "class" + classNumber, subject, chapter);
     props.loadingStart(true);
+
+    //new code
+    console.log(localStorage.getItem("palleteindex"))
+    localStorage.removeItem("palleteindex");
+    //
 
     //Access question to pass as prop
     const db = firebase.firestore();

@@ -112,6 +112,7 @@ const Typer = (props) => {
                         elm.preventDefault();
                         questionDetailSubmit();
                       }}
+                      
                     >
                       <textarea
                         placeholder="Write Here"

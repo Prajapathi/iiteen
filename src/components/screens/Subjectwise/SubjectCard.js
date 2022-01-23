@@ -128,6 +128,11 @@ export function SubjectCard(props) {
     console.log("ohh", "Class " + classNumber, lev, subject, chapter);
     props.loadingStart(true);
 
+    //new code
+    console.log(localStorage.getItem("palleteindex"))
+    localStorage.removeItem("palleteindex");
+    //
+
     //Access question to pass as prop
     const db = firebase.firestore();
     db.collection("SUBJECTWISE")

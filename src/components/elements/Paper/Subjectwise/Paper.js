@@ -50,9 +50,18 @@ export function Paper(props) {
     }
     setPalleteArray(a);
     setIndex(props.paper.lastIndex ? props.paper.lastIndex : 0);
+
+    //new code
+    if(localStorage.getItem("palleteindex")!==null){
+      setIndex(localStorage.getItem("palleteindex"))
+    }
+    //
   }, []);
 
   const navigateQuestion = (ind) => {
+    //new code
+    localStorage.setItem("palleteindex",ind);
+    //
     setIndex(ind);
   };
 

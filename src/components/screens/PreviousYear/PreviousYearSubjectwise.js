@@ -15,10 +15,14 @@ export default function PreviousYearSubjectwise() {
   const [classNumber, setClassNumber] = React.useState("11");
   const [loading, setLoading] = React.useState(false);
   let history = useHistory();
+  // const [locationKeys, setLocationKeys] = React.useState([]);
 
 
   window.onpopstate = function (e) {
+    console.log("called")
+    console.log(open,localStorage.getItem("dialog"))
     if (!open || localStorage.getItem("dialog")===null) {
+      console.log("calledinside")
       setOpen(true);
       history.push("/PreviousYear");
     }
@@ -33,7 +37,7 @@ export default function PreviousYearSubjectwise() {
     }
   },[])
 
-  console.log("dialog",open);
+  // console.log("dialog",open);
   // useEffect(() => {
   //   localStorage.setItem("dialog",open);
   // }, [open])
@@ -60,7 +64,6 @@ export default function PreviousYearSubjectwise() {
           fullWidth={true}
           id="class-select-dialog"
         >
-          {console.log("dialog",open)}
           <DialogTitle id="alert-dialog-title">
             {"Please select your class"}
           </DialogTitle>
