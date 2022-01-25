@@ -32,9 +32,15 @@ const QuestionContent = (props) => {
   }
   var index = props.match.params.subject;
   var mockpaperno = props.location.state
-    ? props.location.state.papernumber
-    : null;
+  ? props.location.state.papernumber
+  : null;
 
+  window.onpopstate=function(e){
+    if(index==3 && localStorage.getItem("count")==null){
+      localStorage.setItem("count",1);
+      history.push("/mocktestadminmain/mains")
+    }
+  }
   const subj = ["physics", "chemistry", "maths"];
 
   useEffect(() => {
@@ -55,6 +61,7 @@ const QuestionContent = (props) => {
   }, [index]);
 
   useEffect(() => {
+    localStorage.removeItem("count")
     if (localStorage.getItem("Class") !== null && index!=='3') {
       setClass(localStorage.getItem("Class"));
       setChapter(localStorage.getItem("chapter"));

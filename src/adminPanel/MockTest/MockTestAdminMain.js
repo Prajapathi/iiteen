@@ -3,6 +3,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css";
 
 const MockTestAdminMain = () => {
+  localStorage.removeItem("count");
     return (
         <div>
         <Container

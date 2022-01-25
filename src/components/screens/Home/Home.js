@@ -18,6 +18,8 @@ export default function Home() {
     const [openUserInfo, setOpenUserInfo] = React.useState(false)
 
     React.useEffect(() => {
+        // window.history.pushState({page: 1}, "title 1", "?page=1")
+
         const user = firebase.auth().currentUser
         if ((user.creationTime == user.lastSignInTime && (user.displayName == null && user.email == null)) || (user.displayName == null && user.email == null)) {
             setOpenUserInfo(true)
@@ -100,7 +102,7 @@ export default function Home() {
                 </div>
                 <div id="home">
                     <img src={banner} id="home-image" alt="" />
-                    <div id="homeContent">
+                    <div id="homeContent" style={{minWidth:"360px"}}>
                         <Link to="/MockTest"><HomeCard title="Mock Test" icon="mock" /></Link>
                         <Link to="/Subjectwise"><HomeCard title="Subject-wise Test" icon="subject-wise" /></Link>
                         <Link to="/AITS"><HomeCard title="AITS" icon="AITS" /></Link>

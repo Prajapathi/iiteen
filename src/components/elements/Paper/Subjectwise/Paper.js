@@ -15,15 +15,21 @@ export function Paper(props) {
   const [answers, setAnswers] = React.useState([]);
   const [index, setIndex] = React.useState(0);
 
+  // window.onpopstate = function (e) {
+  //   console.log("paper.js called");
+  //   // localStorage.removeItem("dialog");
+  //   // history.push("/PreviousYear");
+  // };
   function checkFirstVisit() {
-    // if(localStorage.getItem("reloaded")===null) {
-    //   // cookie doesn't exist, create it now
-    //   localStorage.setItem("reloaded",true)
-    // }
-    // else {
-    //   // not first visit, so alert
-    //   // alert('You refreshed!');
-    // }
+    if (localStorage.getItem("reloaded") === null) {
+      // cookie doesn't exist, create it now
+      localStorage.setItem("reloaded", 1);
+    } else {
+      // not first visit, so alert
+      // alert('You refreshed!');
+      localStorage.setItem("reloaded",Number(localStorage.getItem("reloaded"))+1);
+    }
+    // localStorage.removeItem("dialog");
   }
 
   console.log(props);
@@ -31,6 +37,7 @@ export function Paper(props) {
     //if user is not navigating through MockTestCard then redirect to home
     //new code
     // localStorage.setItem("fromPaper",true);
+    // window.history.pushState({page: 3}, "title 3", "?page=3")
     //
     let verifyPaper = localStorage.getItem("PaperName");
     if (
@@ -52,22 +59,25 @@ export function Paper(props) {
     setIndex(props.paper.lastIndex ? props.paper.lastIndex : 0);
 
     //new code
-    if(localStorage.getItem("palleteindex")!==null){
-      setIndex(localStorage.getItem("palleteindex"))
+    if (localStorage.getItem("palleteindex") !== null) {
+      setIndex(localStorage.getItem("palleteindex"));
     }
     //
   }, []);
 
   const navigateQuestion = (ind) => {
     //new code
-    localStorage.setItem("palleteindex",ind);
+    localStorage.setItem("palleteindex", ind);
     //
     setIndex(ind);
   };
 
   return (
     <>
-      <div className="timer-bar subjectwise-title-bar" onload={checkFirstVisit()}>
+      <div
+        className="timer-bar subjectwise-title-bar"
+        onload={checkFirstVisit()}
+      >
         <div>{props.paper.name} </div>
         <div>Level {props.paper.level} </div>
       </div>

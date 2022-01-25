@@ -87,13 +87,18 @@ const SelectSyllabus = () => {
     }
   };
 
-  const savetodatabase = () => {
+  const savetodatabase = (syllabustype = "partsyllabus") => {
     const db = firebase.firestore();
     db.collection("MOCK")
       .doc("MAINS")
       .collection("PAPER")
       .doc(`PAPER${Number(paperno.number) + 1}`)
-      .update({ syllabustype: syllabustype, phy: phy, che: che, math: math })
+      .update({
+        syllabustype: syllabustype,
+        phy: phy,
+        che: che,
+        math: math,
+      })
       .then(() => {
         console.log("saved");
       })
@@ -105,7 +110,7 @@ const SelectSyllabus = () => {
     <div
       style={{
         display: "flex",
-        flexDirection:"column",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "space-evenly",
         height: "900px",
@@ -123,7 +128,6 @@ const SelectSyllabus = () => {
           width: "1500px",
         }}
       >
-        
         <div
           style={{
             display: "flex",
@@ -133,17 +137,15 @@ const SelectSyllabus = () => {
             marginBottom: "100px",
           }}
         >
-          
           <Button
             className={styl.syllabusbutton}
             component={Link}
             to={{
-              pathname: "/mocktestadminmain/mains/syllabussummary/0",
+              pathname: `/mocktestadminmain/mains/syllabussummary/${paperno.number}`,
             }}
             onClick={() => {
               setSyllabustype("fullsyllabus");
-              window.confirm("Are you sure?, you selected full syllabus");
-              savetodatabase();
+              savetodatabase("fullsyllabus");
             }}
           >
             full syllabus
@@ -152,12 +154,11 @@ const SelectSyllabus = () => {
             className={styl.syllabusbutton}
             component={Link}
             to={{
-              pathname: "/mocktestadminmain/mains/syllabussummary/0",
+              pathname: `/mocktestadminmain/mains/syllabussummary/${paperno.number}`,
             }}
             onClick={() => {
               setSyllabustype("class 11");
-              window.confirm("Are you sure?, you selected class 11 syllabus");
-              savetodatabase();
+              savetodatabase("class 11");
             }}
           >
             class 11
@@ -166,12 +167,11 @@ const SelectSyllabus = () => {
             className={styl.syllabusbutton}
             component={Link}
             to={{
-              pathname: "/mocktestadminmain/mains/syllabussummary/0",
+              pathname: `/mocktestadminmain/mains/syllabussummary/${paperno.number}`,
             }}
             onClick={() => {
               setSyllabustype("class 12");
-              window.confirm("Are you sure?, you selected class 12 syllabus");
-              savetodatabase();
+              savetodatabase("class 12");
             }}
           >
             class 12
@@ -304,49 +304,15 @@ const SelectSyllabus = () => {
                 </Select>
               </FormControl>
             </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                width: "1200px",
-                marginBottom: "100px",
-              }}
-            >
-              <h3
-                className={styl.syllabush3tag}
-                style={{ paddingLeft: "145px" }}
-              >
-                Chapters Selected
-              </h3>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                  width: "100%",
-                }}
-              >
-                <div
-                  className={styl.partsyllabussubjects}
-                  style={{ width: "200px" }}
-                >
-                  {phy.toString()}
-                </div>
-                <div style={{ width: "200px" }}>{che.toString()}</div>
-                <div style={{ width: "200px" }}>{math.toString()}</div>
-              </div>
-            </div>
             <Button
               component={Link}
               to={{
-                pathname: "/mocktestadminmain/mains/syllabussummary/0",
+                pathname: `/mocktestadminmain/mains/syllabussummary/${paperno.number}`,
               }}
               onClick={() => {
-                window.confirm("Are you sure?, you selected part syllabus");
                 savetodatabase();
               }}
-              style={{boxShadow: "0 7px 18px rgba(0, 0, 0, 0.192)"}}
+              style={{ boxShadow: "0 7px 18px rgba(0, 0, 0, 0.192)" }}
             >
               proceed with part syllabus
             </Button>

@@ -212,14 +212,17 @@ const setAnswer = (state, action) => {
 
 
 
+
   if (data.answerType == 1) {
     if (data.answer == action.payload.answer)
       data.isAnsweredWrong = false;
     else data.isAnsweredWrong = true;
   } else if (data.answerType == 2) {
     if (
-        data.answer[0] <= action.payload.answer &&
-        data.answer[1] >= action.payload.answer
+        // data.answer[0] <= action.payload.answer &&
+        // data.answer[1] >= action.payload.answer
+        data.answer <= action.payload.answer ||
+        (Math.round((Number(data.answer)+0.01)*100)/100) >= action.payload.answer
     ) {
       data.isAnsweredWrong = false;
     } else data.isAnsweredWrong = true;

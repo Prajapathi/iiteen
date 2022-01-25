@@ -13,32 +13,35 @@ import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css"
 import { Link, useParams } from "react-router-dom";
 import firebase from "firebase";
 
+function savetodatabase(paperno){
+  const db = firebase.firestore();
+  db.collection("MOCK")
+    .doc("MAINS")
+    .collection("PAPER")
+    .doc(`PAPER${paperno}`)
+    .update({ syllabusCreated:true })
+    .then(() => {
+      console.log("saved");
+    })
+    .catch((error) => {
+      console.log(error.message);
+    });
+}
+
 const Syllabussummary = () => {
   const paperno = useParams();
-
-  const savetodatabase=()=>{
-    const db = firebase.firestore();
-    db.collection("MOCK")
-      .doc("MAINS")
-      .collection("PAPER")
-      .doc(`PAPER${Number(paperno.number) + 1}`)
-      .update({ syllabusCreated:true })
-      .then(() => {
-        console.log("saved");
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  }
   return (
-    <>
+    <div
+    style={{display:"flex",justifyContent:"flex-start",flexDirection:"column",alignItems:"center"}}
+    >
       <div
         style={{
           display: "flex",
           justifyContent: "center",
+          flexDirection:"column",
           alignItems: "center",
           paddingTop: "200px",
-          paddingBottom: "200px",
+          paddingBottom: "70px",
           textTransform: "uppercase",
         }}
         className={styl.muitable}
@@ -134,16 +137,18 @@ const Syllabussummary = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <h6 style={{color:"blue",fontSize:"14px",paddingTop:"20px"}}>Note: Once Clicked on Create Mock Test you will not be able to change the syllabus again</h6>
       </div>
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          marginBottom:"50px"
         }}
       >
         <Button
-          style={{ boxShadow: "0 7px 18px rgba(0, 0, 0, 0.192)" }}
+          style={{ boxShadow: "0 7px 18px rgba(0, 0, 0, 0.192)", backgroundColor:"#5c5c5c",color:"white"}}
           component={Link}
           to={{
             pathname: "/PreviousYearSubjectwise/3",
@@ -151,12 +156,14 @@ const Syllabussummary = () => {
               papernumber:Number(paperno.number) + 1
             }
           }}
-          onClick={savetodatabase()}
+          onClick={()=>{
+            savetodatabase(Number(paperno.number) + 1)
+          }}
         >
           Create MOCK TEST
         </Button>
       </div>
-    </>
+    </div>
   );
 };
 

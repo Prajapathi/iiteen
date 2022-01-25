@@ -333,8 +333,8 @@ export function SubjectwiseChoiceSection(props) {
                       <>
                         {" "}
                         The correct answer is between{" "}
-                        {data.answer[0]}-
-                        {data.answer[1]}{" "}
+                        {data.answer}-
+                        {Math.round((Number(data.answer)+0.01)*100)/100}{" "}
                       </>
                     ) : data.answerType == 4 ? (
                       <>

@@ -9,6 +9,7 @@ const Mains = () => {
   const [size, setSize] = useState(0);
 
   useEffect(() => {
+    localStorage.removeItem("syllabustype")
     const db = firebase.firestore();
     db.collection("MOCK")
       .doc("MAINS")
@@ -35,7 +36,7 @@ const Mains = () => {
       .doc("MAINS")
       .collection("PAPER")
       .doc(`PAPER${paper.length + 1}`)
-      .set({ exist: true, number: paper.length + 1, syllabusSelected: false })
+      .set({ exist: true, number: paper.length + 1, syllabusSelected: false ,syllabusCreated:false})
       .then(() => {
         console.log("saved");
       })
@@ -90,7 +91,7 @@ const Mains = () => {
                   pathname: `${
                     p.syllabusCreated
                       ? "/PreviousYearSubjectwise/3"
-                      : "/mocktestadminmain/mains/selectsyllabus/0"
+                      : `/mocktestadminmain/mains/selectsyllabus/${p.number-1}`
                   }`,
                   state: { papernumber: Number(p.number) },
                 }}

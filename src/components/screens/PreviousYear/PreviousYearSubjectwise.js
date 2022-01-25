@@ -9,33 +9,64 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Loading from "../../elements/Loading";
 import PreviousYearSubjectSection from "./PreviousYearSubjectSection";
 import { useHistory } from "react-router-dom";
+import { browserHistory } from 'react-router';
 
 export default function PreviousYearSubjectwise() {
   const [open, setOpen] = React.useState(true);
   const [classNumber, setClassNumber] = React.useState("11");
   const [loading, setLoading] = React.useState(false);
-  let history = useHistory();
+  let History = useHistory();
   // const [locationKeys, setLocationKeys] = React.useState([]);
 
 
   window.onpopstate = function (e) {
     console.log("called")
     console.log(open,localStorage.getItem("dialog"))
+    // if(open==true){
+    //   // History.push("/mjki123U")
+    //   // window.history.back()
+    //   console.log("unexpected")
+    // }
+    // if(Number(localStorage.getItem("reloaded"))>4){
+    //   // if(open){
+    //   //   History.push("/mjki123U")
+    //   // }
+    //   setOpen(true);
+    //   History.push("/PreviousYear");
+    // }
     if (!open || localStorage.getItem("dialog")===null) {
+      e.preventDefault()
       console.log("calledinside")
       setOpen(true);
-      history.push("/PreviousYear");
+      History.push("/PreviousYear");
     }
     localStorage.removeItem("dialog");
   };
 
   useEffect(()=>{
+    // console.log("run")
+    // window.history.pushState({page: 2}, "title 2", "?page=2")
     if(localStorage.getItem("dialog")!==null){
       setOpen(localStorage.getItem("dialog"));
     }else{
       localStorage.setItem("dialog",true);
     }
+    // console.log(open)
+    // if(open===false){
+      // console.log("this also run")
+      // setOpen(false)
+      // localStorage.setItem("dialog",false);
+    // }
+    // if(open===false)localStorage.removeItem("dialog");
+    // if(open===true){
+    //   localStorage.setItem("dialog",true);
+    // }
   },[])
+
+  // if(!open){
+  //   setOpen(false)
+  //   localStorage.setItem("dialog",false);
+  // }
 
   // console.log("dialog",open);
   // useEffect(() => {
@@ -45,6 +76,9 @@ export default function PreviousYearSubjectwise() {
   const selectClass = (n) => {
     setClassNumber(n);
     localStorage.setItem("dialog",false);
+    //newcode
+      localStorage.removeItem("reloaded")
+    //
     setOpen(false);
   };
   document.title = "PreviousYearSubjectwise | IITEENS";
@@ -111,6 +145,7 @@ export default function PreviousYearSubjectwise() {
           </div>
         </>
       )}
+      {console.log("at the end",open,localStorage.getItem("dialog"))}
     </div>
   );
 }

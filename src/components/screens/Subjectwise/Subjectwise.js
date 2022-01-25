@@ -14,7 +14,7 @@ export default function Subjectwise() {
   const [open, setOpen] = React.useState(true);
   const [classNumber, setClassNumber] = React.useState("11");
   const [loading, setLoading] = React.useState(false);
-  let history = useHistory();
+  let History = useHistory();
 
   window.onpopstate = function (e) {
     // e.preventDefault()
@@ -23,7 +23,7 @@ export default function Subjectwise() {
     if (!open || localStorage.getItem("dialog")===null) {
       console.log("calledinside")
       setOpen(true);
-      history.push("/Subjectwise");
+      History.push("/Subjectwise");
     }
     localStorage.removeItem("dialog");
   };
