@@ -10,9 +10,6 @@ import {
 } from "@material-ui/core";
 import React, { useEffect } from "react";
 import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css";
-import CommentIcon from "@mui/icons-material/Comment";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import physics from "./data/physics";
 import chemistry from "./data/chemistry";
 import maths from "./data/maths";
@@ -40,18 +37,16 @@ function getStyles(name, personName, theme) {
   };
 }
 
-const SelectSyllabus = () => {
+const SelectSyllabus = (props) => {
   const theme = useTheme();
   const [phy, setPhy] = React.useState([]);
   const [che, setChe] = React.useState([]);
   const [math, setMath] = React.useState([]);
   const [syllabustype, setSyllabustype] = React.useState("");
-  const paperno = useParams();
+  const params = useParams();
 
   useEffect(() => {
-    console.log(paperno.number);
-    console.log(paperno.number + 1);
-    console.log(Number(paperno.number) + 1);
+    console.log(params);
     setSyllabustype(localStorage.getItem("syllabustype"));
     // setPhy(localStorage.getItem("phy"))
     // setChe(localStorage.getItem("che"))
@@ -90,9 +85,9 @@ const SelectSyllabus = () => {
   const savetodatabase = (syllabustype = "partsyllabus") => {
     const db = firebase.firestore();
     db.collection("MOCK")
-      .doc("MAINS")
+      .doc(`${params.papertype=='mains'?"MAINS":"ADVANCE"}`)
       .collection("PAPER")
-      .doc(`PAPER${Number(paperno.number) + 1}`)
+      .doc(`PAPER${Number(params.number) + 1}`)
       .update({
         syllabustype: syllabustype,
         phy: phy,
@@ -141,7 +136,7 @@ const SelectSyllabus = () => {
             className={styl.syllabusbutton}
             component={Link}
             to={{
-              pathname: `/mocktestadminmain/mains/syllabussummary/${paperno.number}`,
+              pathname: `/mocktestadminmain/${params.papertype=='mains'?"mains/syllabussummary":"advance/section"}/${params.number}`,
             }}
             onClick={() => {
               setSyllabustype("fullsyllabus");
@@ -154,7 +149,7 @@ const SelectSyllabus = () => {
             className={styl.syllabusbutton}
             component={Link}
             to={{
-              pathname: `/mocktestadminmain/mains/syllabussummary/${paperno.number}`,
+              pathname: `/mocktestadminmain/${params.papertype=='mains'?"mains/syllabussummary":"advance/section"}/${params.number}`,
             }}
             onClick={() => {
               setSyllabustype("class 11");
@@ -167,7 +162,7 @@ const SelectSyllabus = () => {
             className={styl.syllabusbutton}
             component={Link}
             to={{
-              pathname: `/mocktestadminmain/mains/syllabussummary/${paperno.number}`,
+              pathname: `/mocktestadminmain/${params.papertype=='mains'?"mains/syllabussummary":"advance/section"}/${params.number}`,
             }}
             onClick={() => {
               setSyllabustype("class 12");
@@ -307,7 +302,7 @@ const SelectSyllabus = () => {
             <Button
               component={Link}
               to={{
-                pathname: `/mocktestadminmain/mains/syllabussummary/${paperno.number}`,
+                pathname: `/mocktestadminmain/${params.papertype=='mains'?"mains/syllabussummary":"advance/section"}/${params.number}`,
               }}
               onClick={() => {
                 savetodatabase();

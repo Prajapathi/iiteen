@@ -20,6 +20,8 @@ import Advance from "./adminPanel/MockTest/Advance";
 import MainsPaper from "./adminPanel/MockTest/MainsPaper";
 import SelectSyllabus from "./adminPanel/MockTest/SelectSyllabus";
 import Syllabussummary from "./adminPanel/MockTest/Syllabussummary";
+import Syllabussummaryadvance from "./adminPanel/MockTest/Syllabussummaryadvance";
+import AdvancePattern from "./adminPanel/MockTest/AdvancePattern";
 
 export function RoutingWrapper(props) {
   return props.isCheckingAuth ? (
@@ -48,11 +50,17 @@ export function RoutingWrapper(props) {
       <Route path="/mocktestadminmain/mains/:number" exact>
         <MainsPaper />
       </Route>
-      <Route path="/mocktestadminmain/mains/selectsyllabus/:number" exact>
+      <Route path="/mocktestadminmain/:papertype/selectsyllabus/:number" exact>
         <SelectSyllabus />
       </Route>
       <Route path="/mocktestadminmain/mains/syllabussummary/:number" exact>
         <Syllabussummary />
+      </Route>
+      <Route path="/mocktestadminmain/advance/section/:number" exact>
+        <AdvancePattern />
+      </Route>
+      <Route path="/mocktestadminmain/advance/syllabussummary/:number" exact>
+        <Syllabussummaryadvance />
       </Route>
       {/* // */}
       {/* //new code for prevousyearsubjectwise*/}
