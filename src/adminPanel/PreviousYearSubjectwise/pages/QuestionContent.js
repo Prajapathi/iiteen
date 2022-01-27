@@ -40,6 +40,10 @@ const QuestionContent = (props) => {
       localStorage.setItem("count",1);
       history.push("/mocktestadminmain/mains")
     }
+    if(index==4 && localStorage.getItem("count")==null){
+      localStorage.setItem("count",1);
+      history.push("/mocktestadminmain/advance")
+    }
   }
   const subj = ["physics", "chemistry", "maths"];
 
@@ -54,15 +58,18 @@ const QuestionContent = (props) => {
       setSub("chemistry");
     } else if (index == 2) {
       setSub("maths");
-    } else {
+    } else if(index==3){
       setSub("mocktest");
-      fetchPaper("", "");
+      fetchPaper("", "MAINS");
+    }else{
+      setSub("mocktestadvance");
+      fetchPaper("", "ADVANCE");
     }
   }, [index]);
 
   useEffect(() => {
     localStorage.removeItem("count")
-    if (localStorage.getItem("Class") !== null && index!=='3') {
+    if (localStorage.getItem("Class") !== null && index!=='3' && index!=='4') {
       setClass(localStorage.getItem("Class"));
       setChapter(localStorage.getItem("chapter"));
       // let button = document.getElementById("getquestions");
@@ -84,11 +91,11 @@ const QuestionContent = (props) => {
 
   function fetchPaper(selClass, selChapter) {
     const db = firebase.firestore();
-    console.log(sub, selClass);
+    console.log(sub, selClass,selChapter);
     if (selClass === "") {
       var q = db
         .collection("MOCK")
-        .doc("MAINS")
+        .doc(selChapter)
         .collection("PAPER")
         .doc(`PAPER${Number(mockpaperno)}`)
         .collection("question");
@@ -122,10 +129,10 @@ const QuestionContent = (props) => {
     //if no then do nothing
     if (window.confirm("Are you sure want to delete this question?")) {
       const db = firebase.firestore();
-      if (sub == "mocktest") {
+      if (sub == "mocktest" || sub=="mocktestadvance") {
         var q = db
           .collection("MOCK")
-          .doc("MAINS")
+          .doc(`${sub == "mocktest"?"MAINS":"ADVANCE"}`)
           .collection("PAPER")
           .doc(`PAPER${Number(mockpaperno)}`);
       } else {
@@ -156,7 +163,7 @@ const QuestionContent = (props) => {
         className="shadow-card"
         style={{ marginTop: "50px", textAlign: "center" }}
       >
-        {sub !== "mocktest" && (
+        {(sub !== "mocktest" && sub !== "mocktestadvance") && (
           <>
             <h4>Select Portions</h4>
             <div
@@ -233,7 +240,7 @@ const QuestionContent = (props) => {
             </div>
           </>
         )}
-        {sub === "mocktest" && (
+        {(sub === "mocktest" || sub === "mocktestadvance") && (
           <h1>{`MOCK TEST PAPER ${Number(mockpaperno)}`}</h1>
         )}
       </Container>

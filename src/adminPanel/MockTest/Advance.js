@@ -78,7 +78,7 @@ const Advance = () => {
                 to={{
                   pathname: `${
                     p.syllabusCreated
-                      ? "/PreviousYearSubjectwise/3"
+                      ? "/PreviousYearSubjectwise/4"
                       : `/mocktestadminmain/advance/selectsyllabus/${p.number-1}`
                   }`,
                   state: { papernumber: Number(p.number) },

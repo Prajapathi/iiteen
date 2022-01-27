@@ -88,7 +88,7 @@ const AdvancePattern = () => {
           id="outlined-number"
           label="Number"
           type="number"
-          value={section.length}
+          value={section?section.length:0}
           style={{ marginLeft: "50px" }}
           onChange={(e) => {
             createsec(e.target.value);

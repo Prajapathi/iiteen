@@ -53,6 +53,7 @@ const SetQuestion = (props) => {
     false,
   ]);
   const [allQuestions, setAllQuestions] = useState("");
+  const [section, setSection] = useState([]);
 
   const [locationKeys, setLocationKeys] = useState([]);
   const [saveposition, setSaveposition] = useState(0);
@@ -66,7 +67,7 @@ const SetQuestion = (props) => {
   const cursorPosition = 2;
   const [data2, setData2] = useState("");
 
-  const [mocksingletype,setMocksingletype]=useState();
+  const [mocksingletype, setMocksingletype] = useState();
 
   const numarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -88,19 +89,74 @@ const SetQuestion = (props) => {
   // console.log(Class,Id,QuestionNo,Subject,Chapter);
   // const allQuestions = props.location.state.allQuestions;
 
+  function getquestiontype(type) {
+    if (type == "singletype") {
+      return "4";
+    } else if (type == "multipletype") {
+      return "5";
+    } else if (type == "integertype") {
+      return "1";
+    } else if (type == "numericaltype") {
+      return "2";
+    } else {
+      console.log("wrong questiontype from mocktestadvance");
+    }
+  }
   useEffect(() => {
+    //new code
+    // localStorage.setItem("count",1);
+    //
     fetchPaper();
     fetchAllQuestions();
-    if(Subject==="mocktest"){
-      if((QuestionNo>=1 && QuestionNo<=20) || (QuestionNo>=31 && QuestionNo<=50) || (QuestionNo>=61 && QuestionNo<=80)){
+    if (Subject === "mocktest") {
+      if (
+        (QuestionNo >= 1 && QuestionNo <= 20) ||
+        (QuestionNo >= 31 && QuestionNo <= 50) ||
+        (QuestionNo >= 61 && QuestionNo <= 80)
+      ) {
         // setMocksingletype("singletype");
-        setQuestionType("4")
-      }else{
+        setQuestionType("4");
+      } else {
         // setMocksingletype("numericaltype")
-        setQuestionType("2")
+        setQuestionType("2");
       }
     }
+    if (Subject === "mocktestadvance") {
+      // async function fetchadvancepattern() {
+      //   await fetchmocktestadvancepatterndata();
+      //   console.log(section);
+      //   let aggregate = 0;
+      //   for (let i = 0; i < section.length; i++) {
+      //     if (
+      //       QuestionNo >= 1 + aggregate &&
+      //       QuestionNo <= section[i].noofques + aggregate
+      //     ) {
+      //       setQuestionType(getquestiontype(section[i].type));
+      //       break;
+      //     }
+      //     aggregate += Number(section[i].noofques);
+      //   }
+      // }
+      // fetchadvancepattern();
+      fetchmocktestadvancepatterndata();
+    }
   }, []);
+
+  useEffect(() => {
+    console.log(section);
+    let aggregate = 0;
+    for (let i = 0; i < section.length; i++) {
+      if (
+        QuestionNo >= 1 + aggregate &&
+        QuestionNo <= Number(section[i].noofques) + aggregate
+      ) {
+        // console.log(getquestiontype(section[i].type),QuestionNo,Number(section[i].noofques),aggregate,Number(section[i].noofques) + aggregate)
+        setQuestionType(getquestiontype(section[i].type));
+        break;
+      }
+      aggregate += Number(section[i].noofques);
+    }
+  }, [section, QuestionNo]);
 
   // useEffect(()=>{
   //   async function fetchData(){
@@ -139,7 +195,7 @@ const SetQuestion = (props) => {
 
           // Handle back event
 
-          // console.log("pop");
+          console.log("pop");
           // if (!localStorage.getItem("a")) {
           //   // setA(!a);
           //   localStorage.setItem("a", true);
@@ -147,12 +203,14 @@ const SetQuestion = (props) => {
           history.push(
             `${
               Subject === "physics"
-                ? 0
+                ? "/0"
                 : Subject === "chemistry"
-                ? 1
+                ? "/1"
                 : Subject === "maths"
-                ? 2
-                : 3
+                ? "/2"
+                : Subject === "mocktest"
+                ? "/3"
+                : "/4"
             }`
           );
           // }
@@ -185,10 +243,10 @@ const SetQuestion = (props) => {
   const submitPaper = async (e) => {
     // const option=[option1,option2,option3,option4];
     const db = firebase.firestore();
-    if (Subject === "mocktest") {
+    if (Subject === "mocktest" || Subject === "mocktestadvance") {
       var q = await db
         .collection("MOCK")
-        .doc("MAINS")
+        .doc(`${Subject === "mocktest" ? "MAINS" : "ADVANCE"}`)
         .collection("PAPER")
         .doc(`PAPER${Number(mockpaperno)}`);
     } else {
@@ -198,7 +256,7 @@ const SetQuestion = (props) => {
         .collection(Subject)
         .doc(Chapter);
     }
-    await q.update({ noofques: QuestionNo });
+    await q.set({ noofques: QuestionNo }, { merge: true });
     await q
       .collection("question")
       .add({
@@ -223,6 +281,7 @@ const SetQuestion = (props) => {
         );
       })
       .catch((error) => {
+        console.log("NOT SUBMITTED");
         alert(error.message);
       });
   };
@@ -230,10 +289,10 @@ const SetQuestion = (props) => {
     // const option=[option1,option2,option3,option4];
     // console.log("inside update paper");
     const db = firebase.firestore();
-    if (Subject === "mocktest") {
+    if (Subject === "mocktest" || Subject === "mocktestadvance") {
       var q = await db
         .collection("MOCK")
-        .doc("MAINS")
+        .doc(`${Subject === "mocktest" ? "MAINS" : "ADVANCE"}`)
         .collection("PAPER")
         .doc(`PAPER${Number(mockpaperno)}`)
         .collection("question");
@@ -282,6 +341,7 @@ const SetQuestion = (props) => {
         );
       })
       .catch((error) => {
+        console.log("NOT UPDATED");
         alert(error.message);
       });
     // console.log("end of update paper");
@@ -392,10 +452,10 @@ const SetQuestion = (props) => {
     // console.log("inside fetchPaper");
     if (Id) {
       const db = firebase.firestore();
-      if (Subject === "mocktest") {
+      if (Subject === "mocktest" || Subject === "mocktestadvance") {
         var q = await db
           .collection("MOCK")
-          .doc("MAINS")
+          .doc(`${Subject === "mocktest" ? "MAINS" : "ADVANCE"}`)
           .collection("PAPER")
           .doc(`PAPER${Number(mockpaperno)}`)
           .collection("question");
@@ -441,14 +501,31 @@ const SetQuestion = (props) => {
     //   setHint(editPaper.hint);
     //   setSolution(editPaper.solution);
   }
+  async function fetchmocktestadvancepatterndata() {
+    const db = firebase.firestore();
+    await db
+      .collection("MOCK")
+      .doc("ADVANCE")
+      .collection("PAPER")
+      .doc(`PAPER${Number(mockpaperno)}`)
+      .get()
+      .then((snap) => {
+        if (snap.exists) {
+          console.log(snap.data().sections);
+          setSection(snap.data().sections);
+          console.log(section);
+        }
+      });
+    console.log(section);
+  }
 
   async function fetchAllQuestions() {
     const db = firebase.firestore();
-    if (Subject === "mocktest") {
+    if (Subject === "mocktest" || Subject === "mocktestadvance") {
       console.log("mocktest", `PAPER${Number(mockpaperno)}`);
       var q = await db
         .collection("MOCK")
-        .doc("MAINS")
+        .doc(`${Subject === "mocktest" ? "MAINS" : "ADVANCE"}`)
         .collection("PAPER")
         .doc(`PAPER${Number(mockpaperno)}`)
         .collection("question");
@@ -751,7 +828,28 @@ const SetQuestion = (props) => {
 
   return (
     <div>
-      <h1 style={{ textAlign: "center" }}> Question No. - {QuestionNo} {`${Subject==="mocktest" ? questionType==4?"(Single Correct Type)":"(Numerical Correct Type)":"" }`}</h1>
+      <h1 style={{ textAlign: "center" }}>
+        {" "}
+        Question No. - {QuestionNo}{" "}
+        {`${
+          Subject === "mocktest"
+            ? questionType == 4
+              ? "(Single Correct Type)"
+              : "(Numerical Correct Type)"
+            : ""
+        }`}
+        {`${
+          Subject === "mocktestadvance"
+            ? questionType == 4
+              ? "(Single Correct Type)"
+              : questionType == 5
+              ? "(Multiple Correct Type)"
+              : questionType == 1
+              ? "(Integer Type)"
+              : "(Numerical Type)"
+            : ""
+        }`}
+      </h1>
       {/* <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Edit and Save</DialogTitle>
         <DialogContent>
@@ -788,63 +886,63 @@ const SetQuestion = (props) => {
       {/* ---------------------------------------Question End------------------------------------- */}
 
       <Container>
-        {!(Subject==="mocktest") && 
-        <div>
-        <h4>Select Question type</h4>
-        <div
-          style={{
-            display: "inline-flex",
-            justifyContent: "space-evenly",
-            width: "100%",
-          }}
-          onChange={(e) => {
-            setQuestionType(e.target.value);
-            setCorrect([]);
-          }}
-        >
-          <RadioGroup
-            name="radio-buttons-group"
-            row
-            style={{
-              display: "flex",
-              justifyContent: "space-around",
-              width: "100%",
-            }}
-          >
-            <FormControlLabel
-              value="4"
-              // onChange={() => handleCheck(0)}
-              control={<Radio />}
-              label="Single Correct"
-              checked={"4" == questionType}
-              defaultChecked="true"
-            />
-            <FormControlLabel
-              value="5"
-              // onChange={() => handleCheck(1)}
-              control={<Radio />}
-              label="Multiple Correct"
-              checked={"5" == questionType}
-            />
-            <FormControlLabel
-              value="1"
-              // onChange={() => handleCheck(2)}
-              control={<Radio />}
-              label="Integers"
-              checked={"1" == questionType}
-            />
-            <FormControlLabel
-              value="2"
-              // onChange={() => handleCheck(3)}
-              control={<Radio />}
-              label="Numerical"
-              checked={"2" == questionType}
-            />
-          </RadioGroup>
-        </div>
-      </div>
-        }
-        
+        {!(Subject === "mocktest" || Subject === "mocktestadvance") && (
+          <div>
+            <h4>Select Question type</h4>
+            <div
+              style={{
+                display: "inline-flex",
+                justifyContent: "space-evenly",
+                width: "100%",
+              }}
+              onChange={(e) => {
+                setQuestionType(e.target.value);
+                setCorrect([]);
+              }}
+            >
+              <RadioGroup
+                name="radio-buttons-group"
+                row
+                style={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  width: "100%",
+                }}
+              >
+                <FormControlLabel
+                  value="4"
+                  // onChange={() => handleCheck(0)}
+                  control={<Radio />}
+                  label="Single Correct"
+                  checked={"4" == questionType}
+                  defaultChecked="true"
+                />
+                <FormControlLabel
+                  value="5"
+                  // onChange={() => handleCheck(1)}
+                  control={<Radio />}
+                  label="Multiple Correct"
+                  checked={"5" == questionType}
+                />
+                <FormControlLabel
+                  value="1"
+                  // onChange={() => handleCheck(2)}
+                  control={<Radio />}
+                  label="Integers"
+                  checked={"1" == questionType}
+                />
+                <FormControlLabel
+                  value="2"
+                  // onChange={() => handleCheck(3)}
+                  control={<Radio />}
+                  label="Numerical"
+                  checked={"2" == questionType}
+                />
+              </RadioGroup>
+            </div>
+          </div>
+        )}
+
         <div>
           {questionType === "2" ? (
             <div>
@@ -1168,7 +1266,7 @@ const SetQuestion = (props) => {
                   ? "next"
                   : "Add New Question"}
               </Button>
-              {console.log("hello")}
+              {console.log(section)}
             </Col>
           )}
         </Row>

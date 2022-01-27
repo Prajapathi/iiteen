@@ -47,6 +47,7 @@ const SelectSyllabus = (props) => {
 
   useEffect(() => {
     console.log(params);
+    localStorage.removeItem("section")
     setSyllabustype(localStorage.getItem("syllabustype"));
     // setPhy(localStorage.getItem("phy"))
     // setChe(localStorage.getItem("che"))
