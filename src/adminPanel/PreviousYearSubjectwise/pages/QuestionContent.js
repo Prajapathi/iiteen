@@ -36,11 +36,12 @@ const QuestionContent = (props) => {
   : null;
 
   window.onpopstate=function(e){
-    if(index==3 && localStorage.getItem("count")==null){
+    console.log("yes i got called",window.location.pathname.charAt(1))
+    if(index==3 && localStorage.getItem("count")==null && window.location.pathname.charAt(1)!='P'){
       localStorage.setItem("count",1);
       history.push("/mocktestadminmain/mains")
     }
-    if(index==4 && localStorage.getItem("count")==null){
+    if(index==4 && localStorage.getItem("count")==null && window.location.pathname.charAt(1)!='P'){
       localStorage.setItem("count",1);
       history.push("/mocktestadminmain/advance")
     }

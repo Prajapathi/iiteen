@@ -17,7 +17,6 @@ export default function Home() {
     const [seconds, setSeconds] = React.useState(0)
     const [openUserInfo, setOpenUserInfo] = React.useState(false)
 
-    // localStorage.removeItem("dialog");
     React.useEffect(() => {
         // window.history.pushState({page: 1}, "title 1", "?page=1")
 

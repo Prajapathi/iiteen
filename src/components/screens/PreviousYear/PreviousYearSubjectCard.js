@@ -107,7 +107,7 @@ export function PreviousYearSubjectCard(props) {
 
   const selectLevel = (lev) => {
     setLevel(lev);
-    localStorage.setItem("dialog", false);
+    sessionStorage.setItem("dialog", false);
     console.log("ohh", "class" + classNumber, subject, chapter);
     props.loadingStart(true);
 

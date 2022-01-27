@@ -21,7 +21,7 @@ export default function PreviousYearSubjectwise() {
 
   window.onpopstate = function (e) {
     console.log("called")
-    console.log(open,localStorage.getItem("dialog"))
+    console.log(open,sessionStorage.getItem("dialog"))
     // if(open==true){
     //   // History.push("/mjki123U")
     //   // window.history.back()
@@ -34,22 +34,22 @@ export default function PreviousYearSubjectwise() {
     //   setOpen(true);
     //   History.push("/PreviousYear");
     // }
-    if (!open || localStorage.getItem("dialog")===null) {
+    if (!open || sessionStorage.getItem("dialog")===null) {
       e.preventDefault()
       console.log("calledinside")
       setOpen(true);
       History.push("/PreviousYear");
     }
-    localStorage.removeItem("dialog");
+    sessionStorage.removeItem("dialog");
   };
 
   useEffect(()=>{
     // console.log("run")
     // window.history.pushState({page: 2}, "title 2", "?page=2")
-    if(localStorage.getItem("dialog")!==null){
-      setOpen(localStorage.getItem("dialog"));
+    if(sessionStorage.getItem("dialog")!==null){
+      setOpen(sessionStorage.getItem("dialog"));
     }else{
-      localStorage.setItem("dialog",true);
+      sessionStorage.setItem("dialog",true);
     }
     // console.log(open)
     // if(open===false){
@@ -75,7 +75,7 @@ export default function PreviousYearSubjectwise() {
 
   const selectClass = (n) => {
     setClassNumber(n);
-    localStorage.setItem("dialog",false);
+    sessionStorage.setItem("dialog",false);
     //newcode
       localStorage.removeItem("reloaded")
     //

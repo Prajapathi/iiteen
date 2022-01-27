@@ -89,6 +89,54 @@ const SetQuestion = (props) => {
   // console.log(Class,Id,QuestionNo,Subject,Chapter);
   // const allQuestions = props.location.state.allQuestions;
 
+  useEffect(() => {
+    return history.listen((location) => {
+      if (history.action === "PUSH") {
+        setLocationKeys([location.key]);
+      }
+
+      if (history.action === "POP") {
+        if (locationKeys[1] === location.key) {
+          setLocationKeys(([_, ...keys]) => keys);
+
+          // Handle forward event
+        } else {
+          setLocationKeys((keys) => [location.key, ...keys]);
+
+          // Handle back event
+
+          console.log("pop");
+          history.push(
+            `${
+              Subject === "physics"
+                ? "/0"
+                : Subject === "chemistry"
+                ? "/1"
+                : Subject === "maths"
+                ? "/2"
+                : Subject === "mocktest"
+                ? "/3"
+                : "/4"
+            }`
+          );
+          // }
+        }
+      }
+    });
+  }, [locationKeys, Subject]);
+
+   // window.onpopstate = function (e) {
+  //   console.log("pop");
+  //   if (!localStorage.getItem("a")) {
+  //     // setA(!a);
+  //     localStorage.setItem("a", true);
+  //     console.log("just popped");
+  //     history.push(
+  //       `${Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2}`
+  //     );
+  //   }
+  // };
+
   function getquestiontype(type) {
     if (type == "singletype") {
       return "4";
@@ -122,22 +170,6 @@ const SetQuestion = (props) => {
       }
     }
     if (Subject === "mocktestadvance") {
-      // async function fetchadvancepattern() {
-      //   await fetchmocktestadvancepatterndata();
-      //   console.log(section);
-      //   let aggregate = 0;
-      //   for (let i = 0; i < section.length; i++) {
-      //     if (
-      //       QuestionNo >= 1 + aggregate &&
-      //       QuestionNo <= section[i].noofques + aggregate
-      //     ) {
-      //       setQuestionType(getquestiontype(section[i].type));
-      //       break;
-      //     }
-      //     aggregate += Number(section[i].noofques);
-      //   }
-      // }
-      // fetchadvancepattern();
       fetchmocktestadvancepatterndata();
     }
   }, []);
@@ -150,93 +182,12 @@ const SetQuestion = (props) => {
         QuestionNo >= 1 + aggregate &&
         QuestionNo <= Number(section[i].noofques) + aggregate
       ) {
-        // console.log(getquestiontype(section[i].type),QuestionNo,Number(section[i].noofques),aggregate,Number(section[i].noofques) + aggregate)
         setQuestionType(getquestiontype(section[i].type));
         break;
       }
       aggregate += Number(section[i].noofques);
     }
   }, [section, QuestionNo]);
-
-  // useEffect(()=>{
-  //   async function fetchData(){
-  //     console.log("fetch paper started");
-  //     await fetchPaper();
-  //     console.log("fetch paper ended");
-  //   }
-  //   fetchData();
-  // },[])
-
-  // window.onpopstate = function (e) {
-  //   console.log("pop");
-  //   if (!localStorage.getItem("a")) {
-  //     // setA(!a);
-  //     localStorage.setItem("a", true);
-  //     console.log("just popped");
-  //     history.push(
-  //       `${Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2}`
-  //     );
-  //   }
-  // };
-
-  useEffect(() => {
-    return history.listen((location) => {
-      if (history.action === "PUSH") {
-        setLocationKeys([location.key]);
-      }
-
-      if (history.action === "POP") {
-        if (locationKeys[1] === location.key) {
-          setLocationKeys(([_, ...keys]) => keys);
-
-          // Handle forward event
-        } else {
-          setLocationKeys((keys) => [location.key, ...keys]);
-
-          // Handle back event
-
-          console.log("pop");
-          // if (!localStorage.getItem("a")) {
-          //   // setA(!a);
-          //   localStorage.setItem("a", true);
-          //   console.log("just popped");
-          history.push(
-            `${
-              Subject === "physics"
-                ? "/0"
-                : Subject === "chemistry"
-                ? "/1"
-                : Subject === "maths"
-                ? "/2"
-                : Subject === "mocktest"
-                ? "/3"
-                : "/4"
-            }`
-          );
-          // }
-        }
-      }
-    });
-  }, [locationKeys, Subject]);
-
-  // window.addEventListener(
-  //   "popstate",
-  //   (event) => {
-  //     if (event.state) {
-  //       //do your code here
-  //       console.log("pop");
-  //       if (!localStorage.getItem("a")) {
-  //         // setA(!a);
-  //         localStorage.setItem("a", true);
-  //         console.log("just popped");
-  //         history.push(
-  //           `${Subject === "physics" ? 0 : Subject === "chemistry" ? 1 : 2}`
-  //         );
-  //       }
-  //     }
-  //   },
-  //   false
-  // );
 
   console.log("allQuestions", allQuestions);
 

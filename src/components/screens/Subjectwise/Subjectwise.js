@@ -19,21 +19,21 @@ export default function Subjectwise() {
   window.onpopstate = function (e) {
     // e.preventDefault()
     console.log("called")
-    console.log(open,localStorage.getItem("dialog"))
-    if (!open || localStorage.getItem("dialog")===null) {
+    console.log(open,sessionStorage.getItem("dialog"))
+    if (!open || sessionStorage.getItem("dialog")===null) {
       console.log("calledinside")
       setOpen(true);
       History.push("/Subjectwise");
     }
-    localStorage.removeItem("dialog");
+    sessionStorage.removeItem("dialog");
   };
 
   useEffect(()=>{
     // console.log("effectcalled")
-    if(localStorage.getItem("dialog")!==null){
-      setOpen(localStorage.getItem("dialog"));
+    if(sessionStorage.getItem("dialog")!==null){
+      setOpen(sessionStorage.getItem("dialog"));
     }else{
-      localStorage.setItem("dialog",true);
+      sessionStorage.setItem("dialog",true);
     }
   },[])
 
@@ -45,7 +45,7 @@ export default function Subjectwise() {
 
   const selectClass = (n) => {
     setClassNumber(n);
-    localStorage.setItem("dialog",false);
+    sessionStorage.setItem("dialog",false);
     // console.log("dia",localStorage.getItem("dialog"));
     setOpen(false);
   };
