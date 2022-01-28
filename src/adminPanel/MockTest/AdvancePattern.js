@@ -10,6 +10,7 @@ const AdvancePattern = () => {
   const [section, setSection] = useState([]);
   const params=useParams();
   const createsec = (value) => {
+    
     console.log(section);
     let i = section.length;
     const arr = [...section];
@@ -27,7 +28,8 @@ const AdvancePattern = () => {
   };
 
   useEffect(() => {
-    setSection(JSON.parse(localStorage.getItem("section")));
+    if(localStorage.getItem('section')!==null)
+      setSection(JSON.parse(localStorage.getItem("section")));
   }, []);
 
   useEffect(() => {

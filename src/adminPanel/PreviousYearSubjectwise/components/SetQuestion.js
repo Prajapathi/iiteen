@@ -26,7 +26,11 @@ import "../components/css/myCss.css";
 import yeardata from "../components/data/year";
 import { render } from "@testing-library/react";
 import { Link, useHistory } from "react-router-dom";
-import { browserHistory } from "react-router";
+import { ToastContainer, toast ,Flip} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
+toast.configure();
 
 const SetQuestion = (props) => {
   var [type, setType] = useState("1");
@@ -54,6 +58,8 @@ const SetQuestion = (props) => {
   ]);
   const [allQuestions, setAllQuestions] = useState("");
   const [section, setSection] = useState([]);
+  const [submitted, setSubmitted] = useState(false);
+  const [Id, setId] = useState(props.location.state.id);
 
   const [locationKeys, setLocationKeys] = useState([]);
   const [saveposition, setSaveposition] = useState(0);
@@ -80,7 +86,8 @@ const SetQuestion = (props) => {
 
   // console.log(props.location.state);
   const Class = props.location.state.Class;
-  const Id = props.location.state.id;
+  // const Id = props.location.state.id;
+
   // this QuestionNo here is like index to the allQuestion array it is not the questionNo of the database
   const QuestionNo = props.location.state.QuestionNo;
   const Subject = props.location.state.Subject;
@@ -125,7 +132,7 @@ const SetQuestion = (props) => {
     });
   }, [locationKeys, Subject]);
 
-   // window.onpopstate = function (e) {
+  // window.onpopstate = function (e) {
   //   console.log("pop");
   //   if (!localStorage.getItem("a")) {
   //     // setA(!a);
@@ -189,10 +196,17 @@ const SetQuestion = (props) => {
     }
   }, [section, QuestionNo]);
 
+  useEffect(() => {
+    if (submitted === true) {
+    }
+  }, [submitted]);
+
   console.log("allQuestions", allQuestions);
 
   const submitPaper = async (e) => {
     // const option=[option1,option2,option3,option4];
+    setSubmitted(true);
+    toast.success("SUBMITTED");
     const db = firebase.firestore();
     if (Subject === "mocktest" || Subject === "mocktestadvance") {
       var q = await db
@@ -225,14 +239,19 @@ const SetQuestion = (props) => {
         college: college,
         number: `${QuestionNo}`,
       })
-      .then(() => {
+      .then((docref) => {
         console.log(
           "SUBMITTED",
-          "     Your question has been uploaded to database"
+          "     Your question has been uploaded to database ",
+          docref.id
         );
+        
+        setId(docref.id);
+        setSubmitted(true);
       })
       .catch((error) => {
         console.log("NOT SUBMITTED");
+        toast.error("NOT SUBMITTED");
         alert(error.message);
       });
   };
@@ -240,61 +259,67 @@ const SetQuestion = (props) => {
     // const option=[option1,option2,option3,option4];
     // console.log("inside update paper");
     const db = firebase.firestore();
-    if (Subject === "mocktest" || Subject === "mocktestadvance") {
-      var q = await db
-        .collection("MOCK")
-        .doc(`${Subject === "mocktest" ? "MAINS" : "ADVANCE"}`)
-        .collection("PAPER")
-        .doc(`PAPER${Number(mockpaperno)}`)
-        .collection("question");
-    } else {
-      var q = await db
-        .collection("PYSV")
-        .doc(Class)
-        .collection(Subject)
-        .doc(Chapter)
-        .collection("question");
-    }
-    await q
-      .doc(Id)
-      .update({
-        // question: questionDetail,
-        // questionType: questionType,
-        // option2: option2,
-        // option1: option1,
-        // option3: option3,
-        // option4: option4,
-        // correct: correct,
-        // solution: solution,
-        // hint: hint,
-        // year: year,
-        // college: college,
-        // questionNumber: `${QuestionNo}`,
+    if (Id) {
+      toast.success("UPDATED");
+      if (Subject === "mocktest" || Subject === "mocktestadvance") {
+        var q = await db
+          .collection("MOCK")
+          .doc(`${Subject === "mocktest" ? "MAINS" : "ADVANCE"}`)
+          .collection("PAPER")
+          .doc(`PAPER${Number(mockpaperno)}`)
+          .collection("question");
+      } else {
+        var q = await db
+          .collection("PYSV")
+          .doc(Class)
+          .collection(Subject)
+          .doc(Chapter)
+          .collection("question");
+      }
+      await q
+        .doc(Id)
+        .update({
+          // question: questionDetail,
+          // questionType: questionType,
+          // option2: option2,
+          // option1: option1,
+          // option3: option3,
+          // option4: option4,
+          // correct: correct,
+          // solution: solution,
+          // hint: hint,
+          // year: year,
+          // college: college,
+          // questionNumber: `${QuestionNo}`,
 
-        question: questionDetail,
-        answerType: questionType,
-        option2: option2,
-        option1: option1,
-        option3: option3,
-        option4: option4,
-        // option:option,
-        answer: correct,
-        hint: hint,
-        solution: solution,
-        year: year,
-        college: college,
-        number: `${QuestionNo}`,
-      })
-      .then(() => {
-        console.log(
-          "UPDATED",
-          "     Your question has been updated to database"
-        );
-      })
-      .catch((error) => {
-        console.log("NOT UPDATED");
-        alert(error.message);
-      });
+          question: questionDetail,
+          answerType: questionType,
+          option2: option2,
+          option1: option1,
+          option3: option3,
+          option4: option4,
+          // option:option,
+          answer: correct,
+          hint: hint,
+          solution: solution,
+          year: year,
+          college: college,
+          number: `${QuestionNo}`,
+        })
+        .then(() => {
+          console.log(
+            "UPDATED",
+            "     Your question has been updated to database"
+          );
+          
+        })
+        .catch((error) => {
+          console.log("NOT UPDATED");
+          toast.error("NOT UPDATED");
+          alert(error.message);
+        });
+    }
+
     // console.log("end of update paper");
   };
 
@@ -777,6 +802,8 @@ const SetQuestion = (props) => {
     [editable]
   );
 
+  // const notify = () => toast("SUBMITTED");
+
   return (
     <div>
       <h1 style={{ textAlign: "center" }}>
@@ -801,29 +828,6 @@ const SetQuestion = (props) => {
             : ""
         }`}
       </h1>
-      {/* <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit and Save</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Save
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            value={data2}
-            onChange={(e)=>{
-              setV(e.target.value)
-            }}
-            fullWidth
-            variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={Save}>Save</Button>
-        </DialogActions>
-      </Dialog> */}
       <br />
       <Typer
         info={questionDetail}
@@ -835,6 +839,19 @@ const SetQuestion = (props) => {
       <DragContain filed={questionDetail} dropType="question" />
       {console.log("hello")}
       {/* ---------------------------------------Question End------------------------------------- */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        transition={Flip}
+        toastStyle={{ backgroundColor: "black",color:"white" }}
+      />
 
       <Container>
         {!(Subject === "mocktest" || Subject === "mocktestadvance") && (
@@ -1131,7 +1148,8 @@ const SetQuestion = (props) => {
                     if (Id !== undefined) {
                       await updatePaper();
                     } else {
-                      await submitPaper();
+                      // await submitPaper()
+                      !submitted ? await submitPaper() : await updatePaper();
                     }
                     window.location.reload();
                   }}
@@ -1159,7 +1177,10 @@ const SetQuestion = (props) => {
             ) : (
               <Button
                 className="shadow-btn"
-                onClick={submitPaper}
+                onClick={() => {
+                  // await submitPaper()
+                  !submitted ? submitPaper() : updatePaper();
+                }}
                 style={{
                   margin: "30px",
                   width: "40%",
@@ -1206,7 +1227,8 @@ const SetQuestion = (props) => {
                   if (Id !== undefined) {
                     await updatePaper();
                   } else {
-                    await submitPaper();
+                    // await submitPaper();
+                    !submitted ? await submitPaper() : await updatePaper();
                   }
                   // props.setQuestionNo(allQuestions.length + 1);
                   // setQuestionNo(allQuestions.length + 1);

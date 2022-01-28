@@ -143,7 +143,7 @@ const QuestionContent = (props) => {
           .collection(subj[index])
           .doc(chapter);
       }
-      q.update({noofques:firebase.firestore.FieldValue.increment(-1)})
+      q.set({noofques:firebase.firestore.FieldValue.increment(-1)},{merge: true})
       q.collection("question")
         .doc(id)
         .delete()
