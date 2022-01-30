@@ -36,19 +36,32 @@ const QuestionContent = (props) => {
   : null;
 
   window.onpopstate=function(e){
-    console.log("yes i got called",window.location.pathname.charAt(1))
-    if(index==3 && localStorage.getItem("count")==null && window.location.pathname.charAt(1)!='P'){
+    console.log("yes i got called",window.location.pathname.charAt(1),localStorage.getItem("count"),index)
+    //new code
+    if(index==3 && localStorage.getItem("count")==="1" && window.location.pathname.charAt(1)=='m'){
+      console.log("inside count 1 index 3")
+      history.push("/mocktestadminmain")
+    }else if(index==4 && localStorage.getItem("count")==="1" && window.location.pathname.charAt(1)=='m'){
+      console.log("inside count 1 index 4")
+      history.push("/mocktestadminmain")
+    }
+    //
+    else if(index==3 && localStorage.getItem("count")==null && window.location.pathname.charAt(1)!='P'){
+      console.log("inside count null index 3")
       localStorage.setItem("count",1);
       history.push("/mocktestadminmain/mains")
     }
-    if(index==4 && localStorage.getItem("count")==null && window.location.pathname.charAt(1)!='P'){
+    else if(index==4 && localStorage.getItem("count")==null && window.location.pathname.charAt(1)!='P'){
+      console.log("inside count null index 4")
       localStorage.setItem("count",1);
       history.push("/mocktestadminmain/advance")
     }
+    
   }
   const subj = ["physics", "chemistry", "maths"];
 
   useEffect(() => {
+    console.log("version",React.version)
     if (index == 0) {
       // console.log("yes");
       // console.log(sub);

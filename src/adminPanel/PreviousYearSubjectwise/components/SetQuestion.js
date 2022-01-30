@@ -425,7 +425,6 @@ const SetQuestion = (props) => {
   }
 
   async function fetchPaper() {
-    // console.log("inside fetchPaper");
     if (Id) {
       const db = firebase.firestore();
       if (Subject === "mocktest" || Subject === "mocktestadvance") {
@@ -451,31 +450,14 @@ const SetQuestion = (props) => {
           console.log(snap.data());
           if (snap.exists) {
             setEditPaper(snap.data());
-            // console.log("data fetched");
           } else {
             alert("no");
           }
-          // alert(`${Chapter}, ${Class}, ${Id}`);
         })
         .catch((error) => {
           console.log(error);
         });
     }
-    // console.log("outside fetchPaper");
-
-    // console.log("came here after fetching data");
-    // console.log(" not inside editpaper",editPaper);
-    // setQuestionDetail(editPaper.question);
-    //   setOption1(editPaper.option1);
-    //   setOption2(editPaper.option2);
-    //   setOption3(editPaper.option3);
-    //   setOption4(editPaper.option4);
-    //   setQuestionType(editPaper.questionType);
-    //   setCorrect(editPaper.correct);
-    //   setYear(editPaper.year);
-    //   setCollege(editPaper.college);
-    //   setHint(editPaper.hint);
-    //   setSolution(editPaper.solution);
   }
   async function fetchmocktestadvancepatterndata() {
     const db = firebase.firestore();
@@ -635,15 +617,6 @@ const SetQuestion = (props) => {
     // return temp;
   }
   //
-  //   function boldText() {
-  //     var start = ref.selectionStart;
-  //     var end = ref.selectionEnd;
-  //     var sel = ref.value.substring(start, end);
-  //     var finText = ref.value.substring(0, start) + '[b]' + sel + '[/b]' + ref.value.substring(end);
-  //     ref.value = finText;
-  //     ref.focus();
-  // }
-  //
   const handleClose = () => {
     setOpen(false);
   };
@@ -673,7 +646,7 @@ const SetQuestion = (props) => {
                   ref={provided.innerRef}
                   style={{ marginTop: "50px" }}
                 >
-                  {console.log("prop.filed", props.filed)}
+                  {/* {console.log("prop.filed", props.filed)} */}
                   {props.filed !== "" ? (
                     props.filed.map((e, index) => {
                       var { data } = e;
@@ -835,9 +808,8 @@ const SetQuestion = (props) => {
         title="question"
       />
 
-      {console.log("hello")}
       <DragContain filed={questionDetail} dropType="question" />
-      {console.log("hello")}
+      
       {/* ---------------------------------------Question End------------------------------------- */}
       <ToastContainer
         position="top-right"

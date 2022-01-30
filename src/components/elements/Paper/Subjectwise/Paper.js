@@ -114,9 +114,9 @@ export function Paper(props) {
               }
               number={
                 localStorage.getItem("PaperName") == "Subjectwise" &&
-                questions &&
-                questions[index]
-                  ? questions[index].number
+                answers &&
+                answers[index]
+                  ? answers[index].number+1
                   : localStorage.getItem("PaperName") ==
                       "previousyearSubjectwise" &&
                     answers &&
