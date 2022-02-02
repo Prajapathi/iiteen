@@ -183,11 +183,19 @@ const SetQuestion = (props) => {
 
   useEffect(() => {
     console.log(section);
+    let totalnoofquespersubject=0;
+    for (let i = 0; i < section.length; i++) {
+      totalnoofquespersubject+=Number(section[i].noofques);
+    }
     let aggregate = 0;
     for (let i = 0; i < section.length; i++) {
       if (
-        QuestionNo >= 1 + aggregate &&
-        QuestionNo <= Number(section[i].noofques) + aggregate
+        (QuestionNo >= 1 + aggregate &&
+        QuestionNo <= Number(section[i].noofques) + aggregate) ||
+        (QuestionNo >= 1 + aggregate + totalnoofquespersubject &&
+          QuestionNo <= Number(section[i].noofques) + aggregate + totalnoofquespersubject) ||
+          (QuestionNo >= 1 + aggregate + totalnoofquespersubject*2 &&
+            QuestionNo <= Number(section[i].noofques) + aggregate + totalnoofquespersubject*2)
       ) {
         setQuestionType(getquestiontype(section[i].type));
         break;
@@ -205,6 +213,7 @@ const SetQuestion = (props) => {
 
   const submitPaper = async (e) => {
     // const option=[option1,option2,option3,option4];
+    console.log("uid",firebase.auth().currentUser.uid)
     setSubmitted(true);
     toast.success("SUBMITTED");
     const db = firebase.firestore();

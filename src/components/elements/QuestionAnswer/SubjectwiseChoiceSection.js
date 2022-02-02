@@ -51,21 +51,21 @@ export function SubjectwiseChoiceSection(props) {
   const handleChange = () => {
     setChecked((prev) => !prev);
   };
-  console.log("props", props, props.user.uid);
+  // console.log("props", props, props.user.uid);
 
   // console.log("filtered",props.stateAnswer.filter((qid)=>qid==props.data.qid))
   // console.log("filtered",data.qid);
 
-  console.log(
-    "kkk",
-    props.stateAnswer[props.number - 1],
-    props.number,
-    props.data && localStorage.getItem("PaperName"),
-    localStorage.getItem("PaperName") == "previousyearSubjectwise",
-    props.data,
-    props.qid,
-    props.stateAnswer.filter((a)=>(a.qid==props.qid))
-  );
+  // console.log(
+  //   "kkk",
+  //   props.stateAnswer[props.number - 1],
+  //   props.number,
+  //   props.data && localStorage.getItem("PaperName"),
+  //   localStorage.getItem("PaperName") == "previousyearSubjectwise",
+  //   props.data,
+  //   props.qid,
+  //   props.stateAnswer.filter((a)=>(a.qid==props.qid))
+  // );
 
   useEffect(() => {
     //if answer given was wrong initially and solution was not shown, don't display previously given answer
@@ -76,8 +76,8 @@ export function SubjectwiseChoiceSection(props) {
     //   props=JSON.parse(localStorage.getItem("props"));
     // }
     setData(props.stateAnswer.filter((a)=>(a.qid==props.qid))[0]);
-    console.log(props.stateAnswer.filter((a)=>(a.qid==props.qid))[0]);
-    console.log(data);
+    // console.log(props.stateAnswer.filter((a)=>(a.qid==props.qid))[0]);
+    // console.log(data);
     if (
       props.stateAnswer.filter((a)=>(a.qid==props.qid))[0] &&
       props.stateAnswer.filter((a)=>(a.qid==props.qid))[0].isAnsweredWrong &&
@@ -276,11 +276,11 @@ export function SubjectwiseChoiceSection(props) {
 
     saveAttemptDatabase();
   };
-  console.log(
-    props.stateAnswer,
-    props.stateAnswer.filter((a)=>(a.qid==props.qid))[0],
-    props.data
-  );
+  // console.log(
+  //   props.stateAnswer,
+  //   props.stateAnswer.filter((a)=>(a.qid==props.qid))[0],
+  //   props.data
+  // );
 
   return (
     <>
@@ -288,7 +288,7 @@ export function SubjectwiseChoiceSection(props) {
         <Row noGutters>
           <Col id="choice-sec">
             <div className="heading">
-              {console.log(data && data.answerType)}
+              {/* {console.log(data && data.answerType)} */}
               {data
                 ? data.answerType == 1
                   ? "Integer Type"
@@ -495,7 +495,6 @@ export function SubjectwiseChoiceSection(props) {
                                 : "1px solid white",
                           }}
                         >
-                          {console.log("i got inside")}
                           {"A.  "}
                           {props.data.option1 && props.data.option1.map((item) => (
                             <div>
@@ -546,7 +545,6 @@ export function SubjectwiseChoiceSection(props) {
                                 : "1px solid white",
                           }}
                         >
-                          {console.log("i got inside")}
                           {"B.  "}
                           {props.data.option2 && props.data.option2.map((item) => (
                             <div>
@@ -582,7 +580,6 @@ export function SubjectwiseChoiceSection(props) {
                                 : "1px solid white",
                           }}
                         >
-                          {console.log("i got inside")}
                           {"C. "}
 
                           {props.data.option3 && props.data.option3.map((item) => (
@@ -619,7 +616,6 @@ export function SubjectwiseChoiceSection(props) {
                                 : "1px solid white",
                           }}
                         >
-                          {console.log("i got inside")}
                           {"D. "}
 
                           {props.data.option4 && props.data.option4.map((item) => (

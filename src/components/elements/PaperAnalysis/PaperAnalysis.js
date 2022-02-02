@@ -38,8 +38,9 @@ export function PaperAnalysis(props) {
 
     const location = useLocation();
     const history=useHistory();
+    const markdistribution=[[3,1,0],[4,2,0],[3,1,0],[3,1,0]]
 
-    let {paperType,paperName}=useParams();
+    let {paperType,paperName,mockpaperType}=useParams();
     let paperTypeCaps=paperType.toUpperCase()
     
     const [loading, setLoading] = useState(true)
@@ -47,6 +48,7 @@ export function PaperAnalysis(props) {
     const [data,setData]=useState([])
     const [paperInfo,setPaperInfo]=useState([])
     const [percent, setPercent] = useState({physics:0,chemistry:0,maths:0})
+    const [totalmarks,setTotalmarks]=useState(0);
 
     //function for rounding off numbers
     const roundOff=(num)=>{
@@ -107,6 +109,8 @@ export function PaperAnalysis(props) {
     
     //data fetching
     React.useEffect(() => {
+
+        console.log("props",props)
         let paperTypeRoute;
         switch(paperTypeCaps){
             case "MOCKTEST":
@@ -127,7 +131,8 @@ export function PaperAnalysis(props) {
         const db = firebase.firestore();
 
         //Fetch the analysis of the attempted paper
-        db.collection("User").doc(props.user.uid).collection(paperTypeRoute+"Papers").doc(paperName).collection("LeaderBoard").doc("Analysis").get()
+        console.log(paperTypeRoute)
+        db.collection("User").doc(props.user.uid).collection(paperTypeRoute+"Papers").doc(mockpaperType).collection("PAPER").doc(paperName).collection("LeaderBoard").doc("Analysis").get()
             .then(function(querySnapshot) {
                 console.log("here's the analysis:",querySnapshot.data())
                 setData(querySnapshot.data());
@@ -142,7 +147,7 @@ export function PaperAnalysis(props) {
             });
         
         //Fetch the details of the paper
-        db.collection(paperTypeRoute).doc(paperName).get()
+        db.collection(paperTypeRoute).doc(mockpaperType).collection("PAPER").doc(paperName).get()
             .then(function(querySnapshot) {
                 console.log("here's the paper:",querySnapshot.data())
                 setPaperInfo(querySnapshot.data());
@@ -161,6 +166,16 @@ export function PaperAnalysis(props) {
     //Data calculation for pie chart after fetching
     React.useEffect(() => {
         //setting % marks
+        console.log(paperInfo.sections,paperInfo.sections ? paperInfo.sections.length:0)
+        let tm=0;
+        let marksdistributiontype=0;
+        for(let i=0;i<paperInfo.sections ? paperInfo.sections.length:0;i++){
+            marksdistributiontype=paperInfo.sections[i].type=="singletype"?0:paperInfo.sections[i].type=='multipletype'?1:paperInfo.sections[i].type=='integertype'?2:3;
+            console.log(marksdistributiontype)
+            tm+=Number(paperInfo.sections[i].noofques)*markdistribution[marksdistributiontype][0];
+        }
+        console.log(3*tm)
+        setTotalmarks(3*tm);
         let total=Math.abs(data.mathsMarks)+Math.abs(data.chemistryMarks)+Math.abs(data.physicsMarks);
         let p=0,c=0,m=0;
         if(total!==0){
@@ -192,7 +207,7 @@ export function PaperAnalysis(props) {
                                 Overall
                             </div>
                             <div>
-                                {data.totalMarks}/{paperInfo.totalMarks}
+                                {data.totalMarks}/{totalmarks}
                             </div>
                         </div>
                         <div className="report-card-sections">

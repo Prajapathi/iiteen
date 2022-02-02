@@ -32,7 +32,7 @@ export function Paper(props) {
     // localStorage.removeItem("dialog");
   }
 
-  console.log(props);
+  // console.log(props);
   React.useEffect(() => {
     //if user is not navigating through MockTestCard then redirect to home
     //new code
@@ -48,7 +48,7 @@ export function Paper(props) {
     }
     // localStorage.removeItem("PaperName")
 
-    console.log("lll", props.paper);
+    // console.log("lll", props.paper);
     setQuestions(props.paper.questions);
     setAnswers(props.answers);
     const a = [];
@@ -95,11 +95,11 @@ export function Paper(props) {
           style={{ marginLeft: 0, marginRight: 0, display: "flex" }}
         >
           <div style={{ width: "80%" }}>
-            {console.log(
+            {/* {console.log(
               "props",
               props
               // ,questions[index].number,questions[index].Questionnumber
-            )}
+            )} */}
             <Question
               key={index}
               type={"subjectwise"}

@@ -51,7 +51,7 @@ const setNewAttemptTime = (state, action) => {
 
 //store paper inside intital values and create answers[]
 const fetchPaper = (state, action) => {
-  console.log("ha aya hai");
+  // console.log("ha aya hai");
   console.log(action);
   console.log(state);
   //in case questions are not present
@@ -101,16 +101,16 @@ const fetchPreviousSubjectwiseAnswers = (state, action) => {
   // new code
   let answer=action.payload.answers["Level 0" + action.payload.level]
   let ques=action.payload.questions
-  console.log(answer,ques,action.payload.level);
+  // console.log(answer,ques,action.payload.level);
   let ans=[];
   for (let i = 0; i < 25; i++) {
-    ques[i] && console.log(answer.filter((t)=>(t.qid==ques[i].qid)))
+    // ques[i] && console.log(answer.filter((t)=>(t.qid==ques[i].qid)))
     if(ques[i] && ques[i].qid  && answer.filter((t)=>(t.qid==ques[i].qid))!=undefined && answer.filter((t)=>(t.qid==ques[i].qid)).length!=0 && answer.filter((t)=>(t.qid==ques[i].qid))!=null){
-      console.log("included",answer.filter((t)=>(t.qid==ques[i].qid)))
+      // console.log("included",answer.filter((t)=>(t.qid==ques[i].qid)))
       answer.filter((t)=>(t.qid==ques[i].qid))[0].number=i;
       ans.push(answer.filter((t)=>(t.qid==ques[i].qid))[0])
     }else{
-      ques[i] && console.log("not included",answer.filter((t)=>(t.qid==ques[i].qid)))
+      // ques[i] && console.log("not included",answer.filter((t)=>(t.qid==ques[i].qid)))
       ans.push({
         qid:ques[i] && ques[i].qid?ques[i].qid:"",
         uid: ques[i] && ques[i].uid?ques[i].uid:"",
@@ -126,7 +126,7 @@ const fetchPreviousSubjectwiseAnswers = (state, action) => {
       });
     }
   }
-  console.log(ans)
+  // console.log(ans)
   
   return {
     ...state,
@@ -161,9 +161,9 @@ const setSeen = (state, action) => {
 //setting answerGiven and isAnswered fields and evaluating isAnsweredWrong
 const setAnswer = (state, action) => {
   const ans = [...state.answers];
-  console.log(ans);
-  console.log(action.payload.index)
-  console.log(state, action);
+  // console.log(ans);
+  // console.log(action.payload.index)
+  // console.log(state, action);
   const data=ans.filter((a)=>(a.qid==action.payload.index))[0];
   data.answerGiven = action.payload.answer;
   data.isAnswered = true;

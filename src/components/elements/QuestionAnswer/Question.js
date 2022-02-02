@@ -35,8 +35,8 @@ export default function Question(props) {
         setQuestion(props.question?props.question.question:sampleQues)
     }, [props.question])
 
-    console.log(question,solution,hint)
-    console.log("props.questions",props.question)
+    // console.log(question,solution,hint)
+    console.log("props",props)
 
     return (
         <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
@@ -45,7 +45,7 @@ export default function Question(props) {
                         <QuestionSection number={props.number} data={question}/>
                     </Col>
                     <Col xs={6}>
-                        {console.log("in question.js",props.number)}
+                        {/* {console.log("in question.js",props.number)} */}
                         {props.type=="subjectwise"?
                             <SubjectwiseChoiceSection
                                 data={props.question} 
@@ -59,6 +59,7 @@ export default function Question(props) {
                             />
                             :<ChoiceSection 
                                 data={props.question} 
+                                qid={props.question.qid}
                                 noOfQuestions={props.noOfQuestions} 
                                 number={props.number} 
                                 goToPrevQuestion={props.goToPrevQuestion} 

@@ -22,7 +22,7 @@ export const fetchPaper = (paper) => {
 };
 
 export const fetchPreviousSubjectwiseAnswers = (ansques) => {
-  console.log(ansques);
+  // console.log(ansques);
   return {
     type: actionTypes.FETCH_PREVIOUS_ANSWERS,
     payload: ansques,

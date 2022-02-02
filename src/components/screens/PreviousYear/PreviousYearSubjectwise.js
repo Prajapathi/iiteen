@@ -145,7 +145,6 @@ export default function PreviousYearSubjectwise() {
           </div>
         </>
       )}
-      {console.log("at the end",open,localStorage.getItem("dialog"))}
     </div>
   );
 }

@@ -11,7 +11,7 @@ export default function QuestionSection(props) {
                 <div id="question-text">
         {
             props.data?props.data.map((item,index)=>
-                <div key={index} style={{overflowWrap:'anywhere'}}>
+                <span key={index} style={{overflowWrap:'anywhere'}}>
                 {item.type==0?<br/>:(item.type==1
                                     ?item.data
                                     :(item.type==2
@@ -19,8 +19,8 @@ export default function QuestionSection(props) {
                                                 :(item.type==3?<div id="ques-img-sec"><img src={item.data} style={{width:"100%"}}/></div>:null)
                                      )
                                     )
-                }
-                </div>
+                }{" "}
+                </span>
             ):null}
                     {/* <InlineMath>{str}</InlineMath> */}
                 </div>

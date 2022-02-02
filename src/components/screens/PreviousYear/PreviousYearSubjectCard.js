@@ -52,7 +52,7 @@ export function PreviousYearSubjectCard(props) {
     //new code
     localStorage.removeItem("palleteindex");
     //
-    console.log(props.user.uid,props.classNumber,sub,ch)
+    // console.log(props.user.uid,props.classNumber,sub,ch)
     //fetch attempted answers to show in progress bar
     const db = firebase.firestore();
     db.collection("User")
@@ -63,9 +63,9 @@ export function PreviousYearSubjectCard(props) {
       .doc("Chapter " + ch)
       .get()
       .then((doc) => {  
-        console.log(doc.data());
+        // console.log(doc.data());
         if (doc.data() == null) {
-          console.log("it has gone to null")
+          // console.log("it has gone to null")
           setLastIndex([0]);
           setTotalAttempted(0);
           setProgress(0);
@@ -109,10 +109,11 @@ export function PreviousYearSubjectCard(props) {
     setLevel(lev);
     sessionStorage.setItem("dialog", false);
     console.log("ohh", "class" + classNumber, subject, chapter);
+    // console.log("chapter number",chapter)
     props.loadingStart(true);
 
     //new code
-    console.log(localStorage.getItem("palleteindex"))
+    // console.log(localStorage.getItem("palleteindex"))
     localStorage.removeItem("palleteindex");
     //
 
@@ -130,12 +131,12 @@ export function PreviousYearSubjectCard(props) {
         querySnapshot.forEach(function (doc) {
           questions.push({ ...doc.data(), qid: doc.id });
         });
-        console.log("k", questions);
+        // console.log("k", questions);
         if (questions.length == 0) {
           history.push("/QuestionsError");
         } else {
           setPaper(questions);
-          console.log("hmmm", questions);
+          // console.log("hmmm", questions);
           props.loadingStart(false);
           //put into redux store
           props.fetchPaper({
@@ -151,7 +152,7 @@ export function PreviousYearSubjectCard(props) {
 
           //set Previously given answers for this level
           if (answers["Level 0" + lev]) {
-            console.log("Yaha", chapter, answers["Level 0" + lev],questions);
+            // console.log("Yaha", chapter, answers["Level 0" + lev],questions);
             props.fetchPreviousSubjectwiseAnswers({answers,questions,level: lev});
           }
 

@@ -97,7 +97,7 @@ export default React.memo(function SubjectCardSection(props) {
     } else if (vpWidth > 600) {
       setcardNumbers(2);
     } else setcardNumbers(1);
-    console.log(cardNumbers);
+    // console.log(cardNumbers);
   }, [vpWidth]);
 
   //change number list when number of cards is changed
@@ -201,6 +201,8 @@ export default React.memo(function SubjectCardSection(props) {
   ) : (
     <div>
       <div className="sub-cards">
+        {console.log(chapters)}
+        {console.log(initialItems)}
         {chapters.length === 0 ? (
           <div className="no-results">No Results found</div>
         ) : (
@@ -222,7 +224,8 @@ export default React.memo(function SubjectCardSection(props) {
               <Slide in={slideIn} direction={slideDirection}>
                 <div>
                   <PreviousYearSubjectCard
-                    number={chapterIndex + index + 1}
+                    // number={chapterIndex + index + 1}
+                    number={initialItems.indexOf(chapters[index])+1}
                     classNumber={props.classNumber}
                     name={chapters[index]}
                     subject={props.subject}
@@ -234,7 +237,8 @@ export default React.memo(function SubjectCardSection(props) {
               <Slide in={slideIn} direction={slideDirection}>
                 <div>
                   <SubjectCard
-                    number={chapterIndex + index + 1}
+                    // number={chapterIndex + index + 1}
+                    number={initialItems.indexOf(chapters[index])+1}
                     classNumber={props.classNumber}
                     name={chapters[index]}
                     subject={props.subject}
