@@ -7,15 +7,15 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import React from "react";
+import React,{useEffect} from "react";
 import Paper from "@mui/material/Paper";
 import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css";
 import { Link, useParams } from "react-router-dom";
 import firebase from "firebase";
 
-function savetodatabase(paperno){
+function savetodatabase(paperno,mainpaptyp){
   const db = firebase.firestore();
-  db.collection("MOCK")
+  db.collection(mainpaptyp.toUpperCase())
     .doc("MAINS")
     .collection("PAPER")
     .doc(`PAPER${paperno}`)
@@ -30,6 +30,15 @@ function savetodatabase(paperno){
 
 const Syllabussummary = () => {
   const paperno = useParams();
+  const [mainpapertype,setMainpapertype]=React.useState("");
+  const {type}=useParams()
+
+  useEffect(()=>{
+    if(type=='mocktest'){
+      setMainpapertype("mock");
+    }else setMainpapertype("aits")
+  },[])
+
   return (
     <div
     style={{display:"flex",justifyContent:"flex-start",flexDirection:"column",alignItems:"center"}}
@@ -51,7 +60,7 @@ const Syllabussummary = () => {
             <TableHead>
               <TableRow>
                 <TableCell align="center" colSpan={3}>
-                  <b>MOCK PAPER PATTERN</b>
+                  <b>{mainpapertype.toUpperCase()} PAPER PATTERN</b>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -137,7 +146,7 @@ const Syllabussummary = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <h6 style={{color:"blue",fontSize:"14px",paddingTop:"20px"}}>Note: Once Clicked on Create Mock Test you will not be able to change the syllabus again</h6>
+        <h6 style={{color:"blue",fontSize:"14px",paddingTop:"20px"}}>Note: Once Clicked on Create {mainpapertype} Test you will not be able to change the syllabus again</h6>
       </div>
       <div
         style={{
@@ -153,14 +162,14 @@ const Syllabussummary = () => {
           to={{
             pathname: "/PreviousYearSubjectwise/3",
             state:{
-              papernumber:Number(paperno.number) + 1
+              papernumber:Number(paperno.number) + 1,mainpapertype:mainpapertype
             }
           }}
           onClick={()=>{
-            savetodatabase(Number(paperno.number) + 1)
+            savetodatabase(Number(paperno.number) + 1,mainpapertype)
           }}
         >
-          Create MOCK TEST
+          Create {mainpapertype.toUpperCase()} TEST
         </Button>
       </div>
     </div>

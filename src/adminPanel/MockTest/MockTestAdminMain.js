@@ -1,9 +1,12 @@
 import React from 'react'
 import { Col, Container, Row } from "react-bootstrap";
+import { useParams } from 'react-router-dom';
 import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css";
 
 const MockTestAdminMain = () => {
   localStorage.removeItem("count");
+  console.log("coming")
+  const params=useParams();
     return (
         <div>
         <Container
@@ -23,14 +26,14 @@ const MockTestAdminMain = () => {
           >
             <Row>
               <Col>
-                <a href={'/mocktestadminmain/mains'}>
+                <a href={`/admin/${params.type}/main/mains`}>
                   <div className={styl.subjects}>
                     <h4>Mains</h4>
                   </div>
                 </a>
               </Col>
               <Col>
-                <a href={'/mocktestadminmain/advance'}>
+                <a href={`/admin/${params.type}/main/advance`}>
                   <div className={styl.subjects}>
                     <h4>Advanced</h4>
                   </div>

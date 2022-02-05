@@ -123,10 +123,18 @@ export function ChoiceSection(props) {
   };
   const submitQuestion = () => {
     //If there is choice in questions then check for no of questions attempted
+    console.log(
+      props.paper.toBeAttempted &&
+        props.paper.noOfQuestions != props.paper.toBeAttempted,
+      props.paper.noOfQuestions,
+      props.paper.toBeAttempted,
+      props.paper.noOfQuestions != props.paper.toBeAttempted
+    );
     if (
       props.paper.toBeAttempted &&
       props.paper.noOfQuestions != props.paper.toBeAttempted
     ) {
+      console.log("inside submitquestions");
       let countQ = 0,
         sub = props.paper.questions[props.number - 1].subject;
       for (let i = 0; i < props.stateAnswer.length; i++) {
@@ -175,17 +183,36 @@ export function ChoiceSection(props) {
       <Container style={{ paddingLeft: 0, paddingRight: 0 }}>
         <Row noGutters>
           <Col id="choice-sec">
-            {/* <div>
-                            <div id="instruction-ques-box" onClick={()=>setShowInstruction(!showInstruction)}>
-                                Instructions
-                                {
-                                    showInstruction?<ArrowDropUpIcon/>:<ArrowDropDownIcon/>
-                                }
-                            </div>
-                            <div style={{opacity:showInstruction?1:0}} id="instruction-detail">
-                                   <InstructionDropdown inst={.noOfQuestions!=props.paper.toBeAttempted.instructionInfo} section={props.paper.questions[props.number-1]?props.paper.questions[props.number-1].section:0}/>
-                            </div>
-                        </div> */}
+            <div>
+              <div
+                id="instruction-ques-box"
+                onClick={() => setShowInstruction(!showInstruction)}
+              >
+                Instructions
+                {showInstruction ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+              </div>
+              <div
+                style={{ opacity: showInstruction ? 1 : 0 }}
+                id="instruction-detail"
+              >
+                <InstructionDropdown
+                  answerType={
+                    props.stateAnswer[props.number - 1]
+                      ? props.stateAnswer[props.number - 1].answerType
+                      : 0
+                  }
+                  // inst={
+                  //   props.paper.noofques !=
+                  //   props.paper.toBeAttempted.instructionInfo
+                  // }
+                  // section={
+                  //   props.paper.questions[props.number - 1]
+                  //     ? props.paper.questions[props.number - 1].section
+                  //     : 0
+                  // }
+                />
+              </div>
+            </div>
 
             <div className="heading">
               {props.stateAnswer[props.number - 1]
@@ -251,66 +278,29 @@ export function ChoiceSection(props) {
                 </div>
               ) : props.data.answerType == 5 || props.data.answerType == 4 ? (
                 <div className="options">
-                  {props.data
-                    ? (
-                        <div>
-                        <div
-                          className="option"
-                          onClick={
-                            props.stateAnswer[props.number - 1] &&
-                            props.stateAnswer[props.number - 1].isAnswered
-                              ? null
-                              : props.data.answerType == 5
-                              ? () => changeOptMultiple(0)
-                              : () => changeOptSingle(0)
-                          }
-                          style={{
-                            border:
-                              selectOpt[0] == true
-                                ? "2px solid rgb(59, 149, 194)"
-                                : "1px solid white",
-                          }}
-                        >
-                          {"A.  "}
-
-                          {props.data.option1 && props.data.option1.map((item) => (
-                            <div>
-                              {item.type == 0 ? (
-                                <br />
-                              ) : item.type == 1 ? (
-                                item.data
-                              ) : item.type == 2 ? (
-                                <InlineMath>{item.data}</InlineMath>
-                              ) : item.type == 3 ? (
-                                <img
-                                  alt="img"
-                                  src={item.data}
-                                  style={{ width: "50%" }}
-                                />
-                              ) : null}
-                            </div>
-                          ))}
-                        </div>
-                        <div
+                  {props.data ? (
+                    <div>
+                      <div
                         className="option"
                         onClick={
                           props.stateAnswer[props.number - 1] &&
                           props.stateAnswer[props.number - 1].isAnswered
                             ? null
                             : props.data.answerType == 5
-                            ? () => changeOptMultiple(1)
-                            : () => changeOptSingle(1)
+                            ? () => changeOptMultiple(0)
+                            : () => changeOptSingle(0)
                         }
                         style={{
                           border:
-                            selectOpt[1] == true
+                            selectOpt[0] == true
                               ? "2px solid rgb(59, 149, 194)"
                               : "1px solid white",
                         }}
                       >
-                        {"B.  "}
+                        {"A.  "}
 
-                        {props.data.option2 && props.data.option2.map((item) => (
+                        {props.data.option1 &&
+                          props.data.option1.map((item) => (
                             <div>
                               {item.type == 0 ? (
                                 <br />
@@ -329,25 +319,26 @@ export function ChoiceSection(props) {
                           ))}
                       </div>
                       <div
-                      className="option"
-                      onClick={
-                        props.stateAnswer[props.number - 1] &&
-                        props.stateAnswer[props.number - 1].isAnswered
-                          ? null
-                          : props.data.answerType == 5
-                          ? () => changeOptMultiple(2)
-                          : () => changeOptSingle(2)
-                      }
-                      style={{
-                        border:
-                          selectOpt[2] == true
-                            ? "2px solid rgb(59, 149, 194)"
-                            : "1px solid white",
-                      }}
-                    >
-                      {"C. "}
+                        className="option"
+                        onClick={
+                          props.stateAnswer[props.number - 1] &&
+                          props.stateAnswer[props.number - 1].isAnswered
+                            ? null
+                            : props.data.answerType == 5
+                            ? () => changeOptMultiple(1)
+                            : () => changeOptSingle(1)
+                        }
+                        style={{
+                          border:
+                            selectOpt[1] == true
+                              ? "2px solid rgb(59, 149, 194)"
+                              : "1px solid white",
+                        }}
+                      >
+                        {"B.  "}
 
-                      {props.data.option3 && props.data.option3.map((item) => (
+                        {props.data.option2 &&
+                          props.data.option2.map((item) => (
                             <div>
                               {item.type == 0 ? (
                                 <br />
@@ -364,46 +355,85 @@ export function ChoiceSection(props) {
                               ) : null}
                             </div>
                           ))}
+                      </div>
+                      <div
+                        className="option"
+                        onClick={
+                          props.stateAnswer[props.number - 1] &&
+                          props.stateAnswer[props.number - 1].isAnswered
+                            ? null
+                            : props.data.answerType == 5
+                            ? () => changeOptMultiple(2)
+                            : () => changeOptSingle(2)
+                        }
+                        style={{
+                          border:
+                            selectOpt[2] == true
+                              ? "2px solid rgb(59, 149, 194)"
+                              : "1px solid white",
+                        }}
+                      >
+                        {"C. "}
+
+                        {props.data.option3 &&
+                          props.data.option3.map((item) => (
+                            <div>
+                              {item.type == 0 ? (
+                                <br />
+                              ) : item.type == 1 ? (
+                                item.data
+                              ) : item.type == 2 ? (
+                                <InlineMath>{item.data}</InlineMath>
+                              ) : item.type == 3 ? (
+                                <img
+                                  alt="img"
+                                  src={item.data}
+                                  style={{ width: "50%" }}
+                                />
+                              ) : null}
+                            </div>
+                          ))}
+                      </div>
+                      <div
+                        className="option"
+                        onClick={
+                          props.stateAnswer[props.number - 1] &&
+                          props.stateAnswer[props.number - 1].isAnswered
+                            ? null
+                            : props.data.answerType == 5
+                            ? () => changeOptMultiple(3)
+                            : () => changeOptSingle(3)
+                        }
+                        style={{
+                          border:
+                            selectOpt[3] == true
+                              ? "2px solid rgb(59, 149, 194)"
+                              : "1px solid white",
+                        }}
+                      >
+                        {"D. "}
+
+                        {props.data.option4 &&
+                          props.data.option4.map((item) => (
+                            <div>
+                              {item.type == 0 ? (
+                                <br />
+                              ) : item.type == 1 ? (
+                                item.data
+                              ) : item.type == 2 ? (
+                                <InlineMath>{item.data}</InlineMath>
+                              ) : item.type == 3 ? (
+                                <img
+                                  alt="img"
+                                  src={item.data}
+                                  style={{ width: "50%" }}
+                                />
+                              ) : null}
+                            </div>
+                          ))}
+                      </div>
                     </div>
-                    <div
-                    className="option"
-                    onClick={
-                      props.stateAnswer[props.number - 1] &&
-                      props.stateAnswer[props.number - 1].isAnswered
-                        ? null
-                        : props.data.answerType == 5
-                        ? () => changeOptMultiple(3)
-                        : () => changeOptSingle(3)
-                    }
-                    style={{
-                      border:
-                        selectOpt[3] == true
-                          ? "2px solid rgb(59, 149, 194)"
-                          : "1px solid white",
-                    }}
-                  >
-                    {"D. "}
-
-                    {props.data.option4 && props.data.option4.map((item) => (
-                            <div>
-                              {item.type == 0 ? (
-                                <br />
-                              ) : item.type == 1 ? (
-                                item.data
-                              ) : item.type == 2 ? (
-                                <InlineMath>{item.data}</InlineMath>
-                              ) : item.type == 3 ? (
-                                <img
-                                  alt="img"
-                                  src={item.data}
-                                  style={{ width: "50%" }}
-                                />
-                              ) : null}
-                            </div>
-                          ))}
-                  </div></div>
-                      )
-                    : null}
+                  ) : null}
                 </div>
               ) : null
             ) : null}

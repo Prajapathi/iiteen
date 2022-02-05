@@ -7,6 +7,7 @@ import {
   OutlinedInput,
   Select,
   Button,
+  TextField,
 } from "@material-ui/core";
 import React, { useEffect } from "react";
 import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css";
@@ -43,11 +44,21 @@ const SelectSyllabus = (props) => {
   const [che, setChe] = React.useState([]);
   const [math, setMath] = React.useState([]);
   const [syllabustype, setSyllabustype] = React.useState("");
+  const [date, setDate] = React.useState("2022-02-12");
+  const [shift, setShift] = React.useState("shift1");
   const params = useParams();
+  const [mainpapertype, setMainpapertype] = React.useState("");
+  const { type } = useParams();
+
+  useEffect(() => {
+    if (type == "mocktest") {
+      setMainpapertype("mock");
+    } else setMainpapertype("aits");
+  }, []);
 
   useEffect(() => {
     console.log(params);
-    localStorage.removeItem("section")
+    localStorage.removeItem("section");
     setSyllabustype(localStorage.getItem("syllabustype"));
     // setPhy(localStorage.getItem("phy"))
     // setChe(localStorage.getItem("che"))
@@ -85,8 +96,8 @@ const SelectSyllabus = (props) => {
 
   const savetodatabase = (syllabustype = "partsyllabus") => {
     const db = firebase.firestore();
-    db.collection("MOCK")
-      .doc(`${params.papertype=='mains'?"MAINS":"ADVANCE"}`)
+    db.collection(mainpapertype.toUpperCase())
+      .doc(`${params.papertype == "mains" ? "MAINS" : "ADVANCE"}`)
       .collection("PAPER")
       .doc(`PAPER${Number(params.number) + 1}`)
       .update({
@@ -94,6 +105,8 @@ const SelectSyllabus = (props) => {
         phy: phy,
         che: che,
         math: math,
+        date: date,
+        shift: shift,
       })
       .then(() => {
         console.log("saved");
@@ -113,6 +126,49 @@ const SelectSyllabus = (props) => {
       }}
     >
       <h1>Select Syllabus</h1>
+      {mainpapertype == "aits" && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            alignItems: "baseline",
+            width: "500px",
+            marginBottom: "60px",
+          }}
+        >
+          <h6 style={{ marginRight: "40px" }}>Select date and time</h6>
+
+          <TextField
+            id="datetime-local"
+            label="Date and time"
+            type="date"
+            // className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            style={{ width: "150px", marginRight: "18px" }}
+            value={date}
+            onChange={(e) => {
+              setDate(e.target.value);
+              console.log(e.target.value);
+            }}
+          />
+          <TextField
+            id="standard-number"
+            select
+            label="slot"
+            value={shift}
+            style={{ width: "130px" }}
+            onChange={(event) => {
+              setShift(event.target.value);
+            }}
+          >
+            <MenuItem value={"shift1"}>shift 1(9-12)</MenuItem>
+            <MenuItem value={"shift2"}>shift 2(1-4)</MenuItem>
+          </TextField>
+        </div>
+      )}
+
       <div
         style={{
           display: "flex",
@@ -137,7 +193,11 @@ const SelectSyllabus = (props) => {
             className={styl.syllabusbutton}
             component={Link}
             to={{
-              pathname: `/mocktestadminmain/${params.papertype=='mains'?"mains/syllabussummary":"advance/section"}/${params.number}`,
+              pathname: `/admin/${mainpapertype}testadmin/main/${
+                params.papertype == "mains"
+                  ? "mains/syllabussummary"
+                  : "advance/section"
+              }/${params.number}`,
             }}
             onClick={() => {
               setSyllabustype("fullsyllabus");
@@ -150,7 +210,11 @@ const SelectSyllabus = (props) => {
             className={styl.syllabusbutton}
             component={Link}
             to={{
-              pathname: `/mocktestadminmain/${params.papertype=='mains'?"mains/syllabussummary":"advance/section"}/${params.number}`,
+              pathname: `/admin/${mainpapertype}testadmin/main/${
+                params.papertype == "mains"
+                  ? "mains/syllabussummary"
+                  : "advance/section"
+              }/${params.number}`,
             }}
             onClick={() => {
               setSyllabustype("class 11");
@@ -163,7 +227,11 @@ const SelectSyllabus = (props) => {
             className={styl.syllabusbutton}
             component={Link}
             to={{
-              pathname: `/mocktestadminmain/${params.papertype=='mains'?"mains/syllabussummary":"advance/section"}/${params.number}`,
+              pathname: `/admin/${mainpapertype}testadmin/main/${
+                params.papertype == "mains"
+                  ? "mains/syllabussummary"
+                  : "advance/section"
+              }/${params.number}`,
             }}
             onClick={() => {
               setSyllabustype("class 12");
@@ -303,7 +371,11 @@ const SelectSyllabus = (props) => {
             <Button
               component={Link}
               to={{
-                pathname: `/mocktestadminmain/${params.papertype=='mains'?"mains/syllabussummary":"advance/section"}/${params.number}`,
+                pathname: `/admin/${mainpapertype}testadmin/main/${
+                  params.papertype == "mains"
+                    ? "mains/syllabussummary"
+                    : "advance/section"
+                }/${params.number}`,
               }}
               onClick={() => {
                 savetodatabase();

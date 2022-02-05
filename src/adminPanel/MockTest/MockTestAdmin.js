@@ -1,8 +1,11 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css";
 
 const MockTestAdmin = () => {
+  const params=useParams();
+
   return (
     <div>
       <Container
@@ -12,7 +15,7 @@ const MockTestAdmin = () => {
         color: "rgb(88, 88, 88)",
       }}
       >
-        <h1>Mock test admin pane</h1>
+        <h1>{params.type=='mocktest'?"MOCK":"AITS"} test admin pane</h1>
         <div
         style={{
             marginTop: "50px",
@@ -22,9 +25,9 @@ const MockTestAdmin = () => {
         >
           <Row>
             <Col>
-              <a href={`/mocktestadminmain`}>
+              <a href={`/admin/${params.type}/main`}>
                 <div className={styl.subjects}>
-                  <h4>Mock Test</h4>
+                  <h4>{params.type=='mocktest'?"MOCK":"AITS"} Test</h4>
                 </div>
               </a>
             </Col>

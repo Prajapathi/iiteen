@@ -85,16 +85,48 @@ const AdvDefaultInst = [
 ];
 export default function PaperInstruction(props) {
   const [check, setCheck] = React.useState(false);
+  const [totalmarks, setTotalmarks] = React.useState(0);
+  const markdistribution = [
+    [3, 1, 0],
+    [4, 2, 0],
+    [4, 0, 0],
+    [2, 0, 0],
+  ];
+
+  React.useEffect(() => {
+    console.log(props.details.sections);
+    let tm = 0;
+    let marksdistributiontype = 0;
+    props.details.sections &&
+      props.details.sections.map((item, i) => {
+        // console.log("hello")
+        marksdistributiontype =
+          item.type == "singletype"
+            ? 0
+            : item.type == "multipletype"
+            ? 1
+            : item.type == "integertype"
+            ? 2
+            : 3;
+        // console.log(marksdistributiontype)
+        tm +=
+          Number(item.noofques) * markdistribution[marksdistributiontype][0];
+      });
+    console.log(3 * tm);
+    setTotalmarks(3 * tm);
+  }, []);
 
   return (
     <div id="inst-body">
-      <div id="paper-heading">JEE MAINS </div>
+      <div id="paper-heading">
+        {props.details.sections ? "JEE ADVANCE" : "JEE MAINS"}{" "}
+      </div>
       <div id="top-bar">MARKING SCHEME</div>
       <div id="detail-head">
         <div>
           <div className="detail-subhead">Duration</div>
           <div className="detail-subhead-data">
-            {props.details ? props.details.totalDuration : "-"} mins
+            {props.details.sections ? "M" : "180"} mins
           </div>
         </div>
         <div>
@@ -106,7 +138,7 @@ export default function PaperInstruction(props) {
         <div>
           <div className="detail-subhead">Marks</div>
           <div className="detail-subhead-data">
-            {props.details ? props.details.totalMarks : "-"}
+            {props.details ? totalmarks : "-"}
           </div>
         </div>
       </div>
@@ -128,77 +160,81 @@ export default function PaperInstruction(props) {
           <div className="paper-inst">
             <div className="inst-point-box"></div>
             <div className="inst-point-data">
-              Part A contains 20 multiple choice questions. Each Questions has 4 choices (A),(B),(C),(D) out of which only ONE is correct
-              <ul>
-                        <li style={{ listStyleType: "none" }}>
-                          <div className="inst-sub-points">
-                            <div
-                              style={{
-                                background: "#F6391B",
-                              }}
-                            ></div>
-                            4 Marks for correct answer
-                          </div>
-                        </li>
-                        <li style={{ listStyleType: "none" }}>
-                          <div className="inst-sub-points">
-                            <div
-                              style={{
-                                background: "#2BC559",
-                              }}
-                            ></div>
-                            1 negative mark for incorrect Answer
-                          </div>
-                        </li>
-                        <li style={{ listStyleType: "none" }}>
-                          <div className="inst-sub-points">
-                            <div
-                              style={{
-                                background: "#878585",
-                              }}
-                            ></div>
-                            No Negative mark for Skipped Questions
-                          </div>
-                        </li>
-                      </ul>
+              Part A contains 20 multiple choice questions. Each Questions has 4
+              choices (A),(B),(C),(D) out of which only ONE is correct
+              <ul style={{marginLeft:"42px"}}>
+                <li style={{ listStyleType: "none" }}>
+                  <div className="inst-sub-points">
+                    <div
+                      style={{
+                        
+                        background: "#2BC559",
+                      }}
+                    ></div>
+                    4 Marks for correct answer
+                  </div>
+                </li>
+                <li style={{ listStyleType: "none" }}>
+                  <div className="inst-sub-points">
+                    <div
+                      style={{
+                        background: "#F6391B",
+                      }}
+                    ></div>
+                    1 negative mark for incorrect Answer
+                  </div>
+                </li>
+                <li style={{ listStyleType: "none" }}>
+                  <div className="inst-sub-points">
+                    <div
+                      style={{
+                        background: "#878585",
+                      }}
+                    ></div>
+                    No Negative mark for Skipped Questions
+                  </div>
+                </li>
+              </ul>
             </div>
           </div>
           <div className="paper-inst">
             <div className="inst-point-box"></div>
             <div className="inst-point-data">
-              Part B contains 10 numerical choice questions. The answer to each questions is a numerical
-              <ul>
-                        <li style={{ listStyleType: "none" }}>
-                          <div className="inst-sub-points">
-                            <div
-                              style={{
-                                background: "#F6391B",
-                              }}
-                            ></div>
-                            4 Marks for correct answer
-                          </div>
-                        </li>
-                        <li style={{ listStyleType: "none" }}>
-                          <div className="inst-sub-points">
-                            <div
-                              style={{
-                                background: "#2BC559",
-                              }}
-                            ></div>
-                            1 negative mark for incorrect Answer
-                          </div>
-                        </li>
-                        <li style={{ listStyleType: "none" }}>
-                          <div className="inst-sub-points">
-                            <div
-                              style={{
-                                background: "#878585",
-                              }}
-                            ></div>
-                            No Negative mark for Skipped Questions
-                          </div>
-                        </li>
-                      </ul>
+              Part B contains 10 numerical choice questions. The answer to each
+              questions is a numerical
+              <ul style={{marginLeft:"42px"}}>
+                <li style={{ listStyleType: "none" }}>
+                  <div className="inst-sub-points">
+                    <div
+                      style={{
+                        
+                        background: "#2BC559",
+                      }}
+                    ></div>
+                    4 Marks for correct answer
+                  </div>
+                </li>
+                <li style={{ listStyleType: "none" }}>
+                  <div className="inst-sub-points">
+                    <div
+                      style={{
+                        background: "#F6391B",
+                      }}
+                    ></div>
+                    1 negative mark for incorrect Answer
+                  </div>
+                </li>
+                <li style={{ listStyleType: "none" }}>
+                  <div className="inst-sub-points">
+                    <div
+                      style={{
+                        background: "#878585",
+                      }}
+                    ></div>
+                    No Negative mark for Skipped Questions
+                  </div>
+                </li>
+              </ul>
             </div>
           </div>
         </>
@@ -208,7 +244,7 @@ export default function PaperInstruction(props) {
             <div className="inst-point-box"></div>
             <div className="inst-point-data">
               {props.details.noOfQuestions / 3} questions each for Physics,
-              Chemistry and Maths. 
+              Chemistry and Maths.
             </div>
           </div>
           <div className="paper-inst">
@@ -235,12 +271,12 @@ export default function PaperInstruction(props) {
                       ? "integer type questions. The answer to each questions is a single digit integer ranging from 0 to 9"
                       : "numerical type questions. The answer to each questions is a numerical"}
                     {items.type == "singletype" ? (
-                      <ul>
+                      <ul style={{marginLeft:"42px"}}>
                         <li style={{ listStyleType: "none" }}>
                           <div className="inst-sub-points">
                             <div
                               style={{
-                                background: "#F6391B",
+                                background: "#2BC559",
                               }}
                             ></div>
                             3 Marks for correct answer
@@ -250,7 +286,8 @@ export default function PaperInstruction(props) {
                           <div className="inst-sub-points">
                             <div
                               style={{
-                                background: "#2BC559",
+                                
+                                background: "#F6391B",
                               }}
                             ></div>
                             1 negative mark for incorrect Answer
@@ -268,12 +305,13 @@ export default function PaperInstruction(props) {
                         </li>
                       </ul>
                     ) : items.type == "multipletype" ? (
-                      <ul>
+                      <ul style={{marginLeft:"42px"}}>
                         <li style={{ listStyleType: "none" }}>
                           <div className="inst-sub-points">
                             <div
                               style={{
-                                background: "#F6391B",
+                                background: "#2BC559",
+                                
                               }}
                             ></div>
                             4 Marks if all correct options are marked correct
@@ -283,7 +321,37 @@ export default function PaperInstruction(props) {
                           <div className="inst-sub-points">
                             <div
                               style={{
-                                background: "#2BC559",
+                                background: "#e6e600",
+                              }}
+                            ></div>
+                            3 mark ,if all 4 correct but only 3 are selected
+                          </div>
+                        </li>
+                        <li style={{ listStyleType: "none" }}>
+                          <div className="inst-sub-points">
+                            <div
+                              style={{
+                                background: "#e6e600",
+                              }}
+                            ></div>
+                            2 mark ,if 3 or more are correct but only 2 are selected
+                          </div>
+                        </li>
+                        <li style={{ listStyleType: "none" }}>
+                          <div className="inst-sub-points">
+                            <div
+                              style={{
+                                background: "#e6e600",
+                              }}
+                            ></div>
+                            1 mark ,if 2 or more are correct but only 1 is selected
+                          </div>
+                        </li>
+                        <li style={{ listStyleType: "none" }}>
+                          <div className="inst-sub-points">
+                            <div
+                              style={{
+                                background: "#F6391B",
                               }}
                             ></div>
                             2 Negative mark for incorrect combination of Answer
@@ -302,17 +370,7 @@ export default function PaperInstruction(props) {
                         </li>
                       </ul>
                     ) : items.type == "integertype" ? (
-                      <ul>
-                        <li style={{ listStyleType: "none" }}>
-                          <div className="inst-sub-points">
-                            <div
-                              style={{
-                                background: "#F6391B",
-                              }}
-                            ></div>
-                            3 Marks for correct answer
-                          </div>
-                        </li>
+                      <ul style={{marginLeft:"42px"}}>
                         <li style={{ listStyleType: "none" }}>
                           <div className="inst-sub-points">
                             <div
@@ -320,7 +378,18 @@ export default function PaperInstruction(props) {
                                 background: "#2BC559",
                               }}
                             ></div>
-                            1 negative mark for incorrect Answer
+                            4 Marks for correct answer
+                          </div>
+                        </li>
+                        <li style={{ listStyleType: "none" }}>
+                          <div className="inst-sub-points">
+                            <div
+                              style={{
+                                
+                                background: "#F6391B",
+                              }}
+                            ></div>
+                            No negative mark for incorrect Answer
                           </div>
                         </li>
                         <li style={{ listStyleType: "none" }}>
@@ -335,17 +404,7 @@ export default function PaperInstruction(props) {
                         </li>
                       </ul>
                     ) : (
-                      <ul>
-                        <li style={{ listStyleType: "none" }}>
-                          <div className="inst-sub-points">
-                            <div
-                              style={{
-                                background: "#F6391B",
-                              }}
-                            ></div>
-                            3 Marks for correct answer
-                          </div>
-                        </li>
+                      <ul style={{marginLeft:"42px"}}>
                         <li style={{ listStyleType: "none" }}>
                           <div className="inst-sub-points">
                             <div
@@ -353,7 +412,17 @@ export default function PaperInstruction(props) {
                                 background: "#2BC559",
                               }}
                             ></div>
-                            1 negative mark for incorrect Answer
+                            2 Marks for correct answer
+                          </div>
+                        </li>
+                        <li style={{ listStyleType: "none" }}>
+                          <div className="inst-sub-points">
+                            <div
+                              style={{
+                                background: "#F6391B",
+                              }}
+                            ></div>
+                          No negative mark for incorrect Answer
                           </div>
                         </li>
                         <li style={{ listStyleType: "none" }}>

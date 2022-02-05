@@ -32,36 +32,52 @@ const QuestionContent = (props) => {
   }
   var index = props.match.params.subject;
   var mockpaperno = props.location.state
-  ? props.location.state.papernumber
-  : null;
+    ? props.location.state.papernumber
+    : null;
+  var mainpapertype = props.location.state
+    ? props.location.state.mainpapertype
+    : null;
 
-  window.onpopstate=function(e){
-    console.log("yes i got called",window.location.pathname.charAt(1),localStorage.getItem("count"),index)
+  window.onpopstate = function (e) {
+    // console.log("yes i got called",window.location.pathname.charAt(1),localStorage.getItem("count"),index)
     //new code
-    if(index==3 && localStorage.getItem("count")==="1" && window.location.pathname.charAt(1)=='m'){
-      console.log("inside count 1 index 3")
-      history.push("/mocktestadminmain")
-    }else if(index==4 && localStorage.getItem("count")==="1" && window.location.pathname.charAt(1)=='m'){
-      console.log("inside count 1 index 4")
-      history.push("/mocktestadminmain")
+    if (
+      index == 3 &&
+      localStorage.getItem("count") === "1" &&
+      window.location.pathname.charAt(1) == "m"
+    ) {
+      // console.log("inside count 1 index 3")
+      history.push(`/admin/${mainpapertype}test/main`);
+    } else if (
+      index == 4 &&
+      localStorage.getItem("count") === "1" &&
+      window.location.pathname.charAt(1) == "m"
+    ) {
+      // console.log("inside count 1 index 4")
+      history.push(`/admin/${mainpapertype}test/main`);
     }
     //
-    else if(index==3 && localStorage.getItem("count")==null && window.location.pathname.charAt(1)!='P'){
-      console.log("inside count null index 3")
-      localStorage.setItem("count",1);
-      history.push("/mocktestadminmain/mains")
+    else if (
+      index == 3 &&
+      localStorage.getItem("count") == null &&
+      window.location.pathname.charAt(1) != "P"
+    ) {
+      // console.log("inside count null index 3")
+      localStorage.setItem("count", 1);
+      history.push(`/admin/${mainpapertype}test/main/mains`);
+    } else if (
+      index == 4 &&
+      localStorage.getItem("count") == null &&
+      window.location.pathname.charAt(1) != "P"
+    ) {
+      // console.log("inside count null index 4")
+      localStorage.setItem("count", 1);
+      history.push(`/admin/${mainpapertype}test/main/advance`);
     }
-    else if(index==4 && localStorage.getItem("count")==null && window.location.pathname.charAt(1)!='P'){
-      console.log("inside count null index 4")
-      localStorage.setItem("count",1);
-      history.push("/mocktestadminmain/advance")
-    }
-    
-  }
+  };
   const subj = ["physics", "chemistry", "maths"];
 
   useEffect(() => {
-    console.log("version",React.version)
     if (index == 0) {
       // console.log("yes");
       // console.log(sub);
@@ -72,18 +88,22 @@ const QuestionContent = (props) => {
       setSub("chemistry");
     } else if (index == 2) {
       setSub("maths");
-    } else if(index==3){
+    } else if (index == 3) {
       setSub("mocktest");
       fetchPaper("", "MAINS");
-    }else{
+    } else {
       setSub("mocktestadvance");
       fetchPaper("", "ADVANCE");
     }
   }, [index]);
 
   useEffect(() => {
-    localStorage.removeItem("count")
-    if (localStorage.getItem("Class") !== null && index!=='3' && index!=='4') {
+    localStorage.removeItem("count");
+    if (
+      localStorage.getItem("Class") !== null &&
+      index !== "3" &&
+      index !== "4"
+    ) {
       setClass(localStorage.getItem("Class"));
       setChapter(localStorage.getItem("chapter"));
       // let button = document.getElementById("getquestions");
@@ -105,10 +125,10 @@ const QuestionContent = (props) => {
 
   function fetchPaper(selClass, selChapter) {
     const db = firebase.firestore();
-    console.log(sub, selClass,selChapter);
+    console.log(sub, selClass, selChapter);
     if (selClass === "") {
       var q = db
-        .collection("MOCK")
+        .collection(mainpapertype.toUpperCase())
         .doc(selChapter)
         .collection("PAPER")
         .doc(`PAPER${Number(mockpaperno)}`)
@@ -143,10 +163,10 @@ const QuestionContent = (props) => {
     //if no then do nothing
     if (window.confirm("Are you sure want to delete this question?")) {
       const db = firebase.firestore();
-      if (sub == "mocktest" || sub=="mocktestadvance") {
+      if (sub == "mocktest" || sub == "mocktestadvance") {
         var q = db
-          .collection("MOCK")
-          .doc(`${sub == "mocktest"?"MAINS":"ADVANCE"}`)
+          .collection(mainpapertype.toUpperCase())
+          .doc(`${sub == "mocktest" ? "MAINS" : "ADVANCE"}`)
           .collection("PAPER")
           .doc(`PAPER${Number(mockpaperno)}`);
       } else {
@@ -156,7 +176,10 @@ const QuestionContent = (props) => {
           .collection(subj[index])
           .doc(chapter);
       }
-      q.set({noofques:firebase.firestore.FieldValue.increment(-1)},{merge: true})
+      q.set(
+        { noofques: firebase.firestore.FieldValue.increment(-1) },
+        { merge: true }
+      );
       q.collection("question")
         .doc(id)
         .delete()
@@ -177,7 +200,7 @@ const QuestionContent = (props) => {
         className="shadow-card"
         style={{ marginTop: "50px", textAlign: "center" }}
       >
-        {(sub !== "mocktest" && sub !== "mocktestadvance") && (
+        {sub !== "mocktest" && sub !== "mocktestadvance" && (
           <>
             <h4>Select Portions</h4>
             <div
@@ -255,7 +278,7 @@ const QuestionContent = (props) => {
           </>
         )}
         {(sub === "mocktest" || sub === "mocktestadvance") && (
-          <h1>{`MOCK TEST PAPER ${Number(mockpaperno)}`}</h1>
+          <h1>{`${mainpapertype.toUpperCase()} TEST PAPER ${Number(mockpaperno)}`}</h1>
         )}
       </Container>
 
@@ -293,6 +316,7 @@ const QuestionContent = (props) => {
                         Chapter: chapter,
                         QuestionNo: allQuestions.length + 1,
                         mockpaperno: mockpaperno,
+                        mainpapertype:mainpapertype
                         // allQuestions: allQuestions,
                         // setQuestionNo:setQuestionNo,
                       },
@@ -388,6 +412,7 @@ const QuestionContent = (props) => {
                             Chapter: chapter,
                             QuestionNo: index + 1,
                             mockpaperno: mockpaperno,
+                            mainpapertype:mainpapertype
                             // allQuestions: allQuestions,
                           },
                         }}
@@ -477,24 +502,6 @@ const QuestionContent = (props) => {
         )}
       </Container>
 
-      {/* {editBtn === true ? (
-        //   <Router>
-        //   <Switch>
-        //     <Route path="/edit" exact component={()=>{
-        //          <SetQuestion Class= {Class} Chapter = {chapter} QuestionNumber={questionNo} Id={Id}/>
-        //     }} />
-        //   </Switch>
-        // </Router>
-        <SetQuestion
-          Class={Class}
-          Chapter={chapter}
-          QuestionNumber={questionNo}
-          Id={Id}
-          Subject={sub}
-        />
-      ) : (
-        <></>
-      )} */}
     </div>
   );
 };

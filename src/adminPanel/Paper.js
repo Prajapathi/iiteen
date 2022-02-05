@@ -212,7 +212,7 @@ export default function Paper(props) {
   };
   return (
     <div>
-      <Prompt when={true} message="Are you sure you want to leave?" />
+      {/* <Prompt when={true} message="Are you sure you want to leave?" /> */}
       {loading == true ? (
         <CircularProgress style={{ margin: "25% 50%" }} />
       ) : showQuestion == false ? (

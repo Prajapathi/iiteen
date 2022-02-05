@@ -20,6 +20,22 @@ export function MockTestCard(props) {
   const [openContinuePreviousAttempt, setOpenContinuePreviousAttempt] =
     React.useState(false);
   const [prevAttempt, setPrevAttempt] = React.useState(false);
+  const [totalmarks,setTotalmarks]=React.useState(0);
+  const markdistribution=[[3,1,0],[4,2,0],[3,1,0],[3,1,0]]
+
+React.useEffect(()=>{
+  console.log(props.paper.sections)
+        let tm=0;
+        let marksdistributiontype=0;
+  props.paper.sections && props.paper.sections.map((item,i)=>{
+    // console.log("hello")
+    marksdistributiontype=item.type=="singletype"?0:item.type=='multipletype'?1:item.type=='integertype'?2:3;
+    // console.log(marksdistributiontype)
+    tm+=Number(item.noofques)*markdistribution[marksdistributiontype][0];
+})
+console.log(3*tm)
+setTotalmarks(3*tm);
+},[])
 
   //for checking if user has any previous attempt which wasn't submitted
   const checkPreviousAttempt = () => {
@@ -125,7 +141,7 @@ export function MockTestCard(props) {
                 No of Question:{" "}
               </div>
               <div style={{ fontSize: "14px", color: "#448698" }}>
-                {props.paper.noofques}{" "}
+                {props.paper.noofques?props.paper.noofques:0}{" "}
               </div>
             </div>
             <div
@@ -139,7 +155,7 @@ export function MockTestCard(props) {
                 Duration:{" "}
               </div>
               <div style={{ fontSize: "14px", color: "#448698" }}>
-                {props.paper.totalDuration} minutes
+                {props.paper.totalDuration?props.paper.totalDuration:"180"} minutes
               </div>
             </div>
             <div
@@ -153,7 +169,7 @@ export function MockTestCard(props) {
                 Max Marks{" "}
               </div>
               <div style={{ fontSize: "14px", color: "#448698" }}>
-                {props.paper.totalMarks}
+                {totalmarks}
               </div>
             </div>
           </div>

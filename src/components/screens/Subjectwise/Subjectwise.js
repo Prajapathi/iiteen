@@ -19,11 +19,14 @@ export default function Subjectwise() {
   window.onpopstate = function (e) {
     // e.preventDefault()
     console.log("called")
-    console.log(open,sessionStorage.getItem("dialog"))
+    console.log(open,sessionStorage.getItem("dialog"),window.location.pathname)
     if (!open || sessionStorage.getItem("dialog")===null) {
-      console.log("calledinside")
-      setOpen(true);
-      History.push("/Subjectwise");
+      if(window.location.pathname!='/MockTest'){
+        console.log("calledinside")
+        setOpen(true);
+        History.push("/Subjectwise");
+      }
+      
     }
     sessionStorage.removeItem("dialog");
   };

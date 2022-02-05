@@ -60,6 +60,7 @@ const SetQuestion = (props) => {
   const [section, setSection] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [Id, setId] = useState(props.location.state.id);
+  const [subj,setSubj]=useState("");
 
   const [locationKeys, setLocationKeys] = useState([]);
   const [saveposition, setSaveposition] = useState(0);
@@ -93,6 +94,7 @@ const SetQuestion = (props) => {
   const Subject = props.location.state.Subject;
   const Chapter = props.location.state.Chapter;
   const mockpaperno = props.location.state.mockpaperno;
+  const mainpapertype=props.location.state.mainpapertype;
   // console.log(Class,Id,QuestionNo,Subject,Chapter);
   // const allQuestions = props.location.state.allQuestions;
 
@@ -163,6 +165,13 @@ const SetQuestion = (props) => {
     //
     fetchPaper();
     fetchAllQuestions();
+    if(Subject=='physics'){
+      setSubj(1)
+    }else if(Subject=='chemistry'){
+      setSubj(2)
+    }else if(Subject=='maths'){
+      setSubj(3)
+    }
     if (Subject === "mocktest") {
       if (
         (QuestionNo >= 1 && QuestionNo <= 20) ||
@@ -175,6 +184,11 @@ const SetQuestion = (props) => {
         // setMocksingletype("numericaltype")
         setQuestionType("2");
       }
+      if(QuestionNo>=1 && QuestionNo<=30){
+        setSubj(1)
+      }else if(QuestionNo>=31 && QuestionNo<=60){
+        setSubj(2)
+      }else setSubj(3)
     }
     if (Subject === "mocktestadvance") {
       fetchmocktestadvancepatterndata();
@@ -187,6 +201,11 @@ const SetQuestion = (props) => {
     for (let i = 0; i < section.length; i++) {
       totalnoofquespersubject+=Number(section[i].noofques);
     }
+    if(QuestionNo>=1 && QuestionNo<=totalnoofquespersubject){
+      setSubj(1)
+    }else if(QuestionNo>=1+totalnoofquespersubject && QuestionNo<=totalnoofquespersubject*2){
+      setSubj(2)
+    }else setSubj(3)
     let aggregate = 0;
     for (let i = 0; i < section.length; i++) {
       if (
@@ -219,7 +238,7 @@ const SetQuestion = (props) => {
     const db = firebase.firestore();
     if (Subject === "mocktest" || Subject === "mocktestadvance") {
       var q = await db
-        .collection("MOCK")
+        .collection(mainpapertype.toUpperCase())
         .doc(`${Subject === "mocktest" ? "MAINS" : "ADVANCE"}`)
         .collection("PAPER")
         .doc(`PAPER${Number(mockpaperno)}`);
@@ -247,6 +266,7 @@ const SetQuestion = (props) => {
         year: year,
         college: college,
         number: `${QuestionNo}`,
+        subject:subj
       })
       .then((docref) => {
         console.log(
@@ -272,7 +292,7 @@ const SetQuestion = (props) => {
       toast.success("UPDATED");
       if (Subject === "mocktest" || Subject === "mocktestadvance") {
         var q = await db
-          .collection("MOCK")
+          .collection(mainpapertype.toUpperCase())
           .doc(`${Subject === "mocktest" ? "MAINS" : "ADVANCE"}`)
           .collection("PAPER")
           .doc(`PAPER${Number(mockpaperno)}`)
@@ -438,7 +458,7 @@ const SetQuestion = (props) => {
       const db = firebase.firestore();
       if (Subject === "mocktest" || Subject === "mocktestadvance") {
         var q = await db
-          .collection("MOCK")
+          .collection(mainpapertype.toUpperCase())
           .doc(`${Subject === "mocktest" ? "MAINS" : "ADVANCE"}`)
           .collection("PAPER")
           .doc(`PAPER${Number(mockpaperno)}`)
@@ -471,7 +491,7 @@ const SetQuestion = (props) => {
   async function fetchmocktestadvancepatterndata() {
     const db = firebase.firestore();
     await db
-      .collection("MOCK")
+      .collection(mainpapertype.toUpperCase())
       .doc("ADVANCE")
       .collection("PAPER")
       .doc(`PAPER${Number(mockpaperno)}`)
@@ -491,7 +511,7 @@ const SetQuestion = (props) => {
     if (Subject === "mocktest" || Subject === "mocktestadvance") {
       console.log("mocktest", `PAPER${Number(mockpaperno)}`);
       var q = await db
-        .collection("MOCK")
+        .collection(mainpapertype.toUpperCase())
         .doc(`${Subject === "mocktest" ? "MAINS" : "ADVANCE"}`)
         .collection("PAPER")
         .doc(`PAPER${Number(mockpaperno)}`)
@@ -1116,6 +1136,7 @@ const SetQuestion = (props) => {
                       Chapter: Chapter,
                       QuestionNo: QuestionNo - 1,
                       mockpaperno: mockpaperno,
+                      mainpapertype:mainpapertype
                       // allQuestions: allQuestions,
                     },
                   }}
@@ -1191,6 +1212,7 @@ const SetQuestion = (props) => {
                     Chapter: Chapter,
                     QuestionNo: QuestionNo + 1,
                     mockpaperno: mockpaperno,
+                    mainpapertype:mainpapertype
                     // allQuestions[QuestionNo] !== undefined
                     //   ? QuestionNo + 1
                     //   : allQuestions.length + 2,

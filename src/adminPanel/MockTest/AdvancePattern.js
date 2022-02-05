@@ -9,6 +9,15 @@ const AdvancePattern = () => {
   const [noofsec, setNoofsec] = useState(0);
   const [section, setSection] = useState([]);
   const params=useParams();
+  const [mainpapertype,setMainpapertype]=React.useState("");
+  const {type}=useParams()
+
+  useEffect(()=>{
+    if(type=='mocktest'){
+      setMainpapertype("mock");
+    }else setMainpapertype("aits")
+  },[])
+
   const createsec = (value) => {
     
     console.log(section);
@@ -49,7 +58,7 @@ const AdvancePattern = () => {
 
   const savetodatabase=()=>{
     const db = firebase.firestore();
-    db.collection("MOCK")
+    db.collection(mainpapertype.toUpperCase())
       .doc("ADVANCE")
       .collection("PAPER")
       .doc(`PAPER${Number(params.number) + 1}`)
@@ -166,7 +175,7 @@ const AdvancePattern = () => {
         }}
         component={Link}
         to={{
-          pathname:`/mocktestadminmain/advance/syllabussummary/${params.number}`
+          pathname:`/admin/${mainpapertype}testadmin/main/advance/syllabussummary/${params.number}`
         }}
       >
         Proceed

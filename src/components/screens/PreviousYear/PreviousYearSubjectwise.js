@@ -21,7 +21,7 @@ export default function PreviousYearSubjectwise() {
 
   window.onpopstate = function (e) {
     console.log("called")
-    console.log(open,sessionStorage.getItem("dialog"))
+    console.log(open,sessionStorage.getItem("dialog"),window.location.pathname)
     // if(open==true){
     //   // History.push("/mjki123U")
     //   // window.history.back()

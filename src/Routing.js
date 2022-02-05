@@ -74,7 +74,7 @@ export function Routing(props) {
                         <Route exact path="/:paperType/:mockpaperType/Papers/Analysis/:paperName">
                             <LeftMenu /><PaperAnalysis /><Footer />
                         </Route>
-                        <Route exact path="/:paperType/Papers/Detailed_Analysis/:paperName">
+                        <Route exact path="/:paperType/:mockpaperType/Papers/Detailed_Analysis/:paperName">
                             <LeftMenu /><DetailedAnalysis /><Footer />
                         </Route>
                         <Route exact path="/Report">
