@@ -37,7 +37,7 @@ const Syllabussummaryadvance = () => {
   const {type}=useParams()
 
   useEffect(()=>{
-    if(type=='mocktestadmin'){
+    if(type=='mocktest'){
       setMainpapertype("mock");
     }else setMainpapertype("aits")
   },[])

@@ -175,7 +175,7 @@ const AdvancePattern = () => {
         }}
         component={Link}
         to={{
-          pathname:`/admin/${mainpapertype}testadmin/main/advance/syllabussummary/${params.number}`
+          pathname:`/admin/${mainpapertype}test/main/advance/syllabussummary/${params.number}`
         }}
       >
         Proceed

@@ -344,7 +344,7 @@ export function Paper(props) {
                 db.collection("User").doc(props.user.uid).collection(paperTypeRoute).doc(`${props.paper.sections?"ADVANCE":"MAINS"}`).collection("PAPER").doc(`PAPER${props.paper.number}`).collection("LeaderBoard").doc("Analysis")
                 .set({...Analysis})
                 .then((res)=>{
-                    window.alert("yo");
+                    // window.alert("yo");
                     history.push({pathname:"Analysis/"+`PAPER${props.paper.number}`})
                 })
                 .catch((err)=>{

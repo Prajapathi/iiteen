@@ -191,27 +191,30 @@ export function ChoiceSection(props) {
                 Instructions
                 {showInstruction ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
               </div>
+              {showInstruction && 
               <div
-                style={{ opacity: showInstruction ? 1 : 0 }}
-                id="instruction-detail"
-              >
-                <InstructionDropdown
-                  answerType={
-                    props.stateAnswer[props.number - 1]
-                      ? props.stateAnswer[props.number - 1].answerType
-                      : 0
-                  }
-                  // inst={
-                  //   props.paper.noofques !=
-                  //   props.paper.toBeAttempted.instructionInfo
-                  // }
-                  // section={
-                  //   props.paper.questions[props.number - 1]
-                  //     ? props.paper.questions[props.number - 1].section
-                  //     : 0
-                  // }
-                />
-              </div>
+              style={{ opacity: showInstruction ? 1 : 0 }}
+              id="instruction-detail"
+            >
+              <InstructionDropdown
+                answerType={
+                  props.stateAnswer[props.number - 1]
+                    ? props.stateAnswer[props.number - 1].answerType
+                    : 0
+                }
+                // inst={
+                //   props.paper.noofques !=
+                //   props.paper.toBeAttempted.instructionInfo
+                // }
+                // section={
+                //   props.paper.questions[props.number - 1]
+                //     ? props.paper.questions[props.number - 1].section
+                //     : 0
+                // }
+              />
+            </div>
+              }
+              
             </div>
 
             <div className="heading">

@@ -14,6 +14,7 @@ import { Link, useParams } from "react-router-dom";
 import firebase from "firebase";
 
 function savetodatabase(paperno,mainpaptyp){
+  console.log(paperno,mainpaptyp)
   const db = firebase.firestore();
   db.collection(mainpaptyp.toUpperCase())
     .doc("MAINS")
@@ -166,6 +167,7 @@ const Syllabussummary = () => {
             }
           }}
           onClick={()=>{
+            console.log(Number(paperno.number) + 1,mainpapertype)
             savetodatabase(Number(paperno.number) + 1,mainpapertype)
           }}
         >

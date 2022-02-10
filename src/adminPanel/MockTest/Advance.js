@@ -1,8 +1,9 @@
-import { MenuItem, TextField } from "@material-ui/core";
+import { IconButton, MenuItem, TextField } from "@material-ui/core";
 import firebase from "firebase";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css";
+import CloseIcon from "@mui/icons-material/Close";  
 
 const Advance = () => {
   const [paper, setPaper] = useState([]);
@@ -76,6 +77,9 @@ const Advance = () => {
     setEditable(temp);
   }
   const savetodatabase = (index) => {
+    if(date==undefined || shift==undefined){
+      return
+    }
     const db = firebase.firestore();
     db.collection(mainpapertype.toUpperCase())
       .doc("ADVANCE")
@@ -86,6 +90,61 @@ const Advance = () => {
         shift: shift,
       });
   };
+
+  const deletepaperfromdatabase=(index,batchSize)=>{
+    const db = firebase.firestore();
+    db.collection(mainpapertype.toUpperCase())
+      .doc("ADVANCE")
+      .collection("PAPER")
+      .doc(`PAPER${index + 1}`)
+      .delete()
+      .then(function () {
+        console.log("Paper successfully deleted!");
+      })
+      .catch(function (error) {
+        console.error("Error removing Paper: ", error);
+      });
+
+      deleteCollection(db,index,batchSize)
+  }
+
+  //new code
+  async function deleteCollection(db, index, batchSize) {
+    const collectionRef = db.collection(mainpapertype.toUpperCase())
+    .doc("ADVANCE")
+    .collection("PAPER")
+    .doc(`PAPER${index + 1}`).collection("question");
+    const query = collectionRef.orderBy('number').limit(batchSize);
+  
+    return new Promise((resolve, reject) => {
+      deleteQueryBatch(db, query, resolve).catch(reject);
+    });
+  }
+  
+  async function deleteQueryBatch(db, query, resolve) {
+    const snapshot = await query.get();
+  
+    const batchSize = snapshot.size;
+    if (batchSize === 0) {
+      // When there are no documents left, we are done
+      resolve();
+      return;
+    }
+  
+    // Delete documents in a batch
+    const batch = db.batch();
+    snapshot.docs.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+    await batch.commit();
+  
+    // Recurse on the next process tick, to avoid
+    // exploding the stack.
+    process.nextTick(() => {
+      deleteQueryBatch(db, query, resolve);
+    });
+  }
+  //
   return (
     <div>
       <div
@@ -119,16 +178,22 @@ const Advance = () => {
               <Link
                 to={{
                   pathname: `${
+                    !editable[index]?
                     p.syllabusCreated
                       ? "/PreviousYearSubjectwise/4"
-                      : `/admin/${mainpapertype}testadmin/main/advance/selectsyllabus/${
+                      : `/admin/${mainpapertype}test/main/advance/selectsyllabus/${
                           p.number - 1
                         }`
+                        :'#'
                   }`,
                   state: {
                     papernumber: Number(p.number),
                     mainpapertype: mainpapertype,
                   },
+                }}
+                onClick={(e)=>{
+                  e.stopPropagation()
+                editable[index] && e.preventDefault()
                 }}
               >
                 <div
@@ -138,8 +203,35 @@ const Advance = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
+                    position: "relative",
                   }}
                 >
+                  <IconButton
+                    style={{
+                      position: "absolute",
+                      top: "0px",
+                      right: "0px",
+                      backgroundColor: "#fc584c",
+                      borderTopRightRadius: "15px !important",
+                      borderTopLeftRadius: "0px",
+                      borderBottomRightRadius: "0px",
+                      borderBottomLeftRadius: "0px",
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      if (
+                        window.confirm(
+                          "Are you sure you want to delete this paper completely?"
+                        )
+                      ) {
+                        deletepaperfromdatabase(index,p.noofques)
+                      }
+                    }}
+                    className="dialog-close-icon"
+                  >
+                    <CloseIcon />
+                  </IconButton>
                   <h4>Advance Paper {p.number}</h4>
                   <h6>No. of Questions :{p.noofques ? p.noofques : "0"}</h6>
                   {mainpapertype == "aits" ? (

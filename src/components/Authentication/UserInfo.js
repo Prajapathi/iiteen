@@ -26,6 +26,9 @@ export function UserInfo(props) {
     const [allowSubmit,setAllowSubmit]=React.useState(false)
     const [loading,setLoading]=React.useState(false)
     const [showError,setShowError]=React.useState(false)
+    const [school,setSchool]=React.useState("")
+    const [JeeId,setJeeId]=React.useState("")
+    const [error,setError]=React.useState("")
 
     React.useEffect(() => {
         if(new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/g).test(email)==true){
@@ -57,12 +60,24 @@ export function UserInfo(props) {
                 setShowError(true)
                 setLoading(false)
                 console.log("error",error)
+                setError(error)
             });
         }).catch(function(error) {
             setShowError(true)
             setLoading(false)
             console.log("error happened:",error)
+            setError(error)
         });
+        const db = firebase.firestore();
+        db.collection("User")
+          .doc(firebase.auth().currentUser.uid)
+          .set({ email: email,school:school,JeeId:JeeId,name:name }, { merge: true })
+          .then(() => {
+            console.log("saved user info");
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
         
     }
     return (
@@ -93,6 +108,14 @@ export function UserInfo(props) {
                                 />
                                 <div style={{color:"#FF1E1E"}}>*</div>
                             </div>
+                            <div className="user-info-input" style={{marginRight:"34px"}}>
+                                School: 
+                                <TextField 
+                                    multiline
+                                    value={school}
+                                    onChange={(e)=>setSchool(e.target.value)}
+                                />
+                            </div>
                             <div className="user-info-input">
                                 Email:
                                 <TextField 
@@ -103,13 +126,22 @@ export function UserInfo(props) {
                                 />
                                 <div style={{color:"#FF1E1E"}}>*</div>
                             </div>
+                            <div className="user-info-input" style={{marginRight:"34px"}}>
+                                Jee Id:
+                                <TextField 
+                                    multiline
+                                    value={JeeId}
+                                    onChange={(e)=>setJeeId(e.target.value)}
+                                />
+                            </div>
                             {loading?
                                 <CircularProgress/>
                                 :
                                 showError?
                                 <>
                                     <div className="edit-name-error">
-                                        <div>An error occured. <br/>Please Try again later.</div>
+                                        {/* <div>An error occured. <br/>Please Try again later.</div> */}
+                                        <div>{error}</div>
                                         <button className="edit-button" onClick={props.closeDialog}>
                                             Cancel
                                         </button>

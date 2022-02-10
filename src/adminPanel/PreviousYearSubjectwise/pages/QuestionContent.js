@@ -305,9 +305,23 @@ const QuestionContent = (props) => {
                     setQuestionNo(allQuestions.length + 1);
                     // alert(questionNo);
                   }}
-                  style={{ marginLeft: "300px" }}
+                  style={{ marginLeft: "300px",textDecoration: "none" }}
+                  component={Link}
+                  to={{
+                    pathname: "/PreviousYearSubjectwise/setQuestion",
+                    state: {
+                      Class: Class,
+                      Subject: sub,
+                      Chapter: chapter,
+                      QuestionNo: allQuestions.length + 1,
+                      mockpaperno: mockpaperno,
+                      mainpapertype:mainpapertype
+                      // allQuestions: allQuestions,
+                      // setQuestionNo:setQuestionNo,
+                    },
+                  }}
                 >
-                  <Link
+                  {/* <Link
                     to={{
                       pathname: "/PreviousYearSubjectwise/setQuestion",
                       state: {
@@ -322,9 +336,9 @@ const QuestionContent = (props) => {
                       },
                     }}
                     style={{ textDecoration: "none" }}
-                  >
+                  > */}
                     Add New Question
-                  </Link>
+                  {/* </Link> */}
                 </Button>{" "}
               </Col>
             </Row>

@@ -23,7 +23,7 @@ export function MockTest(props) {
 
     const db = firebase.firestore();
     db.collection("MOCK")
-        .doc(`${params.papertype=='mains'?"MAINS":"ADVANCE"}`)
+      .doc(`${params.papertype == "mains" ? "MAINS" : "ADVANCE"}`)
       .collection("PAPER")
       .orderBy("number")
       .get()
@@ -41,6 +41,8 @@ export function MockTest(props) {
         db.collection("User")
           .doc(props.user.uid)
           .collection("MOCKPapers")
+          .doc(`${params.papertype == "mains" ? "MAINS" : "ADVANCE"}`)
+          .collection("PAPER")
           .get()
           .then(function (querySnapshot) {
             let attempted = [];
@@ -70,6 +72,7 @@ export function MockTest(props) {
     }
     return false;
   };
+  console.log(mockTestPapers,attemptedPapers);
 
   return (
     <div className="screen" id="mocktest">
@@ -88,11 +91,11 @@ export function MockTest(props) {
             {mockTestPapers.map((item, index) => (
               <div key={index} style={{ margin: "20px" }}>
                 <MockTestCard
-                  isAttempted={checkAttempted(item.name)}
+                  isAttempted={checkAttempted(`PAPER${index+1}`)}
                   paper={item}
                   setLoading={setLoading}
                   papertype={params.papertype}
-                  papernumber={index+1}
+                  papernumber={index + 1}
                 />
               </div>
             ))}

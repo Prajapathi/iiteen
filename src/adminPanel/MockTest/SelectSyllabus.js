@@ -193,7 +193,7 @@ const SelectSyllabus = (props) => {
             className={styl.syllabusbutton}
             component={Link}
             to={{
-              pathname: `/admin/${mainpapertype}testadmin/main/${
+              pathname: `/admin/${mainpapertype}test/main/${
                 params.papertype == "mains"
                   ? "mains/syllabussummary"
                   : "advance/section"
@@ -210,7 +210,7 @@ const SelectSyllabus = (props) => {
             className={styl.syllabusbutton}
             component={Link}
             to={{
-              pathname: `/admin/${mainpapertype}testadmin/main/${
+              pathname: `/admin/${mainpapertype}test/main/${
                 params.papertype == "mains"
                   ? "mains/syllabussummary"
                   : "advance/section"
@@ -227,7 +227,7 @@ const SelectSyllabus = (props) => {
             className={styl.syllabusbutton}
             component={Link}
             to={{
-              pathname: `/admin/${mainpapertype}testadmin/main/${
+              pathname: `/admin/${mainpapertype}test/main/${
                 params.papertype == "mains"
                   ? "mains/syllabussummary"
                   : "advance/section"
@@ -371,7 +371,7 @@ const SelectSyllabus = (props) => {
             <Button
               component={Link}
               to={{
-                pathname: `/admin/${mainpapertype}testadmin/main/${
+                pathname: `/admin/${mainpapertype}test/main/${
                   params.papertype == "mains"
                     ? "mains/syllabussummary"
                     : "advance/section"

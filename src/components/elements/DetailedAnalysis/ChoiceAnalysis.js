@@ -25,10 +25,33 @@ export default function ChoiceAnalysis(props) {
     false,
     false,
   ]);
+  const [ispartiallycorrect, setIspartiallycorrect] = useState(false);
+
+  useEffect(() => {
+    if(props.answers[props.number-1].answerType!='5'){
+      return
+    }
+    let flag2 = 0;
+    
+    for (
+      let i = 0;
+      i < props.answers[props.number - 1].answerGiven.length;
+      i++
+    ) {
+      if (
+        !props.answers[props.number - 1].answer.includes(
+          props.answers[props.number - 1].answerGiven[i]
+        )
+      ) {
+        flag2 = 1;
+      }
+    }
+    if(flag2==0)setIspartiallycorrect(true)
+  },[]);
 
   useEffect(() => {
     //if answer was already submitted then load this into local state for display
-    console.log("props",props)
+    console.log("props", props);
     if (
       props.answers[props.number - 1] &&
       props.answers[props.number - 1].answerGiven != null
@@ -185,12 +208,11 @@ export default function ChoiceAnalysis(props) {
                   <div
                     className="option"
                     style={{
-                      border:
-                        props.answers[props.number - 1].answer.includes(0)
-                          ? "2px solid #2AD586"
-                          : selectOpt[0] == true
-                          ? "2px solid #FF1E1E"
-                          : "1px solid white",
+                      border: props.answers[props.number - 1].answer.includes(0)
+                        ? "2px solid #2AD586"
+                        : selectOpt[0] == true
+                        ? "2px solid #FF1E1E"
+                        : "1px solid white",
                     }}
                   >
                     {"A.  "}
@@ -217,12 +239,11 @@ export default function ChoiceAnalysis(props) {
                   <div
                     className="option"
                     style={{
-                      border:
-                        props.answers[props.number - 1].answer.includes(1)
-                          ? "2px solid #2AD586"
-                          : selectOpt[1] == true
-                          ? "2px solid #FF1E1E"
-                          : "1px solid white",
+                      border: props.answers[props.number - 1].answer.includes(1)
+                        ? "2px solid #2AD586"
+                        : selectOpt[1] == true
+                        ? "2px solid #FF1E1E"
+                        : "1px solid white",
                     }}
                   >
                     {"B.  "}
@@ -249,12 +270,11 @@ export default function ChoiceAnalysis(props) {
                   <div
                     className="option"
                     style={{
-                      border:
-                        props.answers[props.number - 1].answer.includes(2)
-                          ? "2px solid #2AD586"
-                          : selectOpt[2] == true
-                          ? "2px solid #FF1E1E"
-                          : "1px solid white",
+                      border: props.answers[props.number - 1].answer.includes(2)
+                        ? "2px solid #2AD586"
+                        : selectOpt[2] == true
+                        ? "2px solid #FF1E1E"
+                        : "1px solid white",
                     }}
                   >
                     {"C. "}
@@ -281,12 +301,11 @@ export default function ChoiceAnalysis(props) {
                   <div
                     className="option"
                     style={{
-                      border:
-                        props.answers[props.number - 1].answer.includes(3)
-                          ? "2px solid #2AD586"
-                          : selectOpt[3] == true
-                          ? "2px solid #FF1E1E"
-                          : "1px solid white",
+                      border: props.answers[props.number - 1].answer.includes(3)
+                        ? "2px solid #2AD586"
+                        : selectOpt[3] == true
+                        ? "2px solid #FF1E1E"
+                        : "1px solid white",
                     }}
                   >
                     {"D. "}
@@ -316,7 +335,7 @@ export default function ChoiceAnalysis(props) {
 
             {/* Section containing statement about answer by user */}
             <div className="answer-analysis">
-              <div
+              {/* <div
                 style={{
                   color: props.answers[props.number - 1].isAnsweredWrong
                     ? "#FF1E1E"
@@ -330,6 +349,82 @@ export default function ChoiceAnalysis(props) {
                   : props.answers[props.number - 1].isAnswered
                   ? "Your answer was correct!"
                   : "Question not attempted"}
+                  
+              </div> */}
+              {console.log(
+                props.answers[props.number - 1].answerType,
+                props.answers[props.number - 1].answer,
+                props.answers[props.number - 1].answerGiven,
+                props.answers[props.number - 1].answer.includes(
+                  props.answers[props.number - 1].answerGiven
+                )
+              )}
+              <div
+                style={{
+                  color: props.answers[props.number - 1].isAnsweredWrong
+                    ? ispartiallycorrect
+                      ? "#cccc00"
+                      : "#FF1E1E"
+                    : props.answers[props.number - 1].isAnswered
+                    ? "#2AD586"
+                    : "#3B95C2",
+                }}
+              >
+                {props.answers[props.number - 1] ? (
+                  props.answers[props.number - 1].answerType == 1 ? (
+                    <>
+                      {" "}
+                      Your answer was{" "}
+                      {props.answers[props.number - 1].answerGiven}{" "}
+                    </>
+                  ) : props.answers[props.number - 1].answerType == 2 ? (
+                    <>
+                      {" "}
+                      Your answer was between{" "}
+                      {props.answers[props.number - 1].answerGiven[0]}-
+                      {props.answers[props.number - 1].answerGiven[1]}{" "}
+                    </>
+                  ) : props.answers[props.number - 1].answerType == 4 ? (
+                    <>
+                      {" "}
+                      Your answer was option{" "}
+                      {props.answers[props.number - 1].answerGiven == 0
+                        ? "A."
+                        : props.answers[props.number - 1].answerGiven == 1
+                        ? "B."
+                        : props.answers[props.number - 1].answerGiven == 2
+                        ? "C."
+                        : "D."}
+                    </>
+                  ) : (
+                    <>
+                      Your answer was option
+                      {props.answers[props.number - 1].answerGiven.length == 1
+                        ? " "
+                        : "s "}
+                      {props.answers[props.number - 1].answerGiven.map(
+                        (opt, i) => (
+                          <>
+                            {opt == 0
+                              ? "A"
+                              : opt == 1
+                              ? "B"
+                              : opt == 2
+                              ? "C"
+                              : "D"}
+                            {i ==
+                            props.answers[props.number - 1].answerGiven.length -
+                              1
+                              ? "."
+                              : ", "}
+                          </>
+                        )
+                      )}
+                    </>
+                  )
+                ) : (
+                  ""
+                )}
               </div>
             </div>
 

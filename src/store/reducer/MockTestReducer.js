@@ -122,11 +122,11 @@ const fetchPreviousSubjectwiseAnswers = (state, action) => {
         isSeen: false,
         isBookmarked: false,
         isAnsweredWrong: false,
-        isAnswered: false,
+        isAnswered: false
       });
     }
   }
-  // console.log(ans)
+  console.log(ans)
   
   return {
     ...state,

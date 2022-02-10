@@ -4,26 +4,28 @@ import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css"
 import firebase from "firebase";
 import { Link, useParams } from "react-router-dom";
 import { MenuItem, TextField } from "@material-ui/core";
+import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@material-ui/core/IconButton";
 
 const Mains = () => {
   const [paper, setPaper] = useState([]);
   const [size, setSize] = useState(0);
-  const [mainpapertype,setMainpapertype]=useState("");
+  const [mainpapertype, setMainpapertype] = useState("");
   const [editable, setEditable] = useState([false]);
-  const {type}=useParams()
+  const { type } = useParams();
   const [shift, setShift] = useState();
   const [date, setDate] = useState();
 
-  useEffect(()=>{
-    if(type=='mocktest'){
+  useEffect(() => {
+    if (type == "mocktest") {
       setMainpapertype("mock");
-    }else setMainpapertype("aits")
-  },[])
+    } else setMainpapertype("aits");
+  }, []);
 
   useEffect(() => {
-    localStorage.removeItem("syllabustype")
+    localStorage.removeItem("syllabustype");
     const db = firebase.firestore();
-    db.collection(`${type=='mocktest'?"MOCK":"AITS"}`)
+    db.collection(`${type == "mocktest" ? "MOCK" : "AITS"}`)
       .doc("MAINS")
       .collection("PAPER")
       .orderBy("number")
@@ -33,9 +35,9 @@ const Mains = () => {
           snap.docs.map((doc) => ({
             number: doc.data().number,
             syllabusCreated: doc.data().syllabusCreated,
-            noofques:doc.data().noofques,
-            date:doc.data().date,
-            shift:doc.data().shift
+            noofques: doc.data().noofques,
+            date: doc.data().date,
+            shift: doc.data().shift,
           }))
         );
         console.log(snap.docs.length);
@@ -50,7 +52,12 @@ const Mains = () => {
       .doc("MAINS")
       .collection("PAPER")
       .doc(`PAPER${paper.length + 1}`)
-      .set({ exist: true, number: paper.length + 1, syllabusSelected: false ,syllabusCreated:false})
+      .set({
+        exist: true,
+        number: paper.length + 1,
+        syllabusSelected: false,
+        syllabusCreated: false,
+      })
       .then(() => {
         console.log("saved");
       })
@@ -76,6 +83,63 @@ const Mains = () => {
       });
   };
 
+  const deletepaperfromdatabase=(index,batchSize)=>{
+    const db = firebase.firestore();
+    db.collection(mainpapertype.toUpperCase())
+      .doc("MAINS")
+      .collection("PAPER")
+      .doc(`PAPER${index + 1}`)
+      .delete()
+      .then(function () {
+        console.log("Paper successfully deleted!");
+      })
+      .catch(function (error) {
+        console.error("Error removing Paper: ", error);
+      });
+
+      deleteCollection(db,index,batchSize)
+  }
+
+  //new code
+  async function deleteCollection(db, index, batchSize) {
+    const collectionRef = db.collection(mainpapertype.toUpperCase())
+    .doc("MAINS")
+    .collection("PAPER")
+    .doc(`PAPER${index + 1}`).collection("question");
+    const query = collectionRef.orderBy('number').limit(batchSize);
+  
+    return new Promise((resolve, reject) => {
+      deleteQueryBatch(db, query, resolve).catch(reject);
+    });
+  }
+  
+  async function deleteQueryBatch(db, query, resolve) {
+    const snapshot = await query.get();
+  
+    const batchSize = snapshot.size;
+    if (batchSize === 0) {
+      // When there are no documents left, we are done
+      resolve();
+      return;
+    }
+  
+    // Delete documents in a batch
+    const batch = db.batch();
+    snapshot.docs.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+    await batch.commit();
+  
+    // Recurse on the next process tick, to avoid
+    // exploding the stack.
+    process.nextTick(() => {
+      deleteQueryBatch(db, query, resolve);
+    });
+  }
+  //
+
+  console.log(paper);
+
   return (
     <div>
       <div
@@ -99,7 +163,7 @@ const Mains = () => {
             flexWrap: "wrap",
           }}
         >
-          {paper.map((p,index) => (
+          {paper.map((p, index) => (
             <div
               style={{
                 width: "300px",
@@ -109,31 +173,68 @@ const Mains = () => {
               <Link
                 to={{
                   pathname: `${
-                    p.syllabusCreated
-                      ? "/PreviousYearSubjectwise/3"
-                      : `/admin/${type}/main/mains/selectsyllabus/${p.number-1}`
+                    !editable[index]
+                      ? p.syllabusCreated
+                        ? "/PreviousYearSubjectwise/3"
+                        : `/admin/${type}/main/mains/selectsyllabus/${
+                            p.number - 1
+                          }`
+                      : "#"
                   }`,
-                  state: { papernumber: Number(p.number),mainpapertype:mainpapertype },
+                  state: {
+                    papernumber: Number(p.number),
+                    mainpapertype: mainpapertype,
+                  },
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  editable[index] && e.preventDefault();
                 }}
               >
-                <div className={styl.subjects} style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+                <div
+                  className={styl.subjects}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "relative",
+                  }}
+                >
+                  <IconButton
+                    style={{
+                      position: "absolute",
+                      top: "0px",
+                      right: "0px",
+                      backgroundColor: "#fc584c",
+                      borderTopRightRadius: "15px !important",
+                      borderTopLeftRadius: "0px",
+                      borderBottomRightRadius: "0px",
+                      borderBottomLeftRadius: "0px",
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      if (
+                        window.confirm(
+                          "Are you sure you want to delete this paper completely?"
+                        )
+                      ) {
+                        deletepaperfromdatabase(index,p.noofques)
+                      }
+                    }}
+                    className="dialog-close-icon"
+                  >
+                    <CloseIcon />
+                  </IconButton>
                   <h4>Mains Paper {p.number}</h4>
-                  <h6>No. of Questions :{p.noofques?p.noofques:"0"}</h6>
+                  <h6>No. of Questions :{p.noofques ? p.noofques : "0"}</h6>
                   {mainpapertype == "aits" ? (
-                    <div style={{ display: "flex",alignItems:"baseline" }}>
+                    <div style={{ display: "flex", alignItems: "baseline" }}>
                       {!editable[index] ? (
                         <div style={{ color: "blue", fontSize: "13px" }}>
                           Date: {p.date ? p.date : 0} | Time:
                           {p.shift ? p.shift : 0}
-                          {/* <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            setEdit(index);
-                          }}
-                        >
-                          change
-                        </button> */}
                         </div>
                       ) : (
                         <div
@@ -142,6 +243,9 @@ const Mains = () => {
                             justifyContent: "space-evenly",
                             alignItems: "baseline",
                             fontSize: "14px",
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
                           }}
                         >
                           <TextField
@@ -158,7 +262,13 @@ const Mains = () => {
                             //   shrink: true,
                             // }}
                             InputProps={{ style: { fontSize: 12, height: 18 } }}
-                            InputLabelProps={{ style: { fontSize: 12 } }}
+                            InputLabelProps={{
+                              style: { fontSize: 12 },
+                              onClick: (e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                              },
+                            }}
                             style={{ width: "110px", marginRight: "10px" }}
                             value={!editable[index] ? p.date : date}
                             onChange={(e) => {
@@ -209,7 +319,7 @@ const Mains = () => {
                           border: "1px solid grey",
                           borderRadius: "5px",
                           marginLeft: "5px",
-                          height:"20px"
+                          height: "20px",
                         }}
                       >
                         {editable[index] ? "save" : "change"}

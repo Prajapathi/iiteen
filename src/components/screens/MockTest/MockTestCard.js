@@ -186,7 +186,7 @@ setTotalmarks(3*tm);
               {props.isAttempted ? "Re-attempt" : "Attempt"}
             </button>
             {props.isAttempted ? (
-              <Link to={"/MockTest/Papers/Analysis/" + `PAPER${props.papernumber}`}>
+              <Link to={`/MockTest/${props.papertype=='mains'?"MAINS":"ADVANCE"}/Papers/Analysis/` + `PAPER${props.papernumber}`}>
                 <button>Analysis</button>
               </Link>
             ) : null}

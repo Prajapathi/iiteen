@@ -20,6 +20,13 @@ export default function Subjectwise() {
     // e.preventDefault()
     console.log("called")
     console.log(open,sessionStorage.getItem("dialog"),window.location.pathname)
+    if(open==true && sessionStorage.getItem("dialog")==null && window.location.pathname[1]=='m'){
+      return
+    }
+    if(open==true && sessionStorage.getItem("dialog")==null && window.location.pathname[1]=='M'){
+      return
+    }
+
     if (!open || sessionStorage.getItem("dialog")===null) {
       if(window.location.pathname!='/MockTest'){
         console.log("calledinside")
