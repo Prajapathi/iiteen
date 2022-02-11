@@ -567,15 +567,120 @@ const QuestionContent = (props) => {
       </Container>
        )}
       {sub === "mocktest" && (
-        <Container style={{ marginTop: "35px" }}>
+        <Container style={{ marginTop: "35px" ,maxWidth:"1400px"}}>
           {allQuestions !== "" && (
             <div>
               <Row><h4>PHYSICS</h4></Row><br/>
-              <div style={{ display: "flex", flexWrap: "wrap" ,overflowX:'auto',height:"700px"}}>
+              <h6 style={{color:"#6198ff"}}>Section A(singletype)</h6>
+              <div style={{ display: "flex", flexWrap: "wrap" ,overflowX:'auto',height:"480px"}}>
               {allQuestions.map((e, index) => {
                 var { id, yr, questions } = e;
                 // console.log("year", allQuestions[index].year);
-                if(index+1>=1 && index+1<=30){
+                if(index+1>=1 && index+1<=20){
+                  return (
+                    <div
+                      className="shadow-card"
+                      style={{
+                        margin: "15px",
+                        position: "relative",
+                        width: "234px",
+                          // minHeight:"260px"
+                          height: "200px",
+                      }}
+                      key={index}
+                    >
+                      <h6>Question No: {index + 1} ({allQuestions[index].year})</h6>
+                      <span />
+                      <div
+                        style={{
+                          // wordWrap: "break-word",
+                          height: "144px",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {questions !== "" ? (
+                          questions.map((e, index) => {
+                            var { data, type } = e;
+                            const LaTeX = "$" + data + "$ ";
+                            return (
+                              <div style={{ display: "inline",fontSize:"13px" }} key={index}>
+                                {type === "1" ? (
+                                  <text style={{ textOverflow: "ellipsis" }}>
+                                    {data}{" "}
+                                  </text>
+                                ) : type === "2" ? (
+                                  <Latex>{LaTeX}</Latex>
+                                ) : type === "3" ? (
+                                  <div>
+                                    <img
+                                      src={data}
+                                      alt="img"
+                                      style={{
+                                        display: "block",
+                                        marginLeft: "auto",
+                                        marginRight: "auto",
+                                        height: "100px",
+                                        marginTop: "10px",
+                                      }}
+                                    />
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <br />
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                        <IconButton
+                          // className="shadow-btn"
+                          component={Link}
+                          to={{
+                            pathname: "/PreviousYearSubjectwise/setQuestion",
+                            state: {
+                              id: id,
+                              Class: Class,
+                              Subject: sub,
+                              Chapter: chapter,
+                              QuestionNo: index + 1,
+                              mockpaperno: mockpaperno,
+                              mainpapertype: mainpapertype,
+                            },
+                          }}
+                          style={{
+                            // marginTop: "19px",
+                            position: "absolute",
+                            // backgroundColor: "white",
+                            // bottom: "0px",
+                            top:"0px",
+                            right: "12px",
+                            backgroundColor: "#6198ff",
+                            color:"white",
+                            padding:"0px",
+                            borderRadius:"0px"
+                          }}
+                          onClick={() => {
+                            return SetQuestionBtn(index + 1, id);
+                          }}
+                        >
+                          <EditIcon/>
+                        </IconButton>
+                    </div>
+                  );
+                }
+                
+              })}
+              </div><br/>
+              <h6 style={{color:"#6198ff"}}>Section B(numericaltype)</h6>
+              <div style={{ display: "flex", flexWrap: "wrap" ,overflowX:'auto',height:"240px"}}>
+              {allQuestions.map((e, index) => {
+                var { id, yr, questions } = e;
+                // console.log("year", allQuestions[index].year);
+                if(index+1>=21 && index+1<=30){
                   return (
                     <div
                       className="shadow-card"
@@ -677,11 +782,117 @@ const QuestionContent = (props) => {
               {/* <Divider/> */}
               <br/>
               <Row><h4>CHEMISTRY</h4></Row><br/>
-              <div style={{ display: "flex", flexWrap: "wrap",overflowX:'auto',height:"700px" }}>
+              <h6 style={{color:"#6198ff"}}>Section A(singletype)</h6>
+              <div style={{ display: "flex", flexWrap: "wrap",overflowX:'auto',height:"480px" }}>
               {allQuestions.map((e, index) => {
                 var { id, yr, questions } = e;
                 // console.log("year", allQuestions[index].year);
-                if(index+1>=31 && index+1<=60){
+                if(index+1>=31 && index+1<=50){
+                  return (
+                    <div
+                      className="shadow-card"
+                      style={{
+                        margin: "15px",
+                        position: "relative",
+                        width: "234px",
+                          // minHeight:"260px"
+                          height: "200px",
+                      }}
+                      key={index}
+                    >
+                      <h6>Question No: {index + 1} ({allQuestions[index].year})</h6>
+                      <span />
+                      <div
+                        style={{
+                          // wordWrap: "break-word",
+                          height: "144px",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {questions !== "" ? (
+                          questions.map((e, index) => {
+                            var { data, type } = e;
+                            const LaTeX = "$" + data + "$ ";
+                            return (
+                              <div style={{ display: "inline",fontSize:"13px" }} key={index}>
+                                {type === "1" ? (
+                                  <text style={{ textOverflow: "ellipsis" }}>
+                                    {data}{" "}
+                                  </text>
+                                ) : type === "2" ? (
+                                  <Latex>{LaTeX}</Latex>
+                                ) : type === "3" ? (
+                                  <div>
+                                    <img
+                                      src={data}
+                                      alt="img"
+                                      style={{
+                                        display: "block",
+                                        marginLeft: "auto",
+                                        marginRight: "auto",
+                                        height: "100px",
+                                        marginTop: "10px",
+                                      }}
+                                    />
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <br />
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                        <IconButton
+                          // className="shadow-btn"
+                          component={Link}
+                          to={{
+                            pathname: "/PreviousYearSubjectwise/setQuestion",
+                            state: {
+                              id: id,
+                              Class: Class,
+                              Subject: sub,
+                              Chapter: chapter,
+                              QuestionNo: index + 1,
+                              mockpaperno: mockpaperno,
+                              mainpapertype: mainpapertype,
+                              // allQuestions: allQuestions,
+                            },
+                          }}
+                          style={{
+                            // marginTop: "19px",
+                            position: "absolute",
+                            // backgroundColor: "white",
+                            // bottom: "0px",
+                            top:"0px",
+                            right: "12px",
+                            backgroundColor: "#6198ff",
+                            color:"white",
+                            padding:"0px",
+                            borderRadius:"0px"
+                          }}
+                          onClick={() => {
+                            return SetQuestionBtn(index + 1, id);
+                          }}
+                        >
+                          <EditIcon/>
+                        </IconButton>
+                    </div>
+                  );
+                }
+                
+              })}
+              </div><br/>
+              <h6 style={{color:"#6198ff"}}>Section B(numericaltype)</h6>
+              <div style={{ display: "flex", flexWrap: "wrap",overflowX:'auto',height:"240px" }}>
+              {allQuestions.map((e, index) => {
+                var { id, yr, questions } = e;
+                // console.log("year", allQuestions[index].year);
+                if(index+1>=51 && index+1<=60){
                   return (
                     <div
                       className="shadow-card"
@@ -784,11 +995,117 @@ const QuestionContent = (props) => {
               {/* <Divider/> */}
               <br/>
               <Row style={{justifyContent:"center !important"}}><h4>MATHS</h4></Row><br/>
-              <div style={{ display: "flex", flexWrap: "wrap",overflowX:'auto',height:"700px" }}>
+              <h6 style={{color:"#6198ff"}}>Section A(singletype)</h6>
+              <div style={{ display: "flex", flexWrap: "wrap",overflowX:'auto',height:"480px" }}>
               {allQuestions.map((e, index) => {
                 var { id, yr, questions } = e;
                 // console.log("year", allQuestions[index].year);
-                if(index+1>=61 && index+1<=90){
+                if(index+1>=61 && index+1<=80){
+                  return (
+                    <div
+                      className="shadow-card"
+                      style={{
+                        margin: "15px",
+                        position: "relative",
+                        width: "234px",
+                          // minHeight:"260px"
+                          height: "200px",
+                      }}
+                      key={index}
+                    >
+                      <h6>Question No: {index + 1} ({allQuestions[index].year})</h6>
+                      <span />
+                      <div
+                        style={{
+                          // wordWrap: "break-word",
+                          height: "144px",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {questions !== "" ? (
+                          questions.map((e, index) => {
+                            var { data, type } = e;
+                            const LaTeX = "$" + data + "$ ";
+                            return (
+                              <div style={{ display: "inline",fontSize:"13px" }} key={index}>
+                                {type === "1" ? (
+                                  <text style={{ textOverflow: "ellipsis" }}>
+                                    {data}{" "}
+                                  </text>
+                                ) : type === "2" ? (
+                                  <Latex>{LaTeX}</Latex>
+                                ) : type === "3" ? (
+                                  <div>
+                                    <img
+                                      src={data}
+                                      alt="img"
+                                      style={{
+                                        display: "block",
+                                        marginLeft: "auto",
+                                        marginRight: "auto",
+                                        height: "100px",
+                                        marginTop: "10px",
+                                      }}
+                                    />
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <br />
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                        <IconButton
+                          // className="shadow-btn"
+                          component={Link}
+                          to={{
+                            pathname: "/PreviousYearSubjectwise/setQuestion",
+                            state: {
+                              id: id,
+                              Class: Class,
+                              Subject: sub,
+                              Chapter: chapter,
+                              QuestionNo: index + 1,
+                              mockpaperno: mockpaperno,
+                              mainpapertype: mainpapertype,
+                              // allQuestions: allQuestions,
+                            },
+                          }}
+                          style={{
+                            // marginTop: "19px",
+                            position: "absolute",
+                            // backgroundColor: "white",
+                            // bottom: "0px",
+                            top:"0px",
+                            right: "12px",
+                            backgroundColor: "#6198ff",
+                            color:"white",
+                            padding:"0px",
+                            borderRadius:"0px"
+                          }}
+                          onClick={() => {
+                            return SetQuestionBtn(index + 1, id);
+                          }}
+                        >
+                          <EditIcon/>
+                        </IconButton>
+                    </div>
+                  );
+                }
+                
+              })}
+              </div><br/>
+              <h6 style={{color:"#6198ff"}}>Section B(numericaltype)</h6>
+              <div style={{ display: "flex", flexWrap: "wrap",overflowX:'auto',height:"240px" }}>
+              {allQuestions.map((e, index) => {
+                var { id, yr, questions } = e;
+                // console.log("year", allQuestions[index].year);
+                if(index+1>=81 && index+1<=90){
                   return (
                     <div
                       className="shadow-card"
@@ -893,7 +1210,7 @@ const QuestionContent = (props) => {
         </Container>
       )}
       {sub === "mocktestadvance" && (
-        <Container style={{ marginTop: "35px" }}>
+        <Container style={{ marginTop: "35px",maxWidth:"1400px" }}>
           {allQuestions !== "" && (
             <div>
               <Row><h4>PHYSICS</h4></Row><br/>

@@ -61,6 +61,7 @@
     /* box-shadow:1px 3px 4px 0px rgba(0,0,0,0.2); */
     opacity:0;
     padding-top: 10px;
+    z-index: 1;
 }
 .heading{
     padding:4%;

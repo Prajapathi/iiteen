@@ -50,6 +50,7 @@ const SetQuestion = (props) => {
   var history = useHistory();
   var [editable, setEditable] = useState([]);
   var [count, setCount] = useState(0);
+  var [visible,setVisible]=useState(true)
   const [multiOption, setMultiOption] = React.useState([
     false,
     false,
@@ -1118,104 +1119,26 @@ const SetQuestion = (props) => {
             </TextField>
           </Col>
         </Row>
-      </Container>
+      </Container>  
+      {allQuestions && visible && 
       <Container>
-        <Row>
-          {allQuestions && allQuestions[QuestionNo - 2] !== undefined && (
-            <Col>
-              {allQuestions[QuestionNo - 2] !== undefined ? (
-                <Button
-                  className="shadow-btn"
-                  component={Link}
-                  to={{
-                    pathname: "/PreviousYearSubjectwise/setQuestion",
-                    state: {
-                      id: allQuestions[QuestionNo - 2].id,
-                      Class: Class,
-                      Subject: Subject,
-                      Chapter: Chapter,
-                      QuestionNo: QuestionNo - 1,
-                      mockpaperno: mockpaperno,
-                      mainpapertype:mainpapertype
-                      // allQuestions: allQuestions,
-                    },
-                  }}
-                  style={{
-                    margin: "30px",
-                    width: "30%",
-                    background:
-                      "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-                  }}
-                  onClick={async () => {
-                    if (Id !== undefined) {
-                      await updatePaper();
-                    } else {
-                      // await submitPaper()
-                      !submitted ? await submitPaper() : await updatePaper();
-                    }
-                    window.location.reload();
-                  }}
-                >
-                  back
-                </Button>
-              ) : null}
-            </Col>
-          )}
-
+      <Row>
+        {allQuestions && allQuestions[QuestionNo - 2] !== undefined && (
           <Col>
-            {Id ? (
-              <Button
-                className="shadow-btn"
-                onClick={updatePaper}
-                style={{
-                  margin: "30px",
-                  width: "40%",
-                  background:
-                    "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-                }}
-              >
-                Update this Question
-              </Button>
-            ) : (
-              <Button
-                className="shadow-btn"
-                onClick={() => {
-                  // await submitPaper()
-                  !submitted ? submitPaper() : updatePaper();
-                }}
-                style={{
-                  margin: "30px",
-                  width: "40%",
-                  background:
-                    "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-                }}
-              >
-                {/* in actual it is submit this question */}
-                Update this Question
-              </Button>
-            )}
-          </Col>
-          {allQuestions && (
-            <Col>
+            {allQuestions[QuestionNo - 2] !== undefined ? (
               <Button
                 className="shadow-btn"
                 component={Link}
                 to={{
                   pathname: "/PreviousYearSubjectwise/setQuestion",
                   state: {
-                    id:
-                      allQuestions[QuestionNo] !== undefined
-                        ? allQuestions[QuestionNo].id
-                        : undefined,
+                    id: allQuestions[QuestionNo - 2].id,
                     Class: Class,
                     Subject: Subject,
                     Chapter: Chapter,
-                    QuestionNo: QuestionNo + 1,
+                    QuestionNo: QuestionNo - 1,
                     mockpaperno: mockpaperno,
                     mainpapertype:mainpapertype
-                    // allQuestions[QuestionNo] !== undefined
-                    //   ? QuestionNo + 1
-                    //   : allQuestions.length + 2,
                     // allQuestions: allQuestions,
                   },
                 }}
@@ -1225,28 +1148,136 @@ const SetQuestion = (props) => {
                   background:
                     "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
                 }}
-                onClick={async () => {
-                  console.log(Id);
+                onClick={async (e) => {
+                  if(correct.length==0 || correct==[] || correct==null || correct==undefined){
+                    e.stopPropagation()
+                  e.preventDefault()
+                    toast.warn("fill the correct answer!")
+                    return;
+                  }
+                  setVisible(false)
                   if (Id !== undefined) {
                     await updatePaper();
                   } else {
-                    // await submitPaper();
+                    // await submitPaper()
                     !submitted ? await submitPaper() : await updatePaper();
                   }
-                  // props.setQuestionNo(allQuestions.length + 1);
-                  // setQuestionNo(allQuestions.length + 1);
                   window.location.reload();
                 }}
               >
-                {allQuestions[QuestionNo] !== undefined
-                  ? "next"
-                  : "Add New Question"}
+                back
               </Button>
-              {console.log(section)}
-            </Col>
+            ) : null}
+          </Col>
+        )}
+
+        <Col>
+          {Id ? (
+            <Button
+              className="shadow-btn"
+              onClick={()=>{
+                console.log(correct)
+                if(correct.length==0 || correct==[] || correct==null || correct==undefined){
+                  toast.warn("fill the correct answer!")
+                  return;
+                }
+                updatePaper()
+              }}
+              style={{
+                margin: "30px",
+                width: "40%",
+                background:
+                  "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+              }}
+            >
+              Update this Question
+            </Button>
+          ) : (
+            <Button
+              className="shadow-btn"
+              onClick={() => {
+                // await submitPaper()
+                console.log(correct)
+                if(correct.length==0 || correct==[] || correct==null || correct==undefined){
+                  toast.warn("fill the correct answer!")
+                  return;
+                }
+                !submitted ? submitPaper() : updatePaper();
+              }}
+              style={{
+                margin: "30px",
+                width: "40%",
+                background:
+                  "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+              }}
+            >
+              {/* in actual it is submit this question */}
+              Update this Question
+            </Button>
           )}
-        </Row>
-      </Container>
+        </Col>
+        {allQuestions && (
+          <Col>
+            <Button
+              className="shadow-btn"
+              component={Link}
+              to={{
+                pathname: "/PreviousYearSubjectwise/setQuestion",
+                state: {
+                  id:
+                    allQuestions[QuestionNo] !== undefined
+                      ? allQuestions[QuestionNo].id
+                      : undefined,
+                  Class: Class,
+                  Subject: Subject,
+                  Chapter: Chapter,
+                  QuestionNo: QuestionNo + 1,
+                  mockpaperno: mockpaperno,
+                  mainpapertype:mainpapertype
+                  // allQuestions[QuestionNo] !== undefined
+                  //   ? QuestionNo + 1
+                  //   : allQuestions.length + 2,
+                  // allQuestions: allQuestions,
+                },
+              }}
+              style={{
+                margin: "30px",
+                width: "30%",
+                background:
+                  "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+              }}
+              onClick={async (e) => {
+                console.log(correct)
+                if(correct.length==0 || correct==[] || correct==null || correct==undefined){
+                  e.stopPropagation()
+                  e.preventDefault()
+                  toast.warn("fill the correct answer!")
+                  return;
+                }
+                console.log(Id);
+                setVisible(false)
+                if (Id !== undefined) {
+                  await updatePaper();
+                } else {
+                  // await submitPaper();
+                  !submitted ? await submitPaper() : await updatePaper();
+                }
+                // props.setQuestionNo(allQuestions.length + 1);
+                // setQuestionNo(allQuestions.length + 1);
+                window.location.reload();
+              }}
+            >
+              {allQuestions[QuestionNo] !== undefined
+                ? "next"
+                : "Add New Question"}
+            </Button>
+            {console.log(section)}
+          </Col>
+        )}
+      </Row>
+    </Container>
+      }
+      
     </div>
   );
 };

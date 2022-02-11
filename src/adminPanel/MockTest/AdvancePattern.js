@@ -156,7 +156,9 @@ const AdvancePattern = () => {
                     shrink: true,
                   }}
                   onChange={(e) => {
-                    doquesnochange(e.target.value, index);
+                    if(e.target.value<0){
+                      doquesnochange(0, index);
+                    }else doquesnochange(e.target.value, index);
                   }}
                 />
               </div>
