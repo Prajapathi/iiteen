@@ -145,6 +145,7 @@ export function PaperAnalysis(props) {
       .then(function (querySnapshot) {
         console.log("here's the analysis:", querySnapshot.data());
         setData(querySnapshot.data());
+
         if (querySnapshot.data() == null) {
           window.alert("Paper Does Not Exist!");
           //404 page
@@ -155,6 +156,9 @@ export function PaperAnalysis(props) {
         console.log("Error getting documents: ", error);
       });
 
+
+      
+      
     //Fetch the details of the paper
     db.collection(paperTypeRoute)
       .doc(mockpaperType)
@@ -175,6 +179,8 @@ export function PaperAnalysis(props) {
         console.log("Error getting documents: ", error);
       });
   }, []);
+
+  console.log(paperName,data,paperInfo)
 
   //Data calculation for pie chart after fetching
   React.useEffect(() => {

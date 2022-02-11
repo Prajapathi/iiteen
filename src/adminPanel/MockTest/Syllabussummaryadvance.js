@@ -13,38 +13,88 @@ import Paper from "@mui/material/Paper";
 import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css";
 import { Link, useParams } from "react-router-dom";
 
-function savetodatabase(paperno,mainpaptyp) {
+function savetodatabase(paperno, mainpaptyp,section,totalquestions,noofquesset) {
   const db = firebase.firestore();
-  console.log(mainpaptyp)
-  db.collection(mainpaptyp.toUpperCase())
+  console.log(mainpaptyp);
+  const paperref = db
+    .collection(mainpaptyp.toUpperCase())
     .doc("ADVANCE")
     .collection("PAPER")
-    .doc(`PAPER${paperno}`)
-    .update({ syllabusCreated: true })
+    .doc(`PAPER${paperno}`);
+
+  paperref
+    .update({ syllabusCreated: true,noofques:totalquestions })
     .then(() => {
       console.log("saved");
     })
     .catch((error) => {
       console.log(error.message);
     });
+  for (let i = 1; i <= totalquestions; i++) {
+    const p=(totalquestions/3);
+    console.log(i,getanstypefromquestionno(i,section,totalquestions,noofquesset))
+    paperref.collection("question").add({
+      question: "",
+      answerType: getanstypefromquestionno(i,section,totalquestions,noofquesset),
+      option2: "",
+      option1: "",
+      option3: "",
+      option4: "",
+      answer: "",
+      hint: "",
+      solution: "",
+      year: "",
+      college: "",
+      number: `${i}`,
+      subject: `${(i>=1 && i<=p)?1:(i>=1+p && i<=2*p)?2:3}`,
+    });
+  }
 }
 
-const Syllabussummaryadvance = () => {
+
+
+function getanstypefromquestionno(index,section,totalquestions,noofquesset){
+  console.log("h")
+  let t=index%(totalquestions/3);
+  console.log(t,totalquestions)
+  if(t==0){
+    t=totalquestions/3;
+  }
+  let arr=[...noofquesset]
+  arr.push(totalquestions/3)
+  for(let i=0;i<arr.length-1;i++){
+    if(t>=1+arr[i] && t<=arr[i+1]){
+       if(section[i].type=='singletype'){
+         return "4"
+       }else if(section[i].type=='multipletype'){
+         return "5"
+       }else if(section[i].type=='integertype'){
+         return "1"
+       }else return "2"
+    }
+  }
+}
+
+const Syllabussummaryadvance = (props) => {
   const params = useParams();
   const [section, setSection] = useState([]);
   const [noofquesset, setNoofquesset] = useState([]);
-  const [mainpapertype,setMainpapertype]=React.useState("");
-  const {type}=useParams()
+  const [mainpapertype, setMainpapertype] = React.useState("");
+  const { type } = useParams();
 
-  useEffect(()=>{
-    if(type=='mocktest'){
+  var paperindex = props.location
+  ? props.location.state.paperindex?props.location.state.paperindex
+  : sessionStorage.getItem("paperindex"):null;
+
+  useEffect(() => {
+    if (type == "mocktest") {
       setMainpapertype("mock");
-    }else setMainpapertype("aits")
-  },[])
+    } else setMainpapertype("aits");
+  }, []);
 
   useEffect(() => {
     const db = firebase.firestore();
-    db.collection(`${type=='mocktest'?"MOCK":"AITS"}`)
+    db.collection(`${type == "mocktest" ? "MOCK" : "AITS"}`)
       .doc("ADVANCE")
       .collection("PAPER")
       .doc(`PAPER${Number(params.number) + 1}`)
@@ -59,11 +109,11 @@ const Syllabussummaryadvance = () => {
   }, []);
 
   useEffect(() => {
-    let arr=[];
-    let aggregate=0;
-    for(let i=0;i<section.length;i++){
+    let arr = [];
+    let aggregate = 0;
+    for (let i = 0; i < section.length; i++) {
       arr.push(aggregate);
-      aggregate+=Number(section[i].noofques);
+      aggregate += Number(section[i].noofques);
     }
     setNoofquesset(arr);
   }, [section]);
@@ -148,11 +198,8 @@ const Syllabussummaryadvance = () => {
                   {section.map((item, index) => {
                     return (
                       <div>
-                        {Number(noofquesset[index]) + 1}
-                        -
-                        {Number(noofquesset[index]) +
-                            Number(item.noofques)}{" "}
-                        :{" "}
+                        {Number(noofquesset[index]) + 1}-
+                        {Number(noofquesset[index]) + Number(item.noofques)} :{" "}
                         {item.type == "singletype"
                           ? "single correct type"
                           : item.type == "multipletype"
@@ -183,14 +230,17 @@ const Syllabussummaryadvance = () => {
                   style={{ borderLeft: "0.05rem solid #ebebeb" }}
                 >
                   {/* 31-50: single correct type <br /> 51-60: numerical type */}
-                  
+
                   {section.map((item, index) => {
                     return (
                       <div>
-                        {totalquestions(section)+Number(noofquesset[index]) + 1}
+                        {totalquestions(section) +
+                          Number(noofquesset[index]) +
+                          1}
                         -
-                        {totalquestions(section)+Number(noofquesset[index]) +
-                            Number(item.noofques)}{" "}
+                        {totalquestions(section) +
+                          Number(noofquesset[index]) +
+                          Number(item.noofques)}{" "}
                         :{" "}
                         {item.type == "singletype"
                           ? "single correct type"
@@ -226,10 +276,13 @@ const Syllabussummaryadvance = () => {
                   {section.map((item, index) => {
                     return (
                       <div>
-                        {totalquestions(section)*2+Number(noofquesset[index]) + 1}
+                        {totalquestions(section) * 2 +
+                          Number(noofquesset[index]) +
+                          1}
                         -
-                        {totalquestions(section)*2+Number(noofquesset[index]) +
-                            Number(item.noofques)}{" "}
+                        {totalquestions(section) * 2 +
+                          Number(noofquesset[index]) +
+                          Number(item.noofques)}{" "}
                         :{" "}
                         {item.type == "singletype"
                           ? "single correct type"
@@ -247,8 +300,8 @@ const Syllabussummaryadvance = () => {
           </Table>
         </TableContainer>
         <h6 style={{ color: "blue", fontSize: "14px", paddingTop: "20px" }}>
-          Note: Once Clicked on Create {mainpapertype.toUpperCase()} Test you will not be able to change
-          the syllabus again
+          Note: Once Clicked on Create {mainpapertype.toUpperCase()} Test you
+          will not be able to change the syllabus again
         </h6>
       </div>
       <div
@@ -269,11 +322,13 @@ const Syllabussummaryadvance = () => {
           to={{
             pathname: "/PreviousYearSubjectwise/4",
             state: {
-              papernumber: Number(params.number) + 1,mainpapertype:mainpapertype
-            },
+              papernumber: Number(params.number) + 1,
+              mainpapertype: mainpapertype,
+              paperindex:paperindex
+            }
           }}
           onClick={() => {
-            savetodatabase(Number(params.number) + 1,mainpapertype);
+            savetodatabase(Number(params.number) + 1, mainpapertype,section,totalquestions(section)*3,noofquesset);
           }}
         >
           Create {mainpapertype.toUpperCase()} TEST

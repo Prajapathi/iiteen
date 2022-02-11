@@ -127,7 +127,7 @@ setTotalmarks(3*tm);
       <div className="flip-card-inner-mock">
         <div className="flip-card-front-mock">
           <div id="card-title-mock">
-            <div style={{ fontSize: "26px" }}>{`PAPER${props.papernumber}`}</div>
+            <div style={{ fontSize: "26px" }}>{`PAPER ${props.paperindex}`}</div>
           </div>
           <div id="card-content-mock">
             <div

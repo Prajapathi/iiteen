@@ -3,7 +3,7 @@ import firebase from "firebase";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css";
-import CloseIcon from "@mui/icons-material/Close";  
+import CloseIcon from "@mui/icons-material/Close";
 
 const Advance = () => {
   const [paper, setPaper] = useState([]);
@@ -13,6 +13,7 @@ const Advance = () => {
   const [size, setSize] = useState(0);
   const [shift, setShift] = useState();
   const [date, setDate] = useState();
+  const [indexofpapers, setIndexofpapers] = useState(0);
 
   useEffect(() => {
     if (type == "mocktest") {
@@ -51,16 +52,27 @@ const Advance = () => {
       });
   }, []);
 
+  useEffect(() => {
+    const db = firebase.firestore();
+    db.collection(`${type == "mocktest" ? "MOCK" : "AITS"}`)
+      .doc("ADVANCE")
+      .get()
+      .then((snap) => {
+        console.log(snap.data());
+        setIndexofpapers(snap.data().indexofpaper);
+      });
+  }, []);
+
   function CreateNewPaper() {
     console.log(paper);
     const db = firebase.firestore();
     db.collection(mainpapertype.toUpperCase())
       .doc("ADVANCE")
       .collection("PAPER")
-      .doc(`PAPER${paper.length + 1}`)
+      .doc(`PAPER${indexofpapers + 1}`)
       .set({
         exist: true,
-        number: paper.length + 1,
+        number: indexofpapers + 1,
         syllabusSelected: false,
         syllabusCreated: false,
       })
@@ -70,6 +82,9 @@ const Advance = () => {
       .catch((error) => {
         console.log(error.message());
       });
+    db.collection(mainpapertype.toUpperCase())
+      .doc("ADVANCE")
+      .update({ indexofpaper: indexofpapers + 1 });
   }
   function setEdit(index) {
     let temp = [...editable];
@@ -77,26 +92,26 @@ const Advance = () => {
     setEditable(temp);
   }
   const savetodatabase = (index) => {
-    if(date==undefined || shift==undefined){
-      return
+    if (date == undefined || shift == undefined) {
+      return;
     }
     const db = firebase.firestore();
     db.collection(mainpapertype.toUpperCase())
       .doc("ADVANCE")
       .collection("PAPER")
-      .doc(`PAPER${index + 1}`)
+      .doc(`PAPER${index}`)
       .update({
         date: date,
         shift: shift,
       });
   };
 
-  const deletepaperfromdatabase=(index,batchSize)=>{
+  const deletepaperfromdatabase = (index, batchSize) => {
     const db = firebase.firestore();
     db.collection(mainpapertype.toUpperCase())
       .doc("ADVANCE")
       .collection("PAPER")
-      .doc(`PAPER${index + 1}`)
+      .doc(`PAPER${index}`)
       .delete()
       .then(function () {
         console.log("Paper successfully deleted!");
@@ -105,39 +120,41 @@ const Advance = () => {
         console.error("Error removing Paper: ", error);
       });
 
-      deleteCollection(db,index,batchSize)
-  }
+    if (batchSize) deleteCollection(db, index, batchSize);
+  };
 
   //new code
   async function deleteCollection(db, index, batchSize) {
-    const collectionRef = db.collection(mainpapertype.toUpperCase())
-    .doc("ADVANCE")
-    .collection("PAPER")
-    .doc(`PAPER${index + 1}`).collection("question");
-    const query = collectionRef.orderBy('number').limit(batchSize);
-  
+    const collectionRef = db
+      .collection(mainpapertype.toUpperCase())
+      .doc("ADVANCE")
+      .collection("PAPER")
+      .doc(`PAPER${index + 1}`)
+      .collection("question");
+    const query = collectionRef.orderBy("number").limit(batchSize);
+
     return new Promise((resolve, reject) => {
       deleteQueryBatch(db, query, resolve).catch(reject);
     });
   }
-  
+
   async function deleteQueryBatch(db, query, resolve) {
     const snapshot = await query.get();
-  
+
     const batchSize = snapshot.size;
     if (batchSize === 0) {
       // When there are no documents left, we are done
       resolve();
       return;
     }
-  
+
     // Delete documents in a batch
     const batch = db.batch();
     snapshot.docs.forEach((doc) => {
       batch.delete(doc.ref);
     });
     await batch.commit();
-  
+
     // Recurse on the next process tick, to avoid
     // exploding the stack.
     process.nextTick(() => {
@@ -178,22 +195,24 @@ const Advance = () => {
               <Link
                 to={{
                   pathname: `${
-                    !editable[index]?
-                    p.syllabusCreated
-                      ? "/PreviousYearSubjectwise/4"
-                      : `/admin/${mainpapertype}test/main/advance/selectsyllabus/${
-                          p.number - 1
-                        }`
-                        :'#'
+                    !editable[index]
+                      ? p.syllabusCreated
+                        ? "/PreviousYearSubjectwise/4"
+                        : `/admin/${mainpapertype}test/main/advance/selectsyllabus/${
+                            p.number - 1
+                          }`
+                      : "#"
                   }`,
                   state: {
                     papernumber: Number(p.number),
+                    paperindex: index + 1,
                     mainpapertype: mainpapertype,
                   },
                 }}
-                onClick={(e)=>{
-                  e.stopPropagation()
-                editable[index] && e.preventDefault()
+                onClick={(e) => {
+                  e.stopPropagation();
+                  sessionStorage.setItem("paperindex",index+1)
+                  editable[index] && e.preventDefault();
                 }}
               >
                 <div
@@ -225,30 +244,21 @@ const Advance = () => {
                           "Are you sure you want to delete this paper completely?"
                         )
                       ) {
-                        deletepaperfromdatabase(index,p.noofques)
+                        deletepaperfromdatabase(p.number, p.noofques);
                       }
                     }}
                     className="dialog-close-icon"
                   >
                     <CloseIcon />
                   </IconButton>
-                  <h4>Advance Paper {p.number}</h4>
+                  <h4>Advance Paper {index + 1}</h4>
                   <h6>No. of Questions :{p.noofques ? p.noofques : "0"}</h6>
                   {mainpapertype == "aits" ? (
-                    <div style={{ display: "flex",alignItems:"baseline" }}>
+                    <div style={{ display: "flex", alignItems: "baseline" }}>
                       {!editable[index] ? (
                         <div style={{ color: "blue", fontSize: "13px" }}>
                           Date: {p.date ? p.date : 0} | Time:
                           {p.shift ? p.shift : 0}
-                          {/* <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            setEdit(index);
-                          }}
-                        >
-                          change
-                        </button> */}
                         </div>
                       ) : (
                         <div
@@ -309,7 +319,7 @@ const Advance = () => {
                           console.log("hello");
                           e.stopPropagation();
                           e.preventDefault();
-                          if (editable[index]) savetodatabase(index);
+                          if (editable[index]) savetodatabase(p.number);
                           else {
                             setDate(p.date);
                             setShift(p.shift);
@@ -324,7 +334,7 @@ const Advance = () => {
                           border: "1px solid grey",
                           borderRadius: "5px",
                           marginLeft: "5px",
-                          height:"20px"
+                          height: "20px",
                         }}
                       >
                         {editable[index] ? "save" : "change"}

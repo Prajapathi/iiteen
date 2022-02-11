@@ -15,12 +15,21 @@ const Mains = () => {
   const { type } = useParams();
   const [shift, setShift] = useState();
   const [date, setDate] = useState();
+  const [indexofpapers,setIndexofpapers]=useState(0);
 
   useEffect(() => {
     if (type == "mocktest") {
       setMainpapertype("mock");
     } else setMainpapertype("aits");
   }, []);
+
+  useEffect(() => {
+    let arr = [];
+    for (let i = 0; i < size; i++) {
+      arr.push(false);
+    }
+    setEditable(arr);
+  }, [size]);
 
   useEffect(() => {
     localStorage.removeItem("syllabustype");
@@ -45,16 +54,27 @@ const Mains = () => {
       });
   }, []);
 
+  useEffect(()=>{
+    const db = firebase.firestore();
+    db.collection(`${type == "mocktest" ? "MOCK" : "AITS"}`)
+      .doc("MAINS")
+      .get()
+      .then((snap)=>{
+        console.log(snap.data())
+        setIndexofpapers(snap.data().indexofpaper)
+      })
+  },[])
+
   function CreateNewPaper() {
     console.log(paper);
     const db = firebase.firestore();
     db.collection(mainpapertype.toUpperCase())
       .doc("MAINS")
       .collection("PAPER")
-      .doc(`PAPER${paper.length + 1}`)
+      .doc(`PAPER${indexofpapers + 1}`)
       .set({
         exist: true,
-        number: paper.length + 1,
+        number: indexofpapers + 1,
         syllabusSelected: false,
         syllabusCreated: false,
       })
@@ -64,6 +84,9 @@ const Mains = () => {
       .catch((error) => {
         console.log(error.message());
       });
+      db.collection(mainpapertype.toUpperCase())
+      .doc("MAINS")
+      .update({indexofpaper:indexofpapers+1})
   }
 
   function setEdit(index) {
@@ -72,11 +95,15 @@ const Mains = () => {
     setEditable(temp);
   }
   const savetodatabase = (index) => {
+    console.log(index)
+    if(date==undefined || shift==undefined){
+      return
+    }
     const db = firebase.firestore();
     db.collection(mainpapertype.toUpperCase())
       .doc("MAINS")
       .collection("PAPER")
-      .doc(`PAPER${index + 1}`)
+      .doc(`PAPER${index}`)
       .update({
         date: date,
         shift: shift,
@@ -88,7 +115,7 @@ const Mains = () => {
     db.collection(mainpapertype.toUpperCase())
       .doc("MAINS")
       .collection("PAPER")
-      .doc(`PAPER${index + 1}`)
+      .doc(`PAPER${index}`)
       .delete()
       .then(function () {
         console.log("Paper successfully deleted!");
@@ -97,7 +124,7 @@ const Mains = () => {
         console.error("Error removing Paper: ", error);
       });
 
-      deleteCollection(db,index,batchSize)
+      if(batchSize)deleteCollection(db,index,batchSize)
   }
 
   //new code
@@ -176,18 +203,20 @@ const Mains = () => {
                     !editable[index]
                       ? p.syllabusCreated
                         ? "/PreviousYearSubjectwise/3"
-                        : `/admin/${type}/main/mains/selectsyllabus/${
+                        : `/admin/${mainpapertype}test/main/mains/selectsyllabus/${
                             p.number - 1
                           }`
                       : "#"
                   }`,
                   state: {
                     papernumber: Number(p.number),
+                    paperindex:index+1,
                     mainpapertype: mainpapertype,
                   },
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
+                  sessionStorage.setItem("paperindex",index+1)
                   editable[index] && e.preventDefault();
                 }}
               >
@@ -220,14 +249,14 @@ const Mains = () => {
                           "Are you sure you want to delete this paper completely?"
                         )
                       ) {
-                        deletepaperfromdatabase(index,p.noofques)
+                        deletepaperfromdatabase(p.number,p.noofques)
                       }
                     }}
                     className="dialog-close-icon"
                   >
                     <CloseIcon />
                   </IconButton>
-                  <h4>Mains Paper {p.number}</h4>
+                  <h4>Mains Paper {index+1}</h4>
                   <h6>No. of Questions :{p.noofques ? p.noofques : "0"}</h6>
                   {mainpapertype == "aits" ? (
                     <div style={{ display: "flex", alignItems: "baseline" }}>
@@ -244,9 +273,9 @@ const Mains = () => {
                             alignItems: "baseline",
                             fontSize: "14px",
                           }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
+                          // onClick={(e) => {
+                          //   e.stopPropagation();
+                          // }}
                         >
                           <TextField
                             id="datetime-local"
@@ -264,10 +293,10 @@ const Mains = () => {
                             InputProps={{ style: { fontSize: 12, height: 18 } }}
                             InputLabelProps={{
                               style: { fontSize: 12 },
-                              onClick: (e) => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                              },
+                              // onClick: (e) => {
+                              //   e.stopPropagation();
+                              //   e.preventDefault();
+                              // },
                             }}
                             style={{ width: "110px", marginRight: "10px" }}
                             value={!editable[index] ? p.date : date}
@@ -304,7 +333,7 @@ const Mains = () => {
                           console.log("hello");
                           e.stopPropagation();
                           e.preventDefault();
-                          if (editable[index]) savetodatabase(index);
+                          if (editable[index]) savetodatabase(p.number);
                           else {
                             setDate(p.date);
                             setShift(p.shift);

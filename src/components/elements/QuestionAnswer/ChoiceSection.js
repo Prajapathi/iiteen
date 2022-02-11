@@ -202,6 +202,7 @@ export function ChoiceSection(props) {
                     ? props.stateAnswer[props.number - 1].answerType
                     : 0
                 }
+                style={{zIndex:"100"}}
                 // inst={
                 //   props.paper.noofques !=
                 //   props.paper.toBeAttempted.instructionInfo

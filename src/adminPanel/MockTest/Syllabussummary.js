@@ -7,48 +7,73 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css";
 import { Link, useParams } from "react-router-dom";
 import firebase from "firebase";
 
-function savetodatabase(paperno,mainpaptyp){
-  console.log(paperno,mainpaptyp)
+function savetodatabase(paperno, mainpaptyp) {
+  console.log(paperno, mainpaptyp);
   const db = firebase.firestore();
-  db.collection(mainpaptyp.toUpperCase())
+  const paperref = db
+    .collection(mainpaptyp.toUpperCase())
     .doc("MAINS")
     .collection("PAPER")
-    .doc(`PAPER${paperno}`)
-    .update({ syllabusCreated:true })
+    .doc(`PAPER${paperno}`);
+
+  paperref
+    .update({ syllabusCreated: true,noofques:90 })
     .then(() => {
       console.log("saved");
     })
     .catch((error) => {
       console.log(error.message);
     });
+  for (let i = 1; i <= 90; i++) {
+    paperref.collection("question").add({
+      question: "",
+      answerType: `${i % 30 >= 1 && i % 30 <= 20 ? "4" : "2"}`,
+      option2: "",
+      option1: "",
+      option3: "",
+      option4: "",
+      answer: "",
+      hint: "",
+      solution: "",
+      year: "",
+      college: "",
+      number: `${i}`,
+      subject: `${i >= 1 && i <= 30 ? 1 : i >= 31 && i <= 60 ? 2 : 3}`,
+    });
+  }
 }
 
 const Syllabussummary = () => {
   const paperno = useParams();
-  const [mainpapertype,setMainpapertype]=React.useState("");
-  const {type}=useParams()
+  const [mainpapertype, setMainpapertype] = React.useState("");
+  const { type } = useParams();
 
-  useEffect(()=>{
-    if(type=='mocktest'){
+  useEffect(() => {
+    if (type == "mocktest") {
       setMainpapertype("mock");
-    }else setMainpapertype("aits")
-  },[])
+    } else setMainpapertype("aits");
+  }, []);
 
   return (
     <div
-    style={{display:"flex",justifyContent:"flex-start",flexDirection:"column",alignItems:"center"}}
+      style={{
+        display: "flex",
+        justifyContent: "flex-start",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
     >
       <div
         style={{
           display: "flex",
           justifyContent: "center",
-          flexDirection:"column",
+          flexDirection: "column",
           alignItems: "center",
           paddingTop: "200px",
           paddingBottom: "70px",
@@ -147,28 +172,36 @@ const Syllabussummary = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <h6 style={{color:"blue",fontSize:"14px",paddingTop:"20px"}}>Note: Once Clicked on Create {mainpapertype} Test you will not be able to change the syllabus again</h6>
+        <h6 style={{ color: "blue", fontSize: "14px", paddingTop: "20px" }}>
+          Note: Once Clicked on Create {mainpapertype} Test you will not be able
+          to change the syllabus again
+        </h6>
       </div>
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginBottom:"50px"
+          marginBottom: "50px",
         }}
       >
         <Button
-          style={{ boxShadow: "0 7px 18px rgba(0, 0, 0, 0.192)", backgroundColor:"#5c5c5c",color:"white"}}
+          style={{
+            boxShadow: "0 7px 18px rgba(0, 0, 0, 0.192)",
+            backgroundColor: "#5c5c5c",
+            color: "white",
+          }}
           component={Link}
           to={{
             pathname: "/PreviousYearSubjectwise/3",
-            state:{
-              papernumber:Number(paperno.number) + 1,mainpapertype:mainpapertype
-            }
+            state: {
+              papernumber: Number(paperno.number) + 1,
+              mainpapertype: mainpapertype,
+            },
           }}
-          onClick={()=>{
-            console.log(Number(paperno.number) + 1,mainpapertype)
-            savetodatabase(Number(paperno.number) + 1,mainpapertype)
+          onClick={() => {
+            console.log(Number(paperno.number) + 1, mainpapertype);
+            savetodatabase(Number(paperno.number) + 1, mainpapertype);
           }}
         >
           Create {mainpapertype.toUpperCase()} TEST

@@ -198,8 +198,9 @@ export function Paper(props) {
                     if(item.isAnswered){
                         totalAttempted++;
                         console.log(props.paper.questions[i].subject)
-                        switch (props.paper.questions[i].subject) {
+                        switch (Number(props.paper.questions[i].subject)) {
                             case 1:
+                                console.log("got in 1")
                                 physicsAttempted++;
                                 physicsTags[props.paper.questions[i].tag+'a']++;
 
@@ -238,6 +239,7 @@ export function Paper(props) {
                                 }
                                 break;
                             case 2:
+                                console.log("got in 2")
                                 chemistryAttempted++;
                                 chemistryTags[props.paper.questions[i].tag+'a']++;
                                 if(props.paper.questions[i].answerType=='5'){
@@ -275,6 +277,7 @@ export function Paper(props) {
                                 }
                                 break;
                             case 3:
+                                console.log("got in 3")
                                 mathsAttempted++;
                                 mathsTags[props.paper.questions[i].tag+'a']++;
                                 if(props.paper.questions[i].answerType=='5'){
@@ -341,6 +344,7 @@ export function Paper(props) {
                 }
 
                 //Send leaderboard and Analysis to User model
+                console.log(Analysis)
                 db.collection("User").doc(props.user.uid).collection(paperTypeRoute).doc(`${props.paper.sections?"ADVANCE":"MAINS"}`).collection("PAPER").doc(`PAPER${props.paper.number}`).collection("LeaderBoard").doc("Analysis")
                 .set({...Analysis})
                 .then((res)=>{

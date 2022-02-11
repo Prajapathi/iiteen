@@ -91,11 +91,12 @@ export function MockTest(props) {
             {mockTestPapers.map((item, index) => (
               <div key={index} style={{ margin: "20px" }}>
                 <MockTestCard
-                  isAttempted={checkAttempted(`PAPER${index+1}`)}
+                  isAttempted={checkAttempted(`PAPER${item.number}`)}
                   paper={item}
                   setLoading={setLoading}
                   papertype={params.papertype}
-                  papernumber={index + 1}
+                  papernumber={item.number}
+                  paperindex={index+1}
                 />
               </div>
             ))}

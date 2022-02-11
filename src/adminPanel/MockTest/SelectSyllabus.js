@@ -50,6 +50,12 @@ const SelectSyllabus = (props) => {
   const [mainpapertype, setMainpapertype] = React.useState("");
   const { type } = useParams();
 
+  console.log(props)
+
+  var paperindex = props.location?props.location.state
+    ? props.location.state.paperindex
+    : null:null;
+
   useEffect(() => {
     if (type == "mocktest") {
       setMainpapertype("mock");
@@ -198,6 +204,9 @@ const SelectSyllabus = (props) => {
                   ? "mains/syllabussummary"
                   : "advance/section"
               }/${params.number}`,
+              state:{
+                paperindex:paperindex
+              }
             }}
             onClick={() => {
               setSyllabustype("fullsyllabus");
@@ -215,6 +224,9 @@ const SelectSyllabus = (props) => {
                   ? "mains/syllabussummary"
                   : "advance/section"
               }/${params.number}`,
+              state:{
+                paperindex:paperindex
+              }
             }}
             onClick={() => {
               setSyllabustype("class 11");
@@ -232,6 +244,9 @@ const SelectSyllabus = (props) => {
                   ? "mains/syllabussummary"
                   : "advance/section"
               }/${params.number}`,
+              state:{
+                paperindex:paperindex
+              }
             }}
             onClick={() => {
               setSyllabustype("class 12");
@@ -376,6 +391,9 @@ const SelectSyllabus = (props) => {
                     ? "mains/syllabussummary"
                     : "advance/section"
                 }/${params.number}`,
+                state:{
+                  paperindex:paperindex
+                }
               }}
               onClick={() => {
                 savetodatabase();

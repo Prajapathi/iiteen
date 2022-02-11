@@ -54,7 +54,7 @@ export function Signin(props) {
     // if (alreadyUser) {
     //   return;
     // }
-    // e.preventDefault();  
+    // e.preventDefault();
 
     //if previously the Phone was invalid then this new attempt will hide the error
     setShowInvalidNumber(false);
@@ -79,24 +79,24 @@ export function Signin(props) {
     //   .catch((e) => {});
     const db = firebase.firestore();
     console.log(phoneNumber);
-    console.log(props.openLogin,props.login,alreadyUser)
+    console.log(props.openLogin, props.login, alreadyUser);
     if (!props.login) {
-      const snapshot=await db
+      const snapshot = await db
         .collection("User")
         .where("phoneNumber", "==", phoneNumber)
-        .get()
-        // .then((snapshot)=>{
-        //   if (snapshot.empty) {
-        //     console.log("No matching documents.");
-        //   } else {
-        //     snapshot.forEach((doc) => {
-        //       console.log(doc.id, "=>", doc.data());
-        //       setAlreadyUser(true);
-        //       setShowLoading(false);
-        //     });
-        //     return;
-        //   }
-        // })
+        .get();
+      // .then((snapshot)=>{
+      //   if (snapshot.empty) {
+      //     console.log("No matching documents.");
+      //   } else {
+      //     snapshot.forEach((doc) => {
+      //       console.log(doc.id, "=>", doc.data());
+      //       setAlreadyUser(true);
+      //       setShowLoading(false);
+      //     });
+      //     return;
+      //   }
+      // })
 
       if (snapshot.empty) {
         console.log("No matching documents.");
@@ -284,7 +284,7 @@ export function Signin(props) {
                   maxLength="10"
                   inputProps={{ maxLength: 10 }}
                 />
-              ) : !alreadyUser?(
+              ) : !alreadyUser ? (
                 <TextField
                   label="Enter OTP"
                   placeholder="_ _ _ _ _ _"
@@ -293,7 +293,7 @@ export function Signin(props) {
                   onChange={(e) => setOTP(e.target.value)}
                   variant="outlined"
                 />
-              ):null}
+              ) : null}
               <br />
               {showIncorrectOTPError ? (
                 <div id="incorrect-error">Incorrect OTP. Please Try Again.</div>
@@ -311,7 +311,7 @@ export function Signin(props) {
                   <Button
                     onClick={() => {
                       setAlreadyUser(false);
-                      props.setOpenSignup(false)
+                      props.setOpenSignup(false);
                       props.setOpenLogin(true);
                     }}
                   >
