@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from "react-router-dom";
-import store from './store/config'
+import {store} from './store/config'
 import * as Actions from './store/action/Authentication'
 import RoutingWrapper from './RoutingWrapper'
 import Landing from './components/signin'

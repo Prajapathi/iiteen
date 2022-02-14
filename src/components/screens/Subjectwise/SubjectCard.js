@@ -109,6 +109,11 @@ export function SubjectCard(props) {
           setAnswers(doc.data());
           setTotalAttempted(totalQAttempted);
           setProgress((totalQAttempted / 75) * 100);
+
+          // setLastIndex([0, 0, 0]);
+          // setTotalAttempted(0);
+          // setProgress(0);
+          // setAnswers({});
         }
       })
       .catch(function (error) {
@@ -119,9 +124,14 @@ export function SubjectCard(props) {
 
   const selectLevel = (lev) => {
     setLevel(lev);
-    localStorage.setItem("dialog",false);
+    sessionStorage.setItem("dialog",false);
     console.log("ohh", "Class " + classNumber, lev, subject, chapter);
     props.loadingStart(true);
+
+    //new code
+    console.log(localStorage.getItem("palleteindex"))
+    localStorage.removeItem("palleteindex");
+    //
 
     //Access question to pass as prop
     const db = firebase.firestore();
@@ -158,8 +168,8 @@ export function SubjectCard(props) {
 
           //set Previously given answers for this level
           if (answers["Level 0" + lev]) {
-            console.log("Yaha", chapter, answers["Level 0" + lev]);
-            props.fetchPreviousSubjectwiseAnswers(answers["Level 0" + lev]);
+            console.log("Yaha", chapter, answers["Level 0" + lev],questions);
+            props.fetchPreviousSubjectwiseAnswers({answers,questions,level: lev});
           }
 
           //to check if user is navigating through SubjectCard

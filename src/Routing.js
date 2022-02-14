@@ -19,6 +19,7 @@ import LeftMenu from './components/NavigationLeftMenu/LeftMenu'
 import Signin from './components/signin'
 import Loading from './components/elements/Loading'
 import PreviousYearSubjectwise from './components/screens/PreviousYear/PreviousYearSubjectwise'
+import MockTestMain from './components/screens/MockTest/MockTestMain'
 
 
 export function Routing(props) {
@@ -43,8 +44,11 @@ export function Routing(props) {
                         {/* <Route exact path="/Home">
                             <LeftMenu/><Home/><Footer/>
                         </Route> */}
-                        <Route exact path="/MockTest">
+                        <Route exact path="/MockTest/:papertype">
                             <LeftMenu /><MockTest /><Footer />
+                        </Route>
+                        <Route exact path="/MockTest">
+                            <LeftMenu /><MockTestMain /><Footer />
                         </Route>
                         <Route exact path="/Subjectwise">
                             <LeftMenu /><SubjectWise /><Footer />
@@ -58,13 +62,19 @@ export function Routing(props) {
                         <Route exact path="/Subjectwise/Papers/:paperName">
                             <LeftMenu /><SubjectwisePaper /><Footer />
                         </Route>
-                        <Route exact path="/:paperType/Papers/:paperName">
+                        {/* <Route exact path="/:paperType/Papers/:paperName">
+                            <LeftMenu /><Papers /><Footer />
+                        </Route> */}
+                        <Route exact path="/:paperType/:mockpaperType/Papers/:paperName">
                             <LeftMenu /><Papers /><Footer />
                         </Route>
-                        <Route exact path="/:paperType/Papers/Analysis/:paperName">
+                        {/* <Route exact path="/:paperType/Papers/Analysis/:paperName">
+                            <LeftMenu /><PaperAnalysis /><Footer />
+                        </Route> */}
+                        <Route exact path="/:paperType/:mockpaperType/Papers/Analysis/:paperName">
                             <LeftMenu /><PaperAnalysis /><Footer />
                         </Route>
-                        <Route exact path="/:paperType/Papers/Detailed_Analysis/:paperName">
+                        <Route exact path="/:paperType/:mockpaperType/Papers/Detailed_Analysis/:paperName">
                             <LeftMenu /><DetailedAnalysis /><Footer />
                         </Route>
                         <Route exact path="/Report">

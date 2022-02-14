@@ -20,7 +20,7 @@ import PaperSummary from './PaperSummary'
 export function Paper(props) {
     const location = useLocation();
     const history= useHistory();
-    let {paperType,paperName}=useParams();
+    let {paperType,paperName,mockpaperType}=useParams();
     paperType=paperType.toUpperCase()
     const [palleteSub,setPalleteSub]=React.useState(1);
     const [palleteArray,setPalleteArray]=React.useState({phy:[],maths:[],chem:[]})
@@ -30,14 +30,16 @@ export function Paper(props) {
     const [start,setStart]=React.useState(false)
     const [showSummary,setShowSummary]=React.useState(false)
     const [timeOver,setTimeOver]=React.useState(false)
+    const markdistributionbyanswertype=[[4,0,0],[2,0,0],[],[3,1,0],[4,2,0]]
 
     React.useEffect(() => {
-        console.log("Yaha aaya")
+        console.log("Yaha aaya",props)
         //if user is not navigating through Cards then redirect to home
         let verifyPaper=localStorage.getItem("PaperName")
-        if(verifyPaper==null|| verifyPaper!=props.paper.name){
+        console.log(localStorage.getItem("PaperName"),verifyPaper,props.paper,`PAPER${props.paper.number}`)
+        if(verifyPaper==null|| verifyPaper!=`PAPER${props.paper.number}`){
             console.log("Because of this")
-            history.push('/')
+            history.push('/mocktest')
         }
         localStorage.removeItem("PaperName")
 
@@ -88,9 +90,10 @@ export function Paper(props) {
     }
 
     const submitPaperFinal=()=>{
+        console.log("props.answers",props.answers)
         const UserQuestionModel={
             answers:props.answers,
-            quid:props.paper.name,
+            quid:`PAPER${props.paper.number}`,
             attempted:true
         }
         let paperTypeRoute;
@@ -102,7 +105,7 @@ export function Paper(props) {
                 paperTypeRoute="PREVIOUSPapers"
         }
         const db = firebase.firestore();
-        const paperRef = db.collection("User").doc(props.user.uid).collection(paperTypeRoute).doc(props.paper.name)
+        const paperRef = db.collection("User").doc(props.user.uid).collection(paperTypeRoute).doc(`${props.paper.sections?"ADVANCE":"MAINS"}`).collection("PAPER").doc(`PAPER${props.paper.number}`)
             .set(UserQuestionModel)
             .then((res)=>{
                 let marks = 0;
@@ -174,6 +177,7 @@ export function Paper(props) {
                     '4a': 0,
                     '4e':false,
                 };
+                console.log(props.answers,props)
                 props.answers.map((item,i)=>{
                     console.log(props.paper.questions[i])
 
@@ -193,51 +197,120 @@ export function Paper(props) {
                     //if attempted then calculate marks and increment attempted values
                     if(item.isAnswered){
                         totalAttempted++;
-                        switch (props.paper.questions[i].subject) {
+                        console.log(props.paper.questions[i].subject)
+                        switch (Number(props.paper.questions[i].subject)) {
                             case 1:
+                                console.log("got in 1")
                                 physicsAttempted++;
                                 physicsTags[props.paper.questions[i].tag+'a']++;
+
+                                if(props.paper.questions[i].answerType=='5'){
+                                    if(!item.isAnsweredWrong){
+                                        physicsCorrect++;
+                                        totalCorrect++;
+                                        physicsMarks+=4;
+                                        marks+=4;
+                                        break;
+                                    }
+                                    let mar=0;
+                                    for(let i=0;i<item.answerGiven.length;i++){
+                                        if(item.answer.includes(item.answerGiven[i])){
+                                            mar++;
+                                        }else{
+                                            mar=-2;
+                                            break;
+                                        }
+                                    }
+                                    physicsMarks+=mar;
+                                        marks+=mar;
+                                    break;
+                                }
 
                                 if(!item.isAnsweredWrong){
                                     physicsCorrect++;
                                     totalCorrect++;
-                                    physicsMarks+=props.paper.questions[i].marks;
-                                    marks+=props.paper.questions[i].marks;
+                                    physicsMarks+=markdistributionbyanswertype[Number(props.paper.questions[i].answerType)-1][0] ;
+                                    marks+=markdistributionbyanswertype[Number(props.paper.questions[i].answerType)-1][0] ;
                                     physicsTags[props.paper.questions[i].tag+'c']++;
                                 }
                                 else{
-                                    physicsMarks-=props.paper.questions[i].negativeMarks;
-                                    marks-=props.paper.questions[i].negativeMarks;
+                                    physicsMarks-=markdistributionbyanswertype[Number(props.paper.questions[i].answerType)-1][1] ;
+                                    marks-=markdistributionbyanswertype[Number(props.paper.questions[i].answerType)-1][1] ;
                                 }
                                 break;
                             case 2:
+                                console.log("got in 2")
                                 chemistryAttempted++;
                                 chemistryTags[props.paper.questions[i].tag+'a']++;
+                                if(props.paper.questions[i].answerType=='5'){
+                                    if(!item.isAnsweredWrong){
+                                        chemistryCorrect++;
+                                        totalCorrect++;
+                                        chemistryMarks+=4;
+                                        marks+=4;
+                                        break;
+                                    }
+                                    let mar=0;
+                                    for(let i=0;i<item.answerGiven.length;i++){
+                                        if(item.answer.includes(item.answerGiven[i])){
+                                            mar++;
+                                        }else{
+                                            mar=-2;
+                                            break;
+                                        }
+                                    }
+                                    chemistryMarks+=mar;
+                                        marks+=mar;
+                                    break;
+                                }
                                 if(!item.isAnsweredWrong){
                                     totalCorrect++;
                                     chemistryCorrect++;
-                                    chemistryMarks+=props.paper.questions[i].marks;
-                                    marks+=props.paper.questions[i].marks;
+                                    chemistryMarks+=markdistributionbyanswertype[Number(props.paper.questions[i].answerType)-1][0] ;
+                                    marks+=markdistributionbyanswertype[Number(props.paper.questions[i].answerType)-1][0] ;
                                     chemistryTags[props.paper.questions[i].tag+'c']++;
                                 }
                                 else{
-                                    chemistryMarks-=props.paper.questions[i].negativeMarks;
-                                    marks-=props.paper.questions[i].negativeMarks;
+                                    console.log(Number(props.paper.questions[i].answerType),markdistributionbyanswertype[Number(props.paper.questions[i].answerType)])
+                                    chemistryMarks-=markdistributionbyanswertype[Number(props.paper.questions[i].answerType)-1][1] ;
+                                    marks-=markdistributionbyanswertype[Number(props.paper.questions[i].answerType)-1][1] ;
                                 }
                                 break;
                             case 3:
+                                console.log("got in 3")
                                 mathsAttempted++;
                                 mathsTags[props.paper.questions[i].tag+'a']++;
+                                if(props.paper.questions[i].answerType=='5'){
+                                    if(!item.isAnsweredWrong){
+                                        mathsCorrect++;
+                                        totalCorrect++;
+                                        mathsMarks+=4;
+                                        marks+=4;
+                                        break;
+                                    }
+                                    let mar=0;
+                                    for(let i=0;i<item.answerGiven.length;i++){
+                                        if(item.answer.includes(item.answerGiven[i])){
+                                            mar++;
+                                        }else{
+                                            mar=-2;
+                                            break;
+                                        }
+                                    }
+                                    mathsMarks+=mar;
+                                        marks+=mar;
+                                    break;
+                                }
                                 if(!item.isAnsweredWrong){
                                     totalCorrect++;
                                     mathsCorrect++;
-                                    mathsMarks+=props.paper.questions[i].marks;
-                                    marks+=props.paper.questions[i].marks;
+                                    mathsMarks+=markdistributionbyanswertype[Number(props.paper.questions[i].answerType)-1][0] ;
+                                    marks+=markdistributionbyanswertype[Number(props.paper.questions[i].answerType)-1][0] ;
                                     mathsTags[props.paper.questions[i].tag+'c']++;
                                 }
                                 else{
-                                    mathsMarks-=props.paper.questions[i].negativeMarks;
-                                    marks-=props.paper.questions[i].negativeMarks;
+                                    mathsMarks-=markdistributionbyanswertype[Number(props.paper.questions[i].answerType)-1][1] ;
+                                    marks-=markdistributionbyanswertype[Number(props.paper.questions[i].answerType)-1][1] ;
                                 }
                                 break;
                             default:
@@ -271,11 +344,12 @@ export function Paper(props) {
                 }
 
                 //Send leaderboard and Analysis to User model
-                db.collection("User").doc(props.user.uid).collection(paperTypeRoute).doc(props.paper.name).collection("LeaderBoard").doc("Analysis")
+                console.log(Analysis)
+                db.collection("User").doc(props.user.uid).collection(paperTypeRoute).doc(`${props.paper.sections?"ADVANCE":"MAINS"}`).collection("PAPER").doc(`PAPER${props.paper.number}`).collection("LeaderBoard").doc("Analysis")
                 .set({...Analysis})
                 .then((res)=>{
-                    window.alert("yo");
-                    history.push({pathname:"Analysis/"+props.paper.name})
+                    // window.alert("yo");
+                    history.push({pathname:"Analysis/"+`PAPER${props.paper.number}`})
                 })
                 .catch((err)=>{
                     console.log("Error saving Leaderboard Analysis",err)
@@ -292,10 +366,10 @@ export function Paper(props) {
         (
             !showPaperInst?
             <>
-            <GeneralInstruction setContinue={setShowPaperInst} />
+            <GeneralInstruction setContinue={setShowPaperInst} mockpaperType={mockpaperType}/>
             {/* <Timer duration={1}/> */}
             </>
-            :<PaperInstruction start={setStart} goToGeneralInst={()=>setShowPaperInst(false)} details={props.paper} inst={props.paper.instructionInfo}/>
+            :<PaperInstruction start={setStart} goToGeneralInst={()=>setShowPaperInst(false)} details={props.paper} inst={props.paper.sections}/>
         )
         :
         //after start is set to true, display individual questions
@@ -401,7 +475,7 @@ export function Paper(props) {
                         </div>
                 </div>
             </Container>
-            :<PaperSummary resume={setShowSummary} submit={submitPaperFinal} totalQ={props.paper.toBeAttempted} name={props.paper.name} answers={props.answers}/>}
+            :<PaperSummary resume={setShowSummary} submit={submitPaperFinal} totalQ={props.paper.toBeAttempted} name={`PAPER${props.paper.number}`} answers={props.answers}/>}
         </>
     )
 }

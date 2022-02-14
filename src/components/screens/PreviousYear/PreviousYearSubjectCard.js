@@ -47,19 +47,25 @@ export function PreviousYearSubjectCard(props) {
     if (props.subject == "physics") sub = "Physics";
     else if (props.subject == "chemistry") sub = "Chemistry";
     else sub = "Maths";
-    setSubject(sub);
+    setSubject(props.subject);
 
+    //new code
+    localStorage.removeItem("palleteindex");
+    //
+    // console.log(props.user.uid,props.classNumber,sub,ch)
     //fetch attempted answers to show in progress bar
     const db = firebase.firestore();
     db.collection("User")
       .doc(props.user.uid)
-      .collection("SUBJECTWISEPapers")
+      .collection("previousyearSUBJECTWISEPapers")
       .doc("Class " + props.classNumber)
-      .collection(sub)
+      .collection(props.subject)
       .doc("Chapter " + ch)
       .get()
-      .then((doc) => {
+      .then((doc) => {  
+        // console.log(doc.data());
         if (doc.data() == null) {
+          // console.log("it has gone to null")
           setLastIndex([0]);
           setTotalAttempted(0);
           setProgress(0);
@@ -81,10 +87,16 @@ export function PreviousYearSubjectCard(props) {
               }
             }
           }
+          console.log([lastInd1],doc.data(),totalQAttempted)
           setLastIndex([lastInd1]);
           setAnswers(doc.data());
           setTotalAttempted(totalQAttempted);
           setProgress((totalQAttempted / 25) * 100);
+
+          // setLastIndex([0]);
+          // setTotalAttempted(0);
+          // setProgress(0);
+          // setAnswers({});
         }
       })
       .catch(function (error) {
@@ -95,17 +107,23 @@ export function PreviousYearSubjectCard(props) {
 
   const selectLevel = (lev) => {
     setLevel(lev);
-    localStorage.setItem("dialog",false);
-    console.log("ohh", "Class " + classNumber, lev, subject, chapter);
+    sessionStorage.setItem("dialog", false);
+    console.log("ohh", "class" + classNumber, subject, chapter);
+    // console.log("chapter number",chapter)
     props.loadingStart(true);
+
+    //new code
+    // console.log(localStorage.getItem("palleteindex"))
+    localStorage.removeItem("palleteindex");
+    //
 
     //Access question to pass as prop
     const db = firebase.firestore();
-    db.collection("PREVIOUSYEARSUBJECTWISE")
-      .doc("Class " + classNumber)
+    db.collection("PYSV")
+      .doc("class" + classNumber)
       .collection(subject)
       .doc("Chapter " + chapter)
-      .collection("Level 0" + lev)
+      .collection("question")
       .orderBy("number")
       .get()
       .then(function (querySnapshot) {
@@ -113,12 +131,12 @@ export function PreviousYearSubjectCard(props) {
         querySnapshot.forEach(function (doc) {
           questions.push({ ...doc.data(), qid: doc.id });
         });
-        console.log("k", questions);
+        // console.log("k", questions);
         if (questions.length == 0) {
           history.push("/QuestionsError");
         } else {
           setPaper(questions);
-          console.log("hmmm", questions);
+          // console.log("hmmm", questions);
           props.loadingStart(false);
           //put into redux store
           props.fetchPaper({
@@ -134,12 +152,12 @@ export function PreviousYearSubjectCard(props) {
 
           //set Previously given answers for this level
           if (answers["Level 0" + lev]) {
-            console.log("Yaha", chapter, answers["Level 0" + lev]);
-            props.fetchPreviousSubjectwiseAnswers(answers["Level 0" + lev]);
+            // console.log("Yaha", chapter, answers["Level 0" + lev],questions);
+            props.fetchPreviousSubjectwiseAnswers({answers,questions,level: lev});
           }
 
           //to check if user is navigating through SubjectCard
-          localStorage.setItem("PaperName", "PreviousYear");
+          localStorage.setItem("PaperName", "previousyearSubjectwise");
           history.push("Subjectwise/Papers/" + chapter);
         }
       })
@@ -160,10 +178,10 @@ export function PreviousYearSubjectCard(props) {
           <div style={{ width: "80%" }}>
             <BorderLinearProgress
               variant="determinate"
-              value={0}
+              value={progress}
               style={{ boxShadow: "1px 1px 3px 0px rgba(0,0,0,0.3)" }}
             />
-            <div style={{ color: "#448698", marginTop: "5px" }}> {0}/25</div>
+            <div style={{ color: "#448698", marginTop: "5px" }}> {totalAttemped}/25</div>
             <button onClick={() => selectLevel(1)} className="prev-card-button">
               Attempt
             </button>

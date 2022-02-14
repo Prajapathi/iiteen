@@ -14,27 +14,49 @@ export default function Subjectwise() {
   const [open, setOpen] = React.useState(true);
   const [classNumber, setClassNumber] = React.useState("11");
   const [loading, setLoading] = React.useState(false);
-  let history = useHistory();
+  let History = useHistory();
+
   window.onpopstate = function (e) {
-    if (!open || localStorage.getItem("dialog")===null) {
-      setOpen(true);
-      history.push("/Subjectwise");
+    // e.preventDefault()
+    console.log("called")
+    console.log(open,sessionStorage.getItem("dialog"),window.location.pathname)
+    if(open==true && sessionStorage.getItem("dialog")==null && window.location.pathname[1]=='m'){
+      return
     }
-    localStorage.removeItem("dialog");
+    if(open==true && sessionStorage.getItem("dialog")==null && window.location.pathname[1]=='M'){
+      return
+    }
+
+    if (!open || sessionStorage.getItem("dialog")===null) {
+      if(window.location.pathname!='/MockTest'){
+        console.log("calledinside")
+        setOpen(true);
+        History.push("/Subjectwise");
+      }
+      
+    }
+    sessionStorage.removeItem("dialog");
   };
 
   useEffect(()=>{
-    if(localStorage.getItem("dialog")!==null){
-      setOpen(localStorage.getItem("dialog"));
+    // console.log("effectcalled")
+    if(sessionStorage.getItem("dialog")!==null){
+      setOpen(sessionStorage.getItem("dialog"));
     }else{
-      localStorage.setItem("dialog",true);
+      sessionStorage.setItem("dialog",true);
     }
   },[])
 
+  // useEffect(()=>{
+  //   if(localStorage.getItem("reloaded")===true){
+  //     console.log("reload detected")
+  //   }
+  // },[])
+
   const selectClass = (n) => {
     setClassNumber(n);
-    localStorage.setItem("dialog",false);
-    console.log("dia",localStorage.getItem("dialog"));
+    sessionStorage.setItem("dialog",false);
+    // console.log("dia",localStorage.getItem("dialog"));
     setOpen(false);
   };
   document.title = "Subjectwise | IITEENS";

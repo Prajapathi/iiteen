@@ -313,7 +313,10 @@ export function LeftMenu(props) {
                                     onClose={handleClose}
                                 >
                                     <div className = { clsx(classes.logoutConfirmMessage) }>Are you Sure?</div>
-                                    <MenuItem onClick={()=>{signout()}} >Yes</MenuItem>
+                                    <MenuItem onClick={()=>{
+                                        setAnchorEl(false)
+                                        signout()
+                                        }} >Yes</MenuItem>
                                     <MenuItem onClick={handleClose} >No</MenuItem>
                                 </Menu>
                             </>

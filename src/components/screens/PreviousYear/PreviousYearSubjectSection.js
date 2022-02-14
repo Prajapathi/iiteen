@@ -60,6 +60,7 @@ export default function PreviousYearSubjectSection(props) {
             className="search-chapter"
             placeholder="Search"
             onChange={(e) => {
+              console.log("search", e.target.value);
               searchup(e.target.value);
             }}
           />

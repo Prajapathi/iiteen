@@ -10,7 +10,7 @@ export function Analysis(props) {
     
     const history=useHistory();
 
-    let {paperType,paperName}=useParams();
+    let {paperType,paperName,mockpaperType}=useParams();
     paperType=paperType.toUpperCase()
 
     const [data,setData]=React.useState(0)
@@ -33,7 +33,7 @@ export function Analysis(props) {
         const db = firebase.firestore();
 
         //fetch answers given by user
-        db.collection("User").doc(props.user.uid).collection(paperTypeRoute+"Papers").doc(paperName).get()
+        db.collection("User").doc(props.user.uid).collection(paperTypeRoute+"Papers").doc(mockpaperType).collection("PAPER").doc(paperName).get()
             .then(function(querySnapshot) {
                 console.log("here's the questionPaper:",querySnapshot.data())
                 if(querySnapshot.data()==null){
@@ -49,7 +49,7 @@ export function Analysis(props) {
             });
 
         //fetch paper details
-        db.collection(paperTypeRoute).doc(paperName).get()
+        db.collection(paperTypeRoute).doc(mockpaperType).collection("PAPER").doc(paperName).get()
             .then(function(querySnapshot) {
                 console.log("here's the questionPaper:",querySnapshot.data())
                 if(querySnapshot.data()==null){
@@ -64,7 +64,7 @@ export function Analysis(props) {
             });
 
         //fetch questions
-        db.collection(paperTypeRoute).doc(paperName).collection("Questions").get()
+        db.collection(paperTypeRoute).doc(mockpaperType).collection("PAPER").doc(paperName).collection("question").get()
             .then(function(querySnapshot) {
                 let qs=[];
                 querySnapshot.forEach(function(doc) {

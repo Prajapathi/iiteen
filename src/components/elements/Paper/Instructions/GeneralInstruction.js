@@ -20,7 +20,7 @@ export default function GeneralInstruction(props) {
     const [check,setCheck]=React.useState(false);
     return (
         <div id="inst-body">
-            <div id="paper-heading">JEE MAINS </div>
+            <div id="paper-heading">JEE {props.mockpaperType} </div>
             <div id="top-bar"> 
                 GENERAL INSTRUCTION
             </div>

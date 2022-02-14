@@ -20,6 +20,22 @@ export function MockTestCard(props) {
   const [openContinuePreviousAttempt, setOpenContinuePreviousAttempt] =
     React.useState(false);
   const [prevAttempt, setPrevAttempt] = React.useState(false);
+  const [totalmarks,setTotalmarks]=React.useState(0);
+  const markdistribution=[[3,1,0],[4,2,0],[3,1,0],[3,1,0]]
+
+React.useEffect(()=>{
+  console.log(props.paper.sections)
+        let tm=0;
+        let marksdistributiontype=0;
+  props.paper.sections && props.paper.sections.map((item,i)=>{
+    // console.log("hello")
+    marksdistributiontype=item.type=="singletype"?0:item.type=='multipletype'?1:item.type=='integertype'?2:3;
+    // console.log(marksdistributiontype)
+    tm+=Number(item.noofques)*markdistribution[marksdistributiontype][0];
+})
+console.log(3*tm)
+setTotalmarks(3*tm);
+},[])
 
   //for checking if user has any previous attempt which wasn't submitted
   const checkPreviousAttempt = () => {
@@ -30,7 +46,7 @@ export function MockTestCard(props) {
     if (
       previousAttempt != null &&
       previousAttempt[0] == "{" &&
-      JSON.parse(previousAttempt)[props.paper.name] != null
+      JSON.parse(previousAttempt)[`PAPER${props.papernumber}`] != null
     ) {
       setOpenContinuePreviousAttempt(true);
       console.log("ok?", JSON.parse(previousAttempt));
@@ -48,7 +64,7 @@ export function MockTestCard(props) {
     //store the previous attempt to redux store and set previousAttemptExists:true
     let previousAttempt = localStorage.getItem("uid");
     props.restorePreviousAttempt({
-      answers: JSON.parse(previousAttempt)[props.paper.name],
+      answers: JSON.parse(previousAttempt)[`PAPER${props.papernumber}`],
       uid: props.user.uid,
     });
     setPrevAttempt(true);
@@ -61,14 +77,16 @@ export function MockTestCard(props) {
     const db = firebase.firestore();
     props.setLoading(true);
     db.collection("MOCK")
-      .doc(props.paper.name)
-      .collection("Questions")
+    .doc(`${props.papertype=='mains'?"MAINS":"ADVANCE"}`)
+      .collection("PAPER")
+      .doc(`PAPER${props.papernumber}`)
+      .collection("question")
       .get()
       .then(function (querySnapshot) {
         let questions = [];
         querySnapshot.forEach(function (doc) {
           console.log(doc.id, " => ", doc.data());
-          questions.push({ ...doc.data(), uid: doc.id });
+          questions.push({ ...doc.data(), qid: doc.id });
         });
 
         console.log("Here are the questions", questions);
@@ -80,19 +98,21 @@ export function MockTestCard(props) {
             return a.number - b.number;
           });
 
-          const obj = { ...props.paper, questions: questions };
+          const obj = { ...props.paper, questions: questions,noOfQuestions: props.paper.noofques };
 
           //put into redux store
           props.fetchPaper(obj);
 
+          console.log(`PAPER${props.papernumber}`)
+
           //to check if user is navigating through MockTestCard
-          localStorage.setItem("PaperName", props.paper.name);
+          localStorage.setItem("PaperName", `PAPER${props.papernumber}`);
 
           //if unfinished previous attempt is not present call restore paper with false value
           props.restorePreviousAttempt({ answers: false, uid: props.user.uid });
 
           props.setLoading(false);
-          history.push("MockTest/Papers/" + props.paper.name);
+          history.push(`${props.papertype=='mains'?"MAINS":"ADVANCE"}`+"/Papers/PAPER" + props.papernumber);
         }
       })
       .catch(function (error) {
@@ -107,7 +127,7 @@ export function MockTestCard(props) {
       <div className="flip-card-inner-mock">
         <div className="flip-card-front-mock">
           <div id="card-title-mock">
-            <div style={{ fontSize: "26px" }}>{props.paper.name}</div>
+            <div style={{ fontSize: "26px" }}>{`PAPER ${props.paperindex}`}</div>
           </div>
           <div id="card-content-mock">
             <div
@@ -118,10 +138,10 @@ export function MockTestCard(props) {
               }}
             >
               <div style={{ fontSize: "14px", color: "#448698" }}>
-                Pattern:{" "}
+                No of Question:{" "}
               </div>
               <div style={{ fontSize: "14px", color: "#448698" }}>
-                {props.paper.paperType == 1 ? "Mains" : "Advance"}{" "}
+                {props.paper.noofques?props.paper.noofques:0}{" "}
               </div>
             </div>
             <div
@@ -135,7 +155,7 @@ export function MockTestCard(props) {
                 Duration:{" "}
               </div>
               <div style={{ fontSize: "14px", color: "#448698" }}>
-                {props.paper.totalDuration} minutes
+                {props.paper.totalDuration?props.paper.totalDuration:"180"} minutes
               </div>
             </div>
             <div
@@ -149,7 +169,7 @@ export function MockTestCard(props) {
                 Max Marks{" "}
               </div>
               <div style={{ fontSize: "14px", color: "#448698" }}>
-                {props.paper.totalMarks}
+                {totalmarks}
               </div>
             </div>
           </div>
@@ -166,7 +186,7 @@ export function MockTestCard(props) {
               {props.isAttempted ? "Re-attempt" : "Attempt"}
             </button>
             {props.isAttempted ? (
-              <Link to={"/MockTest/Papers/Analysis/" + props.paper.name}>
+              <Link to={`/MockTest/${props.papertype=='mains'?"MAINS":"ADVANCE"}/Papers/Analysis/` + `PAPER${props.papernumber}`}>
                 <button>Analysis</button>
               </Link>
             ) : null}

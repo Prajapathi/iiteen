@@ -9,36 +9,82 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Loading from "../../elements/Loading";
 import PreviousYearSubjectSection from "./PreviousYearSubjectSection";
 import { useHistory } from "react-router-dom";
+import { browserHistory } from 'react-router';
 
 export default function PreviousYearSubjectwise() {
   const [open, setOpen] = React.useState(true);
   const [classNumber, setClassNumber] = React.useState("11");
   const [loading, setLoading] = React.useState(false);
-  let history = useHistory();
+  let History = useHistory();
+  // const [locationKeys, setLocationKeys] = React.useState([]);
+
+
   window.onpopstate = function (e) {
-    if (!open || localStorage.getItem("dialog")===null) {
-      setOpen(true);
-      history.push("/PreviousYear");
+    console.log("called")
+    console.log(open,sessionStorage.getItem("dialog"),window.location.pathname)
+    // if(open==true){
+    //   // History.push("/mjki123U")
+    //   // window.history.back()
+    //   console.log("unexpected")
+    // }
+    // if(Number(localStorage.getItem("reloaded"))>4){
+    //   // if(open){
+    //   //   History.push("/mjki123U")
+    //   // }
+    //   setOpen(true);
+    //   History.push("/PreviousYear");
+    // }
+    if(open==true && sessionStorage.getItem("dialog")==null && window.location.pathname[1]=='m'){
+      return
     }
-    localStorage.removeItem("dialog");
+    if(open==true && sessionStorage.getItem("dialog")==null && window.location.pathname[1]=='M'){
+      return
+    }
+    if (!open || sessionStorage.getItem("dialog")===null) {
+      e.preventDefault()
+      console.log("calledinside")
+      setOpen(true);
+      History.push("/PreviousYear");
+    }
+    sessionStorage.removeItem("dialog");
   };
 
   useEffect(()=>{
-    if(localStorage.getItem("dialog")!==null){
-      setOpen(localStorage.getItem("dialog"));
+    // console.log("run")
+    // window.history.pushState({page: 2}, "title 2", "?page=2")
+    if(sessionStorage.getItem("dialog")!==null){
+      setOpen(sessionStorage.getItem("dialog"));
     }else{
-      localStorage.setItem("dialog",true);
+      sessionStorage.setItem("dialog",true);
     }
+    // console.log(open)
+    // if(open===false){
+      // console.log("this also run")
+      // setOpen(false)
+      // localStorage.setItem("dialog",false);
+    // }
+    // if(open===false)localStorage.removeItem("dialog");
+    // if(open===true){
+    //   localStorage.setItem("dialog",true);
+    // }
   },[])
 
-  console.log("dialog",open);
+  // if(!open){
+  //   setOpen(false)
+  //   localStorage.setItem("dialog",false);
+  // }
+
+  // console.log("dialog",open);
   // useEffect(() => {
   //   localStorage.setItem("dialog",open);
   // }, [open])
 
   const selectClass = (n) => {
     setClassNumber(n);
-    localStorage.setItem("dialog",false);
+    sessionStorage.setItem("dialog",false);
+    //newcode
+      localStorage.removeItem("reloaded")
+    //
     setOpen(false);
   };
   document.title = "PreviousYearSubjectwise | IITEENS";
@@ -58,7 +104,6 @@ export default function PreviousYearSubjectwise() {
           fullWidth={true}
           id="class-select-dialog"
         >
-          {console.log("dialog",open)}
           <DialogTitle id="alert-dialog-title">
             {"Please select your class"}
           </DialogTitle>
