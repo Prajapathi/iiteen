@@ -78,7 +78,7 @@ const Mains = () => {
         syllabusSelected: false,
         syllabusCreated: false,
       })
-      .then(() => {
+      .then(() => { 
         console.log("saved");
       })
       .catch((error) => {
@@ -87,6 +87,7 @@ const Mains = () => {
       db.collection(mainpapertype.toUpperCase())
       .doc("MAINS")
       .update({indexofpaper:indexofpapers+1})
+      setIndexofpapers(indexofpapers+1)
   }
 
   function setEdit(index) {

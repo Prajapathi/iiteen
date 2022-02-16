@@ -231,9 +231,12 @@ const SetQuestion = (props) => {
 
   console.log("allQuestions", allQuestions);
 
+  // console.log("user auth",firebase.auth().currentUser,firebase.auth())
+
   const submitPaper = async (e) => {
     // const option=[option1,option2,option3,option4];
     console.log("uid",firebase.auth().currentUser.uid)
+    // console.log("user auth",firebase.auth().currentUser,firebase.auth())
     setSubmitted(true);
     toast.success("SUBMITTED");
     const db = firebase.firestore();

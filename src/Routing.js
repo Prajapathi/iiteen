@@ -5,6 +5,7 @@ import Home from './components/screens/Home/Home'
 import About from './components/screens/About'
 import Landing from './components/Landing'
 import SubjectWise from './components/screens/Subjectwise/Subjectwise'
+import AITStest from './components/screens/AITS/AITStest'
 import AITS from './components/screens/AITS/AITS'
 import MockTest from './components/screens/MockTest/MockTest'
 import PreviousYear from './components/screens/PreviousYear/PreviousYear'
@@ -57,7 +58,7 @@ export function Routing(props) {
                             <LeftMenu /><PreviousYearSubjectwise /><Footer />
                         </Route>
                         <Route path="/AITS">
-                            <LeftMenu /><AITS /><Footer />
+                            <LeftMenu /><AITStest /><Footer />
                         </Route>
                         <Route exact path="/Subjectwise/Papers/:paperName">
                             <LeftMenu /><SubjectwisePaper /><Footer />

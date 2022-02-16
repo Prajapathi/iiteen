@@ -81,7 +81,7 @@ export function MockTest(props) {
       ) : (
         <>
           <div id="mocktest-heading">
-            <img src={icon} id="mocktesticon" />
+            <img src={icon} id="mocktesticon" alt="mocktest" />
             <div class="section-heading" style={{ color: "white" }}>
               MOCK TEST PAPERS
             </div>

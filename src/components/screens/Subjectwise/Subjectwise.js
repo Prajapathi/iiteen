@@ -42,6 +42,7 @@ export default function Subjectwise() {
     // console.log("effectcalled")
     if(sessionStorage.getItem("dialog")!==null){
       setOpen(sessionStorage.getItem("dialog"));
+      setClassNumber(sessionStorage.getItem("class"))
     }else{
       sessionStorage.setItem("dialog",true);
     }
@@ -56,6 +57,7 @@ export default function Subjectwise() {
   const selectClass = (n) => {
     setClassNumber(n);
     sessionStorage.setItem("dialog",false);
+    sessionStorage.setItem("class",n)
     // console.log("dia",localStorage.getItem("dialog"));
     setOpen(false);
   };

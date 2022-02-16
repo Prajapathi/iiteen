@@ -54,6 +54,7 @@ export default function PreviousYearSubjectwise() {
     // window.history.pushState({page: 2}, "title 2", "?page=2")
     if(sessionStorage.getItem("dialog")!==null){
       setOpen(sessionStorage.getItem("dialog"));
+      setClassNumber(sessionStorage.getItem("class"))
     }else{
       sessionStorage.setItem("dialog",true);
     }
@@ -82,6 +83,7 @@ export default function PreviousYearSubjectwise() {
   const selectClass = (n) => {
     setClassNumber(n);
     sessionStorage.setItem("dialog",false);
+    sessionStorage.setItem("class",n)
     //newcode
       localStorage.removeItem("reloaded")
     //

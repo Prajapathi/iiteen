@@ -103,6 +103,12 @@ export function Paper(props) {
                 break;
             case "PREVIOUSYEAR":
                 paperTypeRoute="PREVIOUSPapers"
+                break;
+            case "AITSTEST":
+                paperTypeRoute="AITSPapers"
+                break;
+                default:
+        paperTypeRoute = "undefined";
         }
         const db = firebase.firestore();
         const paperRef = db.collection("User").doc(props.user.uid).collection(paperTypeRoute).doc(`${props.paper.sections?"ADVANCE":"MAINS"}`).collection("PAPER").doc(`PAPER${props.paper.number}`)
@@ -377,7 +383,7 @@ export function Paper(props) {
                 <div className="timer-bar" style={{justifyContent:showSummary?"center":"space-between"}}>
                     <div>
                         <div style={{marginRight:'10px'}}>Time Remaining: </div>
-                        <Timer duration={5} timeOver={setTimeOver}/>
+                        <Timer duration={180} timeOver={setTimeOver}/>
                     </div>
                     {showSummary?
                         null:
@@ -492,7 +498,7 @@ const mapDispatchToProps=dispatch=>{
     return{
         setNewAttemptTime:()=>dispatch(setNewAttemptTime())
     }
-}
+}   
 
 
 export default connect(mapStateToProps,mapDispatchToProps)(Paper)

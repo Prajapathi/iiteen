@@ -85,6 +85,7 @@ const Advance = () => {
     db.collection(mainpapertype.toUpperCase())
       .doc("ADVANCE")
       .update({ indexofpaper: indexofpapers + 1 });
+      setIndexofpapers(indexofpapers+1)
   }
   function setEdit(index) {
     let temp = [...editable];

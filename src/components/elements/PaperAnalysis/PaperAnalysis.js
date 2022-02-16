@@ -119,6 +119,10 @@ export function PaperAnalysis(props) {
         break;
       case "PREVIOUSYEAR":
         paperTypeRoute = "PREVIOUS";
+        break;
+      case "AITSTEST":
+        paperTypeRoute = "AITS";
+        break;
       default:
         paperTypeRoute = "undefined";
     }
@@ -156,9 +160,6 @@ export function PaperAnalysis(props) {
         console.log("Error getting documents: ", error);
       });
 
-
-      
-      
     //Fetch the details of the paper
     db.collection(paperTypeRoute)
       .doc(mockpaperType)
@@ -180,7 +181,7 @@ export function PaperAnalysis(props) {
       });
   }, []);
 
-  console.log(paperName,data,paperInfo)
+  console.log(paperName, data, paperInfo);
 
   //Data calculation for pie chart after fetching
   React.useEffect(() => {

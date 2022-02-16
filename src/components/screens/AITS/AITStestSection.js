@@ -5,10 +5,11 @@ import chemistry from "../../../assets/images/Chemistry.png";
 import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import maths from "../../../assets/images/Maths.png";
 import CardSection from "../../elements/CardSection";
+import { AITStestCardSection } from "./AITStestCardSection";
 
 export default function SubjectSection(props) {
   const [search, setSearch] = useState("");
-  var subject = props.subject;
+  var heading = props.heading;
 
   const searchup = (item) => {
     //console.log(item)
@@ -19,13 +20,6 @@ export default function SubjectSection(props) {
       <div id="subject-bar">
         <div className="subject-sub-bar">
           <div id="sub">
-            <div id="sub-info">
-              <div id="chapterNos">27 Chapters</div>
-              <div id="qL">
-                3 Levels
-                <div style={{ marginLeft: "20px" }}>1200+ Questions</div>
-              </div>
-            </div>
             <div
               style={{
                 display: "flex",
@@ -40,39 +34,15 @@ export default function SubjectSection(props) {
                   marginTop: "7px",
                 }}
               >
-                {subject == "physics"
-                  ? "Physics"
-                  : subject == "chemistry"
-                  ? "Chemistry"
-                  : "Maths"}
+                {heading}
               </h2>
-              <img
-                src={
-                  subject == "physics"
-                    ? physics
-                    : subject == "chemistry"
-                    ? chemistry
-                    : maths
-                }
-                alt="subject"
-                id="subject-img"
-              />
             </div>
           </div>
-          <input
-            type="text"
-            className="search-chapter"
-            placeholder="Search"
-            onChange={(e) => {
-              searchup(e.target.value);
-            }}
-          />
         </div>
       </div>
       <div>
-        <CardSection
-          search={search}
-          subject={subject}
+        <AITStestCardSection
+            section="AITS"
           classNumber={props.classNumber}
           loadingStart={props.loadingStart}
         />

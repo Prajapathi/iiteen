@@ -135,7 +135,7 @@ export default function Landing() {
           </div>
         </div>
         <div className="sub-section3">
-          <img src={subSection3} />
+          <img alt="subsection3" src={subSection3} />
           <div className="sub-section3-sub-div">
             <div className="sub-section3-sub-heading">IITeens Corner</div>
             <p>

@@ -85,18 +85,6 @@ export function Signin(props) {
         .collection("User")
         .where("phoneNumber", "==", phoneNumber)
         .get();
-      // .then((snapshot)=>{
-      //   if (snapshot.empty) {
-      //     console.log("No matching documents.");
-      //   } else {
-      //     snapshot.forEach((doc) => {
-      //       console.log(doc.id, "=>", doc.data());
-      //       setAlreadyUser(true);
-      //       setShowLoading(false);
-      //     });
-      //     return;
-      //   }
-      // })
 
       if (snapshot.empty) {
         console.log("No matching documents.");
@@ -109,6 +97,20 @@ export function Signin(props) {
         return;
       }
     }
+    // if (props.login) {
+    //   const snapshot = await db
+    //     .collection("User")
+    //     .where("phoneNumber", "==", phoneNumber)
+    //     .get();
+
+    //   if (snapshot.empty) {
+    //     console.log("No matching documents.");
+    //   } else {
+    //     snapshot.forEach((doc) => {
+    //       console.log(doc.id, "=>", doc.data());
+    //     });
+    //   }
+    // }
     //set recaptcha only the first time
     if (recaptchaSetOnce == false) {
       setUpRecaptcha();

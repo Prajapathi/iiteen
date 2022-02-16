@@ -355,9 +355,9 @@ export default function ChoiceAnalysis(props) {
                 props.answers[props.number - 1].answerType,
                 props.answers[props.number - 1].answer,
                 props.answers[props.number - 1].answerGiven,
-                props.answers[props.number - 1].answer.includes(
-                  props.answers[props.number - 1].answerGiven
-                )
+                // props.answers[props.number - 1].answer.includes(
+                //   props.answers[props.number - 1].answerGiven
+                // )
               )}
               <div
                 style={{
