@@ -1,5 +1,6 @@
 import React from "react";
 import "../../../../styles/paperInstruction.css";
+import Timer from "../Timer";
 
 const MainsDefaultInst = [
   {
@@ -83,6 +84,39 @@ const AdvDefaultInst = [
     ],
   },
 ];
+
+function datecalculation(date1,date2,shift){
+  console.log(date1.toISOString(),date1.getHours(),date2,shift,new Date(date2))
+  if(shift=="shift1"){
+    console.log(new Date(date2+"T09:00:00+05:30"))
+    if(new Date(date2+"T09:00:00+05:30").getTime()>=date1.getTime() && new Date(date2+"T09:00:00+05:30").getTime()-date1.getTime()<=8.64e+7){
+      console.log("true hai",new Date(date2+"T09:00:00+05:30"),date1)
+      return true
+    }
+  }
+  if(shift=="shift2"){
+    console.log(new Date(date2+"T13:00:00+05:30"))
+    if(new Date(date2+"T13:00:00+05:30").getTime()>=date1.getTime() && new Date(date2+"T13:00:00+05:30").getTime()-date1.getTime()<=8.64e+7){
+      console.log("true hai")
+      return true
+    }
+  }
+  return false;
+
+}
+function calculatetimedifference(date1, date2, shift) {
+  let hours2;
+  let hours;
+  if (shift == "shift1") {
+    hours2 = 9;
+  } else hours2 = 13;
+  let hours1 = date1.getHours();
+  let minutes1 = date1.getMinutes();
+  if (hours1 < hours2) {
+    hours = hours2 - hours1;
+  } else hours = 24 - (hours1 - hours2);
+  return (hours-1) * 60 + 60 - minutes1;
+}
 export default function PaperInstruction(props) {
   const [check, setCheck] = React.useState(false);
   const [totalmarks, setTotalmarks] = React.useState(0);
@@ -92,9 +126,10 @@ export default function PaperInstruction(props) {
     [4, 0, 0],
     [2, 0, 0],
   ];
+  const [timeover,setTimeover]=React.useState(true)
 
   React.useEffect(() => {
-    console.log(props.details.sections);
+    console.log(props.details.sections, props.details);
     let tm = 0;
     let marksdistributiontype = 0;
     props.details.sections &&
@@ -126,7 +161,7 @@ export default function PaperInstruction(props) {
         <div>
           <div className="detail-subhead">Duration</div>
           <div className="detail-subhead-data">
-            {props.details.sections ? "M" : "180"} mins
+            { "180"} mins
           </div>
         </div>
         <div>
@@ -162,12 +197,11 @@ export default function PaperInstruction(props) {
             <div className="inst-point-data">
               Part A contains 20 multiple choice questions. Each Questions has 4
               choices (A),(B),(C),(D) out of which only ONE is correct
-              <ul style={{marginLeft:"42px"}}>
+              <ul style={{ marginLeft: "42px" }}>
                 <li style={{ listStyleType: "none" }}>
                   <div className="inst-sub-points">
                     <div
                       style={{
-                        
                         background: "#2BC559",
                       }}
                     ></div>
@@ -202,12 +236,11 @@ export default function PaperInstruction(props) {
             <div className="inst-point-data">
               Part B contains 10 numerical choice questions. The answer to each
               questions is a numerical
-              <ul style={{marginLeft:"42px"}}>
+              <ul style={{ marginLeft: "42px" }}>
                 <li style={{ listStyleType: "none" }}>
                   <div className="inst-sub-points">
                     <div
                       style={{
-                        
                         background: "#2BC559",
                       }}
                     ></div>
@@ -271,7 +304,7 @@ export default function PaperInstruction(props) {
                       ? "integer type questions. The answer to each questions is a single digit integer ranging from 0 to 9"
                       : "numerical type questions. The answer to each questions is a numerical"}
                     {items.type == "singletype" ? (
-                      <ul style={{marginLeft:"42px"}}>
+                      <ul style={{ marginLeft: "42px" }}>
                         <li style={{ listStyleType: "none" }}>
                           <div className="inst-sub-points">
                             <div
@@ -286,7 +319,6 @@ export default function PaperInstruction(props) {
                           <div className="inst-sub-points">
                             <div
                               style={{
-                                
                                 background: "#F6391B",
                               }}
                             ></div>
@@ -305,13 +337,12 @@ export default function PaperInstruction(props) {
                         </li>
                       </ul>
                     ) : items.type == "multipletype" ? (
-                      <ul style={{marginLeft:"42px"}}>
+                      <ul style={{ marginLeft: "42px" }}>
                         <li style={{ listStyleType: "none" }}>
                           <div className="inst-sub-points">
                             <div
                               style={{
                                 background: "#2BC559",
-                                
                               }}
                             ></div>
                             4 Marks if all correct options are marked correct
@@ -334,7 +365,8 @@ export default function PaperInstruction(props) {
                                 background: "#e6e600",
                               }}
                             ></div>
-                            2 mark ,if 3 or more are correct but only 2 are selected
+                            2 mark ,if 3 or more are correct but only 2 are
+                            selected
                           </div>
                         </li>
                         <li style={{ listStyleType: "none" }}>
@@ -344,7 +376,8 @@ export default function PaperInstruction(props) {
                                 background: "#e6e600",
                               }}
                             ></div>
-                            1 mark ,if 2 or more are correct but only 1 is selected
+                            1 mark ,if 2 or more are correct but only 1 is
+                            selected
                           </div>
                         </li>
                         <li style={{ listStyleType: "none" }}>
@@ -370,7 +403,7 @@ export default function PaperInstruction(props) {
                         </li>
                       </ul>
                     ) : items.type == "integertype" ? (
-                      <ul style={{marginLeft:"42px"}}>
+                      <ul style={{ marginLeft: "42px" }}>
                         <li style={{ listStyleType: "none" }}>
                           <div className="inst-sub-points">
                             <div
@@ -385,7 +418,6 @@ export default function PaperInstruction(props) {
                           <div className="inst-sub-points">
                             <div
                               style={{
-                                
                                 background: "#F6391B",
                               }}
                             ></div>
@@ -404,7 +436,7 @@ export default function PaperInstruction(props) {
                         </li>
                       </ul>
                     ) : (
-                      <ul style={{marginLeft:"42px"}}>
+                      <ul style={{ marginLeft: "42px" }}>
                         <li style={{ listStyleType: "none" }}>
                           <div className="inst-sub-points">
                             <div
@@ -422,7 +454,7 @@ export default function PaperInstruction(props) {
                                 background: "#F6391B",
                               }}
                             ></div>
-                          No negative mark for incorrect Answer
+                            No negative mark for incorrect Answer
                           </div>
                         </li>
                         <li style={{ listStyleType: "none" }}>
@@ -444,8 +476,8 @@ export default function PaperInstruction(props) {
         </>
       )}
 
-      <div id="inst-bottom">
-        <div style={{ display: "flex" }}>
+      <div id="inst-bottom" style={{alignItems:"center"}}>
+        <div style={{ display: "flex",width:"725px",justifyContent:"space-between",alignItems:"center" }}>
           <label class="inst-checkbox">
             I have read the instructions
             <input
@@ -455,6 +487,27 @@ export default function PaperInstruction(props) {
             />
             <span class="checkmark"></span>
           </label>
+          {props.details.date != "" &&
+            datecalculation(
+              new Date(),
+              props.details.date,
+              props.details.shift
+            ) && (
+              <div style={{ color: "green" ,fontSize:"30px"}}>
+                {" "}
+                
+                <Timer
+                  duration={calculatetimedifference(
+                    new Date(),
+                    props.details.date,
+                    props.details.shift
+                  )}
+                  secs={60-(new Date()).getSeconds()}
+                  timeOver={() => {setTimeover(true)}}
+                />
+                
+              </div>
+            )}
         </div>
         <div>
           {/* Time Remaining: 00:30:00 */}
@@ -465,10 +518,11 @@ export default function PaperInstruction(props) {
           >
             Back
           </button>
+          {console.log(check,timeover)}
           <button
             id="inst-start"
-            style={{ background: !check ? "grey" : null }}
-            disabled={!check}
+            style={{ background: (!check || !timeover) ? "grey" : null }}
+            disabled={!check || !timeover}
             onClick={() => props.start(true)}
           >
             Start

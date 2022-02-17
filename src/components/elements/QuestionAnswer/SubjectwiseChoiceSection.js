@@ -497,7 +497,7 @@ export function SubjectwiseChoiceSection(props) {
                         >
                           {"A.  "}
                           {props.data.option1 && props.data.option1.map((item) => (
-                            <div>
+                            <>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -511,7 +511,7 @@ export function SubjectwiseChoiceSection(props) {
                                   style={{ width: "50%" }}
                                 />
                               ) : null}
-                            </div>
+                            </>
                           ))}
                           {/* {props.data.option1[0].type == 0 ? (
                             <br />
@@ -547,7 +547,7 @@ export function SubjectwiseChoiceSection(props) {
                         >
                           {"B.  "}
                           {props.data.option2 && props.data.option2.map((item) => (
-                            <div>
+                            <>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -561,7 +561,7 @@ export function SubjectwiseChoiceSection(props) {
                                   style={{ width: "50%" }}
                                 />
                               ) : null}
-                            </div>
+                            </>
                           ))}
                         </div>
                         <div
@@ -583,7 +583,7 @@ export function SubjectwiseChoiceSection(props) {
                           {"C. "}
 
                           {props.data.option3 && props.data.option3.map((item) => (
-                            <div>
+                            <>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -597,7 +597,7 @@ export function SubjectwiseChoiceSection(props) {
                                   style={{ width: "50%" }}
                                 />
                               ) : null}
-                            </div>
+                            </>
                           ))}
                         </div>
                         <div
@@ -619,7 +619,7 @@ export function SubjectwiseChoiceSection(props) {
                           {"D. "}
 
                           {props.data.option4 && props.data.option4.map((item) => (
-                            <div>
+                            <>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -633,7 +633,7 @@ export function SubjectwiseChoiceSection(props) {
                                   style={{ width: "50%" }}
                                 />
                               ) : null}
-                            </div>
+                            </>
                           ))}
                         </div>
                       </div>

@@ -298,13 +298,14 @@ export function ChoiceSection(props) {
                             selectOpt[0] == true
                               ? "2px solid rgb(59, 149, 194)"
                               : "1px solid white",
+                          display: "flex",
                         }}
                       >
                         {"A.  "}
 
                         {props.data.option1 &&
                           props.data.option1.map((item) => (
-                            <div>
+                            <div style={{margin:"auto"}}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -336,13 +337,14 @@ export function ChoiceSection(props) {
                             selectOpt[1] == true
                               ? "2px solid rgb(59, 149, 194)"
                               : "1px solid white",
+                              display: "flex",
                         }}
                       >
                         {"B.  "}
 
                         {props.data.option2 &&
                           props.data.option2.map((item) => (
-                            <div>
+                            <div style={{margin:"auto"}}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -374,13 +376,14 @@ export function ChoiceSection(props) {
                             selectOpt[2] == true
                               ? "2px solid rgb(59, 149, 194)"
                               : "1px solid white",
+                              display: "flex",
                         }}
                       >
                         {"C. "}
 
                         {props.data.option3 &&
                           props.data.option3.map((item) => (
-                            <div>
+                            <div style={{margin:"auto"}}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -412,13 +415,14 @@ export function ChoiceSection(props) {
                             selectOpt[3] == true
                               ? "2px solid rgb(59, 149, 194)"
                               : "1px solid white",
+                              display: "flex",
                         }}
                       >
                         {"D. "}
 
                         {props.data.option4 &&
                           props.data.option4.map((item) => (
-                            <div>
+                            <div style={{margin:"auto"}}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (

@@ -34,6 +34,21 @@ const tagMap = {
   },
 };
 
+function calctimedevoted(time){
+  let hr=Math.trunc(time/3600);
+  let min=Math.trunc(time/60)%60;
+  let sec=Math.trunc(time%60);
+  let str="";
+  if(hr!=0){
+    str+=hr+"hr "
+  }
+  if(min!=0){
+    str+=min+"min "
+  }
+  str+=sec+"sec"
+  return str
+}
+
 export function PaperAnalysis(props) {
   const location = useLocation();
   const history = useHistory();
@@ -108,6 +123,25 @@ export function PaperAnalysis(props) {
       },
     ],
   };
+  const timeDataChart = {
+    labels: ["Physics", "Chemistry", "Maths"],
+    datasets: [
+      {
+        data: data
+          ? data.totalAttempted == 0
+            ? [0, 0,0]
+            : [data.physec, data.chesec , data.matsec]
+          : [],
+        backgroundColor: ["#448498", "#FF4A4F","#2AD586"],
+        borderColor: [
+          "rgba(0, 0, 0, 0.1)",
+          "rgba(0, 0, 0, 0.1)",
+          "rgba(0, 0, 0, 0.1)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
 
   //data fetching
   React.useEffect(() => {
@@ -130,6 +164,7 @@ export function PaperAnalysis(props) {
     //if the URL does not have correct paper type
     if (paperTypeRoute == "undefined") {
       //404 page
+
       history.push("/");
     }
 
@@ -151,9 +186,11 @@ export function PaperAnalysis(props) {
         setData(querySnapshot.data());
 
         if (querySnapshot.data() == null) {
-          window.alert("Paper Does Not Exist!");
+          window.alert("Previous Analysis Does Not Exist!");
           //404 page
-          history.push("/");
+          if (paperType == "mocktest") {
+            history.push("/mocktest");
+          } else history.push("/aits");
         }
       })
       .catch(function (error) {
@@ -172,7 +209,9 @@ export function PaperAnalysis(props) {
         if (querySnapshot.data() == null) {
           window.alert("Paper Does Not Exist!");
           //404 page
-          history.push("/");
+          if (paperType == "mocktest") {
+            history.push("/mocktest");
+          } else history.push("/aits");
         }
         setLoading(false);
       })
@@ -189,7 +228,8 @@ export function PaperAnalysis(props) {
     console.log(paperInfo.sections);
     let tm = 0;
     let marksdistributiontype = 0;
-    paperInfo.sections &&
+    if(paperInfo.sections!=undefined){
+      paperInfo.sections &&
       paperInfo.sections.map((item, i) => {
         // console.log("hello")
         marksdistributiontype =
@@ -206,6 +246,10 @@ export function PaperAnalysis(props) {
       });
     console.log(3 * tm);
     setTotalmarks(3 * tm);
+    }else{
+      setTotalmarks(360)
+    }
+    
     let total =
       Math.abs(data.mathsMarks) +
       Math.abs(data.chemistryMarks) +
@@ -231,293 +275,328 @@ export function PaperAnalysis(props) {
     <CircularProgress style={{ margin: "25% 50%" }} />
   ) : (
     <div className="analysis-page">
-      <div className="analysis-head">Report Card</div>
-      <div className="report-card-section">
-        <div className="report-card">
-          <div className="report-card-heading">
-            <div>Overall</div>
-            <div>
-              {data.totalMarks}/{totalmarks}
-            </div>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        {paperType=="Aitstest" && <div style={{ flex: "30%" }}>
+          <div
+            style={{
+              color: "#498E9C",
+              fontWeight: "bold",
+              fontSize: "35px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            LeaderBoard
           </div>
-          <div className="report-card-sections">
-            <div>Attempted</div>
-            <div>{data.totalAttempted}</div>
+            <div className="analysis-head">AIR :800</div>
+            <div style={{height:"460px",display:"flex",justifyContent:"center",alignItems:"center"}}><div>Results will be declared soon</div></div>
+          <div className="detailed-analysis-button-sec">
+            <DescriptionOutlinedIcon id="detailed-analysis-button-icon" />
+            <Link
+              to={
+                `/${paperType}/${mockpaperType}/Papers/Detailed_Analysis/` +
+                paperName
+              }
+            >
+              <button className="detailed-analysis-button">
+                Detailed Analysis
+              </button>
+            </Link>
           </div>
-          <div className="report-card-sections">
-            <div>Total Questions</div>
-            <div>{paperInfo.noofques}</div>
-          </div>
-          <div className="report-card-sections">
-            <div>Correct</div>
-            <div>{data.totalCorrect}</div>
-          </div>
-          <div className="report-card-sections">
-            <div>Wrong</div>
-            <div>{data.totalAttempted - data.totalCorrect}</div>
-          </div>
+        </div>}
+        
+        <div style={{ flex: `${paperType=="Aitstest"?"70%":"100%"}` }}>
+          <div className="analysis-head">Report Card</div>
+          <div className="report-card-section">
+            <div className="report-card">
+              <div className="report-card-heading">
+                <div>Overall</div>
+                <div>
+                  {data.totalMarks}/{totalmarks}
+                </div>
+              </div>
+              <div><div className="report-card-sections">
+                <div>Attempted</div>
+                <div>{data.totalAttempted}</div>
+              </div>
+              <div className="report-card-sections">
+                <div>Time</div>
+                <div>{calctimedevoted(data.physec+data.chesec+data.matsec)}</div>
+              </div>
+              <div className="report-card-sections">
+                <div>Correct</div>
+                <div>{data.totalCorrect}</div>
+              </div>
+              <div className="report-card-sections">
+                <div>Wrong</div>
+                <div>{data.totalAttempted - data.totalCorrect}</div>
+              </div>
 
-          <div className="report-card-sections">
-            <div>Accuracy</div>
-            <div>
-              {data.totalAttempted == 0 ? (
-                0
-              ) : (
-                <>
-                  {roundOff((data.totalCorrect / data.totalAttempted) * 100)}%
-                </>
-              )}
-            </div>
-          </div>
-          <div className="report-card-sections">
-            <div>Percentage</div>
-            <div>
-              {totalmarks == 0 ? (
-                0
-              ) : (
-                <>{roundOff((data.totalMarks / totalmarks) * 100)}%</>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="report-card">
-          <div className="report-card-heading">
-            <div>Physics</div>
-            <div>
-              {data.physicsMarks}/{roundOff(totalmarks / 3)}
-            </div>
-          </div>
-          <div className="report-card-sections">
-            <div>Attempted</div>
-            <div>{data.physicsAttempted}</div>
-          </div>
-          <div className="report-card-sections">
-            <div>Total Questions</div>
-            <div>{paperInfo.noofques / 3}</div>
-          </div>
-          <div className="report-card-sections">
-            <div>Correct</div>
-            <div>{data.physicsCorrect}</div>
-          </div>
-          <div className="report-card-sections">
-            <div>Wrong</div>
-            <div>{data.physicsAttempted - data.physicsCorrect}</div>
-          </div>
-
-          <div className="report-card-sections">
-            <div>Accuracy</div>
-            <div>
-              {data.physicsAttempted == 0 ? (
-                0
-              ) : (
-                <>
-                  {roundOff(
-                    (data.physicsCorrect / data.physicsAttempted) * 100
+              <div className="report-card-sections">
+                <div>Accuracy</div>
+                <div>
+                  {data.totalAttempted == 0 ? (
+                    0
+                  ) : (
+                    <>
+                      {roundOff(
+                        (data.totalCorrect / data.totalAttempted) * 100
+                      )}
+                      %
+                    </>
                   )}
-                  %
-                </>
-              )}
-            </div>
-          </div>
-          <div className="report-card-sections">
-            <div>Percentage</div>
-            <div>
-              {totalmarks == 0 ? (
-                0
-              ) : (
-                <>{roundOff((data.physicsMarks / (totalmarks / 3)) * 100)}%</>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="report-card">
-          <div className="report-card-heading">
-            <div>Chemistry</div>
-            <div>
-              {data.chemistryMarks}/{roundOff(totalmarks / 3)}
-            </div>
-          </div>
-          <div className="report-card-sections">
-            <div>Attempted</div>
-            <div>{data.chemistryAttempted}</div>
-          </div>
-          <div className="report-card-sections">
-            <div>Total Questions</div>
-            <div>{paperInfo.noofques / 3}</div>
-          </div>
-          <div className="report-card-sections">
-            <div>Correct</div>
-            <div>{data.chemistryCorrect}</div>
-          </div>
-          <div className="report-card-sections">
-            <div>Wrong</div>
-            <div>{data.chemistryAttempted - data.chemistryCorrect}</div>
-          </div>
-
-          <div className="report-card-sections">
-            <div>Accuracy</div>
-            <div>
-              {data.chemistryAttempted == 0 ? (
-                0
-              ) : (
-                <>
-                  {roundOff(
-                    (data.chemistryCorrect / data.chemistryAttempted) * 100
+                </div>
+              </div>
+              <div className="report-card-sections">
+                <div>Percentage</div>
+                <div>
+                  {totalmarks == 0 ? (
+                    0
+                  ) : (
+                    <>{roundOff((data.totalMarks / totalmarks) * 100)}%</>
                   )}
-                  %
-                </>
-              )}
+                </div>
+              </div></div>
+              
+            </div>
+            <div className="report-card">
+              <div className="report-card-heading">
+                <div>Physics</div>
+                <div>
+                  {data.physicsMarks}/{roundOff(totalmarks / 3)}
+                </div>
+              </div>
+              <div className="report-card-sections">
+                <div>Attempted</div>
+                <div>{data.physicsAttempted}</div>
+              </div>
+              <div className="report-card-sections">
+                <div>Time</div>
+                <div>{calctimedevoted(data.physec)}</div>
+              </div>
+              <div className="report-card-sections">
+                <div>Correct</div>
+                <div>{data.physicsCorrect}</div>
+              </div>
+              <div className="report-card-sections">
+                <div>Wrong</div>
+                <div>{data.physicsAttempted - data.physicsCorrect}</div>
+              </div>
+
+              <div className="report-card-sections">
+                <div>Accuracy</div>
+                <div>
+                  {data.physicsAttempted == 0 ? (
+                    0
+                  ) : (
+                    <>
+                      {roundOff(
+                        (data.physicsCorrect / data.physicsAttempted) * 100
+                      )}
+                      %
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="report-card-sections">
+                <div>Percentage</div>
+                <div>
+                  {totalmarks == 0 ? (
+                    0
+                  ) : (
+                    <>
+                      {roundOff((data.physicsMarks / (totalmarks / 3)) * 100)}%
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="report-card">
+              <div className="report-card-heading">
+                <div>Chemistry</div>
+                <div>
+                  {data.chemistryMarks}/{roundOff(totalmarks / 3)}
+                </div>
+              </div>
+              <div className="report-card-sections">
+                <div>Attempted</div>
+                <div>{data.chemistryAttempted}</div>
+              </div>
+              <div className="report-card-sections">
+                <div>Time</div>
+                <div>{calctimedevoted(data.chesec)}</div>
+              </div>
+              <div className="report-card-sections">
+                <div>Correct</div>
+                <div>{data.chemistryCorrect}</div>
+              </div>
+              <div className="report-card-sections">
+                <div>Wrong</div>
+                <div>{data.chemistryAttempted - data.chemistryCorrect}</div>
+              </div>
+
+              <div className="report-card-sections">
+                <div>Accuracy</div>
+                <div>
+                  {data.chemistryAttempted == 0 ? (
+                    0
+                  ) : (
+                    <>
+                      {roundOff(
+                        (data.chemistryCorrect / data.chemistryAttempted) * 100
+                      )}
+                      %
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="report-card-sections">
+                <div>Percentage</div>
+                <div>
+                  {totalmarks == 0 ? (
+                    0
+                  ) : (
+                    <>
+                      {roundOff((data.chemistryMarks / (totalmarks / 3)) * 100)}
+                      %
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="report-card">
+              <div className="report-card-heading">
+                <div>Maths</div>
+                <div>
+                  {data.mathsMarks}/{roundOff(totalmarks / 3)}
+                </div>
+              </div>
+              <div className="report-card-sections">
+                <div>Attempted</div>
+                <div>{data.mathsAttempted}</div>
+              </div>
+              <div className="report-card-sections">
+                <div>Time</div>
+                <div>{calctimedevoted(data.matsec)}</div>
+              </div>
+              <div className="report-card-sections">
+                <div>Correct</div>
+                <div>{data.mathsCorrect}</div>
+              </div>
+              <div className="report-card-sections">
+                <div>Wrong</div>
+                <div>{data.mathsAttempted - data.mathsCorrect}</div>
+              </div>
+              <div className="report-card-sections">
+                <div>Accuracy</div>
+                <div>
+                  {data.mathsAttempted == 0 ? (
+                    0
+                  ) : (
+                    <>
+                      {roundOff(
+                        (data.mathsCorrect / data.mathsAttempted) * 100
+                      )}
+                      %
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="report-card-sections">
+                <div>Percentage</div>
+                <div>
+                  {totalmarks == 0 ? (
+                    0
+                  ) : (
+                    <>{roundOff((data.mathsMarks / (totalmarks / 3)) * 100)}%</>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-          <div className="report-card-sections">
-            <div>Percentage</div>
-            <div>
-              {totalmarks == 0 ? (
-                0
-              ) : (
-                <>{roundOff((data.chemistryMarks / (totalmarks / 3)) * 100)}%</>
-              )}
+          <div className="analysis-head">Analysis</div>
+
+          <div className="analysis-section">
+            <div id="marks-analysis">
+              Subjectwise Marks
+              <div className="analysis-sub-section">
+                <div id="analysis-chart">
+                  <Pie
+                    data={
+                      percent.physics == 0 &&
+                      percent.chemistry == 0 &&
+                      percent.maths == 0
+                        ? blankData
+                        : marksDataChart
+                    }
+                    options={{ legend: { display: false } }}
+                  />
+                </div>
+                <div id="analysis-chart-legend">
+                  <div>Physics: {percent.physics}%</div>
+                  <div style={{ color: "#FF4A4F" }}>
+                    Chemistry: {percent.chemistry}%
+                  </div>
+                  <div style={{ color: "#2AD586" }}>
+                    Maths: {percent.maths}%
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="report-card">
-          <div className="report-card-heading">
-            <div>Maths</div>
-            <div>
-              {data.mathsMarks}/{roundOff(totalmarks / 3)}
+
+            <div id="legend">
+              <div id="legend-sub-sec">
+                <div className="legend-subject" style={{ color: "#3B95C2" }}>
+                  <div
+                    className="legend-circle"
+                    style={{ background: "#3B95C2" }}
+                  ></div>
+                  Physics
+                </div>
+                <div className="legend-subject" style={{ color: "#FF4A4F" }}>
+                  <div
+                    className="legend-circle"
+                    style={{ background: "#FF4A4F" }}
+                  ></div>
+                  Chemistry
+                </div>
+                <div className="legend-subject" style={{ color: "#2AD586" }}>
+                  <div
+                    className="legend-circle"
+                    style={{ background: "#2AD586" }}
+                  ></div>
+                  Maths
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="report-card-sections">
-            <div>Attempted</div>
-            <div>{data.mathsAttempted}</div>
-          </div>
-          <div className="report-card-sections">
-            <div>Total Questions</div>
-            <div>{paperInfo.noofques / 3}</div>
-          </div>
-          <div className="report-card-sections">
-            <div>Correct</div>
-            <div>{data.mathsCorrect}</div>
-          </div>
-          <div className="report-card-sections">
-            <div>Wrong</div>
-            <div>{data.mathsAttempted - data.mathsCorrect}</div>
-          </div>
-          <div className="report-card-sections">
-            <div>Accuracy</div>
-            <div>
-              {data.mathsAttempted == 0 ? (
-                0
-              ) : (
-                <>
-                  {roundOff((data.mathsCorrect / data.mathsAttempted) * 100)}%
-                </>
-              )}
-            </div>
-          </div>
-          <div className="report-card-sections">
-            <div>Percentage</div>
-            <div>
-              {totalmarks == 0 ? (
-                0
-              ) : (
-                <>{roundOff((data.mathsMarks / (totalmarks / 3)) * 100)}%</>
-              )}
+
+            <div id="time-analysis">
+              Time Devoted
+              <div className="analysis-sub-section">
+                <div id="analysis-chart-legend">
+                  <div style={{ color: "#448498" }}>
+                    Physics: {data.physec?roundOff(data.physec/data.totalsec)*100:0}%
+                  </div>
+                  <div style={{ color: "#FF4A4F" }}>
+                  Chemistry: {data.chesec?roundOff(data.chesec/data.totalsec)*100:0}%
+                  </div>
+                  <div style={{ color: "#2AD586" }}>
+                  Math: {data.matsec?roundOff(data.matsec/data.totalsec)*100:0}%
+                  </div>
+                </div>
+                <div id="analysis-chart">
+                  <Pie
+                    data={data.totalAttempted == 0 ? blankData : timeDataChart}
+                    options={{ legend: { display: false } }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="analysis-head">Analysis</div>
-      <div className="detailed-analysis-button-sec">
-        <DescriptionOutlinedIcon id="detailed-analysis-button-icon" />
-        <br />
-        <Link
-          to={
-            `/${paperType}/${mockpaperType}/Papers/Detailed_Analysis/` +
-            paperName
-          }
-        >
-          <button className="detailed-analysis-button">
-            Detailed Analysis
-          </button>
-        </Link>
-      </div>
 
-      <div className="analysis-section">
-        <div id="marks-analysis">
-          Subjectwise Marks
-          <div className="analysis-sub-section">
-            <div id="analysis-chart">
-              <Pie
-                data={
-                  percent.physics == 0 &&
-                  percent.chemistry == 0 &&
-                  percent.maths == 0
-                    ? blankData
-                    : marksDataChart
-                }
-                options={{ legend: { display: false } }}
-              />
-            </div>
-            <div id="analysis-chart-legend">
-              <div>Physics: {percent.physics}%</div>
-              <div style={{ color: "#FF4A4F" }}>
-                Chemistry: {percent.chemistry}%
-              </div>
-              <div style={{ color: "#2AD586" }}>Maths: {percent.maths}%</div>
-            </div>
-          </div>
-        </div>
-
-        <div id="legend">
-          <div id="legend-sub-sec">
-            <div className="legend-subject" style={{ color: "#3B95C2" }}>
-              <div
-                className="legend-circle"
-                style={{ background: "#3B95C2" }}
-              ></div>
-              Physics
-            </div>
-            <div className="legend-subject" style={{ color: "#FF4A4F" }}>
-              <div
-                className="legend-circle"
-                style={{ background: "#FF4A4F" }}
-              ></div>
-              Chemistry
-            </div>
-            <div className="legend-subject" style={{ color: "#2AD586" }}>
-              <div
-                className="legend-circle"
-                style={{ background: "#2AD586" }}
-              ></div>
-              Maths
-            </div>
-          </div>
-        </div>
-
-        <div id="time-analysis">
-          Question Distribution
-          <div className="analysis-sub-section">
-            <div id="analysis-chart-legend">
-              <div style={{ color: "#2AD586" }}>
-                Correct: {data.totalAttempted == 0 ? 0 : data.totalCorrect}
-              </div>
-              <div style={{ color: "#FF4A4F" }}>
-                Wrong:{" "}
-                {data.totalAttempted == 0
-                  ? 0
-                  : data.totalAttempted - data.totalCorrect}
-              </div>
-            </div>
-            <div id="analysis-chart">
-              <Pie
-                data={data.totalAttempted == 0 ? blankData : quesDataChart}
-                options={{ legend: { display: false } }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
       <div className="bar-section">
         {/* physics section */}
         <div className="subject-bar-card" style={{ background: "#D8F3FD" }}>

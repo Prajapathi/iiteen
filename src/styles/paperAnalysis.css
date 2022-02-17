@@ -1,5 +1,5 @@
 .analysis-page{
-    margin-top:100px;
+    margin-top:65px;
 }
 .analysis-head{
     height:50px;
@@ -11,6 +11,7 @@
     font-size:28px;
     text-align:center;
     display:flex;
+    flex-direction: row;
     align-items:center;
     justify-content:center;
 }
@@ -21,6 +22,7 @@
 }
 .report-card-section{
     display:flex;
+    flex-direction: row;
     flex-wrap:wrap;
     justify-content:center;
 }
@@ -31,6 +33,7 @@
     margin-bottom:20px;
     color:white;
     display:flex;
+    flex-direction: row;
     justify-content:space-between;
 }
 
@@ -40,22 +43,26 @@
     margin:10px 0px;
     padding:5px 15% 5px 10%;
     display:flex;
+    flex-direction: row;
     flex-wrap:wrap;
     justify-content:space-between;
 }
 
 .detailed-analysis-button-sec{
     background:white;
-    width:250px;
+    width:400px;
     border-radius:10px;
     box-shadow:0px 2px 5px 1px rgba(0,0,0,0.2);
     margin:25px auto;
-    padding:10px 60px;
+    padding:10px 10px;
+    display: flex;
+    justify-content: space-evenly;
+
 }
 #detailed-analysis-button-icon{
     font-size:42px;
     color:grey;
-    margin:3px 42px;
+    margin:3px 10px;
 }
 .detailed-analysis-button{
     color:#46889A;
@@ -64,6 +71,7 @@
     background:#E6F4F8;
     border-radius:5px;
     box-shadow:0px 2px 2px 1px rgba(0,0,0,0.2);
+    width: 250px;
 }
 .detailed-analysis-button:active{
     outline:none;
@@ -74,11 +82,12 @@
 }
 .analysis-section{
     background:white;
-    width:80%;
+    width:92%;
     display:flex;
+    flex-direction: row;
     border-radius:10px;
     box-shadow:0px 2px 5px 1px rgba(0,0,0,0.2);
-    margin:2% 10%;
+    margin:2% 4%;
     color:#448498;
 }
 #marks-analysis{
@@ -95,6 +104,7 @@
     padding:5%;
     text-align:center;
     display:flex;
+    flex-direction: row;
     flex-wrap:wrap;
     align-items:center;
 }
@@ -122,6 +132,7 @@
 }
 .analysis-sub-section{
     display:flex;
+    flex-direction: row;
     justify-content:space-between;
     text-align:left;
     font-size:1.1rem;
@@ -130,6 +141,7 @@
 }
 #analysis-chart-legend{
     margin:5% 3%;
+    font-size: 14px;
 }
 #analysis-chart{
     width:60%;
@@ -178,6 +190,7 @@
 }
 .bargraph-sub-sec-title{
     display:flex;
+    flex-direction: row;
     justify-content:center;
     align-items:center;
     text-align:center;
@@ -241,11 +254,13 @@
     #legend{
         width:100%;
         display:flex;
+        flex-direction: row;
         justify-content:space-around;
         padding:2%;
     }
     #legend-sub-sec{
         display:flex;
+        flex-direction: row;
         justify-content:center;
     }
     #legend-subject{

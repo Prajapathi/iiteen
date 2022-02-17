@@ -177,6 +177,24 @@ export function AITStestCard(props) {
     }
   }
 
+  function datecalculation(date1,date2,shift){
+    console.log(date1.toISOString(),date1.getHours(),date2,shift,new Date(date2))
+    if(shift=="shift1"){
+      console.log(new Date(date2+"T09:00:00+05:30"))
+      if(new Date(date2+"T09:00:00+05:30").getTime()-date1.getTime()<=8.64e+7){
+        return true
+      }
+    }
+    if(shift=="shift2"){
+      console.log(new Date(date2+"T13:00:00+05:30"))
+      if(new Date(date2+"T13:00:00+05:30").getTime()-date1.getTime()<=8.64e+7){
+        return true
+      }
+    }
+    return false;
+
+  }
+
   return (
     <div className="flip-card-mock">
       <div className="flip-card-inner-mock">
@@ -215,7 +233,7 @@ export function AITStestCard(props) {
                 {props.paper.shift
                   ? props.paper.shift == "shift1"
                     ? "9:00 AM"
-                    : "2:00 PM"
+                    : "1:00 PM"
                   : 0}{" "}
               </div>
             </div>
@@ -251,20 +269,33 @@ export function AITStestCard(props) {
           <div className="card-button-mock">
             {props.heading == "Upcoming Test" ? (
               <div>
-                <img src={padlock} style={{ height: "22px" }} alt="lock" />
+                {datecalculation(new Date(),props.paper.date,props.paper.shift) ? <button
+                  onClick={
+                    // props.isAttempted
+                    //   ? () => setOpenReattempt(true)
+                    //   : 
+                      () => checkPreviousAttempt()
+                  }
+                >
+                  {"Attempt"}
+                </button>:<img src={padlock} style={{ height: "22px" }} alt="lock" />}
+                
               </div>
             ) : (
               <div>
                 <button
                   onClick={
-                    props.isAttempted
-                      ? () => setOpenReattempt(true)
-                      : () => checkPreviousAttempt()
+                    // props.isAttempted
+                    //   ?
+                       () => setOpenReattempt(true)
+                      // : () => checkPreviousAttempt()
                   }
+                  style={{marginRight:"10px"}}
                 >
-                  {props.isAttempted ? "Re-attempt" : "Attempt"}
+                  {/* {props.isAttempted ? "Re-attempt" : "Attempt"} */}
+                  Re-Attempt
                 </button>
-                {props.isAttempted ? (
+                {/* {props.isAttempted ? ( */}
                   <Link
                     to={
                       `/MockTest/${
@@ -274,7 +305,7 @@ export function AITStestCard(props) {
                   >
                     <button>Analysis</button>
                   </Link>
-                ) : null}
+                {/* ) : null} */}
               </div>
             )}
           </div>
