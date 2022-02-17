@@ -154,13 +154,13 @@ export default function Home() {
             <Link to="/MockTest">
               <HomeCard title="Mock Test" icon="mock" />
             </Link>
-            <Link to="/Subjectwise">
+            <Link to="/Subjectwisemain">
               <HomeCard title="Subject-wise Test" icon="subject-wise" />
             </Link>
             <Link to="/AITS">
               <HomeCard title="AITS" icon="AITS" />
             </Link>
-            <Link to="/PreviousYear">
+            <Link to="/PreviousYearmain">
               <HomeCard title="Previous Year Questions" />
             </Link>
           </div>

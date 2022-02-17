@@ -21,6 +21,9 @@ import Signin from './components/signin'
 import Loading from './components/elements/Loading'
 import PreviousYearSubjectwise from './components/screens/PreviousYear/PreviousYearSubjectwise'
 import MockTestMain from './components/screens/MockTest/MockTestMain'
+import Subjectwisemain from './components/screens/Subjectwise/Subjectwisemain'
+import Subjectwise from './components/screens/Subjectwise/Subjectwise'
+import PreviousYearSubjectwisemain from './components/screens/PreviousYear/PreviousYearSubjectwisemain'
 
 
 export function Routing(props) {
@@ -51,8 +54,14 @@ export function Routing(props) {
                         <Route exact path="/MockTest">
                             <LeftMenu /><MockTestMain /><Footer />
                         </Route>
+                        <Route exact path="/Subjectwisemain">
+                            <LeftMenu /><Subjectwisemain /><Footer />
+                        </Route>
                         <Route exact path="/Subjectwise">
-                            <LeftMenu /><SubjectWise /><Footer />
+                            <LeftMenu /><Subjectwise /><Footer />
+                        </Route>
+                        <Route exact path="/PreviousYearmain">
+                            <LeftMenu /><PreviousYearSubjectwisemain /><Footer />
                         </Route>
                         <Route exact path="/PreviousYear">
                             <LeftMenu /><PreviousYearSubjectwise /><Footer />

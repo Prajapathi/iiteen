@@ -10,43 +10,44 @@ import Loading from "../../elements/Loading";
 import SubjectSection from "./SubjectSection";
 import { useHistory } from "react-router-dom";
 
-export default function Subjectwise() {
+export default function Subjectwise(props) {
   const [open, setOpen] = React.useState(true);
-  const [classNumber, setClassNumber] = React.useState("11");
+  console.log(this,props)
+  const [classNumber, setClassNumber] = React.useState(sessionStorage.getItem("class"));
   const [loading, setLoading] = React.useState(false);
-  let History = useHistory();
+  // let History = useHistory();
 
-  window.onpopstate = function (e) {
-    // e.preventDefault()
-    console.log("called")
-    console.log(open,sessionStorage.getItem("dialog"),window.location.pathname)
-    if(open==true && sessionStorage.getItem("dialog")==null && window.location.pathname[1]=='m'){
-      return
-    }
-    if(open==true && sessionStorage.getItem("dialog")==null && window.location.pathname[1]=='M'){
-      return
-    }
+  // window.onpopstate = function (e) {
+  //   // e.preventDefault()
+  //   console.log("called")
+  //   console.log(open,sessionStorage.getItem("dialog"),window.location.pathname)
+  //   if(open==true && sessionStorage.getItem("dialog")==null && window.location.pathname[1]=='m'){
+  //     return
+  //   }
+  //   if(open==true && sessionStorage.getItem("dialog")==null && window.location.pathname[1]=='M'){
+  //     return
+  //   }
 
-    if (!open || sessionStorage.getItem("dialog")===null) {
-      if(window.location.pathname!='/MockTest'){
-        console.log("calledinside")
-        setOpen(true);
-        History.push("/Subjectwise");
-      }
+  //   if (!open || sessionStorage.getItem("dialog")===null) {
+  //     if(window.location.pathname!='/MockTest'){
+  //       console.log("calledinside")
+  //       setOpen(true);
+  //       History.push("/Subjectwise");
+  //     }
       
-    }
-    sessionStorage.removeItem("dialog");
-  };
+  //   }
+  //   sessionStorage.removeItem("dialog");
+  // };
 
-  useEffect(()=>{
-    // console.log("effectcalled")
-    if(sessionStorage.getItem("dialog")!==null){
-      setOpen(sessionStorage.getItem("dialog"));
-      setClassNumber(sessionStorage.getItem("class"))
-    }else{
-      sessionStorage.setItem("dialog",true);
-    }
-  },[])
+  // useEffect(()=>{
+  //   // console.log("effectcalled")
+  //   if(sessionStorage.getItem("dialog")!==null){
+  //     setOpen(sessionStorage.getItem("dialog"));
+  //     setClassNumber(sessionStorage.getItem("class"))
+  //   }else{
+  //     sessionStorage.setItem("dialog",true);
+  //   }
+  // },[])
 
   // useEffect(()=>{
   //   if(localStorage.getItem("reloaded")===true){
@@ -54,40 +55,42 @@ export default function Subjectwise() {
   //   }
   // },[])
 
-  const selectClass = (n) => {
-    setClassNumber(n);
-    sessionStorage.setItem("dialog",false);
-    sessionStorage.setItem("class",n)
-    // console.log("dia",localStorage.getItem("dialog"));
-    setOpen(false);
-  };
+  // const selectClass = (n) => {
+  //   setClassNumber(n);
+  //   sessionStorage.setItem("dialog",false);
+  //   sessionStorage.setItem("class",n)
+  //   // console.log("dia",localStorage.getItem("dialog"));
+  //   setOpen(false);
+  // };
   document.title = "Subjectwise | IITEENS";
   return (
     <div className="screen" id="subjectwise">
       {loading ? (
         <Loading />
-      ) : open===true ? (
-        <Dialog
-          disableBackdropClick
-          disableEscapeKeyDown
-          open={open}
-          onClose={() => setOpen(false)}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-          fullWidth={true}
-          id="class-select-dialog"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Please select your class"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              <Button onClick={() => selectClass("11")}>Class 11</Button>
-              <Button onClick={() => selectClass("12")}>Class 12</Button>
-            </DialogContentText>
-          </DialogContent>
-        </Dialog>
-      ) : (
+      )
+      //  : open===true ? (
+      //   <Dialog
+      //     disableBackdropClick
+      //     disableEscapeKeyDown
+      //     open={open}
+      //     onClose={() => setOpen(false)}
+      //     aria-labelledby="alert-dialog-title"
+      //     aria-describedby="alert-dialog-description"
+      //     fullWidth={true}
+      //     id="class-select-dialog"
+      //   >
+      //     <DialogTitle id="alert-dialog-title">
+      //       {"Please select your class"}
+      //     </DialogTitle>
+      //     <DialogContent>
+      //       <DialogContentText id="alert-dialog-description">
+      //         <Button onClick={() => selectClass("11")}>Class 11</Button>
+      //         <Button onClick={() => selectClass("12")}>Class 12</Button>
+      //       </DialogContentText>
+      //     </DialogContent>
+      //   </Dialog>
+      // )
+       : (
         <>
           <h1
             style={{
