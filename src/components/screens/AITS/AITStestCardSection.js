@@ -290,17 +290,24 @@ export function AITStestCardSection(props) {
     });
     aitsTestPapersadvance.map((item, index) => {
       item.papertype = "advance";
-      if (
-        new Date().toISOString().substring(0, 10) <= item.date &&
-        props.heading == "Upcoming Test"
-      ) {
-        arr.push(item);
-      } else if (
-        new Date().toISOString().substring(0, 10) > item.date &&
-        props.heading == "Past Test"
-      ) {
-        arr.push(item);
+      if(item.shift=="shift1"){
+        if (new Date().getTime() <= new Date(item.date+"T12:00:00+05:30").getTime() && props.heading == "Upcoming Test") {
+          arr.push(item);
+        } else if (new Date().getTime() > new Date(item.date+"T12:00:00+05:30").getTime() && props.heading == "Past Test") {
+          arr.push(item);
+        }
+      }else if(item.shift=="shift2"){
+        if (new Date().getTime() <= new Date(item.date+"T16:00:00+05:30").getTime() && props.heading == "Upcoming Test") {
+          arr.push(item);
+        } else if (new Date().getTime() > new Date(item.date+"T16:00:00+05:30").getTime() && props.heading == "Past Test") {
+          arr.push(item);
+        }
       }
+      // if (new Date().toISOString().substring(0, 10) <= item.date && props.heading == "Upcoming Test") {
+      //   arr.push(item);
+      // } else if (new Date().toISOString().substring(0, 10) > item.date && props.heading == "Past Test") {
+      //   arr.push(item);
+      // }
     });
     setInitialitems(arr);
   }, [aitsTestPapersmains, aitsTestPapersadvance]);
@@ -401,7 +408,7 @@ export function AITStestCardSection(props) {
                         : checkAttemptedmains(`PAPER${item.number}`)
                     }
                     paper={item}
-                    setLoading={setLoading}
+                    setLoading={props.loadingStart}
                     papertype={item.papertype}
                     papernumber={item.number}
                     paperindex={chapterIndex+index + 1}

@@ -139,10 +139,10 @@ export default function InstructionDropdown(props) {
                       <div className="inst-sub-points">
                         <div
                           style={{
-                            background: "#F6391B",
+                            background: "#878585",
                           }}
                         ></div>
-                        1 negative mark for incorrect Answer
+                        0 negative mark for incorrect Answer
                       </div>
                     </li>
                     <li style={{ listStyleType: "none" }}>
@@ -240,7 +240,7 @@ export default function InstructionDropdown(props) {
                       <div className="inst-sub-points">
                         <div
                           style={{
-                            background: "#F6391B",
+                            background: "#878585",
                           }}
                         ></div>
                         No negative mark for incorrect Answer
@@ -352,8 +352,7 @@ export default function InstructionDropdown(props) {
               >
                 <div className="inst-point-box"></div>
                 <div className="inst-point-data">
-                  Part D multiple choice questions. Each Questions has 4 choices
-                  (A),(B),(C),(D) out of which ONE or more is/are correct
+                  Part D integer type questions. The answer to each questions is a non-negative integer
                   <ul style={{ marginLeft: "42px" }}>
                     <li style={{ listStyleType: "none" }}>
                       <div className="inst-sub-points">
@@ -369,7 +368,7 @@ export default function InstructionDropdown(props) {
                       <div className="inst-sub-points">
                         <div
                           style={{
-                            background: "#F6391B",
+                            background: "#878585",
                           }}
                         ></div>
                         No negative mark for incorrect Answer

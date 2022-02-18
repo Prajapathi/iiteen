@@ -102,8 +102,8 @@ function datecalculation(date1,date2,shift){
     }
   }
   return false;
-
 }
+
 function calculatetimedifference(date1, date2, shift) {
   let hours2;
   let hours;
@@ -195,7 +195,7 @@ export default function PaperInstruction(props) {
           <div className="paper-inst">
             <div className="inst-point-box"></div>
             <div className="inst-point-data">
-              Part A contains 20 multiple choice questions. Each Questions has 4
+              Part A contains 20 multiple choice questions. Each Question have 4
               choices (A),(B),(C),(D) out of which only ONE is correct
               <ul style={{ marginLeft: "42px" }}>
                 <li style={{ listStyleType: "none" }}>
@@ -251,10 +251,10 @@ export default function PaperInstruction(props) {
                   <div className="inst-sub-points">
                     <div
                       style={{
-                        background: "#F6391B",
+                        background: "#878585",
                       }}
                     ></div>
-                    1 negative mark for incorrect Answer
+                    No negative mark for incorrect Answer
                   </div>
                 </li>
                 <li style={{ listStyleType: "none" }}>
@@ -297,11 +297,11 @@ export default function PaperInstruction(props) {
                     Part-{String.fromCharCode(65 + index)} contains{" "}
                     {items.noofques}{" "}
                     {items.type == "singletype"
-                      ? "multiple choice questions. Each Questions has 4 choices (A),(B),(C),(D) out of which only ONE is correct"
+                      ? "multiple choice questions. Each Question have 4 choices (A),(B),(C),(D) out of which only ONE is correct"
                       : items.type == "multipletype"
-                      ? "multiple choice questions. Each Questions has 4 choices (A),(B),(C),(D) out of which ONE or more is/are correct"
+                      ? "multiple choice questions. Each Question have 4 choices (A),(B),(C),(D) out of which ONE or more is/are correct"
                       : items.type == "integertype"
-                      ? "integer type questions. The answer to each questions is a single digit integer ranging from 0 to 9"
+                      ? "integer type questions. The answer to each questions is a non-negative integer"
                       : "numerical type questions. The answer to each questions is a numerical"}
                     {items.type == "singletype" ? (
                       <ul style={{ marginLeft: "42px" }}>
@@ -418,7 +418,7 @@ export default function PaperInstruction(props) {
                           <div className="inst-sub-points">
                             <div
                               style={{
-                                background: "#F6391B",
+                                background: "#878585",
                               }}
                             ></div>
                             No negative mark for incorrect Answer
@@ -451,7 +451,7 @@ export default function PaperInstruction(props) {
                           <div className="inst-sub-points">
                             <div
                               style={{
-                                background: "#F6391B",
+                                background: "#878585",
                               }}
                             ></div>
                             No negative mark for incorrect Answer

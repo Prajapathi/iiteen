@@ -148,23 +148,26 @@ export default function Home() {
         <div id="aits-carousel">
           <AITSCarousel />
         </div>
-        <div id="home">
-          <img src={banner} id="home-image" alt="" />
-          <div id="homeContent" style={{ minWidth: "360px" }}>
-            <Link to="/MockTest">
-              <HomeCard title="Mock Test" icon="mock" />
-            </Link>
-            <Link to="/Subjectwisemain">
-              <HomeCard title="Subject-wise Test" icon="subject-wise" />
-            </Link>
-            <Link to="/AITS">
-              <HomeCard title="AITS" icon="AITS" />
-            </Link>
-            <Link to="/PreviousYearmain">
-              <HomeCard title="Previous Year Questions" />
-            </Link>
-          </div>
+        <div id="home" style={{height:"380px"}}>
+          
+        <img src={banner} id="home-image" alt="" />
+        <div id="homeContent" style={{ minWidth: "390px" }}>
+          <Link to="/MockTest">
+            <HomeCard title="Mock Test" icon="mock" />
+          </Link>
+          <Link to="/Subjectwisemain">
+            <HomeCard title="Subject-wise Test" icon="subject-wise" />
+          </Link>
+          <Link to="/AITS">
+            <HomeCard title="AITS" icon="AITS" />
+          </Link>
+          <Link to="/PreviousYearmain">
+            <HomeCard title="Previous Year Questions" />
+          </Link>
         </div>
+      </div>
+        
+        
       </div>
     </div>
   );

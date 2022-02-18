@@ -298,7 +298,7 @@ export function AITStestCard(props) {
                 {/* {props.isAttempted ? ( */}
                   <Link
                     to={
-                      `/MockTest/${
+                      `/AitsTest/${
                         props.papertype == "mains" ? "MAINS" : "ADVANCE"
                       }/Papers/Analysis/` + `PAPER${props.papernumber}`
                     }

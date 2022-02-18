@@ -930,7 +930,10 @@ const SetQuestion = (props) => {
                 value={correct}
                 type="number"
                 onChange={(e) => {
-                  setCorrect(Math.trunc(e.target.value * 100) / 100);
+                  // setCorrect(Math.trunc(e.target.value * 100) / 100);
+                  let t=e.target.value;
+                  setCorrect(Number((t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 3)) : t))
+
                 }}
               >
                 {correct}

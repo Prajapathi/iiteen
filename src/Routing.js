@@ -24,6 +24,7 @@ import MockTestMain from './components/screens/MockTest/MockTestMain'
 import Subjectwisemain from './components/screens/Subjectwise/Subjectwisemain'
 import Subjectwise from './components/screens/Subjectwise/Subjectwise'
 import PreviousYearSubjectwisemain from './components/screens/PreviousYear/PreviousYearSubjectwisemain'
+import NoAnalysisError from './components/elements/Paper/NoAnalysisError'
 
 
 export function Routing(props) {
@@ -92,6 +93,9 @@ export function Routing(props) {
                         </Route>
                         <Route exact path="/QuestionsError">
                             <LeftMenu /><NoQuestionsError /><Footer />
+                        </Route>
+                        <Route exact path="/AnalysisError">
+                            <LeftMenu /><NoAnalysisError /><Footer />
                         </Route>
                         <Route exact path="/Signin">
                             <LeftMenu /><Signin /><Footer />

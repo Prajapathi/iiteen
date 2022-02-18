@@ -10,11 +10,11 @@ export default function GeneralInstruction(props) {
         {color:"#ff9700", data:"Attempted and Marked Questions"},
     ]
     const generalInst=[
-        "Number pad can be accessed from left top corner.",
-        "Clicking on the question number from the number will navigate to the corresponding question.",
-        "The timer of the top corner displays the time remaining for the test.",
-        "When the timer reaches zero ,the test will be submitted automatically.",
-        "Further instruction should be followed for each part of section as given."
+        "Number pad can be accessed from top left corner.",
+        "Clicking on the question number from the number pad will navigate to the corresponding question.",
+        "The timer at the top of screen displays remaining time.",
+        "When the timer reaches zero ,the test will be automatically submitted.",
+        // "Further instruction should be followed for each part of section as given."
     ]
 
     const [check,setCheck]=React.useState(false);

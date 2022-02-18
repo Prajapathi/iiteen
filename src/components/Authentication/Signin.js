@@ -35,6 +35,7 @@ export function Signin(props) {
   const [disableExit, setDisableExit] = React.useState(false);
   const [phoneNum, setPhoneNum] = React.useState();
   const [alreadyUser, setAlreadyUser] = React.useState(false);
+  const [notalreadyuser,setNotalreadyuser]=React.useState(false);
 
   const enterPhoneNo = (inp) => {
     if (isNaN(inp)) {
@@ -97,20 +98,25 @@ export function Signin(props) {
         return;
       }
     }
-    // if (props.login) {
-    //   const snapshot = await db
-    //     .collection("User")
-    //     .where("phoneNumber", "==", phoneNumber)
-    //     .get();
 
-    //   if (snapshot.empty) {
-    //     console.log("No matching documents.");
-    //   } else {
-    //     snapshot.forEach((doc) => {
-    //       console.log(doc.id, "=>", doc.data());
-    //     });
-    //   }
-    // }
+    if (props.login) {
+      console.log("gone")
+      const snapshot = await db
+        .collection("User")
+        .where("phoneNumber", "==", phoneNumber)
+        .get();
+
+      if (snapshot.empty) {
+        console.log("No matching documents.");
+        setNotalreadyuser(true)
+        setShowLoading(false);
+        return;
+      } else {
+        snapshot.forEach((doc) => {
+          console.log(doc.id, "=>", doc.data());
+        });
+      }
+    }
     //set recaptcha only the first time
     if (recaptchaSetOnce == false) {
       setUpRecaptcha();
@@ -286,7 +292,7 @@ export function Signin(props) {
                   maxLength="10"
                   inputProps={{ maxLength: 10 }}
                 />
-              ) : !alreadyUser ? (
+              ) : !(alreadyUser||notalreadyuser) ? (
                 <TextField
                   label="Enter OTP"
                   placeholder="_ _ _ _ _ _"
@@ -321,6 +327,22 @@ export function Signin(props) {
                   </Button>
                 </div>
               )}
+              {notalreadyuser && (
+                <div>
+                  <div id="incorrect-error">
+                    You are not a registered User. Please Sign in
+                  </div>
+                  {/* <Button
+                    onClick={() => {
+                      setAlreadyUser(false);
+                      props.setOpenSignup(false);
+                      props.setOpenLogin(true);
+                    }}
+                  >
+                    Login
+                  </Button> */}
+                </div>
+              )}
               <div id="signin-button-section">
                 {showLoading ? <CircularProgress /> : null}
                 {showError ? (
@@ -328,7 +350,7 @@ export function Signin(props) {
                     Something went Wrong. Please Try Again.
                     <br />
                   </>
-                ) : !alreadyUser ? (
+                ) : !(alreadyUser||notalreadyuser) ? (
                   <Button
                     id="signin-button"
                     disabled={

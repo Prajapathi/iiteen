@@ -114,10 +114,13 @@ export function Paper(props) {
                 default:
         paperTypeRoute = "undefined";
         }
+        console.log(props.user.uid,paperTypeRoute,props.paper.sections,props.paper.number)
+
         const db = firebase.firestore();
         const paperRef = db.collection("User").doc(props.user.uid).collection(paperTypeRoute).doc(`${props.paper.sections?"ADVANCE":"MAINS"}`).collection("PAPER").doc(`PAPER${props.paper.number}`)
             .set(UserQuestionModel)
             .then((res)=>{
+                console.log(props.user.uid,paperTypeRoute,props.paper.sections,props.paper.number)
                 let marks = 0;
                 let chemistryMarks = 0;
                 let physicsMarks = 0;
@@ -381,22 +384,6 @@ export function Paper(props) {
         let id=setInterval(()=>{
             count++;
         },1000)
-        // let id =setInterval(()=>{
-        //     console.log("c",physec,chesec,matsec,palleteSub)
-        //     if(palleteSub==1){
-        //         console.log("pp")
-        //         let a=physec;
-        //         setPhysec(a+1)
-        //     }else if(palleteSub==2){
-        //         console.log("pc")
-        //         let b=chesec
-        //         setChesec(b+1)
-        //     }else if(palleteSub==3){
-        //         console.log("pm")
-        //         let c=matsec
-        //         setMatsec(c+1)
-        //     }
-        // },1000)
         return () => {
             console.log("c",physec,chesec,matsec,palleteSub,count)
             if(palleteSub==1){
