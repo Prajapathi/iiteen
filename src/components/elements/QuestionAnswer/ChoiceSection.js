@@ -226,11 +226,12 @@ export function ChoiceSection(props) {
                     //   props.paper.noofques !=
                     //   props.paper.toBeAttempted.instructionInfo
                     // }
-                    // section={
-                    //   props.paper.questions[props.number - 1]
-                    //     ? props.paper.questions[props.number - 1].section
-                    //     : 0
-                    // }
+                    section={
+                      props.paper
+                        ? props.paper.sections
+                        : 0
+                    }
+                    index={props.number}
                   />
                 </div>
               )}

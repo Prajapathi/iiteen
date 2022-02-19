@@ -5,6 +5,8 @@ import firebase from "firebase";
 import { Link, useLocation, useHistory } from "react-router-dom";
 import Question from "./elements/Question";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { ToastContainer, toast ,Flip} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Questions(props) {
   const location = useLocation();
@@ -18,6 +20,7 @@ export default function Questions(props) {
   const [numberQ, setnumberQ] = React.useState(0);
   const [saveQ, setSaveQ] = React.useState(false);
   const [subjectwiseSub, setSubjectwiseSub] = React.useState("");
+  const [savelastone,setSavelastone]=React.useState(false)
 
   useEffect(() => {
     setnumberQ(localStorage.getItem("noOfQuestions"));
@@ -250,7 +253,8 @@ export default function Questions(props) {
 
   async function uploadFiles() {
     let qs = 0;
-    for (let file of questionArray) {
+    console.log(savelastone)
+    for (let file of savelastone?[questionArray[index]]:questionArray) {
       const db = firebase.firestore();
       db.settings({
         timestampsInSnapshots: true,
@@ -305,16 +309,44 @@ export default function Questions(props) {
   async function outerFunction() {
     await uploadFiles();
     //new code
-    setSaveQ(true);
+    if(index==numberQ-1){
+      setSaveQ(true);
+    }
+    setLoading(false)
+    toast.success("SUBMITTED")
     //
   }
 
   const confirmSave = () => {
-    let save = window.confirm("Do you want to save the paper?");
-    if (save == true) {
-      savePaper();
-    } else return;
+    // let save = window.confirm("Do you want to save the paper?");
+    // if (save == true) {
+    //   savePaper();
+    // } else return;
+    if(filledeverything()){
+
+      savePaper()
+      return true
+    }else return false
   };
+
+  function filledeverything(){
+    let flag=0;
+    if(questionArray[index].question[0].data==0 || questionArray[index].hint[0].data==0 || questionArray[index].solution[0].data==0){
+      flag=1;
+    }else if(questionArray[index].answerType==4 || questionArray[index].answerType==5){
+      if(questionArray[index].option[0].data==0 || questionArray[index].option[1].data==0 || questionArray[index].option[2].data==0 || questionArray[index].option[3].data==0 || questionArray[index].answer.length==0){
+        flag=1;
+      }
+    }else if(questionArray[index].answerType==1 || questionArray[index].answerType==2){
+      if(questionArray[index].answer.length==0){
+        flag=1;
+      }
+    }
+    if(flag==1){
+      toast.warn("Are you sure you filled everything!")
+      return false;
+    }else return true
+  }
 
   return (
     <>
@@ -322,6 +354,19 @@ export default function Questions(props) {
         <CircularProgress style={{ margin: "25% 50%" }} />
       ) : (
         <div>
+          <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        transition={Flip}
+        toastStyle={{ backgroundColor: "black",color:"white" }}
+      />
           <Question
             key={index}
             index={Number(index)}
@@ -343,12 +388,16 @@ export default function Questions(props) {
                 border: "1px solid white",
                 borderRadius: "20px",
               }}
-              onClick={() => setIndex(index - 1)}
+              onClick={() => {
+
+                setIndex(index - 1);
+                window.scrollTo(0,0)
+              }}
             >
               BACK
             </button>
           ) : null}
-          {index <= numberQ - 2 ? (
+          {index <= numberQ - 1 ? (
             <button
               style={{
                 width: "60%",
@@ -358,11 +407,37 @@ export default function Questions(props) {
                 border: "1px solid white",
                 borderRadius: "20px",
               }}
-              onClick={() => setIndex(index + 1)}
+              onClick={async() => {
+                setSavelastone(true)
+                if(!await confirmSave()){
+                  return
+                }
+                setIndex(index + 1);
+                window.scrollTo(0,0)
+              }}
             >
               Continue
             </button>
-          ) : (
+          ) :
+          //  (
+          //   <button
+          //     style={{
+          //       width: "60%",
+          //       height: "40px",
+          //       margin: "0px 20% 20px 20%",
+          //       background: "#388cf2",
+          //       color: "white",
+          //       border: "1px solid white",
+          //       borderRadius: "20px",
+          //     }}
+          //     onClick={confirmSave}
+          //   >
+          //     SAVE PAPER
+          //   </button>
+          // )
+          null
+          }
+          {/* {index == 0 ? (
             <button
               style={{
                 width: "60%",
@@ -373,28 +448,13 @@ export default function Questions(props) {
                 border: "1px solid white",
                 borderRadius: "20px",
               }}
-              onClick={confirmSave}
+              onClick={() => {
+                confirmSave();
+              }}
             >
-              SAVE PAPER
+              SAVE ONE QUESTION
             </button>
-          )}
-          {index == 0 ? <button
-            style={{
-              width: "60%",
-              height: "40px",
-              margin: "0px 20% 20px 20%",
-              background: "#388cf2",
-              color: "white",
-              border: "1px solid white",
-              borderRadius: "20px",
-            }}
-            onClick={() => {
-              confirmSave();
-            }}
-          >
-            SAVE ONE QUESTION
-          </button>:null}
-          
+          ) : null} */}
         </div>
       )}
     </>
