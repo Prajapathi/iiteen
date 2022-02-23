@@ -25,7 +25,7 @@ import Subjectwisemain from './components/screens/Subjectwise/Subjectwisemain'
 import Subjectwise from './components/screens/Subjectwise/Subjectwise'
 import PreviousYearSubjectwisemain from './components/screens/PreviousYear/PreviousYearSubjectwisemain'
 import NoAnalysisError from './components/elements/Paper/NoAnalysisError'
-import  { PaytmButton } from './components/Payments/PaytmButton'
+// import  { PaytmButton } from './components/Payments/PaytmButton'
 
 
 export function Routing(props) {

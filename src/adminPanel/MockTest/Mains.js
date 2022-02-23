@@ -6,6 +6,8 @@ import { Link, useParams } from "react-router-dom";
 import { MenuItem, TextField } from "@material-ui/core";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@material-ui/core/IconButton";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 const Mains = () => {
   const [paper, setPaper] = useState([]);
@@ -16,6 +18,7 @@ const Mains = () => {
   const [shift, setShift] = useState();
   const [date, setDate] = useState();
   const [indexofpapers,setIndexofpapers]=useState(0);
+  const [loading,setLoading]=useState(true)
 
   useEffect(() => {
     if (type == "mocktest") {
@@ -49,6 +52,7 @@ const Mains = () => {
             shift: doc.data().shift,
           }))
         );
+        setLoading(false)
         console.log(snap.docs.length);
         setSize(snap.docs.length);
       });
@@ -169,6 +173,10 @@ const Mains = () => {
   console.log(paper);
 
   return (
+    <>{loading?
+      <Box sx={{ display: 'flex',justifyContent:"center", alignItems:"center",height:"1000px" }}>
+      <CircularProgress />
+    </Box>:
     <div>
       <div
         style={{
@@ -368,6 +376,9 @@ const Mains = () => {
         </div>
       </div>
     </div>
+    }
+    </>
+    
   );
 };
 

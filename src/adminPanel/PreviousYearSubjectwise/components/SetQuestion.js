@@ -29,6 +29,17 @@ import { Link, useHistory } from "react-router-dom";
 import { ToastContainer, toast, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Syllabus from "./data/syllabus";
+import Rating from "@mui/material/Rating";
+import Box from "@mui/material/Box";
+import StarIcon from "@mui/icons-material/Star";
+
+const labels = {
+  1: "Very Easy",
+  2: "Easy",
+  3: "Medium",
+  4: "Hard",
+  5: "Very Hard",
+};
 
 toast.configure();
 
@@ -65,16 +76,18 @@ const SetQuestion = (props) => {
 
   const [locationKeys, setLocationKeys] = useState([]);
   const [open, setOpen] = useState(false);
-  const [droptype, setDroptype] = useState("");
-  const [field, setField] = useState("");
-  const [v, setV] = useState("");
-  const [index, setIndex] = useState("");
+  const [value, setValue] = React.useState(3);
+  const [hover, setHover] = React.useState(-1);
+  // const [droptype, setDroptype] = useState("");
+  // const [field, setField] = useState("");
+  // const [v, setV] = useState("");
+  // const [index, setIndex] = useState("");
 
-  const ref = useRef();
-  const cursorPosition = 2;
-  const [data2, setData2] = useState("");
+  // const ref = useRef();
+  // const cursorPosition = 2;
+  // const [data2, setData2] = useState("");
 
-  const [mocksingletype, setMocksingletype] = useState();
+  // const [mocksingletype, setMocksingletype] = useState();
 
   const numarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -91,7 +104,7 @@ const SetQuestion = (props) => {
     props.location.state.Class ? props.location.state.Class : null
   );
 
-  console.log(props.location.state.Class,Class)
+  console.log(props.location.state.Class, Class);
   // const Id = props.location.state.id;
 
   // this QuestionNo here is like index to the allQuestion array it is not the questionNo of the database
@@ -208,7 +221,7 @@ const SetQuestion = (props) => {
   }, []);
 
   useEffect(() => {
-    if(section.length>0){
+    if (section.length > 0) {
       console.log(section);
       let totalnoofquespersubject = 0;
       for (let i = 0; i < section.length; i++) {
@@ -244,7 +257,6 @@ const SetQuestion = (props) => {
         aggregate += Number(section[i].noofques);
       }
     }
-    
   }, [section, QuestionNo]);
 
   useEffect(() => {
@@ -294,8 +306,9 @@ const SetQuestion = (props) => {
         college: college,
         number: `${QuestionNo}`,
         subject: subj,
-        class:Class,
-        chapter:Chapter
+        class: Class,
+        chapter: Chapter,
+        rating:value
       })
       .then((docref) => {
         console.log(
@@ -327,7 +340,7 @@ const SetQuestion = (props) => {
           .doc(`PAPER${Number(mockpaperno)}`)
           .collection("question");
       } else {
-        console.log(Class,Subject,Chapter)
+        console.log(Class, Subject, Chapter);
         var q = await db
           .collection("PYSV")
           .doc(Class)
@@ -364,8 +377,9 @@ const SetQuestion = (props) => {
           year: year,
           college: college,
           number: `${QuestionNo}`,
-          class:Class,
-        chapter:Chapter
+          class: Class,
+          chapter: Chapter,
+          rating:value
         })
         .then(() => {
           console.log(
@@ -592,8 +606,13 @@ const SetQuestion = (props) => {
       setCollege(editPaper.college);
       setHint(editPaper.hint);
       setSolution(editPaper.solution);
-      setClass(editPaper.class)
-      setChapter(editPaper.chapter)
+      if (Subject == "mocktest" || Subject == "mocktestadvance") {
+        setClass(editPaper.class);
+        setChapter(editPaper.chapter);
+      }else{
+        setValue(editPaper.rating?editPaper.rating:3)
+      }
+
       // console.log(count);
       setCount(1);
       // render();
@@ -838,9 +857,9 @@ const SetQuestion = (props) => {
   );
 
   // const notify = () => toast("SUBMITTED");
-  useEffect(()=>{
-    console.log(subj)
-  },[subj])
+  useEffect(() => {
+    console.log(subj);
+  }, [subj]);
 
   return (
     <div>
@@ -926,7 +945,41 @@ const SetQuestion = (props) => {
             )}
           </TextField>
         </div>
-      ) : null}
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            sx={{
+              width: 220,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Rating
+              name="hover-feedback"
+              value={value}
+              precision={1}
+              onChange={(event, newValue) => {
+                setValue(newValue);
+              }}
+              onChangeActive={(event, newHover) => {
+                setHover(newHover);
+              }}
+              emptyIcon={
+                <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
+              }
+            />
+            {value !== null && (
+              <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>
+            )}
+          </Box>
+        </div>
+      )}
 
       <Typer
         info={questionDetail}

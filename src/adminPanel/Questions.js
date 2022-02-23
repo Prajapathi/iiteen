@@ -33,6 +33,7 @@ export default function Questions(props) {
     }
   }, []);
 
+
   async function uploadImg() {
     let imgtemp = [];
     let imageNum = 0;
@@ -321,7 +322,14 @@ export default function Questions(props) {
               })
             }
           }
-          
+          let count=0;
+          setInterval(()=>{
+            count++;
+            if(count==2){
+              setLoading(false)
+              return;
+            }
+          },1000)
           // setLoading(false)
         })
     }
@@ -337,7 +345,9 @@ export default function Questions(props) {
 
   useEffect(()=>{
     console.log(indextoidmap)
+    
   },[indextoidmap])
+
 
   async function uploadFiles() {
     let qs = 0;
