@@ -13,7 +13,7 @@ export default function Questions(props) {
   const history = useHistory();
   const [index, setIndex] = React.useState(0);
   const [questionArray, setQuestionArray] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const [images, setImages] = React.useState([]);
   const [imagesNum, setImagesNum] = React.useState(0);
   const [flag, setFlag] = React.useState(false);
@@ -253,10 +253,97 @@ export default function Questions(props) {
   //     })
   // }
 
+  useEffect(()=>{
+    console.log(subjectwiseSub)
+    if(subjectwiseSub!=""){
+      const db = firebase.firestore();
+      let paperSub =
+              subjectwiseSub == 1
+                ? "Physics"
+                : subjectwiseSub == 2
+                ? "Chemistry"
+                : "Maths";
+      console.log(props.subjectwiseClass,paperSub,props.pname)
+      db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}`)
+        .doc(props.pname)
+        .get()
+        .then((snap)=>{
+          console.log("inside snap")
+          if(snap!=undefined && snap.data()!=undefined){
+            console.log("inside snap.data()",snap.data())
+            if(props.level==1 && snap.data().index1!=undefined){
+              if(snap.data().index1==24)setIndex(0)
+              else setIndex(snap.data().index1+1)
+              setLastsaveindex(snap.data().index1)
+              db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}/${props.pname}/Level 0${props.level}`).orderBy('number')
+              .get().then((snap)=>{
+                console.log(snap.docs)
+                snap.docs.map((doc)=>{
+                  console.log(doc.data())
+                })
+                setQuestionArray(snap.docs.map((doc)=>(doc.data())))
+                snap.docs.map((doc)=>{
+                  console.log(doc.id)
+                })
+                setIndextoidmap(snap.docs.map((doc)=>(doc.id)))
+              })
+            }else if(props.level==2 && snap.data().index2!=undefined){
+              if(snap.data().index2==24)setIndex(0)
+              else setIndex(snap.data().index2+1)
+              setLastsaveindex(snap.data().index2)
+              db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}/${props.pname}/Level 0${props.level}`).orderBy('number')
+              .get().then((snap)=>{
+                console.log(snap.docs)
+                snap.docs.map((doc)=>{
+                  console.log(doc.data())
+                })
+                setQuestionArray(snap.docs.map((doc)=>(doc.data())))
+                snap.docs.map((doc)=>{
+                  console.log(doc.id)
+                })
+                setIndextoidmap(snap.docs.map((doc)=>(doc.id)))
+              })
+            }else if(props.level==3 && snap.data().index3!=undefined){
+              if(snap.data().index3==24)setIndex(0)
+              else setIndex(snap.data().index3+1)
+              setLastsaveindex(snap.data().index3)
+              db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}/${props.pname}/Level 0${props.level}`).orderBy('number')
+              .get().then((snap)=>{
+                console.log(snap.docs)
+                snap.docs.map((doc)=>{
+                  console.log(doc.data())
+                })
+                setQuestionArray(snap.docs.map((doc)=>(doc.data())))
+                snap.docs.map((doc)=>{
+                  console.log(doc.id)
+                })
+                setIndextoidmap(snap.docs.map((doc)=>(doc.id)))
+              })
+            }
+          }
+          
+          // setLoading(false)
+        })
+    }
+    
+  },[subjectwiseSub])
+
+  useEffect(()=>{
+    console.log(questionArray)
+    if(questionArray.length!=0){
+      setLoading(false)
+      }
+  },[questionArray])
+
+  useEffect(()=>{
+    console.log(indextoidmap)
+  },[indextoidmap])
+
   async function uploadFiles() {
     let qs = 0;
     console.log(savelastone);
-    for (let file of savelastone ? [questionArray[index]] : questionArray) {
+    console.log(savelastone,questionArray[index])
+    for (let file of true ? [questionArray[index]] : questionArray) {
       console.log(index,lastsaveindex)
       if (index > lastsaveindex) {
         const db = firebase.firestore();
@@ -280,6 +367,14 @@ export default function Questions(props) {
                 setSaveQ(true);
               }
               toast.success("SUBMITTED");
+              if(props.level==1){
+                db.collection(`${props.paperRoute}/${props.pname}`).set({index1:index})
+              }else if(props.level==2){
+                db.collection(`${props.paperRoute}/${props.pname}`).set({index2:index})
+              }else{
+                db.collection(`${props.paperRoute}/${props.pname}`).set({index3:index})
+              }
+              
               // history.push('/AddPaper')
             })
             .catch((error) => {
@@ -309,6 +404,17 @@ export default function Questions(props) {
                 setSaveQ(true);
               }
               toast.success("SUBMITTED");
+              if(props.level==1){
+                db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}`).doc(props.pname).set({index1:index})
+              }else if(props.level==2){
+                db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}`).doc(props.pname).set({index2:index})
+              }else{
+                db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}`).doc(props.pname).set({index3:index}).then(()=>{
+                  console.log("done")
+                }).catch((error)=>{
+                  console.log(error.message)
+                })
+              }
               // history.push('/AddPaper')
             })
             .catch((error) => {
@@ -481,26 +587,48 @@ export default function Questions(props) {
             </button>
           ) : null}
           {index <= numberQ - 1 ? (
+            <>
             <button
-              style={{
-                width: "60%",
-                margin: "0px 20% 20px 20%",
-                background: "#388cf2",
-                color: "white",
-                border: "1px solid white",
-                borderRadius: "20px",
-              }}
-              onClick={async () => {
-                setSavelastone(true);
-                if (!(await confirmSave())) {
-                  return;
-                }
-                setIndex(index + 1);
-                window.scrollTo(0, 0);
-              }}
+            style={{
+              width: "60%",
+              margin: "0px 20% 20px 20%",
+              background: "#388cf2",
+              color: "white",
+              border: "1px solid white",
+              borderRadius: "20px",
+            }}
+            onClick={async () => {
+              setSavelastone(true);
+              if (!(await confirmSave())) {
+                return;
+              }
+              setIndex(index + 1);
+              window.scrollTo(0, 0);
+            }}
+          >
+            {index==numberQ-1?"Save":"Save and next"}
+          </button>
+            {index<=lastsaveindex && index<=numberQ-2 &&
+            <button
+            style={{
+              width: "60%",
+              margin: "0px 20% 20px 20%",
+              background: "#388cf2",
+              color: "white",
+              border: "1px solid white",
+              borderRadius: "20px",
+            }}
+            onClick={async () => {
+              setIndex(index + 1);
+              window.scrollTo(0, 0);
+            }}
             >
-              Continue
+              next
             </button>
+            }
+          
+            </>
+            
           ) : //  (
           //   <button
           //     style={{

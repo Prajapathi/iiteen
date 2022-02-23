@@ -288,7 +288,8 @@ export function LeftMenu(props) {
                                     <Typography className = { clsx(classes.tabs) } >Report </Typography> 
                                 </Link>
                                 <Typography className = { clsx(classes.tabs) } >IITeenCorner </Typography> 
-                                <Typography className = { clsx(classes.tabs) } >Plan </Typography>
+                                <Link to="/Plan" className="menu-link"><Typography className = { clsx(classes.tabs) } >Plan </Typography></Link>
+                                
                                 <Badge style={{}} className = { clsx(classes.notifBadge) }
                                         overlap="circle" 
                                         badgeContent={4} 
