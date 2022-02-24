@@ -22,6 +22,10 @@ import SelectSyllabus from "./adminPanel/MockTest/SelectSyllabus";
 import Syllabussummary from "./adminPanel/MockTest/Syllabussummary";
 import Syllabussummaryadvance from "./adminPanel/MockTest/Syllabussummaryadvance";
 import AdvancePattern from "./adminPanel/MockTest/AdvancePattern";
+import SubPaper from "./adminPanel/Subjectwise/pages/SubPaper";
+
+import SetQuestionsubjectwise from "./adminPanel/Subjectwise/components/SetQuestionsubjectwise";
+import QuestionContentsubjectwise from "./adminPanel/Subjectwise/pages/QuestionContentsubjectwise";
 
 export function RoutingWrapper(props) {
   return props.isCheckingAuth ? (
@@ -86,6 +90,29 @@ export function RoutingWrapper(props) {
         component={SetQuestion}
       />
       {/* // */}
+      {/* //new code for subjectwise*/}
+      <Route
+        path="/Subjectwise"
+        exact
+        component={SubPaper}
+      />
+      <Route
+        path="/Subjectwise/setQuestionsubjectwise"
+        exact
+        component={SetQuestionsubjectwise}
+      />
+      <Route
+        path="/Subjectwise/:subject"
+        exact
+        component={QuestionContentsubjectwise}
+      />
+      <Route
+        path="/editsubjectwise/:Class/:Chapter/:Subject/:QuestionNo/:Id"
+        exact
+        component={SetQuestionsubjectwise}
+      />
+      {/* // */}
+
       <Route exact path="/">
         <ComingSoon />
       </Route>
