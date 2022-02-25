@@ -29,6 +29,7 @@ import { Link, useHistory } from "react-router-dom";
 import { ToastContainer, toast, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Syllabus from "./data/syllabus";
+import tagslist from "./data/tags";
 import Rating from "@mui/material/Rating";
 import Box from "@mui/material/Box";
 import StarIcon from "@mui/icons-material/Star";
@@ -73,6 +74,7 @@ const SetQuestion = (props) => {
   const [submitted, setSubmitted] = useState(false);
   const [Id, setId] = useState(props.location.state.id);
   const [subj, setSubj] = useState("");
+  const [tags,setTags]=useState("")
 
   const [locationKeys, setLocationKeys] = useState([]);
   const [open, setOpen] = useState(false);
@@ -101,7 +103,7 @@ const SetQuestion = (props) => {
   // console.log(props.location.state);
   // const Class = props.location.state.Class;
   const [Class, setClass] = useState(
-    props.location.state.Class ? props.location.state.Class : null
+    props.location.state.Class ? props.location.state.Class : ""
   );
 
   console.log(props.location.state.Class, Class);
@@ -112,7 +114,7 @@ const SetQuestion = (props) => {
   const Subject = props.location.state.Subject;
   // const Chapter = props.location.state.Chapter;
   const [Chapter, setChapter] = useState(
-    props.location.state.Chapter ? props.location.state.Chapter : null
+    props.location.state.Chapter ? props.location.state.Chapter : ""
   );
   const mockpaperno = props.location.state.mockpaperno;
   const mainpapertype = props.location.state.mainpapertype;
@@ -308,7 +310,8 @@ const SetQuestion = (props) => {
         subject: subj,
         class: Class,
         chapter: Chapter,
-        rating:value
+        rating:value,
+        tags:tags
       })
       .then((docref) => {
         console.log(
@@ -379,7 +382,8 @@ const SetQuestion = (props) => {
           number: `${QuestionNo}`,
           class: Class,
           chapter: Chapter,
-          rating:value
+          rating:value,
+          tags:tags
         })
         .then(() => {
           console.log(
@@ -607,8 +611,9 @@ const SetQuestion = (props) => {
       setHint(editPaper.hint);
       setSolution(editPaper.solution);
       if (Subject == "mocktest" || Subject == "mocktestadvance") {
-        setClass(editPaper.class);
-        setChapter(editPaper.chapter);
+        setClass(editPaper.class?editPaper.class:"");
+        setChapter(editPaper.chapter?editPaper.chapter:"");
+        setTags(editPaper.tags?editPaper.tags:"")
       }else{
         setValue(editPaper.rating?editPaper.rating:3)
       }
@@ -894,7 +899,7 @@ const SetQuestion = (props) => {
             alignItems: "center",
           }}
         >
-          <TextField
+          {/* <TextField
             id="standard-number"
             select
             // label="Select Class"
@@ -907,9 +912,9 @@ const SetQuestion = (props) => {
           >
             <MenuItem value="class11">Class 11</MenuItem>
             <MenuItem value="class12">Class 12</MenuItem>
-          </TextField>
+          </TextField> */}
           {console.log(subj)}
-          <TextField
+          {/* <TextField
             id="standard-number"
             select
             // label="Chapter Name"
@@ -943,6 +948,28 @@ const SetQuestion = (props) => {
             ) : (
               <MenuItem value={""}>Select Class</MenuItem>
             )}
+          </TextField> */}
+          <TextField
+            id="standard-number"
+            select
+            // label="Chapter Name"
+            helperText="Tags"
+            value={tags}
+            style={{ width: "250px", marginRight: "20px" }}
+            onChange={(event) => {
+              setTags(event.target.value);
+            }}
+          >
+            {console.log(tagslist)}
+            {
+              tagslist[subj - 1] &&
+              tagslist[subj - 1].map((e, index) => {
+                return (
+                  <MenuItem value={e} key={index}>
+                    {e}
+                  </MenuItem>
+                );
+              })}
           </TextField>
         </div>
       ) : (

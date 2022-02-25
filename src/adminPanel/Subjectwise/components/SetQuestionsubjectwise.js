@@ -226,6 +226,7 @@ const SetQuestionsubjectwise = (props) => {
   const submitPaper = async (e) => {
     setSubmitted(true);
     toast.success("SUBMITTED");
+    console.log(Class,Subject,Chapter,Level)
     const db = firebase.firestore();
     var q = await db
         .collection("SUBJECTWISE")
@@ -496,20 +497,23 @@ const SetQuestionsubjectwise = (props) => {
     if (editPaper !== "" && count == 0) {
       console.log("inside editpaper", editPaper, count);
       if(editPaper.option1==undefined){
+        console.log("option1 undefined",editPaper.option1)
         setOption1([editPaper.option[0]]);
       setOption2([editPaper.option[1]]);
       setOption3([editPaper.option[2]]);
       setOption4([editPaper.option[3]]);
+      setCorrect(questionType=="4"?[editPaper.answer]:editPaper.answer);
       }else{
         setOption1(editPaper.option1);
         setOption2(editPaper.option2);
         setOption3(editPaper.option3);
         setOption4(editPaper.option4);
+        setCorrect(editPaper.answer)
       }
       setQuestionDetail(editPaper.question);
       
       setQuestionType(editPaper.answerType);
-      setCorrect(questionType=="4"?[editPaper.answer]:editPaper.answer);
+      console.log(questionType=="4"?[editPaper.answer]:editPaper.answer)
       setYear(editPaper.year?editPaper.year:"");
       setCollege(editPaper.college?editPaper.college:"");
       setHint(editPaper.hint);
@@ -889,6 +893,7 @@ const SetQuestionsubjectwise = (props) => {
                 </FormLabel>
                 {questionType == "4" ? (
                   <RadioGroup name="radio-buttons-group" row>
+                    {console.log(correct)}
                     <FormControlLabel
                       value="1"
                       checked={correct.includes(0) || correct.includes("0")}
@@ -1055,7 +1060,7 @@ const SetQuestionsubjectwise = (props) => {
                     className="shadow-btn"
                     component={Link}
                     to={{
-                      pathname: "/PreviousYearSubjectwise/setQuestion",
+                      pathname: "/Subjectwise/setQuestionsubjectwise",
                       state: {
                         id: allQuestions[QuestionNo - 2].id,
                         Class: Class,
@@ -1064,6 +1069,7 @@ const SetQuestionsubjectwise = (props) => {
                         QuestionNo: QuestionNo - 1,
                         mockpaperno: mockpaperno,
                         mainpapertype: mainpapertype,
+                        Level:Level
                         // allQuestions: allQuestions,
                       },
                     }}
@@ -1162,7 +1168,7 @@ const SetQuestionsubjectwise = (props) => {
                   className="shadow-btn"
                   component={Link}
                   to={{
-                    pathname: "/PreviousYearSubjectwise/setQuestion",
+                    pathname: "/Subjectwise/setQuestionsubjectwise",
                     state: {
                       id:
                         allQuestions[QuestionNo] !== undefined
@@ -1174,6 +1180,7 @@ const SetQuestionsubjectwise = (props) => {
                       QuestionNo: QuestionNo + 1,
                       mockpaperno: mockpaperno,
                       mainpapertype: mainpapertype,
+                      Level:Level
                       // allQuestions[QuestionNo] !== undefined
                       //   ? QuestionNo + 1
                       //   : allQuestions.length + 2,

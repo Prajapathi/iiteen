@@ -17,7 +17,7 @@ const SubjectwiseTyper = (props) => {
       setText("");
     }
   }
-  console.log(props)
+  // console.log(props)
 
   function uploadImage() {
     const storage = firebase.storage();

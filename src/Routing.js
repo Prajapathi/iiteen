@@ -25,7 +25,10 @@ import Subjectwisemain from './components/screens/Subjectwise/Subjectwisemain'
 import Subjectwise from './components/screens/Subjectwise/Subjectwise'
 import PreviousYearSubjectwisemain from './components/screens/PreviousYear/PreviousYearSubjectwisemain'
 import NoAnalysisError from './components/elements/Paper/NoAnalysisError'
-// import  { PaytmButton } from './components/Payments/PaytmButton'
+import Cart from './components/Payments/Cart'
+import Plans from './components/Payments/Plans'
+import { PaytmButton } from './components/Payments/PaytmButton'
+import PaymentStatus from './components/Payments/PaymentStatus'
 
 
 export function Routing(props) {
@@ -59,7 +62,7 @@ export function Routing(props) {
                         <Route exact path="/Subjectwisemain">
                             <LeftMenu /><Subjectwisemain /><Footer />
                         </Route>
-                        <Route exact path="/Subjectwise">
+                        <Route exact path="/Subjectwisepage">
                             <LeftMenu /><Subjectwise /><Footer />
                         </Route>
                         <Route exact path="/PreviousYearmain">
@@ -101,9 +104,18 @@ export function Routing(props) {
                         <Route exact path="/Signin">
                             <LeftMenu /><Signin /><Footer />
                         </Route>
-                        {/* <Route exact path="/Plan">
+                        <Route exact path="/Plan">
+                            <LeftMenu /><Cart /><Footer />
+                        </Route>
+                        <Route exact path="/Plans">
+                            <LeftMenu /><Plans /><Footer />
+                        </Route>
+                        <Route exact path="/Payment">
                             <LeftMenu /><PaytmButton /><Footer />
-                        </Route> */}
+                        </Route>
+                        <Route exact path="/Paymentstatus">
+                            <LeftMenu /><PaymentStatus /><Footer />
+                        </Route>
                     </Switch>
 
                 </>

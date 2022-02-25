@@ -19,7 +19,7 @@ const Subjectwisemain = () => {
       <Button
         className="mocktestmainbutton"
         component={Link}
-        to={{ pathname: "/Subjectwise",state:{class:"11"} }}
+        to={{ pathname: "/Subjectwisepage",state:{class:"11"} }}
         onClick={()=>{
             sessionStorage.setItem("class","11")
         }}
@@ -29,7 +29,7 @@ const Subjectwisemain = () => {
       <Button
         className="mocktestmainbutton"
         component={Link}
-        to={{ pathname: "/Subjectwise",state:{class:"12"} }}
+        to={{ pathname: "/Subjectwisepage",state:{class:"12"} }}
         onClick={()=>{
             sessionStorage.setItem("class","12")
         }}
