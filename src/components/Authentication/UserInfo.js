@@ -46,37 +46,47 @@ export function UserInfo(props) {
     const setUserDetails=()=>{
         setLoading(true)
         let user = firebase.auth().currentUser;
-        user.updateEmail(email).then(function() {
-            user.updateProfile({
-                displayName: name
-            })
-            .then(function() {
-                props.updateUserProfile(user)
-                console.log("Updated")
-                setLoading(false)
-                props.closeDialog()
-            })
-            .catch(function(error) {
-                setShowError(true)
-                setLoading(false)
-                console.log("error",error)
-                setError(error)
-            });
-        }).catch(function(error) {
-            setShowError(true)
-            setLoading(false)
-            console.log("error happened:",error)
-            setError(error)
-        });
+        // const credential = firebase.auth.PhoneAuthProvider.credential(
+        //     user.phoneNumber
+        // );
+        // user.reauthenticateWithCredential(credential);
+        // console.log("user from email save",user,firebase.auth())
+        // user.updateEmail(email).then(function() {
+        //     user.updateProfile({
+        //         displayName: name
+        //     })
+        //     .then(function() {
+        //         props.updateUserProfile(user)
+        //         console.log("Updated")
+        //         setLoading(false)
+        //         props.closeDialog()
+        //     })
+        //     .catch(function(error) {
+        //         setShowError(true)
+        //         setLoading(false)
+        //         console.log("error",error)
+        //         setError(error.message)
+        //     });
+        // }).catch(function(error) {
+        //     setShowError(true)
+        //     setLoading(false)
+        //     console.log("error happened:",error)
+        //     setError(error.message)
+        // });
         const db = firebase.firestore();
         db.collection("User")
           .doc(firebase.auth().currentUser.uid)
           .set({ email: email,school:school,JeeId:JeeId,name:name }, { merge: true })
           .then(() => {
             console.log("saved user info");
+            setLoading(false)
+            props.closeDialog()
           })
           .catch((error) => {
             console.log(error.message);
+            setShowError(true)
+            setLoading(false)
+            setError(error.message)
           });
         
     }

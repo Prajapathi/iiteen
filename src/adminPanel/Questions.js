@@ -5,19 +5,24 @@ import firebase from "firebase";
 import { Link, useLocation, useHistory } from "react-router-dom";
 import Question from "./elements/Question";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { ToastContainer, toast, Flip } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Questions(props) {
   const location = useLocation();
   const history = useHistory();
   const [index, setIndex] = React.useState(0);
   const [questionArray, setQuestionArray] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const [images, setImages] = React.useState([]);
   const [imagesNum, setImagesNum] = React.useState(0);
   const [flag, setFlag] = React.useState(false);
   const [numberQ, setnumberQ] = React.useState(0);
   const [saveQ, setSaveQ] = React.useState(false);
   const [subjectwiseSub, setSubjectwiseSub] = React.useState("");
+  const [savelastone, setSavelastone] = React.useState(false);
+  const [lastsaveindex, setLastsaveindex] = React.useState(-1);
+  const [indextoidmap, setIndextoidmap] = React.useState([]);
 
   useEffect(() => {
     setnumberQ(localStorage.getItem("noOfQuestions"));
@@ -27,6 +32,7 @@ export default function Questions(props) {
       localStorage.removeItem("subject");
     }
   }, []);
+
 
   async function uploadImg() {
     let imgtemp = [];
@@ -248,73 +254,299 @@ export default function Questions(props) {
   //     })
   // }
 
+  useEffect(()=>{
+    console.log(subjectwiseSub)
+    if(subjectwiseSub!=""){
+      const db = firebase.firestore();
+      let paperSub =
+              subjectwiseSub == 1
+                ? "Physics"
+                : subjectwiseSub == 2
+                ? "Chemistry"
+                : "Maths";
+      console.log(props.subjectwiseClass,paperSub,props.pname)
+      db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}`)
+        .doc(props.pname)
+        .get()
+        .then((snap)=>{
+          console.log("inside snap")
+          if(snap!=undefined && snap.data()!=undefined){
+            console.log("inside snap.data()",snap.data())
+            if(props.level==1 && snap.data().index1!=undefined){
+              if(snap.data().index1==24)setIndex(0)
+              else setIndex(snap.data().index1+1)
+              setLastsaveindex(snap.data().index1)
+              db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}/${props.pname}/Level 0${props.level}`).orderBy('number')
+              .get().then((snap)=>{
+                console.log(snap.docs)
+                snap.docs.map((doc)=>{
+                  console.log(doc.data())
+                })
+                setQuestionArray(snap.docs.map((doc)=>(doc.data())))
+                snap.docs.map((doc)=>{
+                  console.log(doc.id)
+                })
+                setIndextoidmap(snap.docs.map((doc)=>(doc.id)))
+              })
+            }else if(props.level==2 && snap.data().index2!=undefined){
+              if(snap.data().index2==24)setIndex(0)
+              else setIndex(snap.data().index2+1)
+              setLastsaveindex(snap.data().index2)
+              db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}/${props.pname}/Level 0${props.level}`).orderBy('number')
+              .get().then((snap)=>{
+                console.log(snap.docs)
+                snap.docs.map((doc)=>{
+                  console.log(doc.data())
+                })
+                setQuestionArray(snap.docs.map((doc)=>(doc.data())))
+                snap.docs.map((doc)=>{
+                  console.log(doc.id)
+                })
+                setIndextoidmap(snap.docs.map((doc)=>(doc.id)))
+              })
+            }else if(props.level==3 && snap.data().index3!=undefined){
+              if(snap.data().index3==24)setIndex(0)
+              else setIndex(snap.data().index3+1)
+              setLastsaveindex(snap.data().index3)
+              db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}/${props.pname}/Level 0${props.level}`).orderBy('number')
+              .get().then((snap)=>{
+                console.log(snap.docs)
+                snap.docs.map((doc)=>{
+                  console.log(doc.data())
+                })
+                setQuestionArray(snap.docs.map((doc)=>(doc.data())))
+                snap.docs.map((doc)=>{
+                  console.log(doc.id)
+                })
+                setIndextoidmap(snap.docs.map((doc)=>(doc.id)))
+              })
+            }
+          }
+          let count=0;
+          setInterval(()=>{
+            count++;
+            if(count==2){
+              setLoading(false)
+              return;
+            }
+          },1000)
+          // setLoading(false)
+        })
+    }
+    
+  },[subjectwiseSub])
+
+  useEffect(()=>{
+    console.log(questionArray)
+    if(questionArray.length!=0){
+      setLoading(false)
+      }
+  },[questionArray])
+
+  useEffect(()=>{
+    console.log(indextoidmap)
+    
+  },[indextoidmap])
+
+
   async function uploadFiles() {
     let qs = 0;
-    for (let file of questionArray) {
-      const db = firebase.firestore();
-      db.settings({
-        timestampsInSnapshots: true,
-      });
-      console.log(props.pname);
-      if (props.subjectwise == false) {
-        const userRef = db
-          .collection(`${props.paperRoute}/${props.pname}/Questions`)
-          .add({
-            ...file,
-          })
-          .then((res) => {
-            qs++;
-            console.log("Question uploaded: ", file);
-            if (qs == numberQ) {
-              setSaveQ(true);
-            }
-            // history.push('/AddPaper')
-          })
-          .catch((error) => {
-            console.log("Error saving the document: ", error);
-          });
-      } else {
-        let paperSub =
-          subjectwiseSub == 1
-            ? "Physics"
-            : subjectwiseSub == 2
-            ? "Chemistry"
-            : "Maths";
-        const userRef = db
-          .collection(
-            `SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}/${props.pname}/Level 0${props.level}`
-          )
-          .add({
-            ...file,
-          })
-          .then((res) => {
-            qs++;
-            console.log("Question uploaded: ", file);
-            if (qs == numberQ) {
-              setSaveQ(true);
-            }
-            // history.push('/AddPaper')
-          })
-          .catch((error) => {
-            console.log("Error saving the document: ", error);
-          });
+    console.log(savelastone);
+    console.log(savelastone,questionArray[index])
+    for (let file of true ? [questionArray[index]] : questionArray) {
+      console.log(index,lastsaveindex)
+      if (index > lastsaveindex) {
+        const db = firebase.firestore();
+        db.settings({
+          timestampsInSnapshots: true,
+        });
+        console.log(props.pname);
+        if (props.subjectwise == false) {
+          const userRef = db
+            .collection(`${props.paperRoute}/${props.pname}/Questions`)
+            .add({
+              ...file,
+            })
+            .then((res) => {
+              // indextoidmap.push(res.id)
+              indextoid(index,res.id)
+              setLastsaveindex(index)
+              qs++;
+              console.log("Question uploaded: ", file);
+              if (qs == numberQ) {
+                setSaveQ(true);
+              }
+              toast.success("SUBMITTED");
+              if(props.level==1){
+                db.collection(`${props.paperRoute}/${props.pname}`).set({index1:index})
+              }else if(props.level==2){
+                db.collection(`${props.paperRoute}/${props.pname}`).set({index2:index})
+              }else{
+                db.collection(`${props.paperRoute}/${props.pname}`).set({index3:index})
+              }
+              
+              // history.push('/AddPaper')
+            })
+            .catch((error) => {
+              console.log("Error saving the document: ", error);
+            });
+        } else {
+          let paperSub =
+            subjectwiseSub == 1
+              ? "Physics"
+              : subjectwiseSub == 2
+              ? "Chemistry"
+              : "Maths";
+          const userRef = db
+            .collection(
+              `SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}/${props.pname}/Level 0${props.level}`
+            )
+            .add({
+              ...file,
+            })
+            .then((res) => {
+              // indextoidmap.push(res.id)
+              indextoid(index,res.id)
+              setLastsaveindex(index)
+              qs++;
+              console.log("Question uploaded: ", file);
+              if (qs == numberQ) {
+                setSaveQ(true);
+              }
+              toast.success("SUBMITTED");
+              if(props.level==1){
+                db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}`).doc(props.pname).set({index1:index})
+              }else if(props.level==2){
+                db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}`).doc(props.pname).set({index2:index})
+              }else{
+                db.collection(`SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}`).doc(props.pname).set({index3:index}).then(()=>{
+                  console.log("done")
+                }).catch((error)=>{
+                  console.log(error.message)
+                })
+              }
+              // history.push('/AddPaper')
+            })
+            .catch((error) => {
+              console.log("Error saving the document: ", error);
+            });
+        }
+      }else{
+        const db = firebase.firestore();
+        db.settings({
+          timestampsInSnapshots: true,
+        });
+        console.log(props.pname);
+        if (props.subjectwise == false) {
+          const userRef = db
+            .collection(`${props.paperRoute}/${props.pname}/Questions`)
+            .doc(indextoidmap[index]).update({
+              ...file,
+            })
+            .then((res) => {
+              qs++;
+              console.log("Question uploaded: ", file);
+              if (qs == numberQ) {
+                setSaveQ(true);
+              }
+              toast.success("UPDATED");
+              // history.push('/AddPaper')
+            })
+            .catch((error) => {
+              console.log("Error saving the document: ", error);
+            });
+        } else {
+          let paperSub =
+            subjectwiseSub == 1
+              ? "Physics"
+              : subjectwiseSub == 2
+              ? "Chemistry"
+              : "Maths";
+          const userRef = db
+            .collection(
+              `SUBJECTWISE/Class ${props.subjectwiseClass}/${paperSub}/${props.pname}/Level 0${props.level}`
+            )
+            .doc(indextoidmap[index]).update({
+              ...file,
+            })
+            .then((res) => {
+              qs++;
+              console.log("Question uploaded: ", file);
+              if (qs == numberQ) {
+                setSaveQ(true);
+              }
+              toast.success("UPDATED");
+              // history.push('/AddPaper')
+            })
+            .catch((error) => {
+              console.log("Error saving the document: ", error);
+            });
+        }
       }
     }
+  }
+  function indextoid(index,id){
+    let arr=[...indextoidmap]
+    arr.push(id)
+    setIndextoidmap(arr)
   }
 
   async function outerFunction() {
     await uploadFiles();
     //new code
-    setSaveQ(true);
+    if (index == numberQ - 1) {
+      setSaveQ(true);
+    }
+    setLoading(false);
+    
     //
   }
 
   const confirmSave = () => {
-    let save = window.confirm("Do you want to save the paper?");
-    if (save == true) {
+    // let save = window.confirm("Do you want to save the paper?");
+    // if (save == true) {
+    //   savePaper();
+    // } else return;
+    if (filledeverything()) {
       savePaper();
-    } else return;
+      return true;
+    } else return false;
   };
+
+  function filledeverything() {
+    let flag = 0;
+    if (
+      questionArray[index].question[0].data == 0 ||
+      questionArray[index].hint[0].data == 0 ||
+      questionArray[index].solution[0].data == 0
+    ) {
+      flag = 1;
+    } else if (
+      questionArray[index].answerType == 4 ||
+      questionArray[index].answerType == 5
+    ) {
+      if (
+        questionArray[index].option[0].data == 0 ||
+        questionArray[index].option[1].data == 0 ||
+        questionArray[index].option[2].data == 0 ||
+        questionArray[index].option[3].data == 0 ||
+        questionArray[index].answer.length == 0
+      ) {
+        flag = 1;
+      }
+    } else if (
+      questionArray[index].answerType == 1 ||
+      questionArray[index].answerType == 2
+    ) {
+      if (questionArray[index].answer.length == 0) {
+        flag = 1;
+      }
+    }
+    if (flag == 1) {
+      toast.warn("Are you sure you filled everything!");
+      return false;
+    } else return true;
+  }
 
   return (
     <>
@@ -322,6 +554,19 @@ export default function Questions(props) {
         <CircularProgress style={{ margin: "25% 50%" }} />
       ) : (
         <div>
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            transition={Flip}
+            toastStyle={{ backgroundColor: "black", color: "white" }}
+          />
           <Question
             key={index}
             index={Number(index)}
@@ -343,26 +588,75 @@ export default function Questions(props) {
                 border: "1px solid white",
                 borderRadius: "20px",
               }}
-              onClick={() => setIndex(index - 1)}
+              onClick={() => {
+                setIndex(index - 1);
+                window.scrollTo(0, 0);
+              }}
             >
               BACK
             </button>
           ) : null}
-          {index <= numberQ - 2 ? (
+          {index <= numberQ - 1 ? (
+            <>
             <button
-              style={{
-                width: "60%",
-                margin: "0px 20% 20px 20%",
-                background: "#388cf2",
-                color: "white",
-                border: "1px solid white",
-                borderRadius: "20px",
-              }}
-              onClick={() => setIndex(index + 1)}
+            style={{
+              width: "60%",
+              margin: "0px 20% 20px 20%",
+              background: "#388cf2",
+              color: "white",
+              border: "1px solid white",
+              borderRadius: "20px",
+            }}
+            onClick={async () => {
+              setSavelastone(true);
+              if (!(await confirmSave())) {
+                return;
+              }
+              setIndex(index + 1);
+              window.scrollTo(0, 0);
+            }}
+          >
+            {index==numberQ-1?"Save":"Save and next"}
+          </button>
+            {index<=lastsaveindex && index<=numberQ-2 &&
+            <button
+            style={{
+              width: "60%",
+              margin: "0px 20% 20px 20%",
+              background: "#388cf2",
+              color: "white",
+              border: "1px solid white",
+              borderRadius: "20px",
+            }}
+            onClick={async () => {
+              setIndex(index + 1);
+              window.scrollTo(0, 0);
+            }}
             >
-              Continue
+              next
             </button>
-          ) : (
+            }
+          
+            </>
+            
+          ) : //  (
+          //   <button
+          //     style={{
+          //       width: "60%",
+          //       height: "40px",
+          //       margin: "0px 20% 20px 20%",
+          //       background: "#388cf2",
+          //       color: "white",
+          //       border: "1px solid white",
+          //       borderRadius: "20px",
+          //     }}
+          //     onClick={confirmSave}
+          //   >
+          //     SAVE PAPER
+          //   </button>
+          // )
+          null}
+          {/* {index == 0 ? (
             <button
               style={{
                 width: "60%",
@@ -373,28 +667,13 @@ export default function Questions(props) {
                 border: "1px solid white",
                 borderRadius: "20px",
               }}
-              onClick={confirmSave}
+              onClick={() => {
+                confirmSave();
+              }}
             >
-              SAVE PAPER
+              SAVE ONE QUESTION
             </button>
-          )}
-          {index == 0 ? <button
-            style={{
-              width: "60%",
-              height: "40px",
-              margin: "0px 20% 20px 20%",
-              background: "#388cf2",
-              color: "white",
-              border: "1px solid white",
-              borderRadius: "20px",
-            }}
-            onClick={() => {
-              confirmSave();
-            }}
-          >
-            SAVE ONE QUESTION
-          </button>:null}
-          
+          ) : null} */}
         </div>
       )}
     </>

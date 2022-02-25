@@ -3,7 +3,7 @@ import React,{useEffect,useState} from 'react'
 export default function Timer(props) {
     const [hours, sethours] = useState(Math.floor(props.duration/60));
     const [mins, setMins] = useState(props.duration%60)
-    const [secs, setSecs] = useState(0)
+    const [secs, setSecs] = useState(props.secs?props.secs:0)
     const [clear,setClear]=useState(false)
     const [counter, setCounter] = useState(props.duration);
 

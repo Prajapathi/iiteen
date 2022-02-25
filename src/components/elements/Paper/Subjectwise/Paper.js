@@ -7,6 +7,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Question from "../../QuestionAnswer/Question";
+import { MenuItem, TextField } from "@material-ui/core";
 
 export function Paper(props) {
   const history = useHistory();
@@ -14,6 +15,9 @@ export function Paper(props) {
   const [questions, setQuestions] = React.useState([]);
   const [answers, setAnswers] = React.useState([]);
   const [index, setIndex] = React.useState(0);
+  const [filter,setFilter]=React.useState("");
+  const selfref=React.useRef()
+  const [loading,setLoading]=React.useState(false)
 
   // window.onpopstate = function (e) {
   //   console.log("paper.js called");
@@ -32,7 +36,7 @@ export function Paper(props) {
     // localStorage.removeItem("dialog");
   }
 
-  // console.log(props);
+  console.log(props);
   React.useEffect(() => {
     //if user is not navigating through MockTestCard then redirect to home
     //new code
@@ -48,7 +52,7 @@ export function Paper(props) {
     }
     // localStorage.removeItem("PaperName")
 
-    // console.log("lll", props.paper);
+    console.log("lll", props.paper);
     setQuestions(props.paper.questions);
     setAnswers(props.answers);
     const a = [];
@@ -65,12 +69,38 @@ export function Paper(props) {
     //
   }, []);
 
+  React.useEffect(()=>{
+    if(filter=="Hardness"){
+      setLoading(true)
+      let arr=props.paper.questions;
+      arr.sort(function(a,b){return a.rating-b.rating})
+      console.log(questions)
+      setQuestions(arr)
+      let count=0;
+      setInterval(()=>{
+        count++
+        if(count==2){
+          setLoading(false)
+          return;
+        }
+      },100)
+      
+    }
+  },[filter])
+
   const navigateQuestion = (ind) => {
     //new code
     localStorage.setItem("palleteindex", ind);
     //
     setIndex(ind);
   };
+
+  React.useEffect(()=>{
+    console.log(questions)
+    // ref.render(
+      // selfref.current.render()
+      // if(!loading)setLoading(false)
+  },[questions])
 
   return (
     <>
@@ -79,9 +109,27 @@ export function Paper(props) {
         onload={checkFirstVisit()}
       >
         <div>{props.paper.name} </div>
+        <div>Filter {" "}
+        <TextField
+            id="standard-number"
+            select
+            // label="Chapter Name"
+            // helperText="Filter"
+            value={filter}
+            style={{ width: "150px", marginRight: "20px" }}
+            onChange={(event) => {
+              setFilter(event.target.value);
+            }}
+          >
+                  <MenuItem value={"Hardness"} key={index}>
+                    By Hardness(ASC)
+                  </MenuItem>
+          </TextField>
         <div>Level {props.paper.level} </div>
       </div>
-      <Container
+        </div>
+        {!loading?
+        <Container
         fluid
         style={{
           paddingLeft: 0,
@@ -101,32 +149,35 @@ export function Paper(props) {
               // ,questions[index].number,questions[index].Questionnumber
             )} */}
             <Question
-              key={index}
-              type={"subjectwise"}
-              question={questions ? questions[index] : []}
-              noOfQuestions={25}
-              qid={
-                answers && answers[index]
-                  ? questions[answers[index].number]
-                    ? questions[answers[index].number].qid
-                    : 0
+            ref={selfref}
+            key={index}
+            type={"subjectwise"}
+            question={questions ? questions[index] : []}
+            noOfQuestions={25}
+            qid={
+              answers && answers[index]
+                ? questions[answers[index].number]
+                  ? questions[answers[index].number].qid
                   : 0
-              }
-              number={
-                localStorage.getItem("PaperName") == "Subjectwise" &&
-                answers &&
-                answers[index]
-                  ? answers[index].number+1
-                  : localStorage.getItem("PaperName") ==
-                      "previousyearSubjectwise" &&
-                    answers &&
-                    answers[index]
-                  ? answers[index].number + 1
-                  : 0
-              }
-              goToPrevQuestion={() => setIndex(index - 1)}
-              goToNextQuestion={() => setIndex(index + 1)}
-            />
+                : 0
+            }
+            number={
+              localStorage.getItem("PaperName") == "Subjectwise" &&
+              answers &&
+              answers[index]
+                ? answers[index].number+1
+                : localStorage.getItem("PaperName") ==
+                    "previousyearSubjectwise" &&
+                  answers &&
+                  answers[index]
+                ? answers[index].number + 1
+                : 0
+            }
+            goToPrevQuestion={() => setIndex(index - 1)}
+            goToNextQuestion={() => setIndex(index + 1)}
+          />
+            
+            
           </div>
 
           <div style={{ width: "20%" }}>
@@ -136,6 +187,8 @@ export function Paper(props) {
                   className="page-no"
                   style={{
                     background: props.answers[ind].isBookmarked
+                    // background: props.answers.filter((a)=>(a.qid==questions[answers[ind].number].qid))[0].isBookmarked
+                    
                       ? "#ff9700"
                       : props.answers[ind].isAnswered
                       ? "#3B95C2"
@@ -155,7 +208,10 @@ export function Paper(props) {
             </div>
           </div>
         </div>
-      </Container>
+      </Container>:
+      <div style={{height:"100vh"}}></div>
+      }
+      
     </>
   );
 }

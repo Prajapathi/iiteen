@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styl from "../PreviousYearSubjectwise/components/css/QuePaper.module.css";
 import CloseIcon from "@mui/icons-material/Close";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 const Advance = () => {
   const [paper, setPaper] = useState([]);
@@ -14,6 +16,7 @@ const Advance = () => {
   const [shift, setShift] = useState();
   const [date, setDate] = useState();
   const [indexofpapers, setIndexofpapers] = useState(0);
+  const [loading,setLoading]=useState(true)
 
   useEffect(() => {
     if (type == "mocktest") {
@@ -47,6 +50,7 @@ const Advance = () => {
             shift: doc.data().shift,
           }))
         );
+        setLoading(false)
         console.log(snap.docs.length);
         setSize(snap.docs.length);
       });
@@ -85,6 +89,7 @@ const Advance = () => {
     db.collection(mainpapertype.toUpperCase())
       .doc("ADVANCE")
       .update({ indexofpaper: indexofpapers + 1 });
+      setIndexofpapers(indexofpapers+1)
   }
   function setEdit(index) {
     let temp = [...editable];
@@ -163,196 +168,205 @@ const Advance = () => {
   }
   //
   return (
-    <div>
-      <div
-        style={{
-          marginTop: "10%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          color: "rgb(88, 88, 88)",
-        }}
-      >
-        <h1>Advance Paper Type</h1>
+    <>
+    {loading ?
+      <Box sx={{ display: 'flex',justifyContent:"center", alignItems:"center",height:"1000px" }}>
+    <CircularProgress />
+  </Box>
+  :
+  <div>
+  <div
+    style={{
+      marginTop: "10%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      color: "rgb(88, 88, 88)",
+    }}
+  >
+    <h1>Advance Paper Type</h1>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        width: "1100px",
+        flexWrap: "wrap",
+      }}
+    >
+      {paper.map((p, index) => (
         <div
           style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            width: "1100px",
-            flexWrap: "wrap",
+            width: "300px",
+            margin: "30px",
           }}
         >
-          {paper.map((p, index) => (
+          <Link
+            to={{
+              pathname: `${
+                !editable[index]
+                  ? p.syllabusCreated
+                    ? "/PreviousYearSubjectwise/4"
+                    : `/admin/${mainpapertype}test/main/advance/selectsyllabus/${
+                        p.number - 1
+                      }`
+                  : "#"
+              }`,
+              state: {
+                papernumber: Number(p.number),
+                paperindex: index + 1,
+                mainpapertype: mainpapertype,
+              },
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              sessionStorage.setItem("paperindex",index+1)
+              editable[index] && e.preventDefault();
+            }}
+          >
             <div
+              className={styl.subjects}
               style={{
-                width: "300px",
-                margin: "30px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
               }}
             >
-              <Link
-                to={{
-                  pathname: `${
-                    !editable[index]
-                      ? p.syllabusCreated
-                        ? "/PreviousYearSubjectwise/4"
-                        : `/admin/${mainpapertype}test/main/advance/selectsyllabus/${
-                            p.number - 1
-                          }`
-                      : "#"
-                  }`,
-                  state: {
-                    papernumber: Number(p.number),
-                    paperindex: index + 1,
-                    mainpapertype: mainpapertype,
-                  },
+              <IconButton
+                style={{
+                  position: "absolute",
+                  top: "0px",
+                  right: "0px",
+                  backgroundColor: "#fc584c",
+                  borderTopRightRadius: "15px !important",
+                  borderTopLeftRadius: "0px",
+                  borderBottomRightRadius: "0px",
+                  borderBottomLeftRadius: "0px",
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  sessionStorage.setItem("paperindex",index+1)
-                  editable[index] && e.preventDefault();
+                  e.preventDefault();
+                  if (
+                    window.confirm(
+                      "Are you sure you want to delete this paper completely?"
+                    )
+                  ) {
+                    deletepaperfromdatabase(p.number, p.noofques);
+                  }
                 }}
+                className="dialog-close-icon"
               >
-                <div
-                  className={styl.subjects}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    position: "relative",
-                  }}
-                >
-                  <IconButton
-                    style={{
-                      position: "absolute",
-                      top: "0px",
-                      right: "0px",
-                      backgroundColor: "#fc584c",
-                      borderTopRightRadius: "15px !important",
-                      borderTopLeftRadius: "0px",
-                      borderBottomRightRadius: "0px",
-                      borderBottomLeftRadius: "0px",
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      if (
-                        window.confirm(
-                          "Are you sure you want to delete this paper completely?"
-                        )
-                      ) {
-                        deletepaperfromdatabase(p.number, p.noofques);
-                      }
-                    }}
-                    className="dialog-close-icon"
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                  <h4>Advance Paper {index + 1}</h4>
-                  <h6>No. of Questions :{p.noofques ? p.noofques : "0"}</h6>
-                  {mainpapertype == "aits" ? (
-                    <div style={{ display: "flex", alignItems: "baseline" }}>
-                      {!editable[index] ? (
-                        <div style={{ color: "blue", fontSize: "13px" }}>
-                          Date: {p.date ? p.date : 0} | Time:
-                          {p.shift ? p.shift : 0}
-                        </div>
-                      ) : (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-evenly",
-                            alignItems: "baseline",
-                            fontSize: "14px",
-                          }}
-                        >
-                          <TextField
-                            id="datetime-local"
-                            label="Date and time"
-                            type="date"
-                            sx={{
-                              width: "50%",
-                              height: "50%",
-                              fontSize: "14px",
-                            }}
-                            // className={classes.textField}
-                            // InputLabelProps={{
-                            //   shrink: true,
-                            // }}
-                            InputProps={{ style: { fontSize: 12, height: 18 } }}
-                            InputLabelProps={{ style: { fontSize: 12 } }}
-                            style={{ width: "110px", marginRight: "10px" }}
-                            value={!editable[index] ? p.date : date}
-                            onChange={(e) => {
-                              setDate(e.target.value);
-                              console.log(e.target.value);
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                            }}
-                          />
-                          <TextField
-                            id="standard-number"
-                            InputProps={{ style: { fontSize: 12, height: 18 } }}
-                            InputLabelProps={{ style: { fontSize: 12 } }}
-                            select
-                            label="slot"
-                            value={!editable[index] ? p.shift : shift}
-                            style={{ width: "90px" }}
-                            onChange={(event) => {
-                              setShift(event.target.value);
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                            }}
-                          >
-                            <MenuItem value={"shift1"}>shift 1(9-12)</MenuItem>
-                            <MenuItem value={"shift2"}>shift 2(1-4)</MenuItem>
-                          </TextField>
-                        </div>
-                      )}
-                      <button
-                        onClick={(e) => {
-                          console.log("hello");
-                          e.stopPropagation();
-                          e.preventDefault();
-                          if (editable[index]) savetodatabase(p.number);
-                          else {
-                            setDate(p.date);
-                            setShift(p.shift);
-                          }
-                          setEdit(index);
-                          console.log(editable);
+                <CloseIcon />
+              </IconButton>
+              <h4>Advance Paper {index + 1}</h4>
+              <h6>No. of Questions :{p.noofques ? p.noofques : "0"}</h6>
+              {mainpapertype == "aits" ? (
+                <div style={{ display: "flex", alignItems: "baseline" }}>
+                  {!editable[index] ? (
+                    <div style={{ color: "blue", fontSize: "13px" }}>
+                      Date: {p.date ? p.date : 0} | Time:
+                      {p.shift ? p.shift : 0}
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-evenly",
+                        alignItems: "baseline",
+                        fontSize: "14px",
+                      }}
+                    >
+                      <TextField
+                        id="datetime-local"
+                        label="Date and time"
+                        type="date"
+                        sx={{
+                          width: "50%",
+                          height: "50%",
+                          fontSize: "14px",
                         }}
-                        style={{
-                          fontSize: "13px",
-                          backgroundColor: "grey",
-                          color: "white",
-                          border: "1px solid grey",
-                          borderRadius: "5px",
-                          marginLeft: "5px",
-                          height: "20px",
+                        // className={classes.textField}
+                        // InputLabelProps={{
+                        //   shrink: true,
+                        // }}
+                        InputProps={{ style: { fontSize: 12, height: 18 } }}
+                        InputLabelProps={{ style: { fontSize: 12 } }}
+                        style={{ width: "110px", marginRight: "10px" }}
+                        value={!editable[index] ? p.date : date}
+                        onChange={(e) => {
+                          setDate(e.target.value);
+                          console.log(e.target.value);
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      />
+                      <TextField
+                        id="standard-number"
+                        InputProps={{ style: { fontSize: 12, height: 18 } }}
+                        InputLabelProps={{ style: { fontSize: 12 } }}
+                        select
+                        label="slot"
+                        value={!editable[index] ? p.shift : shift}
+                        style={{ width: "90px" }}
+                        onChange={(event) => {
+                          setShift(event.target.value);
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
                         }}
                       >
-                        {editable[index] ? "save" : "change"}
-                      </button>
+                        <MenuItem value={"shift1"}>shift 1(9-12)</MenuItem>
+                        <MenuItem value={"shift2"}>shift 2(1-4)</MenuItem>
+                      </TextField>
                     </div>
-                  ) : null}
+                  )}
+                  <button
+                    onClick={(e) => {
+                      console.log("hello");
+                      e.stopPropagation();
+                      e.preventDefault();
+                      if (editable[index]) savetodatabase(p.number);
+                      else {
+                        setDate(p.date);
+                        setShift(p.shift);
+                      }
+                      setEdit(index);
+                      console.log(editable);
+                    }}
+                    style={{
+                      fontSize: "13px",
+                      backgroundColor: "grey",
+                      color: "white",
+                      border: "1px solid grey",
+                      borderRadius: "5px",
+                      marginLeft: "5px",
+                      height: "20px",
+                    }}
+                  >
+                    {editable[index] ? "save" : "change"}
+                  </button>
                 </div>
-              </Link>
+              ) : null}
             </div>
-          ))}
-          <div>
-            <button className={styl.plusbutton} onClick={CreateNewPaper}>
-              +
-            </button>
-          </div>
+          </Link>
         </div>
+      ))}
+      <div>
+        <button className={styl.plusbutton} onClick={CreateNewPaper}>
+          +
+        </button>
       </div>
     </div>
+  </div>
+</div>}
+    </>
+    
+    
   );
 };
 

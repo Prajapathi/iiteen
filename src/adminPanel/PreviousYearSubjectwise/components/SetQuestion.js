@@ -26,9 +26,21 @@ import "../components/css/myCss.css";
 import yeardata from "../components/data/year";
 import { render } from "@testing-library/react";
 import { Link, useHistory } from "react-router-dom";
-import { ToastContainer, toast ,Flip} from "react-toastify";
+import { ToastContainer, toast, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Syllabus from "./data/syllabus";
+import tagslist from "./data/tags";
+import Rating from "@mui/material/Rating";
+import Box from "@mui/material/Box";
+import StarIcon from "@mui/icons-material/Star";
 
+const labels = {
+  1: "Very Easy",
+  2: "Easy",
+  3: "Medium",
+  4: "Hard",
+  5: "Very Hard",
+};
 
 toast.configure();
 
@@ -50,7 +62,7 @@ const SetQuestion = (props) => {
   var history = useHistory();
   var [editable, setEditable] = useState([]);
   var [count, setCount] = useState(0);
-  var [visible,setVisible]=useState(true)
+  var [visible, setVisible] = useState(true);
   const [multiOption, setMultiOption] = React.useState([
     false,
     false,
@@ -61,21 +73,23 @@ const SetQuestion = (props) => {
   const [section, setSection] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [Id, setId] = useState(props.location.state.id);
-  const [subj,setSubj]=useState("");
+  const [subj, setSubj] = useState("");
+  const [tags,setTags]=useState("")
 
   const [locationKeys, setLocationKeys] = useState([]);
-  const [saveposition, setSaveposition] = useState(0);
   const [open, setOpen] = useState(false);
-  const [droptype, setDroptype] = useState("");
-  const [field, setField] = useState("");
-  const [v, setV] = useState("");
-  const [index, setIndex] = useState("");
+  const [value, setValue] = React.useState(3);
+  const [hover, setHover] = React.useState(-1);
+  // const [droptype, setDroptype] = useState("");
+  // const [field, setField] = useState("");
+  // const [v, setV] = useState("");
+  // const [index, setIndex] = useState("");
 
-  const ref = useRef();
-  const cursorPosition = 2;
-  const [data2, setData2] = useState("");
+  // const ref = useRef();
+  // const cursorPosition = 2;
+  // const [data2, setData2] = useState("");
 
-  const [mocksingletype, setMocksingletype] = useState();
+  // const [mocksingletype, setMocksingletype] = useState();
 
   const numarr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -87,15 +101,23 @@ const SetQuestion = (props) => {
   // alert(props.match.params.Id)
 
   // console.log(props.location.state);
-  const Class = props.location.state.Class;
+  // const Class = props.location.state.Class;
+  const [Class, setClass] = useState(
+    props.location.state.Class ? props.location.state.Class : ""
+  );
+
+  console.log(props.location.state.Class, Class);
   // const Id = props.location.state.id;
 
   // this QuestionNo here is like index to the allQuestion array it is not the questionNo of the database
   const QuestionNo = props.location.state.QuestionNo;
   const Subject = props.location.state.Subject;
-  const Chapter = props.location.state.Chapter;
+  // const Chapter = props.location.state.Chapter;
+  const [Chapter, setChapter] = useState(
+    props.location.state.Chapter ? props.location.state.Chapter : ""
+  );
   const mockpaperno = props.location.state.mockpaperno;
-  const mainpapertype=props.location.state.mainpapertype;
+  const mainpapertype = props.location.state.mainpapertype;
   // console.log(Class,Id,QuestionNo,Subject,Chapter);
   // const allQuestions = props.location.state.allQuestions;
 
@@ -166,30 +188,34 @@ const SetQuestion = (props) => {
     //
     fetchPaper();
     fetchAllQuestions();
-    if(Subject=='physics'){
-      setSubj(1)
-    }else if(Subject=='chemistry'){
-      setSubj(2)
-    }else if(Subject=='maths'){
-      setSubj(3)
+    if (Subject == "physics") {
+      setSubj(1);
+    } else if (Subject == "chemistry") {
+      setSubj(2);
+    } else if (Subject == "maths") {
+      setSubj(3);
     }
+    // console.log(Subject,QuestionNo)
     if (Subject === "mocktest") {
+      // console.log(Subject,QuestionNo)
       if (
         (QuestionNo >= 1 && QuestionNo <= 20) ||
         (QuestionNo >= 31 && QuestionNo <= 50) ||
         (QuestionNo >= 61 && QuestionNo <= 80)
       ) {
+        // console.log(Subject,QuestionNo)
         // setMocksingletype("singletype");
         setQuestionType("4");
       } else {
         // setMocksingletype("numericaltype")
         setQuestionType("2");
       }
-      if(QuestionNo>=1 && QuestionNo<=30){
-        setSubj(1)
-      }else if(QuestionNo>=31 && QuestionNo<=60){
-        setSubj(2)
-      }else setSubj(3)
+      if (QuestionNo >= 1 && QuestionNo <= 30) {
+        // console.log(Subject,QuestionNo)
+        setSubj(1);
+      } else if (QuestionNo >= 31 && QuestionNo <= 60) {
+        setSubj(2);
+      } else setSubj(3);
     }
     if (Subject === "mocktestadvance") {
       fetchmocktestadvancepatterndata();
@@ -197,30 +223,41 @@ const SetQuestion = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log(section);
-    let totalnoofquespersubject=0;
-    for (let i = 0; i < section.length; i++) {
-      totalnoofquespersubject+=Number(section[i].noofques);
-    }
-    if(QuestionNo>=1 && QuestionNo<=totalnoofquespersubject){
-      setSubj(1)
-    }else if(QuestionNo>=1+totalnoofquespersubject && QuestionNo<=totalnoofquespersubject*2){
-      setSubj(2)
-    }else setSubj(3)
-    let aggregate = 0;
-    for (let i = 0; i < section.length; i++) {
-      if (
-        (QuestionNo >= 1 + aggregate &&
-        QuestionNo <= Number(section[i].noofques) + aggregate) ||
-        (QuestionNo >= 1 + aggregate + totalnoofquespersubject &&
-          QuestionNo <= Number(section[i].noofques) + aggregate + totalnoofquespersubject) ||
-          (QuestionNo >= 1 + aggregate + totalnoofquespersubject*2 &&
-            QuestionNo <= Number(section[i].noofques) + aggregate + totalnoofquespersubject*2)
-      ) {
-        setQuestionType(getquestiontype(section[i].type));
-        break;
+    if (section.length > 0) {
+      console.log(section);
+      let totalnoofquespersubject = 0;
+      for (let i = 0; i < section.length; i++) {
+        totalnoofquespersubject += Number(section[i].noofques);
       }
-      aggregate += Number(section[i].noofques);
+      if (QuestionNo >= 1 && QuestionNo <= totalnoofquespersubject) {
+        setSubj(1);
+      } else if (
+        QuestionNo >= 1 + totalnoofquespersubject &&
+        QuestionNo <= totalnoofquespersubject * 2
+      ) {
+        setSubj(2);
+      } else setSubj(3);
+      let aggregate = 0;
+      for (let i = 0; i < section.length; i++) {
+        if (
+          (QuestionNo >= 1 + aggregate &&
+            QuestionNo <= Number(section[i].noofques) + aggregate) ||
+          (QuestionNo >= 1 + aggregate + totalnoofquespersubject &&
+            QuestionNo <=
+              Number(section[i].noofques) +
+                aggregate +
+                totalnoofquespersubject) ||
+          (QuestionNo >= 1 + aggregate + totalnoofquespersubject * 2 &&
+            QuestionNo <=
+              Number(section[i].noofques) +
+                aggregate +
+                totalnoofquespersubject * 2)
+        ) {
+          setQuestionType(getquestiontype(section[i].type));
+          break;
+        }
+        aggregate += Number(section[i].noofques);
+      }
     }
   }, [section, QuestionNo]);
 
@@ -231,9 +268,12 @@ const SetQuestion = (props) => {
 
   console.log("allQuestions", allQuestions);
 
+  // console.log("user auth",firebase.auth().currentUser,firebase.auth())
+
   const submitPaper = async (e) => {
     // const option=[option1,option2,option3,option4];
-    console.log("uid",firebase.auth().currentUser.uid)
+    console.log("uid", firebase.auth().currentUser.uid);
+    // console.log("user auth",firebase.auth().currentUser,firebase.auth())
     setSubmitted(true);
     toast.success("SUBMITTED");
     const db = firebase.firestore();
@@ -267,7 +307,11 @@ const SetQuestion = (props) => {
         year: year,
         college: college,
         number: `${QuestionNo}`,
-        subject:subj
+        subject: subj,
+        class: Class,
+        chapter: Chapter,
+        rating:value,
+        tags:tags
       })
       .then((docref) => {
         console.log(
@@ -275,7 +319,7 @@ const SetQuestion = (props) => {
           "     Your question has been uploaded to database ",
           docref.id
         );
-        
+
         setId(docref.id);
         setSubmitted(true);
       })
@@ -299,6 +343,7 @@ const SetQuestion = (props) => {
           .doc(`PAPER${Number(mockpaperno)}`)
           .collection("question");
       } else {
+        console.log(Class, Subject, Chapter);
         var q = await db
           .collection("PYSV")
           .doc(Class)
@@ -335,13 +380,16 @@ const SetQuestion = (props) => {
           year: year,
           college: college,
           number: `${QuestionNo}`,
+          class: Class,
+          chapter: Chapter,
+          rating:value,
+          tags:tags
         })
         .then(() => {
           console.log(
             "UPDATED",
             "     Your question has been updated to database"
           );
-          
         })
         .catch((error) => {
           console.log("NOT UPDATED");
@@ -562,6 +610,14 @@ const SetQuestion = (props) => {
       setCollege(editPaper.college);
       setHint(editPaper.hint);
       setSolution(editPaper.solution);
+      if (Subject == "mocktest" || Subject == "mocktestadvance") {
+        setClass(editPaper.class?editPaper.class:"");
+        setChapter(editPaper.chapter?editPaper.chapter:"");
+        setTags(editPaper.tags?editPaper.tags:"")
+      }else{
+        setValue(editPaper.rating?editPaper.rating:3)
+      }
+
       // console.log(count);
       setCount(1);
       // render();
@@ -806,6 +862,9 @@ const SetQuestion = (props) => {
   );
 
   // const notify = () => toast("SUBMITTED");
+  useEffect(() => {
+    console.log(subj);
+  }, [subj]);
 
   return (
     <div>
@@ -832,6 +891,123 @@ const SetQuestion = (props) => {
         }`}
       </h1>
       <br />
+      {Subject == "mocktest" || Subject == "mocktestadvance" ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {/* <TextField
+            id="standard-number"
+            select
+            // label="Select Class"
+            helperText="Select Class"
+            value={Class}
+            style={{ width: "140px", marginRight: "20px" }}
+            onChange={(event) => {
+              setClass(event.target.value);
+            }}
+          >
+            <MenuItem value="class11">Class 11</MenuItem>
+            <MenuItem value="class12">Class 12</MenuItem>
+          </TextField> */}
+          {console.log(subj)}
+          {/* <TextField
+            id="standard-number"
+            select
+            // label="Chapter Name"
+            helperText="Chapter Name"
+            value={Chapter}
+            style={{ width: "250px", marginRight: "20px" }}
+            onChange={(event) => {
+              setChapter(event.target.value);
+            }}
+          >
+            {Class === "class11" ? (
+              Syllabus[subj - 1].class11 &&
+              Syllabus[subj - 1].class11.map((e, index) => {
+                var { value, chapter } = e;
+                return (
+                  <MenuItem value={value} key={index}>
+                    {chapter}
+                  </MenuItem>
+                );
+              })
+            ) : Class === "class12" ? (
+              Syllabus[subj - 1].class12 &&
+              Syllabus[subj - 1].class12.map((e, index) => {
+                var { value, chapter } = e;
+                return (
+                  <MenuItem value={value} key={index}>
+                    {chapter}
+                  </MenuItem>
+                );
+              })
+            ) : (
+              <MenuItem value={""}>Select Class</MenuItem>
+            )}
+          </TextField> */}
+          <TextField
+            id="standard-number"
+            select
+            // label="Chapter Name"
+            helperText="Tags"
+            value={tags}
+            style={{ width: "250px", marginRight: "20px" }}
+            onChange={(event) => {
+              setTags(event.target.value);
+            }}
+          >
+            {console.log(tagslist)}
+            {
+              tagslist[subj - 1] &&
+              tagslist[subj - 1].map((e, index) => {
+                return (
+                  <MenuItem value={e} key={index}>
+                    {e}
+                  </MenuItem>
+                );
+              })}
+          </TextField>
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            sx={{
+              width: 220,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Rating
+              name="hover-feedback"
+              value={value}
+              precision={1}
+              onChange={(event, newValue) => {
+                setValue(newValue);
+              }}
+              onChangeActive={(event, newHover) => {
+                setHover(newHover);
+              }}
+              emptyIcon={
+                <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
+              }
+            />
+            {value !== null && (
+              <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>
+            )}
+          </Box>
+        </div>
+      )}
+
       <Typer
         info={questionDetail}
         setInfo={setQuestionDetail}
@@ -839,7 +1015,7 @@ const SetQuestion = (props) => {
       />
 
       <DragContain filed={questionDetail} dropType="question" />
-      
+
       {/* ---------------------------------------Question End------------------------------------- */}
       <ToastContainer
         position="top-right"
@@ -852,7 +1028,7 @@ const SetQuestion = (props) => {
         draggable
         pauseOnHover
         transition={Flip}
-        toastStyle={{ backgroundColor: "black",color:"white" }}
+        toastStyle={{ backgroundColor: "black", color: "white" }}
       />
 
       <Container>
@@ -927,7 +1103,16 @@ const SetQuestion = (props) => {
                 value={correct}
                 type="number"
                 onChange={(e) => {
-                  setCorrect(Math.trunc(e.target.value * 100) / 100);
+                  // setCorrect(Math.trunc(e.target.value * 100) / 100);
+                  let t = e.target.value;
+                  setCorrect(
+                    Number(
+                      t.indexOf(".") >= 0
+                        ? t.substr(0, t.indexOf(".")) +
+                            t.substr(t.indexOf("."), 3)
+                        : t
+                    )
+                  );
                 }}
               >
                 {correct}
@@ -1119,165 +1304,184 @@ const SetQuestion = (props) => {
             </TextField>
           </Col>
         </Row>
-      </Container>  
-      {allQuestions && visible && 
-      <Container>
-      <Row>
-        {allQuestions && allQuestions[QuestionNo - 2] !== undefined && (
-          <Col>
-            {allQuestions[QuestionNo - 2] !== undefined ? (
-              <Button
-                className="shadow-btn"
-                component={Link}
-                to={{
-                  pathname: "/PreviousYearSubjectwise/setQuestion",
-                  state: {
-                    id: allQuestions[QuestionNo - 2].id,
-                    Class: Class,
-                    Subject: Subject,
-                    Chapter: Chapter,
-                    QuestionNo: QuestionNo - 1,
-                    mockpaperno: mockpaperno,
-                    mainpapertype:mainpapertype
-                    // allQuestions: allQuestions,
-                  },
-                }}
-                style={{
-                  margin: "30px",
-                  width: "30%",
-                  background:
-                    "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-                }}
-                onClick={async (e) => {
-                  if(correct.length==0 || correct==[] || correct==null || correct==undefined){
-                    e.stopPropagation()
-                  e.preventDefault()
-                    toast.warn("fill the correct answer!")
-                    return;
-                  }
-                  setVisible(false)
-                  if (Id !== undefined) {
-                    await updatePaper();
-                  } else {
-                    // await submitPaper()
-                    !submitted ? await submitPaper() : await updatePaper();
-                  }
-                  window.location.reload();
-                }}
-              >
-                back
-              </Button>
-            ) : null}
-          </Col>
-        )}
+      </Container>
+      {allQuestions && visible && (
+        <Container>
+          <Row>
+            {allQuestions && allQuestions[QuestionNo - 2] !== undefined && (
+              <Col>
+                {allQuestions[QuestionNo - 2] !== undefined ? (
+                  <Button
+                    className="shadow-btn"
+                    component={Link}
+                    to={{
+                      pathname: "/PreviousYearSubjectwise/setQuestion",
+                      state: {
+                        id: allQuestions[QuestionNo - 2].id,
+                        Class: Class,
+                        Subject: Subject,
+                        Chapter: Chapter,
+                        QuestionNo: QuestionNo - 1,
+                        mockpaperno: mockpaperno,
+                        mainpapertype: mainpapertype,
+                        // allQuestions: allQuestions,
+                      },
+                    }}
+                    style={{
+                      margin: "30px",
+                      width: "30%",
+                      background:
+                        "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+                    }}
+                    onClick={async (e) => {
+                      if (
+                        correct.length == 0 ||
+                        correct == [] ||
+                        correct == null ||
+                        correct == undefined
+                      ) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        toast.warn("fill the correct answer!");
+                        return;
+                      }
+                      setVisible(false);
+                      if (Id !== undefined) {
+                        await updatePaper();
+                      } else {
+                        // await submitPaper()
+                        !submitted ? await submitPaper() : await updatePaper();
+                      }
+                      window.location.reload();
+                    }}
+                  >
+                    back
+                  </Button>
+                ) : null}
+              </Col>
+            )}
 
-        <Col>
-          {Id ? (
-            <Button
-              className="shadow-btn"
-              onClick={()=>{
-                console.log(correct)
-                if(correct.length==0 || correct==[] || correct==null || correct==undefined){
-                  toast.warn("fill the correct answer!")
-                  return;
-                }
-                updatePaper()
-              }}
-              style={{
-                margin: "30px",
-                width: "40%",
-                background:
-                  "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-              }}
-            >
-              Update this Question
-            </Button>
-          ) : (
-            <Button
-              className="shadow-btn"
-              onClick={() => {
-                // await submitPaper()
-                console.log(correct)
-                if(correct.length==0 || correct==[] || correct==null || correct==undefined){
-                  toast.warn("fill the correct answer!")
-                  return;
-                }
-                !submitted ? submitPaper() : updatePaper();
-              }}
-              style={{
-                margin: "30px",
-                width: "40%",
-                background:
-                  "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-              }}
-            >
-              {/* in actual it is submit this question */}
-              Update this Question
-            </Button>
-          )}
-        </Col>
-        {allQuestions && (
-          <Col>
-            <Button
-              className="shadow-btn"
-              component={Link}
-              to={{
-                pathname: "/PreviousYearSubjectwise/setQuestion",
-                state: {
-                  id:
-                    allQuestions[QuestionNo] !== undefined
-                      ? allQuestions[QuestionNo].id
-                      : undefined,
-                  Class: Class,
-                  Subject: Subject,
-                  Chapter: Chapter,
-                  QuestionNo: QuestionNo + 1,
-                  mockpaperno: mockpaperno,
-                  mainpapertype:mainpapertype
-                  // allQuestions[QuestionNo] !== undefined
-                  //   ? QuestionNo + 1
-                  //   : allQuestions.length + 2,
-                  // allQuestions: allQuestions,
-                },
-              }}
-              style={{
-                margin: "30px",
-                width: "30%",
-                background:
-                  "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-              }}
-              onClick={async (e) => {
-                console.log(correct)
-                if(correct.length==0 || correct==[] || correct==null || correct==undefined){
-                  e.stopPropagation()
-                  e.preventDefault()
-                  toast.warn("fill the correct answer!")
-                  return;
-                }
-                console.log(Id);
-                setVisible(false)
-                if (Id !== undefined) {
-                  await updatePaper();
-                } else {
-                  // await submitPaper();
-                  !submitted ? await submitPaper() : await updatePaper();
-                }
-                // props.setQuestionNo(allQuestions.length + 1);
-                // setQuestionNo(allQuestions.length + 1);
-                window.location.reload();
-              }}
-            >
-              {allQuestions[QuestionNo] !== undefined
-                ? "next"
-                : "Add New Question"}
-            </Button>
-            {console.log(section)}
-          </Col>
-        )}
-      </Row>
-    </Container>
-      }
-      
+            <Col>
+              {Id ? (
+                <Button
+                  className="shadow-btn"
+                  onClick={() => {
+                    console.log(correct);
+                    if (
+                      correct.length == 0 ||
+                      correct == [] ||
+                      correct == null ||
+                      correct == undefined
+                    ) {
+                      toast.warn("fill the correct answer!");
+                      return;
+                    }
+                    updatePaper();
+                  }}
+                  style={{
+                    margin: "30px",
+                    width: "40%",
+                    background:
+                      "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+                  }}
+                >
+                  Update this Question
+                </Button>
+              ) : (
+                <Button
+                  className="shadow-btn"
+                  onClick={() => {
+                    // await submitPaper()
+                    console.log(correct);
+                    if (
+                      correct.length == 0 ||
+                      correct == [] ||
+                      correct == null ||
+                      correct == undefined
+                    ) {
+                      toast.warn("fill the correct answer!");
+                      return;
+                    }
+                    !submitted ? submitPaper() : updatePaper();
+                  }}
+                  style={{
+                    margin: "30px",
+                    width: "40%",
+                    background:
+                      "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+                  }}
+                >
+                  {/* in actual it is submit this question */}
+                  Update this Question
+                </Button>
+              )}
+            </Col>
+            {allQuestions && (
+              <Col>
+                <Button
+                  className="shadow-btn"
+                  component={Link}
+                  to={{
+                    pathname: "/PreviousYearSubjectwise/setQuestion",
+                    state: {
+                      id:
+                        allQuestions[QuestionNo] !== undefined
+                          ? allQuestions[QuestionNo].id
+                          : undefined,
+                      Class: Class,
+                      Subject: Subject,
+                      Chapter: Chapter,
+                      QuestionNo: QuestionNo + 1,
+                      mockpaperno: mockpaperno,
+                      mainpapertype: mainpapertype,
+                      // allQuestions[QuestionNo] !== undefined
+                      //   ? QuestionNo + 1
+                      //   : allQuestions.length + 2,
+                      // allQuestions: allQuestions,
+                    },
+                  }}
+                  style={{
+                    margin: "30px",
+                    width: "30%",
+                    background:
+                      "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+                  }}
+                  onClick={async (e) => {
+                    console.log(correct);
+                    if (
+                      correct.length == 0 ||
+                      correct == [] ||
+                      correct == null ||
+                      correct == undefined
+                    ) {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      toast.warn("fill the correct answer!");
+                      return;
+                    }
+                    console.log(Id);
+                    setVisible(false);
+                    if (Id !== undefined) {
+                      await updatePaper();
+                    } else {
+                      // await submitPaper();
+                      !submitted ? await submitPaper() : await updatePaper();
+                    }
+                    // props.setQuestionNo(allQuestions.length + 1);
+                    // setQuestionNo(allQuestions.length + 1);
+                    window.location.reload();
+                  }}
+                >
+                  {allQuestions[QuestionNo] !== undefined
+                    ? "next"
+                    : "Add New Question"}
+                </Button>
+                {console.log(section)}
+              </Col>
+            )}
+          </Row>
+        </Container>
+      )}
     </div>
   );
 };

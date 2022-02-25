@@ -1,0 +1,32 @@
+.plans-card{
+    height: 260px;
+    width: 430px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 15px;
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.192);
+    
+}
+.plans-heading{
+    font-size: 25px;
+}
+.plans-subheading{
+    width: 480px;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-evenly;
+}
+.plans-button{
+    width: 420px;
+    display: flex;
+    justify-content: space-evenly;
+    
+}
+.plans-individual-button{
+    background: linear-gradient(to bottom,  #36698d 0%,#52a0a3 100%);
+    border-radius: 10px !important;
+    padding: 7px 10px;
+    color:white !important;
+}

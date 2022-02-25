@@ -5,6 +5,7 @@ import Home from './components/screens/Home/Home'
 import About from './components/screens/About'
 import Landing from './components/Landing'
 import SubjectWise from './components/screens/Subjectwise/Subjectwise'
+import AITStest from './components/screens/AITS/AITStest'
 import AITS from './components/screens/AITS/AITS'
 import MockTest from './components/screens/MockTest/MockTest'
 import PreviousYear from './components/screens/PreviousYear/PreviousYear'
@@ -20,6 +21,14 @@ import Signin from './components/signin'
 import Loading from './components/elements/Loading'
 import PreviousYearSubjectwise from './components/screens/PreviousYear/PreviousYearSubjectwise'
 import MockTestMain from './components/screens/MockTest/MockTestMain'
+import Subjectwisemain from './components/screens/Subjectwise/Subjectwisemain'
+import Subjectwise from './components/screens/Subjectwise/Subjectwise'
+import PreviousYearSubjectwisemain from './components/screens/PreviousYear/PreviousYearSubjectwisemain'
+import NoAnalysisError from './components/elements/Paper/NoAnalysisError'
+import Cart from './components/Payments/Cart'
+import Plans from './components/Payments/Plans'
+import { PaytmButton } from './components/Payments/PaytmButton'
+import PaymentStatus from './components/Payments/PaymentStatus'
 
 
 export function Routing(props) {
@@ -50,14 +59,20 @@ export function Routing(props) {
                         <Route exact path="/MockTest">
                             <LeftMenu /><MockTestMain /><Footer />
                         </Route>
-                        <Route exact path="/Subjectwise">
-                            <LeftMenu /><SubjectWise /><Footer />
+                        <Route exact path="/Subjectwisemain">
+                            <LeftMenu /><Subjectwisemain /><Footer />
+                        </Route>
+                        <Route exact path="/Subjectwisepage">
+                            <LeftMenu /><Subjectwise /><Footer />
+                        </Route>
+                        <Route exact path="/PreviousYearmain">
+                            <LeftMenu /><PreviousYearSubjectwisemain /><Footer />
                         </Route>
                         <Route exact path="/PreviousYear">
                             <LeftMenu /><PreviousYearSubjectwise /><Footer />
                         </Route>
                         <Route path="/AITS">
-                            <LeftMenu /><AITS /><Footer />
+                            <LeftMenu /><AITStest /><Footer />
                         </Route>
                         <Route exact path="/Subjectwise/Papers/:paperName">
                             <LeftMenu /><SubjectwisePaper /><Footer />
@@ -83,8 +98,23 @@ export function Routing(props) {
                         <Route exact path="/QuestionsError">
                             <LeftMenu /><NoQuestionsError /><Footer />
                         </Route>
+                        <Route exact path="/AnalysisError">
+                            <LeftMenu /><NoAnalysisError /><Footer />
+                        </Route>
                         <Route exact path="/Signin">
                             <LeftMenu /><Signin /><Footer />
+                        </Route>
+                        <Route exact path="/Plan">
+                            <LeftMenu /><Cart /><Footer />
+                        </Route>
+                        <Route exact path="/Plans">
+                            <LeftMenu /><Plans /><Footer />
+                        </Route>
+                        <Route exact path="/Payment">
+                            <LeftMenu /><PaytmButton /><Footer />
+                        </Route>
+                        <Route exact path="/Paymentstatus">
+                            <LeftMenu /><PaymentStatus /><Footer />
                         </Route>
                     </Switch>
 

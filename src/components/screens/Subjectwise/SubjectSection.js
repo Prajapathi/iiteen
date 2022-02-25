@@ -54,6 +54,7 @@ export default function SubjectSection(props) {
                     ? chemistry
                     : maths
                 }
+                alt="subject"
                 id="subject-img"
               />
             </div>

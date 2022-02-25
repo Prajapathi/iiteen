@@ -5,6 +5,8 @@ export default function InstructionDropdown(props) {
   const [instruction, setInstruction] = useState(["", "", "", "", ""]);
 
   const { mockpaperType } = useParams();
+  const [noofquesset,setNoofquesset]=useState([])
+  const [no,setNo]=useState()
 
   useEffect(
     () => {
@@ -17,6 +19,38 @@ export default function InstructionDropdown(props) {
       //   props.inst
     ]
   );
+
+  console.log(props)
+
+  useEffect(() => {
+    console.log(props.section)
+    let arr = [];
+    let aggregate = 0;
+    props.section && props.section.map((item,index)=>{
+      arr.push(aggregate)
+      aggregate+=Number(props.section[index].noofques)
+    })
+    arr.push(aggregate)
+    // setTotalquestionpersub(aggregate)
+    setNoofquesset(arr);
+    console.log(aggregate,arr)
+  }, [props.section]);
+
+  useEffect(()=>{
+    console.log(noofquesset)
+    if(noofquesset.length!=0){
+      for(let i=0;i<noofquesset.length;i++){
+        console.log(noofquesset[i])
+        if(Number(props.index)<=noofquesset[i]){
+          console.log(props.index,noofquesset[i])
+          setNo(i)
+          break;
+        }
+      }
+    }
+  },[noofquesset])
+
+  console.log(noofquesset,no)
 
   return (
     <div>
@@ -139,10 +173,10 @@ export default function InstructionDropdown(props) {
                       <div className="inst-sub-points">
                         <div
                           style={{
-                            background: "#F6391B",
+                            background: "#878585",
                           }}
                         ></div>
-                        1 negative mark for incorrect Answer
+                        No negative mark for incorrect Answer
                       </div>
                     </li>
                     <li style={{ listStyleType: "none" }}>
@@ -160,7 +194,7 @@ export default function InstructionDropdown(props) {
               </div>
             )}
           </>
-        ) : (
+        ) : no && (
           <>
             {props.answerType == 4 && (
               <div 
@@ -174,7 +208,8 @@ export default function InstructionDropdown(props) {
               >
                 <div className="inst-point-box"></div>
                 <div className="inst-point-data">
-                  Part A contains 20 multiple choice questions. Each Questions
+                  
+                  Part {String.fromCharCode(65 + no-1)} contains {props.section[no-1].noofques} multiple choice questions. Each Questions
                   has 4 choices (A),(B),(C),(D) out of which only ONE is correct
                   <ul style={{ marginLeft: "42px" }}>
                     <li style={{ listStyleType: "none" }}>
@@ -223,7 +258,7 @@ export default function InstructionDropdown(props) {
               >
                 <div className="inst-point-box"></div>
                 <div className="inst-point-data">
-                  Part B contains 10 numerical choice questions. The answer to
+                  Part {String.fromCharCode(65 + no-1)} contains {props.section[no-1].noofques} numerical choice questions. The answer to
                   each questions is a numerical
                   <ul style={{ marginLeft: "42px" }}>
                     <li style={{ listStyleType: "none" }}>
@@ -240,7 +275,7 @@ export default function InstructionDropdown(props) {
                       <div className="inst-sub-points">
                         <div
                           style={{
-                            background: "#F6391B",
+                            background: "#878585",
                           }}
                         ></div>
                         No negative mark for incorrect Answer
@@ -272,7 +307,7 @@ export default function InstructionDropdown(props) {
               >
                 <div className="inst-point-box"></div>
                 <div className="inst-point-data">
-                  Part C multiple choice questions. Each Questions has 4 choices
+                  Part {String.fromCharCode(65 + no-1)} contains {props.section[no-1].noofques} multiple choice questions. Each Questions has 4 choices
                   (A),(B),(C),(D) out of which ONE or more is/are correct
                   <ul style={{ marginLeft: "42px" }}>
                     <li style={{ listStyleType: "none" }}>
@@ -352,8 +387,7 @@ export default function InstructionDropdown(props) {
               >
                 <div className="inst-point-box"></div>
                 <div className="inst-point-data">
-                  Part D multiple choice questions. Each Questions has 4 choices
-                  (A),(B),(C),(D) out of which ONE or more is/are correct
+                  Part {String.fromCharCode(65 + no-1)} contains {props.section[no-1].noofques} integer type questions. The answer to each questions is a non-negative integer
                   <ul style={{ marginLeft: "42px" }}>
                     <li style={{ listStyleType: "none" }}>
                       <div className="inst-sub-points">
@@ -369,7 +403,7 @@ export default function InstructionDropdown(props) {
                       <div className="inst-sub-points">
                         <div
                           style={{
-                            background: "#F6391B",
+                            background: "#878585",
                           }}
                         ></div>
                         No negative mark for incorrect Answer

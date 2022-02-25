@@ -1,0 +1,32 @@
+#upcoming-test-dialog{
+    display:flex;
+    justify-content: center;
+    align-items: center !important;
+    position: relative;
+    /* width: 300px; */
+}
+#upcoming-test-dialog-close{
+position: absolute;
+top: 0px;
+right: 0px;
+}
+.MuiDialog-paperFullWidth{
+    width: 500px !important;
+}
+.MuiDialog-paperScrollPaper{
+    align-items: center;
+}
+.dialog-syllabus-chapters{
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+    background-color:rgb(141, 141, 252);
+    color:white;
+    border-radius: 5px;
+    margin:5px 5px;
+    padding: 3px;
+    width: fit-content;
+    block-size: fit-content;
+    display: inline-block;
+
+}

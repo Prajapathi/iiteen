@@ -39,7 +39,7 @@ export function ChoiceSection(props) {
   ]);
   const [show, setShow] = useState(false);
   const [open, setOpen] = React.useState(false);
-  const [errorType, setErrorType] = useState(0);
+  const [errorType, setErrorType] = useState();
   const [showInstruction, setShowInstruction] = useState(false);
 
   useEffect(() => {
@@ -123,13 +123,13 @@ export function ChoiceSection(props) {
   };
   const submitQuestion = () => {
     //If there is choice in questions then check for no of questions attempted
-    console.log(
-      props.paper.toBeAttempted &&
-        props.paper.noOfQuestions != props.paper.toBeAttempted,
-      props.paper.noOfQuestions,
-      props.paper.toBeAttempted,
-      props.paper.noOfQuestions != props.paper.toBeAttempted
-    );
+    // console.log(
+    //   props.paper.toBeAttempted &&
+    //     props.paper.noOfQuestions != props.paper.toBeAttempted,
+    //   props.paper.noOfQuestions,
+    //   props.paper.toBeAttempted,
+    //   props.paper.noOfQuestions != props.paper.toBeAttempted
+    // );
     if (
       props.paper.toBeAttempted &&
       props.paper.noOfQuestions != props.paper.toBeAttempted
@@ -173,10 +173,29 @@ export function ChoiceSection(props) {
       props.setAnswer(props.qid, answer);
       if (props.number != props.noOfQuestions) props.goToNextQuestion();
     } else {
-      setErrorType(0);
+      console.log(flag);
+      setErrorType(1);
       setShow(true);
     }
   };
+
+  useEffect(() => {
+    let id;
+    if (errorType != undefined) {
+      let count = 0;
+      id = setInterval(() => {
+        console.log("calle", count);
+        count++;
+        if (count == 2) {
+          setErrorType();
+          return;
+        }
+      }, 1000);
+    }
+    return () => {
+      clearInterval(id);
+    };
+  }, [errorType]);
 
   return (
     <>
@@ -207,11 +226,12 @@ export function ChoiceSection(props) {
                     //   props.paper.noofques !=
                     //   props.paper.toBeAttempted.instructionInfo
                     // }
-                    // section={
-                    //   props.paper.questions[props.number - 1]
-                    //     ? props.paper.questions[props.number - 1].section
-                    //     : 0
-                    // }
+                    section={
+                      props.paper
+                        ? props.paper.sections
+                        : 0
+                    }
+                    index={props.number}
                   />
                 </div>
               )}
@@ -259,8 +279,10 @@ export function ChoiceSection(props) {
                     onChange={
                       props.stateAnswer[props.number - 1] &&
                       props.stateAnswer[props.number - 1].isAnswered
-                        ? null
-                        : (event) => setAnswer(Number(event.target.value))
+                        ? () => setErrorType(2)
+                        : (event) => {
+                            setAnswer(Number(Math.abs(event.target.value)));
+                          }
                     }
                   />
                 </div>
@@ -274,8 +296,21 @@ export function ChoiceSection(props) {
                     onChange={
                       props.stateAnswer[props.number - 1] &&
                       props.stateAnswer[props.number - 1].isAnswered
-                        ? null
-                        : (event) => setAnswer(Number(event.target.value))
+                        ? () => setErrorType(2)
+                        : (event) => {
+                            // setAnswer(
+                            //   Number(Math.round(event.target.value * 100) / 100)
+                            // );
+                            let t = event.target.value;
+                            setAnswer(
+                              Number(
+                                t.indexOf(".") >= 0
+                                  ? t.substr(0, t.indexOf(".")) +
+                                      t.substr(t.indexOf("."), 3)
+                                  : t
+                              )
+                            );
+                          }
                     }
                   />
                 </div>
@@ -288,7 +323,7 @@ export function ChoiceSection(props) {
                         onClick={
                           props.stateAnswer[props.number - 1] &&
                           props.stateAnswer[props.number - 1].isAnswered
-                            ? null
+                            ? () => setErrorType(2)
                             : props.data.answerType == 5
                             ? () => changeOptMultiple(0)
                             : () => changeOptSingle(0)
@@ -298,13 +333,14 @@ export function ChoiceSection(props) {
                             selectOpt[0] == true
                               ? "2px solid rgb(59, 149, 194)"
                               : "1px solid white",
+                          display: "flex",
                         }}
                       >
                         {"A.  "}
 
                         {props.data.option1 &&
                           props.data.option1.map((item) => (
-                            <div>
+                            <div style={{ margin: "auto" }}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -326,7 +362,7 @@ export function ChoiceSection(props) {
                         onClick={
                           props.stateAnswer[props.number - 1] &&
                           props.stateAnswer[props.number - 1].isAnswered
-                            ? null
+                            ? () => setErrorType(2)
                             : props.data.answerType == 5
                             ? () => changeOptMultiple(1)
                             : () => changeOptSingle(1)
@@ -336,13 +372,14 @@ export function ChoiceSection(props) {
                             selectOpt[1] == true
                               ? "2px solid rgb(59, 149, 194)"
                               : "1px solid white",
+                          display: "flex",
                         }}
                       >
                         {"B.  "}
 
                         {props.data.option2 &&
                           props.data.option2.map((item) => (
-                            <div>
+                            <div style={{ margin: "auto" }}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -364,7 +401,7 @@ export function ChoiceSection(props) {
                         onClick={
                           props.stateAnswer[props.number - 1] &&
                           props.stateAnswer[props.number - 1].isAnswered
-                            ? null
+                            ? () => setErrorType(2)
                             : props.data.answerType == 5
                             ? () => changeOptMultiple(2)
                             : () => changeOptSingle(2)
@@ -374,13 +411,14 @@ export function ChoiceSection(props) {
                             selectOpt[2] == true
                               ? "2px solid rgb(59, 149, 194)"
                               : "1px solid white",
+                          display: "flex",
                         }}
                       >
                         {"C. "}
 
                         {props.data.option3 &&
                           props.data.option3.map((item) => (
-                            <div>
+                            <div style={{ margin: "auto" }}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -402,7 +440,7 @@ export function ChoiceSection(props) {
                         onClick={
                           props.stateAnswer[props.number - 1] &&
                           props.stateAnswer[props.number - 1].isAnswered
-                            ? null
+                            ? () => setErrorType(2)
                             : props.data.answerType == 5
                             ? () => changeOptMultiple(3)
                             : () => changeOptSingle(3)
@@ -412,13 +450,14 @@ export function ChoiceSection(props) {
                             selectOpt[3] == true
                               ? "2px solid rgb(59, 149, 194)"
                               : "1px solid white",
+                          display: "flex",
                         }}
                       >
                         {"D. "}
 
                         {props.data.option4 &&
                           props.data.option4.map((item) => (
-                            <div>
+                            <div style={{ margin: "auto" }}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -440,6 +479,27 @@ export function ChoiceSection(props) {
                 </div>
               ) : null
             ) : null}
+            <div
+              style={{
+                height: "50px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "grey",
+              }}
+            >
+              {errorType == 1 ? (
+                "Please enter a proper response before submitting."
+              ) : errorType == 0 ? (
+                <>
+                  {" "}
+                  Maximum number of questions already attempted in this section.
+                  <br /> Please clear response before attempting more.
+                </>
+              ) : errorType == 2 ? (
+                "Please Clear the response first to change answer"
+              ) : null}
+            </div>
 
             <div className="submit">
               <div className="back-button">

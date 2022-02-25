@@ -30,7 +30,10 @@ export function Paper(props) {
     const [start,setStart]=React.useState(false)
     const [showSummary,setShowSummary]=React.useState(false)
     const [timeOver,setTimeOver]=React.useState(false)
-    const markdistributionbyanswertype=[[4,0,0],[2,0,0],[],[3,1,0],[4,2,0]]
+    const markdistributionbyanswertype=mockpaperType=="ADVANCE"?[[4,0,0],[2,0,0],[],[3,1,0],[4,2,0]]:[[],[4,0,0],[],[4,1,0],[]]
+    const [physec,setPhysec]=React.useState(0)
+    const [chesec,setChesec]=React.useState(0)
+    const [matsec,setMatsec]=React.useState(0)
 
     React.useEffect(() => {
         console.log("Yaha aaya",props)
@@ -39,7 +42,8 @@ export function Paper(props) {
         console.log(localStorage.getItem("PaperName"),verifyPaper,props.paper,`PAPER${props.paper.number}`)
         if(verifyPaper==null|| verifyPaper!=`PAPER${props.paper.number}`){
             console.log("Because of this")
-            history.push('/mocktest')
+            if(props.paper.date=="")history.push('/mocktest')
+            else history.push('/AITS')
         }
         localStorage.removeItem("PaperName")
 
@@ -103,11 +107,20 @@ export function Paper(props) {
                 break;
             case "PREVIOUSYEAR":
                 paperTypeRoute="PREVIOUSPapers"
+                break;
+            case "AITSTEST":
+                paperTypeRoute="AITSPapers"
+                break;
+                default:
+        paperTypeRoute = "undefined";
         }
+        console.log(props.user.uid,paperTypeRoute,props.paper.sections,props.paper.number)
+
         const db = firebase.firestore();
         const paperRef = db.collection("User").doc(props.user.uid).collection(paperTypeRoute).doc(`${props.paper.sections?"ADVANCE":"MAINS"}`).collection("PAPER").doc(`PAPER${props.paper.number}`)
             .set(UserQuestionModel)
             .then((res)=>{
+                console.log(props.user.uid,paperTypeRoute,props.paper.sections,props.paper.number)
                 let marks = 0;
                 let chemistryMarks = 0;
                 let physicsMarks = 0;
@@ -321,6 +334,7 @@ export function Paper(props) {
                     totalMarks: marks,
                     totalAttempted: totalAttempted,
                     totalCorrect: totalCorrect,
+                    totalsec:physec+chesec+matsec,
 
                     ///tags
                     physicsTags: physicsTags,
@@ -331,16 +345,19 @@ export function Paper(props) {
                     physicsCorrect: physicsCorrect,
                     physicsAttempted: physicsAttempted,
                     physicsMarks: physicsMarks,
+                    physec:physec,
 
                     ///chemistry
                     chemistryCorrect: chemistryCorrect,
                     chemistryAttempted: chemistryAttempted,
                     chemistryMarks: chemistryMarks,
+                    chesec:chesec,
 
                     ///maths
                     mathsCorrect: mathsCorrect,
                     mathsAttempted: mathsAttempted,
                     mathsMarks: mathsMarks,
+                    matsec:matsec
                 }
 
                 //Send leaderboard and Analysis to User model
@@ -360,6 +377,26 @@ export function Paper(props) {
             }) 
     }
 
+    
+
+    React.useEffect(()=>{
+        let count=0;
+        let id=setInterval(()=>{
+            count++;
+        },1000)
+        return () => {
+            console.log("c",physec,chesec,matsec,palleteSub,count)
+            if(palleteSub==1){
+                setPhysec(physec+count)
+            }else if(palleteSub==2){
+                setChesec(chesec+count)
+            }else if(palleteSub==3){
+                setMatsec(matsec+count)
+            }
+            clearInterval(id)
+        };
+    },[palleteSub,physec,chesec,matsec])
+
     return (
         !start?
         // //if start is false then display Marking scheme and General Instructions one by one
@@ -377,7 +414,7 @@ export function Paper(props) {
                 <div className="timer-bar" style={{justifyContent:showSummary?"center":"space-between"}}>
                     <div>
                         <div style={{marginRight:'10px'}}>Time Remaining: </div>
-                        <Timer duration={5} timeOver={setTimeOver}/>
+                        <Timer duration={180} timeOver={setTimeOver}/>
                     </div>
                     {showSummary?
                         null:
@@ -409,7 +446,7 @@ export function Paper(props) {
                                     <div className="subject-select" style={{background:palleteSub==2?'#448698':'white',color:palleteSub==2?'white':'black'}} onClick={()=>setPalleteSub(2)}>Chemistry</div>
                                     <div className="subject-select" style={{background:palleteSub==3?'#448698':'white',color:palleteSub==3?'white':'black'}} onClick={()=>setPalleteSub(3)}>Maths</div>
                                 </div>
-                                
+                                {console.log(palleteSub,palleteArray)}
                                 {
                                     palleteSub==1?
                                      palleteArray.phy.map((text, ind) => ( 
@@ -492,7 +529,7 @@ const mapDispatchToProps=dispatch=>{
     return{
         setNewAttemptTime:()=>dispatch(setNewAttemptTime())
     }
-}
+}   
 
 
 export default connect(mapStateToProps,mapDispatchToProps)(Paper)

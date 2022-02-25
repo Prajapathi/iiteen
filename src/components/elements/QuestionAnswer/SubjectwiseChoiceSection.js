@@ -47,6 +47,7 @@ export function SubjectwiseChoiceSection(props) {
   const [checked, setChecked] = React.useState(false);
   const [animate, setAnimate] = React.useState(false);
   const [data,setData]=React.useState("");
+  const [errorType, setErrorType] = useState();
 
   const handleChange = () => {
     setChecked((prev) => !prev);
@@ -245,6 +246,7 @@ export function SubjectwiseChoiceSection(props) {
     //if the answer given was not in acceptable format
     else {
       setShow(true);
+      setErrorType(1);
     }
   };
 
@@ -281,6 +283,24 @@ export function SubjectwiseChoiceSection(props) {
   //   props.stateAnswer.filter((a)=>(a.qid==props.qid))[0],
   //   props.data
   // );
+
+  useEffect(() => {
+    let id;
+    if (errorType != undefined) {
+      let count = 0;
+      id = setInterval(() => {
+        console.log("calle", count);
+        count++;
+        if (count == 2) {
+          setErrorType();
+          return;
+        }
+      }, 1000);
+    }
+    return () => {
+      clearInterval(id);
+    };
+  }, [errorType]);
 
   return (
     <>
@@ -497,7 +517,7 @@ export function SubjectwiseChoiceSection(props) {
                         >
                           {"A.  "}
                           {props.data.option1 && props.data.option1.map((item) => (
-                            <div>
+                            <>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -511,7 +531,7 @@ export function SubjectwiseChoiceSection(props) {
                                   style={{ width: "50%" }}
                                 />
                               ) : null}
-                            </div>
+                            </>
                           ))}
                           {/* {props.data.option1[0].type == 0 ? (
                             <br />
@@ -547,7 +567,7 @@ export function SubjectwiseChoiceSection(props) {
                         >
                           {"B.  "}
                           {props.data.option2 && props.data.option2.map((item) => (
-                            <div>
+                            <>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -561,7 +581,7 @@ export function SubjectwiseChoiceSection(props) {
                                   style={{ width: "50%" }}
                                 />
                               ) : null}
-                            </div>
+                            </>
                           ))}
                         </div>
                         <div
@@ -583,7 +603,7 @@ export function SubjectwiseChoiceSection(props) {
                           {"C. "}
 
                           {props.data.option3 && props.data.option3.map((item) => (
-                            <div>
+                            <>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -597,7 +617,7 @@ export function SubjectwiseChoiceSection(props) {
                                   style={{ width: "50%" }}
                                 />
                               ) : null}
-                            </div>
+                            </>
                           ))}
                         </div>
                         <div
@@ -619,7 +639,7 @@ export function SubjectwiseChoiceSection(props) {
                           {"D. "}
 
                           {props.data.option4 && props.data.option4.map((item) => (
-                            <div>
+                            <>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -633,7 +653,7 @@ export function SubjectwiseChoiceSection(props) {
                                   style={{ width: "50%" }}
                                 />
                               ) : null}
-                            </div>
+                            </>
                           ))}
                         </div>
                       </div>
@@ -642,6 +662,27 @@ export function SubjectwiseChoiceSection(props) {
                 </div>
               ) : null
             ) : null}
+            <div
+              style={{
+                height: "50px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "grey",
+              }}
+            >
+              {errorType == 1 ? (
+                "Please enter a proper response before submitting."
+              ) : errorType == 0 ? (
+                <>
+                  {" "}
+                  Maximum number of questions already attempted in this section.
+                  <br /> Please clear response before attempting more.
+                </>
+              ) : errorType == 2 ? (
+                "Please Clear the response first to change answer"
+              ) : null}
+            </div>
 
             <div className="solution-hint-sec">
               {showHint && !showSolution ? (
