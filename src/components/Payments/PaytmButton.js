@@ -152,7 +152,6 @@ export function PaytmButton(props) {
             });
           setLoading(false);
           setIspaymentdone(true);
-          // history.push('/paymentstatus')
         },
         notifyMerchant: function notifyMerchant(eventName, data) {
           console.log("Closed");

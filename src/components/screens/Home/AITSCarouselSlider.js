@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../../styles/AITS-carousel.css";
 import Dialog from "@material-ui/core/Dialog";
@@ -7,12 +7,12 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { Button, IconButton } from "@material-ui/core";
-import CloseIcon from '@mui/icons-material/Close';
-import '../../../styles/AITSCarouselSlider.css'
+import CloseIcon from "@mui/icons-material/Close";
+import "../../../styles/AITSCarouselSlider.css";
 
 export default function AITSCarouselSlider(props) {
   console.log(props);
-  const [open,setOpen]=useState(false)
+  const [open, setOpen] = useState(false);
 
   function findMonthandDay(date) {
     return new Date(date).toDateString().substring(4, 10);
@@ -28,50 +28,86 @@ export default function AITSCarouselSlider(props) {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           fullWidth={true}
-        //   id="class-select-dialog"  
-            id="upcoming-test-dialog"
+          //   id="class-select-dialog"
+          id="upcoming-test-dialog"
         >
-            <IconButton
-              onClick={()=>{setOpen(false)}}
+          <IconButton
+            onClick={() => {
+              setOpen(false);
+            }}
             //   className="dialog-close-icon"
             id="upcoming-test-dialog-close"
-            >
-              <CloseIcon />
-            </IconButton>
-          <DialogTitle>
-            {"Syllabus"}
-          </DialogTitle>
+          >
+            <CloseIcon />
+          </IconButton>
+          <DialogTitle>{"Syllabus"}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-            {props.paper.syllabustype == "class 11" ? (
-          <>
-            <li>It is a Part-Test</li>
-            <li>Covering Class-11th Syllabus</li>
-          </>
-        ) : props.paper.syllabustype == "class 12" ? (
-          <>
-            <li>It is a Part-Test</li>
-            <li>Covering Class-12th Syllabus</li>
-          </>
-        ) : props.paper.syllabustype == "partsyllabus" ? (
-          <>
-            <li>It is a Part-Test</li>
-            <li>Physics: {props.paper.phy.map((item)=>(
-                <span className="dialog-syllabus-chapters">{item}</span>
-            ))}</li>
-            <li>Chemistry: {props.paper.che.map((item)=>(
-                <span className="dialog-syllabus-chapters">{item}</span>
-            ))}</li>
-            <li>Maths: {props.paper.math.map((item)=>(
-                <span className="dialog-syllabus-chapters">{item}</span>
-            ))}</li>
-          </>
-        ) : (
-          <>
-            <li>It is a Full-Test</li>
-            <li>Covering both the syllabus of Class-11th and Class-12th</li>
-          </>
-        )}
+              {props.paper.syllabustype == "class 11" ? (
+                <>
+                  <li>It is a Part-Test</li>
+                  <li>Covering Class-11th Syllabus</li>
+                </>
+              ) : props.paper.syllabustype == "class 12" ? (
+                <>
+                  <li>It is a Part-Test</li>
+                  <li>Covering Class-12th Syllabus</li>
+                </>
+              ) : props.paper.syllabustype == "partsyllabus" ? (
+                <>
+                  <li>It is a Part-Test</li>
+                  <li>
+                    <span className="dialog-syllabus-chapters">Physics</span>:{" "}
+                    {props.paper.phy.map((item,index) => (
+                      // <span className="dialog-syllabus-chapters">{item}</span>
+                      <span>
+                        {item}
+                        {index!=props.paper.phy.length-1 && 
+                        <span className="dialog-syllabus-chapters-verticaldivision">
+                        &nbsp;{" | "}&nbsp; 
+                      </span>
+                        }
+                      </span>
+                    ))}
+                  </li>
+                  <li>
+                    <span className="dialog-syllabus-chapters">Chemistry</span>:{" "}
+                    {props.paper.che.map((item,index) => (
+                      // <span className="dialog-syllabus-chapters">{item}</span>
+                      <span>
+                        {item}
+                        {index!=props.paper.che.length-1 && 
+                        <span className="dialog-syllabus-chapters-verticaldivision">
+                        &nbsp;{" | "}&nbsp; 
+                      </span>
+                        }
+                      </span>
+                    ))}
+                  </li>
+                  <li>
+                    <span className="dialog-syllabus-chapters">Maths</span>:{" "}
+                    {props.paper.math.map((item,index) => (
+                      // <span className="dialog-syllabus-chapters">{item}</span>
+                      <span>
+                        {item}
+                        {index!=props.paper.math.length-1 && 
+                        <span className="dialog-syllabus-chapters-verticaldivision">
+                        &nbsp;{" | "}&nbsp; 
+                      </span>
+                        }
+                        
+                      </span>
+                    ))}
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>It is a Full-Test</li>
+                  <li>
+                    Covering both the syllabus of Class-11th and Class-12th
+                  </li>
+                </>
+              )}
             </DialogContentText>
           </DialogContent>
         </Dialog>
@@ -116,7 +152,9 @@ export default function AITSCarouselSlider(props) {
           </>
         )}
       </ul>
-      <div className="test-slider-button" onClick={()=>setOpen(true)}>View Schedule</div>
+      <div className="test-slider-button" onClick={() => setOpen(true)}>
+        View Schedule
+      </div>
       <Link to="/AITS" style={{ textDecoration: "none" }}>
         <div className="test-slider-button">View Details</div>
       </Link>

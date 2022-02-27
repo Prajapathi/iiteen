@@ -15,25 +15,16 @@ const Cart = () => {
       .get()
       .then((snap) => {
         console.log(snap.docs);
-        snap.docs.map((doc)=>{
-          if(doc.data().purchasetype=="Mains"){
-            let arr=[...paymentstat]
-            arr.push(1)
-            setPaymentstat(arr)
-          }
-          if(doc.data().purchasetype=="Mains+Advance"){
-            let arr=[...paymentstat]
-            arr.push(2)
-            setPaymentstat(arr)
-          }
-        })
+        setPaymentstat(
+          snap.docs.map((doc) => (doc.data().purchasetype))
+        )
       })
       .catch((err) => {
         console.log(err.message);
       });
   }, []);
 
-  console.log(paymentstat)
+  console.log(paymentstat);
   return (
     <div
       style={{
@@ -44,125 +35,118 @@ const Cart = () => {
         flexDirection: "column",
       }}
     >
-      {/* {paymentstat.length==0?<img
+      {paymentstat.length == 0 ? (
+        <>
+        <img
         src={cart}
         alt=""
-        style={{ height: "250px", marginBottom: "25px" }}
-      />:
-      <>
-      {paymentstat.includes(1) &&
-      <>
-      <div
-        style={{
-          marginRight: "45px",
-        }}
-        className="plans-card"
-      >
-        <div className="plans-heading">JEE(Mains) Test Series</div>
-        <div className="plans-subheading">
-          <div>
-            All India Test Series:
-            <br />
-            Subjectwise Tests:
-            <br />
-            Previous Year Tests:
-          </div>
-          <div>
-            Total 25+ AITS
-            <br />
-            Total 4000+ Questions
-            <br />
-            15 Years+ Previous papers
-          </div>
-        </div>
-        <div className="plans-button">
-          <Button className="plans-individual-button">
-            Check Schedule and Syllabus
-          </Button>
-          <Link className="plans-individual-button"
-          // component={Link}
-          to={{
-           pathname: "/payment",
-           state:{
-            type:"Mains"
-          }
-         }}
-         onClick={()=>{
-          sessionStorage.setItem("purchasetype","Mains")
-        }}
-          >
-            <span style={{ textDecoration: "line-through" }}>3499</span> 349/-
-            Rs Year
-          </Link>
-        </div>
-      </div>
-      </>
-      }
-      {paymentstat.includes(2) && 
-      <>
-      <div style={{}} className="plans-card">
-        <div className="plans-heading">JEE(Mains+Advance) Test Series</div>
-        <div className="plans-subheading">
-          <div>
-            All India Test Series:
-            <br />
-            Subjectwise Tests:
-            <br />
-            Previous Year Tests:
-          </div>
-          <div>
-            Total 25+ AITS
-            <br />
-            Total 4000+ Questions
-            <br />
-            15 Years+ Previous papers
-          </div>
-        </div>
-        <div className="plans-button">
-          <Button className="plans-individual-button" >
-            Check Schedule and Syllabus
-          </Button>
-          <Link className="plans-individual-button"
-          // component={Link}
-          to={{
-           pathname: "/payment",
-           state:{
-             type:"Mains+Advance"
-           }
-           
-         }}
-         onClick={()=>{
-          sessionStorage.setItem("purchasetype","Mains+Advance")
-        }}
-          >
-            <span style={{ textDecoration: "line-through" }}>3499</span> 349/-
-            Rs Year
-          </Link>
-        </div>
-      </div>
-      </>
-      }
-      </>
-      } */}
-      <img
-        src={cart}
-        alt=""
-        style={{ height: "150px", marginBottom: "45px" }}
+        style={{ height: "150px", marginBottom: "45px", marginRight: "28px" }}
       />
-      
+
       <div style={{ fontSize: "28px" }}>Nothing to show</div>
       <div style={{ fontSize: "16px", marginTop: "10px" }}>
         Your Cart Is Empty
       </div>
+        </>
+
+        
+      ) : (
+        <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        >
+          {paymentstat.includes("Mains") && (
+            <>
+              <div
+                style={{
+                  margin: "22px 40px",
+                }}
+                className="plans-card"
+              >
+                <div className="plans-heading">JEE(Mains) Test Series</div>
+                <div className="plans-subheading">
+                  <div>
+                    All India Test Series:
+                    <br />
+                    Subjectwise Tests:
+                    <br />
+                    Previous Year Tests:
+                  </div>
+                  <div>
+                    Total 25+ AITS
+                    <br />
+                    Total 4000+ Questions
+                    <br />
+                    15 Years+ Previous papers
+                  </div>
+                </div>
+                <div style={{color:"green"}}>You have purchased this course</div>
+                <div className="plans-button">
+                  <Button className="plans-individual-button">
+                    Check Schedule and Syllabus
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+          {paymentstat.includes("Mains+Advance") && (
+            <>
+              <div style={{}} className="plans-card">
+                <div className="plans-heading">
+                  JEE(Mains+Advance) Test Series
+                </div>
+                <div className="plans-subheading">
+                  <div>
+                    All India Test Series:
+                    <br />
+                    Subjectwise Tests:
+                    <br />
+                    Previous Year Tests:
+                  </div>
+                  <div>
+                    Total 25+ AITS
+                    <br />
+                    Total 4000+ Questions
+                    <br />
+                    15 Years+ Previous papers
+                  </div>
+                </div>
+                <div style={{color:"green"}}>You have purchased this course</div>
+                <div className="plans-button">
+                  <Button className="plans-individual-button">
+                    Check Schedule and Syllabus
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+      {/* <img
+        src={cart}
+        alt=""
+        style={{ height: "150px", marginBottom: "45px", marginRight: "28px" }}
+      />
+
+      <div style={{ fontSize: "28px" }}>Nothing to show</div>
+      <div style={{ fontSize: "16px", marginTop: "10px" }}>
+        Your Cart Is Empty
+      </div> */}
       <Button
         component={Link}
         to={{
           pathname: "/plans",
+          state:{
+            paymentstat:paymentstat
+          }
         }}
         className="plans-individual-button"
         style={{ marginTop: "45px" }}
       >
-        Purchase Now
+        {paymentstat.length == 0 ? "Purchase Now" : "See other courses"}
       </Button>
     </div>
   );
