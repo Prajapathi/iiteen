@@ -42,7 +42,7 @@ export default function Question(props) {
         <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
             <Row noGutters  >
                     <Col xs={6}>
-                        <QuestionSection number={props.number} data={question}/>
+                        <QuestionSection number={props.number} data={question} rating={props.question?props.question.rating:0}/>
                     </Col>
                     <Col xs={6}>
                         {/* {console.log("in question.js",props.number)} */}

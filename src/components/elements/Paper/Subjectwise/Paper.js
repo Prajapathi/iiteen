@@ -7,18 +7,27 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Question from "../../QuestionAnswer/Question";
-import { Box, MenuItem, TextField } from "@material-ui/core";
+import {
+  Box,
+  MenuItem,
+  Popover,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { Rating } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
-import '../../../../styles/paper-subjectwise-rating-box.css'
+import "../../../../styles/paper-subjectwise-rating-box.css";
 
-const labels = {
-  1: "Very Easy",
-  2: "Easy",
-  3: "Medium",
-  4: "Hard",
-  5: "Very Hard",
-};
+// const styles = theme => ({
+//   ...
+//   tr: {
+//     background: "#f1f1f1",
+//     '&:hover': {
+//        background: "#f00",
+//     },
+//   },
+//   ...
+// });
 
 export function Paper(props) {
   const history = useHistory();
@@ -31,7 +40,8 @@ export function Paper(props) {
   const [loading, setLoading] = React.useState(false);
   const [value, setValue] = React.useState(0);
   const [hover, setHover] = React.useState(-1);
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   // window.onpopstate = function (e) {
   //   console.log("paper.js called");
@@ -133,7 +143,7 @@ export function Paper(props) {
           return;
         }
       }, 100);
-    } else if (filter == "star") {
+    } else if (filter == "star" && value != 0) {
       setLoading(true);
       let arr = props.paper.questions;
       let arr2 = arr.filter(function (a) {
@@ -155,7 +165,7 @@ export function Paper(props) {
         }
       }, 100);
     }
-    console.log(selfref.current)
+    console.log(selfref.current);
   }, [filter, value]);
 
   const navigateQuestion = (ind) => {
@@ -172,85 +182,152 @@ export function Paper(props) {
     // if(!loading)setLoading(false)
   }, [questions]);
 
+  const handleClick = (event) => {
+    setAnchorEl(selfref.current);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
   return (
     <>
       <div
         className="timer-bar subjectwise-title-bar"
         onload={checkFirstVisit()}
+        style={{position:"relative"}}
       >
         <div>{props.paper.name} </div>
-        <div>
-          Filter&nbsp;&nbsp;
-          <TextField
-            id="standard-number"
-            select
-            ref={selfref}
-            InputProps={{ disableUnderline: true,
+        {localStorage.getItem("PaperName")=="previousyearSubjectwise" && 
+        <div style={{position:"absolute",left:"41%"}}>
+          
+        Filter&nbsp;&nbsp;
+        <TextField
+          id="standard-number"
+          select
+          InputProps={{
+            disableUnderline: true,
             //   onClick:(e)=>{
             //     e.stopPropagation()
-                
+
             //   // e.preventDefault()
-            // } 
-            }}
-            // label="Select filter"
-            // InputLabelProps={{
-            //   style: { fontSize: 12 },
-            //   onClick: (e) => {
-            //     e.stopPropagation();
-            //     e.preventDefault();
-            //   },
-            // }}
-            value={filter}
-            style={{ width: "150px", marginRight: "20px" }}
-            onChange={(event) => {
-              setFilter(event.target.value);
-              if (event.target.value != "star") {
-                setValue(0);
-              }
-            }}
-          >
-            
-            <MenuItem value={"asc"} key={"0"}>
-              Hardness(ASC)
-            </MenuItem>
-            <MenuItem value={"dsc"} key={"1"}>
-              Hardness(DSC)
-            </MenuItem>
-            <MenuItem value={"star"} key={"2"}>
-              <Box
-                sx={{
-                  width: 220,
-                  display: "flex",
-                  alignItems: "center",
+            // }
+            color: "#006497"
+          }}
+          // label="Select filter"
+          InputLabelProps={{
+            style: { fontSize: 12,color: "#006497" },
+          }}
+          value={filter}
+          style={{ width: "160px", marginRight: "20px",color:"#006497 !important" }}
+          onChange={(event) => {
+            setFilter(event.target.value);
+            if (event.target.value != "star") {
+              setValue(0);
+            }
+          }}
+        >
+          <MenuItem value={"asc"} key={"0"} style={{color: "#006497",fontSize:"14px"}}>
+            Rating: Low to High
+          </MenuItem>
+          <MenuItem value={"dsc"} key={"1"} style={{color: "#006497",fontSize:"14px"}}>
+            Rating: High to Low
+          </MenuItem>
+          <MenuItem value={"star"} key={"2"} onClick={handleClick} style={{color: "#006497",fontSize:"14px"}}>
+            {/* <Box
+              sx={{
+                width: 220,
+                display: "flex",
+                alignItems: "center",
+              }}
+              className="rating-box"
+            >
+              <Rating
+                name="hover-feedback"
+                value={value}
+                // style={{pointerEvents:`${filter=="star"?"none":"auto"}`}}
+                
+                precision={1}
+                onChange={(event, newValue) => {
+                  setValue(newValue);
                 }}
-                className="rating-box"
-              >
-                <Rating
-                  name="hover-feedback"
-                  value={value}
-                  // style={{pointerEvents:`${filter=="star"?"none":"auto"}`}}
+                onChangeActive={(event, newHover) => {
+                  setHover(-1);
+                }}
+                emptyIcon={
+                  <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" 
+                  // sx={{
+                  //   color:"grey !important"
+                  // }}
                   
-                  precision={1}
-                  onChange={(event, newValue) => {
-                    setValue(newValue);
-                  }}
-                  onChangeActive={(event, newHover) => {
-                    setHover(-1);
-                  }}
-                  emptyIcon={
-                    <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" 
+                  />
+                }
+              />
+            </Box> */}
+            Rating
+          </MenuItem>
+        </TextField>
+        {filter == "star" && (
+          <>
+            <Box
+              sx={{
+                width: 220,
+                display: "flex",
+                alignItems: "center",
+                position: "relative"
+              }}
+              className="rating-box"
+            >
+              <Rating
+                ref={selfref}
+                aria-describedby={id}
+                variant="contained"
+                name="hover-feedback"
+                value={value}
+                disableFocusRipple={true}
+                // style={{pointerEvents:`${filter=="star"?"none":"auto"}`}}
+
+                precision={1}
+                onChange={(event, newValue) => {
+                  setValue(newValue);
+                }}
+                onChangeActive={(event, newHover) => {
+                  setHover(-1);
+                }}
+                emptyIcon={
+                  <StarIcon
+                    style={{ opacity: 0.55 }}
+                    fontSize="inherit"
                     // sx={{
                     //   color:"grey !important"
                     // }}
-                    
-                    />
-                  }
-                />
-              </Box>
-            </MenuItem>
-          </TextField>
-          <div>Level {props.paper.level} </div>
-        </div>
+                  />
+                }
+              />
+              <div style={{position:"absolute",fontSize:"10px",bottom:"-4px"}}>SELECT RATING</div>
+            </Box>
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+            >
+              <Typography sx={{ p: 2 }}>Select rating</Typography>
+            </Popover>
+          </>
+        )}
+        
+      </div>
+        }
+        
+        <div>Level {props.paper.level} </div>
       </div>
       {!loading ? (
         <Container
@@ -307,16 +384,28 @@ export function Paper(props) {
                   <div
                     className="page-no"
                     style={{
-                      background: props.answers.filter((a)=>(a.qid==(questions[ind]?questions[ind].qid:0)))[0].isBookmarked
+                      background: props.answers.filter(
+                        (a) =>
+                          a.qid == (questions[ind] ? questions[ind].qid : 0)
+                      )[0].isBookmarked
                         ? // background: props.answers.filter((a)=>(a.qid==questions[answers[ind].number].qid))[0].isBookmarked
 
                           "#ff9700"
-                        : props.answers.filter((a)=>(a.qid==(questions[ind]?questions[ind].qid:0)))[0].isAnswered
+                        : props.answers.filter(
+                            (a) =>
+                              a.qid == (questions[ind] ? questions[ind].qid : 0)
+                          )[0].isAnswered
                         ? "#3B95C2"
                         : "white",
                       color:
-                      props.answers.filter((a)=>(a.qid==(questions[ind]?questions[ind].qid:0)))[0].isBookmarked ||
-                      props.answers.filter((a)=>(a.qid==(questions[ind]?questions[ind].qid:0)))[0].isAnswered
+                        props.answers.filter(
+                          (a) =>
+                            a.qid == (questions[ind] ? questions[ind].qid : 0)
+                        )[0].isBookmarked ||
+                        props.answers.filter(
+                          (a) =>
+                            a.qid == (questions[ind] ? questions[ind].qid : 0)
+                        )[0].isAnswered
                           ? "white"
                           : "black",
                       border: index == ind ? "1px solid black" : null,
