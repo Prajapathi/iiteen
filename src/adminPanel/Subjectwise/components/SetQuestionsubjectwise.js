@@ -885,9 +885,7 @@ const SetQuestionsubjectwise = (props) => {
           ) : questionType == "4" || questionType == "5" ? (
             <div>
               <div>
-                <h4>
                   <h4>Correct Answer</h4>
-                </h4>
                 <FormLabel component="legend" style={{ color: "black" }}>
                   Select Options
                 </FormLabel>
@@ -1091,6 +1089,11 @@ const SetQuestionsubjectwise = (props) => {
                         toast.warn("fill the correct answer!");
                         return;
                       }
+                      if(submitted && Id==undefined){
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return;
+                      }
                       setVisible(false);
                       if (Id !== undefined) {
                         await updatePaper();
@@ -1207,6 +1210,11 @@ const SetQuestionsubjectwise = (props) => {
                       return;
                     }
                     console.log(Id);
+                    if(submitted && Id==undefined){
+                      e.stopPropagation();
+                      e.preventDefault();
+                      return;
+                    }
                     setVisible(false);
                     if (Id !== undefined) {
                       await updatePaper();

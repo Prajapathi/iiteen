@@ -7,7 +7,27 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Question from "../../QuestionAnswer/Question";
-import { MenuItem, TextField } from "@material-ui/core";
+import {
+  Box,
+  MenuItem,
+  Popover,
+  TextField,
+  Typography,
+} from "@material-ui/core";
+import { Rating } from "@mui/material";
+import StarIcon from "@mui/icons-material/Star";
+import "../../../../styles/paper-subjectwise-rating-box.css";
+
+// const styles = theme => ({
+//   ...
+//   tr: {
+//     background: "#f1f1f1",
+//     '&:hover': {
+//        background: "#f00",
+//     },
+//   },
+//   ...
+// });
 
 export function Paper(props) {
   const history = useHistory();
@@ -15,9 +35,13 @@ export function Paper(props) {
   const [questions, setQuestions] = React.useState([]);
   const [answers, setAnswers] = React.useState([]);
   const [index, setIndex] = React.useState(0);
-  const [filter,setFilter]=React.useState("");
-  const selfref=React.useRef()
-  const [loading,setLoading]=React.useState(false)
+  const [filter, setFilter] = React.useState("");
+  const selfref = React.useRef();
+  const [loading, setLoading] = React.useState(false);
+  const [value, setValue] = React.useState(0);
+  const [hover, setHover] = React.useState(-1);
+  // const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   // window.onpopstate = function (e) {
   //   console.log("paper.js called");
@@ -31,7 +55,10 @@ export function Paper(props) {
     } else {
       // not first visit, so alert
       // alert('You refreshed!');
-      localStorage.setItem("reloaded",Number(localStorage.getItem("reloaded"))+1);
+      localStorage.setItem(
+        "reloaded",
+        Number(localStorage.getItem("reloaded")) + 1
+      );
     }
     // localStorage.removeItem("dialog");
   }
@@ -69,24 +96,77 @@ export function Paper(props) {
     //
   }, []);
 
-  React.useEffect(()=>{
-    if(filter=="Hardness"){
-      setLoading(true)
-      let arr=props.paper.questions;
-      arr.sort(function(a,b){return a.rating-b.rating})
-      console.log(questions)
-      setQuestions(arr)
-      let count=0;
-      setInterval(()=>{
-        count++
-        if(count==2){
-          setLoading(false)
+  React.useEffect(() => {
+    if (filter == "asc") {
+      setLoading(true);
+      let arr = props.paper.questions;
+      arr.sort(function (a, b) {
+        return a.rating - b.rating;
+      });
+      console.log(arr);
+      if (palleteArray.length != 25) {
+        let arr3 = [];
+        for (let i = 0; i < 25; i++) {
+          arr3.push(0);
+        }
+        setPalleteArray(arr3);
+      }
+      setQuestions(arr);
+      let count = 0;
+      setInterval(() => {
+        count++;
+        if (count == 2) {
+          setLoading(false);
           return;
         }
-      },100)
-      
+      }, 100);
+    } else if (filter == "dsc") {
+      setLoading(true);
+      let arr = props.paper.questions;
+      arr.sort(function (a, b) {
+        return b.rating - a.rating;
+      });
+      console.log(arr);
+      if (palleteArray.length != 25) {
+        let arr3 = [];
+        for (let i = 0; i < 25; i++) {
+          arr3.push(0);
+        }
+        setPalleteArray(arr3);
+      }
+      setQuestions(arr);
+      let count = 0;
+      setInterval(() => {
+        count++;
+        if (count == 2) {
+          setLoading(false);
+          return;
+        }
+      }, 100);
+    } else if (filter == "star" && value != 0) {
+      setLoading(true);
+      let arr = props.paper.questions;
+      let arr2 = arr.filter(function (a) {
+        return a.rating == value;
+      });
+      console.log(value, arr2);
+      let arr3 = [];
+      for (let i = 0; i < arr2.length; i++) {
+        arr3.push(0);
+      }
+      setPalleteArray(arr3);
+      setQuestions(arr2);
+      let count = 0;
+      setInterval(() => {
+        count++;
+        if (count == 2) {
+          setLoading(false);
+          return;
+        }
+      }, 100);
     }
-  },[filter])
+    console.log(selfref.current);
+  }, [filter, value]);
 
   const navigateQuestion = (ind) => {
     //new code
@@ -95,123 +175,255 @@ export function Paper(props) {
     setIndex(ind);
   };
 
-  React.useEffect(()=>{
-    console.log(questions)
+  React.useEffect(() => {
+    console.log(questions);
     // ref.render(
-      // selfref.current.render()
-      // if(!loading)setLoading(false)
-  },[questions])
+    // selfref.current.render()
+    // if(!loading)setLoading(false)
+  }, [questions]);
+
+  const handleClick = (event) => {
+    setAnchorEl(selfref.current);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
 
   return (
     <>
       <div
         className="timer-bar subjectwise-title-bar"
         onload={checkFirstVisit()}
+        style={{position:"relative"}}
       >
         <div>{props.paper.name} </div>
-        <div>Filter {" "}
+        {localStorage.getItem("PaperName")=="previousyearSubjectwise" && 
+        <div style={{position:"absolute",left:"41%"}}>
+          
+        Filter&nbsp;&nbsp;
         <TextField
-            id="standard-number"
-            select
-            // label="Chapter Name"
-            // helperText="Filter"
-            value={filter}
-            style={{ width: "150px", marginRight: "20px" }}
-            onChange={(event) => {
-              setFilter(event.target.value);
-            }}
-          >
-                  <MenuItem value={"Hardness"} key={index}>
-                    By Hardness(ASC)
-                  </MenuItem>
-          </TextField>
+          id="standard-number"
+          select
+          InputProps={{
+            disableUnderline: true,
+            //   onClick:(e)=>{
+            //     e.stopPropagation()
+
+            //   // e.preventDefault()
+            // }
+            color: "#006497"
+          }}
+          // label="Select filter"
+          InputLabelProps={{
+            style: { fontSize: 12,color: "#006497" },
+          }}
+          value={filter}
+          style={{ width: "160px", marginRight: "20px",color:"#006497 !important" }}
+          onChange={(event) => {
+            setFilter(event.target.value);
+            if (event.target.value != "star") {
+              setValue(0);
+            }
+          }}
+        >
+          <MenuItem value={"asc"} key={"0"} style={{color: "#006497",fontSize:"14px"}}>
+            Rating: Low to High
+          </MenuItem>
+          <MenuItem value={"dsc"} key={"1"} style={{color: "#006497",fontSize:"14px"}}>
+            Rating: High to Low
+          </MenuItem>
+          <MenuItem value={"star"} key={"2"} onClick={handleClick} style={{color: "#006497",fontSize:"14px"}}>
+            {/* <Box
+              sx={{
+                width: 220,
+                display: "flex",
+                alignItems: "center",
+              }}
+              className="rating-box"
+            >
+              <Rating
+                name="hover-feedback"
+                value={value}
+                // style={{pointerEvents:`${filter=="star"?"none":"auto"}`}}
+                
+                precision={1}
+                onChange={(event, newValue) => {
+                  setValue(newValue);
+                }}
+                onChangeActive={(event, newHover) => {
+                  setHover(-1);
+                }}
+                emptyIcon={
+                  <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" 
+                  // sx={{
+                  //   color:"grey !important"
+                  // }}
+                  
+                  />
+                }
+              />
+            </Box> */}
+            Rating
+          </MenuItem>
+        </TextField>
+        {filter == "star" && (
+          <>
+            <Box
+              sx={{
+                width: 220,
+                display: "flex",
+                alignItems: "center",
+                position: "relative"
+              }}
+              className="rating-box"
+            >
+              <Rating
+                ref={selfref}
+                aria-describedby={id}
+                variant="contained"
+                name="hover-feedback"
+                value={value}
+                disableFocusRipple={true}
+                // style={{pointerEvents:`${filter=="star"?"none":"auto"}`}}
+
+                precision={1}
+                onChange={(event, newValue) => {
+                  setValue(newValue);
+                }}
+                onChangeActive={(event, newHover) => {
+                  setHover(-1);
+                }}
+                emptyIcon={
+                  <StarIcon
+                    style={{ opacity: 0.55 }}
+                    fontSize="inherit"
+                    // sx={{
+                    //   color:"grey !important"
+                    // }}
+                  />
+                }
+              />
+              <div style={{position:"absolute",fontSize:"10px",bottom:"-4px"}}>SELECT RATING</div>
+            </Box>
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+            >
+              <Typography sx={{ p: 2 }}>Select rating</Typography>
+            </Popover>
+          </>
+        )}
+        
+      </div>
+        }
+        
         <div>Level {props.paper.level} </div>
       </div>
-        </div>
-        {!loading?
+      {!loading ? (
         <Container
-        fluid
-        style={{
-          paddingLeft: 0,
-          paddingRight: 0,
-          marginLeft: 0,
-          marginRight: 0,
-        }}
-      >
-        <div
-          noGutters
-          style={{ marginLeft: 0, marginRight: 0, display: "flex" }}
+          fluid
+          style={{
+            paddingLeft: 0,
+            paddingRight: 0,
+            marginLeft: 0,
+            marginRight: 0,
+          }}
         >
-          <div style={{ width: "80%" }}>
-            {/* {console.log(
+          <div
+            noGutters
+            style={{ marginLeft: 0, marginRight: 0, display: "flex" }}
+          >
+            <div style={{ width: "80%" }}>
+              {/* {console.log(
               "props",
               props
               // ,questions[index].number,questions[index].Questionnumber
             )} */}
-            <Question
-            ref={selfref}
-            key={index}
-            type={"subjectwise"}
-            question={questions ? questions[index] : []}
-            noOfQuestions={25}
-            qid={
-              answers && answers[index]
-                ? questions[answers[index].number]
-                  ? questions[answers[index].number].qid
-                  : 0
-                : 0
-            }
-            number={
-              localStorage.getItem("PaperName") == "Subjectwise" &&
-              answers &&
-              answers[index]
-                ? answers[index].number+1
-                : localStorage.getItem("PaperName") ==
-                    "previousyearSubjectwise" &&
+              <Question
+                key={index}
+                type={"subjectwise"}
+                question={questions ? questions[index] : []}
+                noOfQuestions={25}
+                qid={
+                  answers && answers[index]
+                    ? questions[answers[index].number]
+                      ? questions[answers[index].number].qid
+                      : 0
+                    : 0
+                }
+                number={
+                  localStorage.getItem("PaperName") == "Subjectwise" &&
                   answers &&
                   answers[index]
-                ? answers[index].number + 1
-                : 0
-            }
-            goToPrevQuestion={() => setIndex(index - 1)}
-            goToNextQuestion={() => setIndex(index + 1)}
-          />
-            
-            
-          </div>
+                    ? answers[index].number + 1
+                    : localStorage.getItem("PaperName") ==
+                        "previousyearSubjectwise" &&
+                      answers &&
+                      answers[index]
+                    ? answers[index].number + 1
+                    : 0
+                }
+                goToPrevQuestion={() => setIndex(index - 1)}
+                goToNextQuestion={() => setIndex(index + 1)}
+              />
+            </div>
 
-          <div style={{ width: "20%" }}>
-            <div className="ques-pallete">
-              {palleteArray.map((text, ind) => (
-                <div
-                  className="page-no"
-                  style={{
-                    background: props.answers[ind].isBookmarked
-                    // background: props.answers.filter((a)=>(a.qid==questions[answers[ind].number].qid))[0].isBookmarked
-                    
-                      ? "#ff9700"
-                      : props.answers[ind].isAnswered
-                      ? "#3B95C2"
-                      : "white",
-                    color:
-                      props.answers[ind].isBookmarked ||
-                      props.answers[ind].isAnswered
-                        ? "white"
-                        : "black",
-                    border: index == ind ? "1px solid black" : null,
-                  }}
-                  onClick={() => navigateQuestion(ind)}
-                >
-                  {ind + 1}
-                </div>
-              ))}
+            <div style={{ width: "20%" }}>
+              <div className="ques-pallete">
+                {palleteArray.map((text, ind) => (
+                  <div
+                    className="page-no"
+                    style={{
+                      background: props.answers.filter(
+                        (a) =>
+                          a.qid == (questions[ind] ? questions[ind].qid : 0)
+                      )[0].isBookmarked
+                        ? // background: props.answers.filter((a)=>(a.qid==questions[answers[ind].number].qid))[0].isBookmarked
+
+                          "#ff9700"
+                        : props.answers.filter(
+                            (a) =>
+                              a.qid == (questions[ind] ? questions[ind].qid : 0)
+                          )[0].isAnswered
+                        ? "#3B95C2"
+                        : "white",
+                      color:
+                        props.answers.filter(
+                          (a) =>
+                            a.qid == (questions[ind] ? questions[ind].qid : 0)
+                        )[0].isBookmarked ||
+                        props.answers.filter(
+                          (a) =>
+                            a.qid == (questions[ind] ? questions[ind].qid : 0)
+                        )[0].isAnswered
+                          ? "white"
+                          : "black",
+                      border: index == ind ? "1px solid black" : null,
+                    }}
+                    onClick={() => navigateQuestion(ind)}
+                  >
+                    {/* props.answers[ind] */}
+                    {/* {console.log(props.answers.filter((a)=>(a.qid==(questions[ind]?questions[ind].qid:0)))[0])} */}
+                    {ind + 1}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </Container>:
-      <div style={{height:"100vh"}}></div>
-      }
-      
+        </Container>
+      ) : (
+        <div style={{ height: "100vh" }}></div>
+      )}
     </>
   );
 }

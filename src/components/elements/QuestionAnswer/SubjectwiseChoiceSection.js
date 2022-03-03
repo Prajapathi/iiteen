@@ -376,7 +376,7 @@ export function SubjectwiseChoiceSection(props) {
                           : "s "}
                         {data.answer.map(
                           (opt, i) => (
-                            <>
+                            <span key={i}>
                               {opt == 0
                                 ? "A"
                                 : opt == 1
@@ -390,7 +390,7 @@ export function SubjectwiseChoiceSection(props) {
                                 1
                                 ? "."
                                 : ", "}
-                            </>
+                            </span>
                           )
                         )}
                       </>
@@ -454,7 +454,9 @@ export function SubjectwiseChoiceSection(props) {
                   }}
                 >
                   {props.data ? (
-                    localStorage.getItem("PaperName") == "Subjectwise" ? (
+                    // localStorage.getItem("PaperName") == "Subjectwise"
+                    props.data.option1==undefined
+                     ? (
                       props.data.option && props.data.option.map((text, index) => (
                         <div
                           className="option"
@@ -471,6 +473,7 @@ export function SubjectwiseChoiceSection(props) {
                                 ? "2px solid rgb(59, 149, 194)"
                                 : "1px solid white",
                           }}
+                          key={index}
                         >
                           {console.log("i got inside")}
                           {index === 0
@@ -496,8 +499,7 @@ export function SubjectwiseChoiceSection(props) {
                           ) : null}
                         </div>
                       ))
-                    ) : localStorage.getItem("PaperName") ==
-                      "previousyearSubjectwise" ? (
+                    ) :  (
                       <div>
                         <div
                           className="option"
@@ -516,8 +518,8 @@ export function SubjectwiseChoiceSection(props) {
                           }}
                         >
                           {"A.  "}
-                          {props.data.option1 && props.data.option1.map((item) => (
-                            <>
+                          {props.data.option1 && props.data.option1.map((item,index) => (
+                            <div key={index}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -531,7 +533,7 @@ export function SubjectwiseChoiceSection(props) {
                                   style={{ width: "50%" }}
                                 />
                               ) : null}
-                            </>
+                            </div>
                           ))}
                           {/* {props.data.option1[0].type == 0 ? (
                             <br />
@@ -566,8 +568,8 @@ export function SubjectwiseChoiceSection(props) {
                           }}
                         >
                           {"B.  "}
-                          {props.data.option2 && props.data.option2.map((item) => (
-                            <>
+                          {props.data.option2 && props.data.option2.map((item,index) => (
+                            <div key={index}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -581,7 +583,7 @@ export function SubjectwiseChoiceSection(props) {
                                   style={{ width: "50%" }}
                                 />
                               ) : null}
-                            </>
+                            </div>
                           ))}
                         </div>
                         <div
@@ -602,8 +604,8 @@ export function SubjectwiseChoiceSection(props) {
                         >
                           {"C. "}
 
-                          {props.data.option3 && props.data.option3.map((item) => (
-                            <>
+                          {props.data.option3 && props.data.option3.map((item,index) => (
+                            <div key={index}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -617,7 +619,7 @@ export function SubjectwiseChoiceSection(props) {
                                   style={{ width: "50%" }}
                                 />
                               ) : null}
-                            </>
+                            </div>
                           ))}
                         </div>
                         <div
@@ -638,8 +640,8 @@ export function SubjectwiseChoiceSection(props) {
                         >
                           {"D. "}
 
-                          {props.data.option4 && props.data.option4.map((item) => (
-                            <>
+                          {props.data.option4 && props.data.option4.map((item,index) => (
+                            <div key={index}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -653,11 +655,11 @@ export function SubjectwiseChoiceSection(props) {
                                   style={{ width: "50%" }}
                                 />
                               ) : null}
-                            </>
+                            </div>
                           ))}
                         </div>
                       </div>
-                    ) : null
+                    ) 
                   ) : null}
                 </div>
               ) : null
@@ -690,7 +692,7 @@ export function SubjectwiseChoiceSection(props) {
                   <h5 style={{ textAlign: "center" }}>Hint</h5>
                   {props.hint
                     ? props.hint.map((item, index) => (
-                        <>
+                        <div key={index}>
                           {item.type == 0 ? (
                             <br />
                           ) : item.type == 1 ? (
@@ -702,7 +704,7 @@ export function SubjectwiseChoiceSection(props) {
                               <img src={item.data} style={{ width: "100%" }} />
                             </div>
                           ) : null}
-                        </>
+                        </div>
                       ))
                     : null}
                 </div>
@@ -717,7 +719,7 @@ export function SubjectwiseChoiceSection(props) {
                   </h5>
                   {props.solution
                     ? props.solution.map((item, index) => (
-                        <>
+                        <div key={index}>
                           {item.type == 0 ? (
                             <br />
                           ) : item.type == 1 ? (
@@ -729,7 +731,7 @@ export function SubjectwiseChoiceSection(props) {
                               <img src={item.data} style={{ width: "100%" }} />
                             </div>
                           ) : null}
-                        </>
+                        </div>
                       ))
                     : null}
                 </div>

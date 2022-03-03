@@ -30,3 +30,11 @@ right: 0px;
     display: inline-block;
 
 }
+.dialog-syllabus-chapters-verticaldivision{
+    color: blue;
+    font-size: 22px;
+    width: fit-content;
+    block-size: fit-content;
+    display: inline-block;
+    
+}

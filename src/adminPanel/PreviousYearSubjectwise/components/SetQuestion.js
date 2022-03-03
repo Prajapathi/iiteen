@@ -106,7 +106,7 @@ const SetQuestion = (props) => {
     props.location.state.Class ? props.location.state.Class : ""
   );
 
-  console.log(props.location.state.Class, Class);
+  // console.log(props.location.state.Class, Class);
   // const Id = props.location.state.id;
 
   // this QuestionNo here is like index to the allQuestion array it is not the questionNo of the database
@@ -137,7 +137,7 @@ const SetQuestion = (props) => {
 
           // Handle back event
 
-          console.log("pop");
+          // console.log("pop");
           history.push(
             `${
               Subject === "physics"
@@ -179,7 +179,7 @@ const SetQuestion = (props) => {
     } else if (type == "numericaltype") {
       return "2";
     } else {
-      console.log("wrong questiontype from mocktestadvance");
+      // console.log("wrong questiontype from mocktestadvance");
     }
   }
   useEffect(() => {
@@ -224,7 +224,7 @@ const SetQuestion = (props) => {
 
   useEffect(() => {
     if (section.length > 0) {
-      console.log(section);
+      // console.log(section);
       let totalnoofquespersubject = 0;
       for (let i = 0; i < section.length; i++) {
         totalnoofquespersubject += Number(section[i].noofques);
@@ -266,7 +266,11 @@ const SetQuestion = (props) => {
     }
   }, [submitted]);
 
-  console.log("allQuestions", allQuestions);
+  useEffect(()=>{
+
+    if(allQuestions.length!=0)console.log("allQuestions", allQuestions);
+  },[allQuestions])
+  
 
   // console.log("user auth",firebase.auth().currentUser,firebase.auth())
 
@@ -354,18 +358,6 @@ const SetQuestion = (props) => {
       await q
         .doc(Id)
         .update({
-          // question: questionDetail,
-          // questionType: questionType,
-          // option2: option2,
-          // option1: option1,
-          // option3: option3,
-          // option4: option4,
-          // correct: correct,
-          // solution: solution,
-          // hint: hint,
-          // year: year,
-          // college: college,
-          // questionNumber: `${QuestionNo}`,
 
           question: questionDetail,
           answerType: questionType,
@@ -415,10 +407,10 @@ const SetQuestion = (props) => {
       } else {
         setCorrect(correct.filter((item) => item !== index));
       }
-      console.log(correct);
+      // console.log(correct);
     } else if (questionType == 4) {
       setCorrect([index]);
-      console.log(correct);
+      // console.log(correct);
     }
   };
 
@@ -525,7 +517,7 @@ const SetQuestion = (props) => {
         .doc(Id)
         .get()
         .then((snap) => {
-          console.log(snap.data());
+          // console.log(snap.data());
           if (snap.exists) {
             setEditPaper(snap.data());
           } else {
@@ -547,18 +539,18 @@ const SetQuestion = (props) => {
       .get()
       .then((snap) => {
         if (snap.exists) {
-          console.log(snap.data().sections);
+          // console.log(snap.data().sections);
           setSection(snap.data().sections);
-          console.log(section);
+          // console.log(section);
         }
       });
-    console.log(section);
+    // console.log(section);
   }
 
   async function fetchAllQuestions() {
     const db = firebase.firestore();
     if (Subject === "mocktest" || Subject === "mocktestadvance") {
-      console.log("mocktest", `PAPER${Number(mockpaperno)}`);
+      // console.log("mocktest", `PAPER${Number(mockpaperno)}`);
       var q = await db
         .collection(mainpapertype.toUpperCase())
         .doc(`${Subject === "mocktest" ? "MAINS" : "ADVANCE"}`)
@@ -575,7 +567,7 @@ const SetQuestion = (props) => {
     }
     await q.orderBy("number").onSnapshot(
       function (querySnapshot) {
-        console.log(querySnapshot.docs);
+        // console.log(querySnapshot.docs);
         var array = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           year: doc.data().year,
@@ -585,20 +577,20 @@ const SetQuestion = (props) => {
         array.sort((a, b) => {
           return a.quesno - b.quesno;
         });
-        console.log(array);
+        // console.log(array);
         setAllQuestions(array);
       },
       function (error) {
         console.log(error);
       }
     );
-    console.log(allQuestions);
+    // console.log(allQuestions);
   }
 
   useEffect(() => {
     // console.log("inside editpaper but not complete inside");
     if (editPaper !== "" && count == 0) {
-      console.log("inside editpaper", editPaper, count);
+      // console.log("inside editpaper", editPaper, count);
       setQuestionDetail(editPaper.question);
       setOption1(editPaper.option1);
       setOption2(editPaper.option2);
@@ -625,8 +617,8 @@ const SetQuestion = (props) => {
   }, [correct, editPaper, count]);
 
   function Handle(index) {
-    console.log(index);
-    console.log(editable.includes(index));
+    // console.log(index);
+    // console.log(editable.includes(index));
     if (editable.includes(index)) {
       let arr = [];
       for (let i = 0; i <= editable.length; i++) {
@@ -636,24 +628,24 @@ const SetQuestion = (props) => {
       }
       setEditable(arr);
     } else {
-      console.log([...editable, index]);
+      // console.log([...editable, index]);
       setEditable([...editable, index]);
-      console.log("editable", editable);
+      // console.log("editable", editable);
     }
-    console.log("editable", editable);
+    // console.log("editable", editable);
   }
 
   // async function Save(droptype, field, index, value=data2) {
 
   async function Save(droptype, field, index, value) {
     // if(dropType==="question"){
-    console.log("inside save droptype");
-    console.log(droptype, index, field, value);
+    // console.log("inside save droptype");
+    // console.log(droptype, index, field, value);
     const temp = [];
     for (let i = 0; i < field.length; i++) {
       if (i === index) {
         var { data, type } = field[i];
-        console.log(data, type, field[i]);
+        // console.log(data, type, field[i]);
         // data = value;
         data = value;
         temp.push({ data, type });
@@ -683,7 +675,7 @@ const SetQuestion = (props) => {
     if (droptype === "hint") {
       setHint(temp);
     }
-    console.log(temp);
+    // console.log(temp);
     setOpen(false);
     // console.log(questionDetail);
     // var start = ref.current.selectionStart;
@@ -699,7 +691,7 @@ const SetQuestion = (props) => {
     // ref.current.focus();
     // ref.current.selectionEnd = end + 7;
     // }
-    console.log("outside save droptype");
+    // console.log("outside save droptype");
     // return temp;
   }
   //
@@ -812,7 +804,7 @@ const SetQuestion = (props) => {
 
                                     // if(editable.includes(props.dropType + index))Save(props.dropType, props.filed, index);
                                     Handle(props.dropType + index);
-                                    console.log(editable);
+                                    // console.log(editable);
                                     // setDroptype(props.dropType)
                                     // setIndex(index)
                                     // setField(props.filed)
@@ -863,7 +855,7 @@ const SetQuestion = (props) => {
 
   // const notify = () => toast("SUBMITTED");
   useEffect(() => {
-    console.log(subj);
+    // console.log(subj);
   }, [subj]);
 
   return (
@@ -913,7 +905,7 @@ const SetQuestion = (props) => {
             <MenuItem value="class11">Class 11</MenuItem>
             <MenuItem value="class12">Class 12</MenuItem>
           </TextField> */}
-          {console.log(subj)}
+          {/* {console.log(subj)} */}
           {/* <TextField
             id="standard-number"
             select
@@ -960,7 +952,7 @@ const SetQuestion = (props) => {
               setTags(event.target.value);
             }}
           >
-            {console.log(tagslist)}
+            {/* {console.log(tagslist)} */}
             {
               tagslist[subj - 1] &&
               tagslist[subj - 1].map((e, index) => {
@@ -1141,9 +1133,7 @@ const SetQuestion = (props) => {
           ) : questionType === "4" || questionType === "5" ? (
             <div>
               <div>
-                <h4>
                   <h4>Correct Answer</h4>
-                </h4>
                 <FormLabel component="legend" style={{ color: "black" }}>
                   Select Options
                 </FormLabel>
@@ -1345,6 +1335,11 @@ const SetQuestion = (props) => {
                         toast.warn("fill the correct answer!");
                         return;
                       }
+                      if(submitted && Id==undefined){
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return;
+                      }
                       setVisible(false);
                       if (Id !== undefined) {
                         await updatePaper();
@@ -1366,7 +1361,7 @@ const SetQuestion = (props) => {
                 <Button
                   className="shadow-btn"
                   onClick={() => {
-                    console.log(correct);
+                    // console.log(correct);
                     if (
                       correct.length == 0 ||
                       correct == [] ||
@@ -1392,7 +1387,7 @@ const SetQuestion = (props) => {
                   className="shadow-btn"
                   onClick={() => {
                     // await submitPaper()
-                    console.log(correct);
+                    // console.log(correct);
                     if (
                       correct.length == 0 ||
                       correct == [] ||
@@ -1447,7 +1442,7 @@ const SetQuestion = (props) => {
                       "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
                   }}
                   onClick={async (e) => {
-                    console.log(correct);
+                    // console.log(correct);
                     if (
                       correct.length == 0 ||
                       correct == [] ||
@@ -1460,6 +1455,11 @@ const SetQuestion = (props) => {
                       return;
                     }
                     console.log(Id);
+                    if(submitted && Id==undefined){
+                      e.stopPropagation();
+                      e.preventDefault();
+                      return;
+                    }
                     setVisible(false);
                     if (Id !== undefined) {
                       await updatePaper();
@@ -1476,7 +1476,7 @@ const SetQuestion = (props) => {
                     ? "next"
                     : "Add New Question"}
                 </Button>
-                {console.log(section)}
+                {/* {console.log(section)} */}
               </Col>
             )}
           </Row>
