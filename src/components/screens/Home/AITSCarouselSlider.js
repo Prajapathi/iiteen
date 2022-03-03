@@ -114,7 +114,7 @@ export default function AITSCarouselSlider(props) {
         </Dialog>
       )}
 
-      <div className="test-slider-header"><img src={clockimg} alt=""/></div>
+      <div className="test-slider-header" style={{display:"flex",justifyContent:"center",alignContent:"center"}}><img src={clockimg} alt=""/></div>
       <div className="test-slider-date">
         {/* Dec 10 */}
         {findMonthandDay(props.paper.date)}

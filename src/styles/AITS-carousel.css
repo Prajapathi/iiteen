@@ -30,9 +30,9 @@
     border-radius:20px;
 }
 .test-slider-header{
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
     background:#A1E2EE;
     height:28%;
     border-top-left-radius:20px;
