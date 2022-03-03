@@ -239,8 +239,8 @@ const SetQuestionsubjectwise = (props) => {
       .add({
         question: questionDetail,
         answerType: questionType,
-        option2: option2,
         option1: option1,
+        option2: option2,
         option3: option3,
         option4: option4,
         // option:option,
@@ -288,8 +288,8 @@ const SetQuestionsubjectwise = (props) => {
 
           question: questionDetail,
           answerType: questionType,
-          option2: option2,
           option1: option1,
+          option2: option2,
           option3: option3,
           option4: option4,
           // option:option,

@@ -14,6 +14,7 @@ import googlePlay from "../assets/images/Landing/google-play.png";
 import iosStore from "../assets/images/Landing/app-store.png";
 import banner from "../assets/images/Landing/landing_main.png";
 import second from "../assets/images/Landing/second.png";
+import second2 from "../assets/images/second2.png";
 import subSection1 from "../assets/images/Landing/sub-section1.png";
 import subSection2 from "../assets/images/Landing/sub-section2.png";
 import subSection3 from "../assets/images/Landing/sub-section3.png";
@@ -111,7 +112,7 @@ export default function Landing() {
 
       <div id="section2">
         <h1 id="section2-heading">Why You should choose us?</h1>
-        <img src={second} />
+        <img src={second2} />
       </div>
 
       <div id="section3">

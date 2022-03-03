@@ -9,6 +9,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { Button, IconButton } from "@material-ui/core";
 import CloseIcon from "@mui/icons-material/Close";
 import "../../../styles/AITSCarouselSlider.css";
+import clockimg from '../../../assets/images/CC1.png'
 
 export default function AITSCarouselSlider(props) {
   console.log(props);
@@ -113,7 +114,7 @@ export default function AITSCarouselSlider(props) {
         </Dialog>
       )}
 
-      <div className="test-slider-header"></div>
+      <div className="test-slider-header"><img src={clockimg} alt=""/></div>
       <div className="test-slider-date">
         {/* Dec 10 */}
         {findMonthandDay(props.paper.date)}
