@@ -302,6 +302,71 @@ export function SubjectwiseChoiceSection(props) {
     };
   }, [errorType]);
 
+  // useEffect(()=>{
+  //   if(props.data!=undefined && props.data.option!=undefined){
+  //     try{
+
+  //       for(let z=0;z<4;z++){
+  //         let t1=props.data.option[z];
+  //         let o1=[];
+  //         console.log(t1)
+  //         for(let i=0;i<t1.length;){
+  //           console.log(i)
+  //           if(t1.substring(i,i+5)=="<br/>"){
+  //             o1.push({data:"",type:0})
+  //             i+=5;
+  //           }else if(t1.substring(i,i+5)=="<div>"){
+  //             i+=5;
+  //             let j;
+  //             for(j=i;j<t1.length;j++){
+  //               if(t1.substring(j,j+6)=="</div>"){
+  //                 o1.push({data:t1.substring(i,j),type:1})
+  //                 break;
+  //               }
+  //             }
+  //             i=j+6;
+  //           }else if(t1.substring(i,i+12)=="<InlineMath>"){
+  //             i+=12;
+  //             let j;
+  //             for(j=i;j<t1.length;j++){
+  //               if(t1.substring(j,j+13)=="</InlineMath>"){
+  //                 o1.push({data:t1.substring(i,j),type:2})
+  //                 break;
+  //               }
+  //             }
+  //             i=j+13;
+  //           }else if(t1.substring(i,i+9)=="<img src="){
+  //             i+=9;
+  //             let j;
+  //             for(j=i;j<t1.length;j++){
+  //               if(t1.substring(j,j+7)=="></img>"){
+  //                 o1.push({data:t1.substring(i,j),type:3})
+  //                 break;
+  //               }
+  //             }
+  //             i=j+7;
+  //           }else i++;
+  //         }
+  //         console.log(o1)
+  //         if(z==0){
+  //           console.log(o1)
+
+  //           props.data.option1=o1
+  //         }else if(z==1){
+  //           props.data.option2=o1
+  //         }else if(z==2){
+  //           props.data.option3=o1
+  //         }else props.data.option4=o1
+  //       }
+  //     }catch(e){
+  //       console.log(e.message)
+  //     }
+      
+      
+  //     console.log(props.data)
+  //   }
+  // },[props.data])
+
   return (
     <>
       <Container style={{ paddingLeft: 0, paddingRight: 0 }}>
@@ -456,6 +521,7 @@ export function SubjectwiseChoiceSection(props) {
                   {props.data ? (
                     // localStorage.getItem("PaperName") == "Subjectwise"
                     props.data.option1==undefined
+                    // true
                      ? (
                       props.data.option && props.data.option.map((text, index) => (
                         <div
@@ -475,7 +541,7 @@ export function SubjectwiseChoiceSection(props) {
                           }}
                           key={index}
                         >
-                          {console.log("i got inside")}
+                          {console.log("i got inside",text)}
                           {index === 0
                             ? "A.  "
                             : index === 1
@@ -497,6 +563,11 @@ export function SubjectwiseChoiceSection(props) {
                               style={{ width: "50%" }}
                             />
                           ) : null}
+                          {/* <div className="summary" dangerouslySetInnerHTML={{ __html: text }} /> */}
+                          {/* <InlineMath math=" \frac{a}{b} "/> */}
+                          {/* <InlineMath>\int_0^\infty x^2 dx</InlineMath> */}
+                          {/* <InlineMath>\frac{a}{b}</InlineMath> */}
+                          
                         </div>
                       ))
                     ) :  (
@@ -519,7 +590,7 @@ export function SubjectwiseChoiceSection(props) {
                         >
                           {"A.  "}
                           {props.data.option1 && props.data.option1.map((item,index) => (
-                            <div key={index}>
+                            <span key={index}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -532,8 +603,8 @@ export function SubjectwiseChoiceSection(props) {
                                   src={item.data}
                                   style={{ width: "50%" }}
                                 />
-                              ) : null}
-                            </div>
+                              ) : null}{" "}
+                            </span>
                           ))}
                           {/* {props.data.option1[0].type == 0 ? (
                             <br />
@@ -569,7 +640,7 @@ export function SubjectwiseChoiceSection(props) {
                         >
                           {"B.  "}
                           {props.data.option2 && props.data.option2.map((item,index) => (
-                            <div key={index}>
+                            <span key={index}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -582,8 +653,8 @@ export function SubjectwiseChoiceSection(props) {
                                   src={item.data}
                                   style={{ width: "50%" }}
                                 />
-                              ) : null}
-                            </div>
+                              ) : null}{" "}
+                            </span>
                           ))}
                         </div>
                         <div
@@ -605,7 +676,7 @@ export function SubjectwiseChoiceSection(props) {
                           {"C. "}
 
                           {props.data.option3 && props.data.option3.map((item,index) => (
-                            <div key={index}>
+                            <span key={index}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -618,8 +689,8 @@ export function SubjectwiseChoiceSection(props) {
                                   src={item.data}
                                   style={{ width: "50%" }}
                                 />
-                              ) : null}
-                            </div>
+                              ) : null}{" "}
+                            </span>
                           ))}
                         </div>
                         <div
@@ -641,7 +712,7 @@ export function SubjectwiseChoiceSection(props) {
                           {"D. "}
 
                           {props.data.option4 && props.data.option4.map((item,index) => (
-                            <div key={index}>
+                            <span key={index}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -654,8 +725,8 @@ export function SubjectwiseChoiceSection(props) {
                                   src={item.data}
                                   style={{ width: "50%" }}
                                 />
-                              ) : null}
-                            </div>
+                              ) : null}{" "}
+                            </span>
                           ))}
                         </div>
                       </div>
@@ -692,7 +763,7 @@ export function SubjectwiseChoiceSection(props) {
                   <h5 style={{ textAlign: "center" }}>Hint</h5>
                   {props.hint
                     ? props.hint.map((item, index) => (
-                        <div key={index}>
+                        <span key={index}>
                           {item.type == 0 ? (
                             <br />
                           ) : item.type == 1 ? (
@@ -703,8 +774,8 @@ export function SubjectwiseChoiceSection(props) {
                             <div id="ques-img-sec">
                               <img src={item.data} style={{ width: "100%" }} />
                             </div>
-                          ) : null}
-                        </div>
+                          ) : null}{" "}
+                        </span>
                       ))
                     : null}
                 </div>
@@ -719,7 +790,7 @@ export function SubjectwiseChoiceSection(props) {
                   </h5>
                   {props.solution
                     ? props.solution.map((item, index) => (
-                        <div key={index}>
+                        <span key={index}>
                           {item.type == 0 ? (
                             <br />
                           ) : item.type == 1 ? (
@@ -730,8 +801,8 @@ export function SubjectwiseChoiceSection(props) {
                             <div id="ques-img-sec">
                               <img src={item.data} style={{ width: "100%" }} />
                             </div>
-                          ) : null}
-                        </div>
+                          ) : null}{" "}
+                        </span>
                       ))
                     : null}
                 </div>
@@ -834,7 +905,7 @@ export function SubjectwiseChoiceSection(props) {
               Report
             </button>
           </DialogContentText>
-        </DialogContent>
+        </DialogContent>  
       </Dialog>
     </>
   );

@@ -340,7 +340,7 @@ export function ChoiceSection(props) {
 
                         {props.data.option1 &&
                           props.data.option1.map((item) => (
-                            <div style={{ margin: "auto" }}>
+                            <span style={{ margin: "auto" }}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -353,8 +353,8 @@ export function ChoiceSection(props) {
                                   src={item.data}
                                   style={{ width: "50%" }}
                                 />
-                              ) : null}
-                            </div>
+                              ) : null}{" "}
+                            </span>
                           ))}
                       </div>
                       <div
@@ -379,7 +379,7 @@ export function ChoiceSection(props) {
 
                         {props.data.option2 &&
                           props.data.option2.map((item) => (
-                            <div style={{ margin: "auto" }}>
+                            <span style={{ margin: "auto" }}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -392,8 +392,8 @@ export function ChoiceSection(props) {
                                   src={item.data}
                                   style={{ width: "50%" }}
                                 />
-                              ) : null}
-                            </div>
+                              ) : null}{" "}
+                            </span>
                           ))}
                       </div>
                       <div
@@ -418,7 +418,7 @@ export function ChoiceSection(props) {
 
                         {props.data.option3 &&
                           props.data.option3.map((item) => (
-                            <div style={{ margin: "auto" }}>
+                            <span style={{ margin: "auto" }}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -431,8 +431,8 @@ export function ChoiceSection(props) {
                                   src={item.data}
                                   style={{ width: "50%" }}
                                 />
-                              ) : null}
-                            </div>
+                              ) : null}{" "}
+                            </span>
                           ))}
                       </div>
                       <div
@@ -457,7 +457,7 @@ export function ChoiceSection(props) {
 
                         {props.data.option4 &&
                           props.data.option4.map((item) => (
-                            <div style={{ margin: "auto" }}>
+                            <span style={{ margin: "auto" }}>
                               {item.type == 0 ? (
                                 <br />
                               ) : item.type == 1 ? (
@@ -470,8 +470,8 @@ export function ChoiceSection(props) {
                                   src={item.data}
                                   style={{ width: "50%" }}
                                 />
-                              ) : null}
-                            </div>
+                              ) : null}{" "}
+                            </span>
                           ))}
                       </div>
                     </div>
@@ -488,7 +488,7 @@ export function ChoiceSection(props) {
                 color: "grey",
               }}
             >
-              {errorType == 1 ? (
+              {errorType == 1 ? ( 
                 "Please enter a proper response before submitting."
               ) : errorType == 0 ? (
                 <>

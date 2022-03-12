@@ -111,8 +111,9 @@ const SelectSyllabus = (props) => {
         phy: phy,
         che: che,
         math: math,
-        date: date,
+        date2: date,
         shift: shift,
+        date:shift=="shift1"?new Date(date+"T09:00:00+05:30"):new Date(date+"T13:00:00+05:30")
       })
       .then(() => {
         console.log("saved");

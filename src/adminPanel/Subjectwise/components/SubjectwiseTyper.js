@@ -1,6 +1,6 @@
 // import Button from "@restart/ui/esm/Button";
 import Button from "react-bootstrap/Button";
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import Latex from "react-latex-next";
 import firebase from "firebase";
@@ -10,6 +10,7 @@ const SubjectwiseTyper = (props) => {
   var [text, setText] = useState("");
   var [type, setType] = useState("1");
   var [file, setFile] = useState("");
+  var selfref=useRef();
 
   function questionDetailSubmit() {
     if (text !== "") {
@@ -19,9 +20,11 @@ const SubjectwiseTyper = (props) => {
   }
   // console.log(props)
 
-  function uploadImage() {
+  async function uploadImage() {
     const storage = firebase.storage();
     const ref = storage.ref("previousYear");
+    console.log(file)
+    const url2=URL.createObjectURL(file);
     ref
       .child(file.name)
       .put(file)
@@ -32,14 +35,23 @@ const SubjectwiseTyper = (props) => {
           .then((url) => {
             console.log(url);
             if (url) {
-              props.setInfo([...props.info, { type: type, data: url }]);
+              props.setInfo([...props.info, { type: type, data: url,url: url2}]);
+              // var xhr = new XMLHttpRequest();
+              // xhr.responseType = 'blob';
+              // xhr.onload = (event) => {
+              //   var blob = xhr.response;
+              //   console.log(blob,URL.createObjectURL(blob))
+              // };
+              // xhr.open('GET', url);
+              // xhr.send();
             }
           });
+        
       })
       .catch((e) => {
         console.log(e);
       });
-    alert(file);
+    // alert(file);
     console.log(file);
     setFile("");
   }
@@ -69,7 +81,7 @@ const SubjectwiseTyper = (props) => {
                         <Latex>{LaTeX}</Latex>
                       ) : type == "3" ? (
                         <div>
-                          <img src={data} alt="img" style={{display:'block',marginLeft:"auto",marginRight:"auto"}}/>
+                          <img ref={selfref} src={data} alt="img" style={{display:'block',marginLeft:"auto",marginRight:"auto"}}/>
                         </div>
                       ) : (
                         <div>{data}</div>

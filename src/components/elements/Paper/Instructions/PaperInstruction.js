@@ -487,10 +487,10 @@ export default function PaperInstruction(props) {
             />
             <span class="checkmark"></span>
           </label>
-          {props.details.date != "" &&
+          {props.details.date2 != "" &&
             datecalculation(
               new Date(),
-              props.details.date,
+              props.details.date2,
               props.details.shift
             ) && (
               <div style={{ color: "green" ,fontSize:"30px"}}>
@@ -499,7 +499,7 @@ export default function PaperInstruction(props) {
                 <Timer
                   duration={calculatetimedifference(
                     new Date(),
-                    props.details.date,
+                    props.details.date2,
                     props.details.shift
                   )}
                   secs={60-(new Date()).getSeconds()}

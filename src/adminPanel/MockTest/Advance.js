@@ -46,8 +46,9 @@ const Advance = () => {
             number: doc.data().number,
             syllabusCreated: doc.data().syllabusCreated,
             noofques: doc.data().noofques,
-            date: doc.data().date,
+            date: doc.data().date2,
             shift: doc.data().shift,
+
           }))
         );
         setLoading(false)
@@ -79,6 +80,9 @@ const Advance = () => {
         number: indexofpapers + 1,
         syllabusSelected: false,
         syllabusCreated: false,
+        name:`PAPER${indexofpapers + 1}`,
+        paperType:2,
+        totalDuration:180,
       })
       .then(() => {
         console.log("saved");
@@ -106,8 +110,9 @@ const Advance = () => {
       .collection("PAPER")
       .doc(`PAPER${index}`)
       .update({
-        date: date,
+        date2: date,
         shift: shift,
+        date:shift=="shift1"?new Date(date+"T09:00:00+05:30"):new Date(date+"T13:00:00+05:30")
       });
   };
 

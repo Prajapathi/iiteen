@@ -76,7 +76,7 @@ export default function AITSCarousel() {
         aitsTestPapersmains.map((item, index) => {
           item.papertype = "mains";
           if (
-            new Date().toISOString().substring(0, 10) <= item.date
+            new Date().toISOString().substring(0, 10) <= item.date2
           ) {
             arr.push(item);
           }
@@ -84,11 +84,11 @@ export default function AITSCarousel() {
         aitsTestPapersadvance.map((item, index) => {
           item.papertype = "advance";
           if(item.shift=="shift1"){
-            if (new Date().getTime() <= new Date(item.date+"T12:00:00+05:30").getTime()) {
+            if (new Date().getTime() <= new Date(item.date2+"T12:00:00+05:30").getTime()) {
               arr.push(item);
             } 
           }else if(item.shift=="shift2"){
-            if (new Date().getTime() <= new Date(item.date+"T16:00:00+05:30").getTime()) {
+            if (new Date().getTime() <= new Date(item.date2+"T16:00:00+05:30").getTime()) {
               arr.push(item);
             } 
           }

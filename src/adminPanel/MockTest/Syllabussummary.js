@@ -21,9 +21,62 @@ function savetodatabase(paperno, mainpaptyp) {
     .doc("MAINS")
     .collection("PAPER")
     .doc(`PAPER${paperno}`);
-
+  const instructionInfo=[
+    {
+      data:"30 questions each for Physics, Chemistry and Maths",
+      section:0,
+      isLine:false
+    },
+    {
+      data:"Each Subject contains 2 Parts: Part A, Part B",
+      section:0,
+      isLine:false
+    },
+    {
+      data:"Part A contains 20 multiple choice questions. Each Question have 4 choices (A),(B),(C),(D) out of which only ONE is correct",
+      points:[
+        {
+          data:"4 Marks for correct answer",
+          color:2
+        },
+        {
+          data:"1 negative mark for incorrect Answer",
+          color:1
+        },
+        {
+          data:"No Negative mark for Skipped Questions",
+          color:3
+        }
+      ],
+      section:3,
+      isLine:false
+    },
+    {
+      data:"Part B contains 10 numerical choice questions. The answer to each questions is a numerical",
+      points:[
+        {
+          data:"4 Marks for correct answer",
+          color:2
+        },
+        {
+          data:"No negative mark for incorrect Answer",
+          color:3
+        },
+        {
+          data:"No Negative mark for Skipped Questions",
+          color:3
+        }
+      ],
+      section:2,
+      isLine:false
+    }
+  ]
   paperref
-    .update({ syllabusCreated: true,noofques:90 })
+    .update({ syllabusCreated: true, 
+      noofques: 90, 
+      noOfQuestions: 90,
+      instructionInfo:instructionInfo
+    })
     .then(() => {
       console.log("saved");
     })
