@@ -1,0 +1,7 @@
+[
+    {
+      "origin": ["https://iiteens.in"],
+      "method": ["GET"],
+      "maxAgeSeconds": 3600
+    }
+  ]

@@ -44,8 +44,8 @@ const SelectSyllabus = (props) => {
   const [che, setChe] = React.useState([]);
   const [math, setMath] = React.useState([]);
   const [syllabustype, setSyllabustype] = React.useState("");
-  const [date, setDate] = React.useState("");
-  const [shift, setShift] = React.useState("");
+  const [date, setDate] = React.useState("2022-03-25");
+  const [shift, setShift] = React.useState("shift1");
   const params = useParams();
   const [mainpapertype, setMainpapertype] = React.useState("");
   const { type } = useParams();
@@ -111,8 +111,9 @@ const SelectSyllabus = (props) => {
         phy: phy,
         che: che,
         math: math,
-        date: date,
+        date2: date,
         shift: shift,
+        date:shift=="shift1"?new Date(date+"T09:00:00+05:30"):new Date(date+"T13:00:00+05:30")
       })
       .then(() => {
         console.log("saved");

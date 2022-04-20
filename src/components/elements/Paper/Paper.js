@@ -51,7 +51,7 @@ export function Paper(props) {
     );
     if (verifyPaper == null || verifyPaper != `PAPER${props.paper.number}`) {
       console.log("Because of this");
-      if (props.paper.date == "") history.push("/mocktest");
+      if (props.paper.date2 == "") history.push("/mocktest");
       else history.push("/AITS");
     }
     localStorage.removeItem("PaperName");

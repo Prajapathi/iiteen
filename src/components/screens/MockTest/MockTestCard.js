@@ -20,22 +20,36 @@ export function MockTestCard(props) {
   const [openContinuePreviousAttempt, setOpenContinuePreviousAttempt] =
     React.useState(false);
   const [prevAttempt, setPrevAttempt] = React.useState(false);
-  const [totalmarks,setTotalmarks]=React.useState(0);
-  const markdistribution=[[3,1,0],[4,2,0],[3,1,0],[3,1,0]]
+  const [totalmarks, setTotalmarks] = React.useState(0);
+  const markdistribution = [
+    [3, 1, 0],
+    [4, 2, 0],
+    [3, 1, 0],
+    [3, 1, 0],
+  ];
 
-React.useEffect(()=>{
-  console.log(props.paper.sections)
-        let tm=0;
-        let marksdistributiontype=0;
-  props.paper.sections && props.paper.sections.map((item,i)=>{
-    // console.log("hello")
-    marksdistributiontype=item.type=="singletype"?0:item.type=='multipletype'?1:item.type=='integertype'?2:3;
-    // console.log(marksdistributiontype)
-    tm+=Number(item.noofques)*markdistribution[marksdistributiontype][0];
-})
-console.log(3*tm)
-setTotalmarks(3*tm);
-},[])
+  React.useEffect(() => {
+    console.log(props.paper.sections);
+    let tm = 0;
+    let marksdistributiontype = 0;
+    props.paper.sections &&
+      props.paper.sections.map((item, i) => {
+        // console.log("hello")
+        marksdistributiontype =
+          item.type == "singletype"
+            ? 0
+            : item.type == "multipletype"
+            ? 1
+            : item.type == "integertype"
+            ? 2
+            : 3;
+        // console.log(marksdistributiontype)
+        tm +=
+          Number(item.noofques) * markdistribution[marksdistributiontype][0];
+      });
+    console.log(3 * tm);
+    setTotalmarks(3 * tm);
+  }, []);
 
   //for checking if user has any previous attempt which wasn't submitted
   const checkPreviousAttempt = () => {
@@ -77,7 +91,7 @@ setTotalmarks(3*tm);
     const db = firebase.firestore();
     props.setLoading(true);
     db.collection("MOCK")
-    .doc(`${props.papertype=='mains'?"MAINS":"ADVANCE"}`)
+      .doc(`${props.papertype == "mains" ? "MAINS" : "ADVANCE"}`)
       .collection("PAPER")
       .doc(`PAPER${props.papernumber}`)
       .collection("question")
@@ -98,12 +112,16 @@ setTotalmarks(3*tm);
             return a.number - b.number;
           });
 
-          const obj = { ...props.paper, questions: questions,noOfQuestions: props.paper.noofques };
+          const obj = {
+            ...props.paper,
+            questions: questions,
+            noOfQuestions: props.paper.noofques,
+          };
 
           //put into redux store
           props.fetchPaper(obj);
 
-          console.log(`PAPER${props.papernumber}`)
+          console.log(`PAPER${props.papernumber}`);
 
           //to check if user is navigating through MockTestCard
           localStorage.setItem("PaperName", `PAPER${props.papernumber}`);
@@ -112,7 +130,11 @@ setTotalmarks(3*tm);
           props.restorePreviousAttempt({ answers: false, uid: props.user.uid });
 
           props.setLoading(false);
-          history.push(`${props.papertype=='mains'?"MAINS":"ADVANCE"}`+"/Papers/PAPER" + props.papernumber);
+          history.push(
+            `${props.papertype == "mains" ? "MAINS" : "ADVANCE"}` +
+              "/Papers/PAPER" +
+              props.papernumber
+          );
         }
       })
       .catch(function (error) {
@@ -127,7 +149,9 @@ setTotalmarks(3*tm);
       <div className="flip-card-inner-mock">
         <div className="flip-card-front-mock">
           <div id="card-title-mock">
-            <div style={{ fontSize: "26px" }}>{`PAPER ${props.paperindex}`}</div>
+            <div
+              style={{ fontSize: "26px" }}
+            >{`PAPER ${props.paperindex}`}</div>
           </div>
           <div id="card-content-mock">
             <div
@@ -141,7 +165,7 @@ setTotalmarks(3*tm);
                 No of Question:{" "}
               </div>
               <div style={{ fontSize: "14px", color: "#448698" }}>
-                {props.paper.noofques?props.paper.noofques:0}{" "}
+                {props.paper.noofques ? props.paper.noofques : 0}{" "}
               </div>
             </div>
             <div
@@ -155,7 +179,8 @@ setTotalmarks(3*tm);
                 Duration:{" "}
               </div>
               <div style={{ fontSize: "14px", color: "#448698" }}>
-                {props.paper.totalDuration?props.paper.totalDuration:"180"} minutes
+                {props.paper.totalDuration ? props.paper.totalDuration : "180"}{" "}
+                minutes
               </div>
             </div>
             <div
@@ -169,7 +194,7 @@ setTotalmarks(3*tm);
                 Max Marks{" "}
               </div>
               <div style={{ fontSize: "14px", color: "#448698" }}>
-                {totalmarks}
+                {totalmarks==0?"300":totalmarks}
               </div>
             </div>
           </div>
@@ -186,7 +211,13 @@ setTotalmarks(3*tm);
               {props.isAttempted ? "Re-attempt" : "Attempt"}
             </button>
             {props.isAttempted ? (
-              <Link to={`/MockTest/${props.papertype=='mains'?"MAINS":"ADVANCE"}/Papers/Analysis/` + `PAPER${props.papernumber}`}>
+              <Link
+                to={
+                  `/MockTest/${
+                    props.papertype == "mains" ? "MAINS" : "ADVANCE"
+                  }/Papers/Analysis/` + `PAPER${props.papernumber}`
+                }
+              >
                 <button>Analysis</button>
               </Link>
             ) : null}

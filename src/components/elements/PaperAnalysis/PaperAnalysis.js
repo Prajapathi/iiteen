@@ -328,7 +328,7 @@ export function PaperAnalysis(props) {
       data != undefined &&
       data.rank == undefined &&
       paperInfo != undefined &&
-      paperhasended(paperInfo.date, paperInfo.shift)
+      paperhasended(paperInfo.date2, paperInfo.shift)
     ) {
       const db = firebase.firestore();
       db.collection("User").onSnapshot((snap) => {

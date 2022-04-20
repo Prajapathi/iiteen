@@ -82,7 +82,7 @@ const Plans = (props) => {
             sessionStorage.setItem("purchasetype", "Mains");
           }}
         >
-          <span style={{ textDecoration: "line-through" }}>3499</span> 349/-
+          <span style={{ textDecoration: "line-through" }}>3499</span> 1/-
           Rs Year
         </Link>
           }
@@ -127,7 +127,7 @@ const Plans = (props) => {
             sessionStorage.setItem("purchasetype", "Mains+Advance");
           }}
         >
-          <span style={{ textDecoration: "line-through" }}>3499</span> 349/-
+          <span style={{ textDecoration: "line-through" }}>3499</span> 1/-
           Rs Year
         </Link>
           }

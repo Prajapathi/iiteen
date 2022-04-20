@@ -178,7 +178,9 @@ const QuestionContentsubjectwise = (props) => {
         .collection(`Level 0${selLevel}`).orderBy("number").onSnapshot(function (querySnapshot) {
       var array = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        year: doc.data().year,
+        // year: doc.data().year,
+        date:doc.data().date,
+        shift:doc.data().shift,
         questions: doc.data().question,
         quesno: doc.data().number,
       }));
@@ -503,13 +505,16 @@ const QuestionContentsubjectwise = (props) => {
 
                       <div
                         style={{
-                          textAlign: "right",
+                          textAlign: "center",
                           position: "absolute",
                           bottom: "0px",
-                          left: "270px",
+                          left: "238px",
+                          fontSize:"12px",
+                          width:"74px"
                         }}
                       >
-                        {allQuestions[index].year}
+                        {allQuestions[index].date}<br/>
+                        {allQuestions[index].shift}
                       </div>
                       {/* </Row> */}
                     </div>

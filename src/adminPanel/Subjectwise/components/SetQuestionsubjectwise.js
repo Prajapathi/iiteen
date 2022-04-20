@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 import React, { useEffect, useRef, useState } from "react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import Latex from "react-latex-next";
@@ -26,6 +27,12 @@ import Syllabus from "./data/syllabus";
 import Rating from "@mui/material/Rating";
 import Box from "@mui/material/Box";
 import StarIcon from "@mui/icons-material/Star";
+import * as htmlToImage from "html-to-image";
+import { toPng } from "html-to-image";
+import mergeImages from "merge-images";
+import CircularProgress from '@mui/material/CircularProgress';
+
+
 
 const labels = {
   1: "Very Easy",
@@ -77,7 +84,15 @@ const SetQuestionsubjectwise = (props) => {
     props.location.state.Class ? props.location.state.Class : null
   );
 
-  console.log(props.location.state.Class, Class);
+  const ref = useRef();
+  const [loading, setLoading] = useState(false)
+
+  const [date,setDate]=useState(null)
+  const [shift, setShift] = useState(null);
+  // const [h, setH] = useState(0);
+  // const [imgsrc,setImgsrc]=useState("");
+
+  // console.log(props.location.state.Class, Class);
   // const Id = props.location.state.id;
 
   // this QuestionNo here is like index to the allQuestion array it is not the questionNo of the database
@@ -89,7 +104,7 @@ const SetQuestionsubjectwise = (props) => {
   );
   const mockpaperno = props.location.state.mockpaperno;
   const mainpapertype = props.location.state.mainpapertype;
-  const Level=props.location.state.Level;
+  const Level = props.location.state.Level;
   // console.log(Class,Id,QuestionNo,Subject,Chapter);
   // const allQuestions = props.location.state.allQuestions;
 
@@ -112,15 +127,15 @@ const SetQuestionsubjectwise = (props) => {
           console.log("pop");
           history.push(
             `${
-              Subject === "physics"
-                ? "/0"
-                : Subject === "chemistry"
+            Subject === "physics"
+              ? "/0"
+              : Subject === "chemistry"
                 ? "/1"
                 : Subject === "maths"
-                ? "/2"
-                : Subject === "mocktest"
-                ? "/3"
-                : "/4"
+                  ? "/2"
+                  : Subject === "mocktest"
+                    ? "/3"
+                    : "/4"
             }`
           );
           // }
@@ -180,59 +195,309 @@ const SetQuestionsubjectwise = (props) => {
     // }
   }, []);
 
+  // function getMeta(url){
+  //   var w; var h;
+  //   var img=new Image();
+  //   img.src=url;
+  //   img.onload=function(){w=img.width; h=img.height;};
+  //   console.log(w,h)
+  //   return {w:w,h:h}
+  //  }
+
+  // var h=0;
+  // async function getMeta(url) {
+  //   var img = new Image();
+  //   img.onload = function () {
+  //     console.log(this.width + " " + this.height);
+  //     // let z = h;
+  //     // setH(z + this.height);
+  //     // h+=this.height;
+  //     return this.height;
+  //   };
+  //   img.src = url;
+  // }
+
+  // function tex2img(formula, callback) {
+  //   MathJax.Hub.Queue(function () {
+  //       var wrapper = MathJax.HTML.Element("span", {}, formula);
+  //       MathJax.Hub.Typeset(wrapper, function () {
+  //           var svg = wrapper.getElementsByTagName("svg")[0];
+  //           svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+  //           var image = new Image();
+  //           image.src = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(svg.outerHTML)));
+  //           image.onload = function () {
+  //               var canvas = document.createElement('canvas');
+  //               canvas.width = image.width;
+  //               canvas.height = image.height;
+  //               var context = canvas.getContext('2d');
+  //               context.drawImage(image, 0, 0);
+  //               var img = '<img src="' + canvas.toDataURL('image/png') + '"/>';
+  //               callback(img);
+  //           };
+  //       });
+  //   })
+  // }
+  function getMeta(url) {
+    return new Promise((resolve, reject) => {
+      let img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject();
+      img.src = url;
+    });
+  }
+  function getXMTURL(url) {
+    return new Promise((resolve, reject) => {
+      var xhr = new XMLHttpRequest();
+      xhr.responseType = "blob";
+      xhr.onload = async (event) => {
+        var blob = xhr.response;
+        var url3 = URL.createObjectURL(blob);
+
+        // console.log(blob,url3)
+        // url.push(url3)
+        // let d = await getMeta(url3);
+        // heightofimg += d.height;
+        // heightarr.push(heightofimg)
+        // console.log(
+        //   d
+        // );
+        var image = new Image();
+        image.src = url3;
+        image.onload = function () {
+          var resized = resizeMe(image);
+          console.log(resized)
+          // var newinput = document.createElement("input");
+          // newinput.type = 'hidden';
+          // newinput.name = 'images[]';
+          // newinput.value = resized; 
+          // form.appendChild(newinput);
+          // resolve(url3);
+          resolve(resized)
+        }
+        //
+
+      };
+      xhr.onerror = () => reject();
+      xhr.open("GET", url);
+      xhr.send();
+    });
+  }
+  function resizeMe(img) {
+
+    var canvas = document.createElement('canvas');
+
+    var width = img.width;
+    var height = img.height;
+
+    if (width > height) {
+      if (width > 290) {
+        height = Math.round(height *= 290 / width);
+        width = 290;
+      }
+    }
+    // else {
+    //   if (height > max_height) {
+    //     width = Math.round(width *= max_height / height);
+    //     height = max_height;
+    //   }
+    // }
+    canvas.width = width;
+    canvas.height = height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, width, height);
+
+    // preview.appendChild(canvas); // do the actual resized preview
+
+    return canvas.toDataURL("image/png", 0.7); // get the data from canvas as 70% JPG (can be also PNG, etc.)
+
+  }
   // useEffect(() => {
-  //   if (section.length > 0) {
-  //     console.log(section);
-  //     let totalnoofquespersubject = 0;
-  //     for (let i = 0; i < section.length; i++) {
-  //       totalnoofquespersubject += Number(section[i].noofques);
-  //     }
-  //     if (QuestionNo >= 1 && QuestionNo <= totalnoofquespersubject) {
-  //       setSubj(1);
-  //     } else if (
-  //       QuestionNo >= 1 + totalnoofquespersubject &&
-  //       QuestionNo <= totalnoofquespersubject * 2
-  //     ) {
-  //       setSubj(2);
-  //     } else setSubj(3);
-  //     let aggregate = 0;
-  //     for (let i = 0; i < section.length; i++) {
-  //       if (
-  //         (QuestionNo >= 1 + aggregate &&
-  //           QuestionNo <= Number(section[i].noofques) + aggregate) ||
-  //         (QuestionNo >= 1 + aggregate + totalnoofquespersubject &&
-  //           QuestionNo <=
-  //             Number(section[i].noofques) +
-  //               aggregate +
-  //               totalnoofquespersubject) ||
-  //         (QuestionNo >= 1 + aggregate + totalnoofquespersubject * 2 &&
-  //           QuestionNo <=
-  //             Number(section[i].noofques) +
-  //               aggregate +
-  //               totalnoofquespersubject * 2)
-  //       ) {
-  //         setQuestionType(getquestiontype(section[i].type));
-  //         break;
-  //       }
-  //       aggregate += Number(section[i].noofques);
-  //     }
+  //   let tex = "sum_0^infty \frac{x^n}{n!}";
+  //   console.log(
+  //     "http://chart.apis.google.com/chart?cht=tx&chl=" + encodeURIComponent(tex)
+  //   );
+  // }, []);
+
+  async function imgdata(option) {
+    console.log(option);
+
+    if(option.length==1){
+      return option[0];
+    }
+    
+    let finalimage;
+    let url = [];
+    let heightofimg = 0;
+    let heightarr = [];
+    let isimagpresent = false;
+    let islatexpresent = false;
+    let tex = "";
+    for (let i = 0; i < option.length; i++) {
+      if (option[i].type == 0) {
+        ref.current.innerHTML = tex;
+        await toPng(ref.current, { cacheBust: true })
+          .then((dataUrl) => {
+            url.push(dataUrl);
+            heightofimg += 20;
+            heightarr.push(heightofimg);
+            console.log(dataUrl, 20);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        tex = "";
+      } else if (option[i].type == 1) {
+        tex += option[i].data;
+      } else if (option[i].type == 2) {
+        islatexpresent = true;
+        tex += option[i].data;
+      } else if (option[i].type == 3) {
+        isimagpresent = true;
+        if (tex != "") {
+          if (!islatexpresent) {
+            ref.current.innerHTML = tex;
+            await toPng(ref.current, { cacheBust: true })
+              .then(async (dataUrl) => {
+                url.push(dataUrl);
+                // heightofimg += 20*(tex.length/35+1);
+                let temp = await getMeta(dataUrl);
+                heightofimg += temp.height;
+                heightarr.push(heightofimg);
+                console.log(dataUrl, temp);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            tex = "";
+          } else {
+            let url4 = `https://chart.apis.google.com/chart?cht=tx&chl={${tex}}`;
+            url.push(url4);
+            console.log(url4);
+            let temp = await getMeta(url4);
+            heightofimg += temp.height;
+            heightarr.push(heightofimg);
+            console.log(url4, temp);
+          }
+        }
+
+        var url3 = await getXMTURL(option[i].data);
+        console.log(url3);
+        url.push(url3);
+        let d = await getMeta(url3);
+        heightofimg += d.height;
+        heightarr.push(heightofimg);
+        console.log(d);
+        //
+        // url.push(option[i].url);
+
+        // let d = await getMeta(option[i].url);
+        // heightofimg += d.height;
+        // heightarr.push(heightofimg)
+        // console.log(
+        //   option[i].file,
+        //   d
+        // );
+        continue;
+      }
+    }
+    if (tex != "") {
+      if (isimagpresent) {
+        if (!islatexpresent) {
+          ref.current.innerHTML = tex;
+          await toPng(ref.current, { cacheBust: true })
+            .then(async (dataUrl) => {
+              url.push(dataUrl);
+              // heightofimg += 20*(tex.length/35+1);
+              let temp = await getMeta(dataUrl);
+              heightofimg += temp.height;
+              heightarr.push(heightofimg);
+              console.log(dataUrl, temp);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          tex = "";
+        } else {
+          let url4 = await getXMTURL(`https://chart.apis.google.com/chart?cht=tx&chl={${tex}}`);
+          url.push(url4);
+          console.log(url4);
+          let temp = await getMeta(url4);
+          heightofimg += temp.height;
+          heightarr.push(heightofimg);
+          console.log(url4, temp);
+        }
+      } else {
+        if (islatexpresent) {
+          return { data: tex, type: 2 };
+        } else return { data: tex, type: 1 };
+      }
+    }
+    console.log(url, heightofimg);
+
+    await mergeImages(
+      url.map((ur, ind) => ({
+        src: ur,
+        x: 0,
+        y: ind == 0 ? 0 : heightarr[ind - 1],
+      })),
+      { width: 295, height: heightofimg }
+    )
+      .then((imgurlf) => {
+        console.log(imgurlf);
+        finalimage = imgurlf;
+      })
+      .catch((err) => console.log(err.message));
+
+    const storage = firebase.storage();
+    await storage.ref("previousYear")
+      .child(finalimage.substr(22, 40))
+      .putString(finalimage.substr(22), 'base64', { contentType: 'image/png' })
+      .then(async (e) => {
+        console.log(e)
+        await storage
+          .ref(`previousYear/${finalimage.substr(22, 40)}`)
+          .getDownloadURL()
+          .then((url) => {
+            console.log(url);
+            finalimage = url
+            if (url) {
+            }
+          });
+
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    return { data: finalimage, type: 3 };
+  }
+
+  // useEffect(() => {
+  //   var t;
+  //   async function dat() {
+  //     t = option1 && (await imgdata(option1));
+  //     console.log(t);
   //   }
-  // }, [section, QuestionNo]);
-
-  console.log("allQuestions", allQuestions);
-
-  // console.log("user auth",firebase.auth().currentUser,firebase.auth())
+  //   dat();
+  // }, [option1]);
 
   const submitPaper = async (e) => {
     setSubmitted(true);
+    // console.log(Class,Subject,Chapter,Level)
+    console.log(option1, option2, option3, option4);
+    let o1 = await imgdata(option1),
+    o2 = await imgdata(option2),
+    o3 = await imgdata(option3),
+    o4 = await imgdata(option4);
+    
     toast.success("SUBMITTED");
-    console.log(Class,Subject,Chapter,Level)
+    console.log(option1, option2, option3, option4);
+
     const db = firebase.firestore();
     var q = await db
-        .collection("SUBJECTWISE")
-        .doc(Class)
-        .collection(Subject)
-        .doc(Chapter);
+      .collection("SUBJECTWISE")
+      .doc(Class)
+      .collection(Subject)
+      .doc(Chapter);
     await q.set({ noofques: QuestionNo }, { merge: true });
     await q
       .collection(`Level 0${Level}`)
@@ -243,17 +508,19 @@ const SetQuestionsubjectwise = (props) => {
         option2: option2,
         option3: option3,
         option4: option4,
-        // option:option,
+        option: [o1, o2, o3, o4],
         answer: correct,
         hint: hint,
         solution: solution,
-        year: year,
+        // year: year,
         college: college,
-        number: `${QuestionNo}`,
+        number: QuestionNo,
         subject: subj,
         class: Class,
         chapter: Chapter,
-        rating:value
+        rating: value,
+        date:date?date:"",
+          shift:shift?shift:""
       })
       .then((docref) => {
         console.log(
@@ -273,35 +540,44 @@ const SetQuestionsubjectwise = (props) => {
   };
   const updatePaper = async (e) => {
     // const option=[option1,option2,option3,option4];
+    console.log(option1, option2, option3, option4)
     // console.log("inside update paper");
+    let o1 = await imgdata(option1),
+      o2 = await imgdata(option2),
+      o3 = await imgdata(option3),
+      o4 = await imgdata(option4);
+
+    console.log(o1, o2, o3, o4)
+    // console.log(questionDetail, questionType, option1, option2, option3, option4, [o1, o2, o3, o4], correct, hint, solution, year, college, `${QuestionNo}`, Class, Chapter, value)
     const db = firebase.firestore();
     if (Id) {
       toast.success("UPDATED");
       await db
-      .collection("SUBJECTWISE")
-      .doc(Class)
-      .collection(Subject)
-      .doc(Chapter)
-      .collection(`Level 0${Level}`)
+        .collection("SUBJECTWISE")
+        .doc(Class)
+        .collection(Subject)
+        .doc(Chapter)
+        .collection(`Level 0${Level}`)
         .doc(Id)
         .update({
-
           question: questionDetail,
           answerType: questionType,
           option1: option1,
           option2: option2,
           option3: option3,
           option4: option4,
-          // option:option,
+          option: [o1, o2, o3, o4],
           answer: correct,
           hint: hint,
           solution: solution,
-          year: year,
+          // year: year,
           college: college,
-          number: `${QuestionNo}`,
+          number: QuestionNo,
           class: Class,
           chapter: Chapter,
-          rating:value
+          rating: value,
+          date:date?date:"",
+          shift:shift?shift:""
         })
         .then(() => {
           console.log(
@@ -315,8 +591,6 @@ const SetQuestionsubjectwise = (props) => {
           alert(error.message);
         });
     }
-
-    // console.log("end of update paper");
   };
 
   const handleCheck = (index) => {
@@ -333,10 +607,10 @@ const SetQuestionsubjectwise = (props) => {
       } else {
         setCorrect(correct.filter((item) => item !== index));
       }
-      console.log(correct);
+      // console.log(correct);
     } else if (questionType == 4) {
       setCorrect([index]);
-      console.log(correct);
+      // console.log(correct);
     }
   };
 
@@ -423,17 +697,17 @@ const SetQuestionsubjectwise = (props) => {
   async function fetchPaper() {
     if (Id) {
       const db = firebase.firestore();
-      console.log(Id,Class,Subject,Chapter,Level);
+      // console.log(Id,Class,Subject,Chapter,Level);
       await db
-          .collection("SUBJECTWISE")
-          .doc(Class)
-          .collection(Subject)
-          .doc(Chapter)
-          .collection(`Level 0${Level}`)
+        .collection("SUBJECTWISE")
+        .doc(Class)
+        .collection(Subject)
+        .doc(Chapter)
+        .collection(`Level 0${Level}`)
         .doc(Id)
         .get()
         .then((snap) => {
-          console.log(snap.data());
+          // console.log(snap.data());
           if (snap.exists) {
             setEditPaper(snap.data());
           } else {
@@ -445,92 +719,72 @@ const SetQuestionsubjectwise = (props) => {
         });
     }
   }
-  // async function fetchmocktestadvancepatterndata() {
-  //   const db = firebase.firestore();
-  //   await db
-  //     .collection(mainpapertype.toUpperCase())
-  //     .doc("ADVANCE")
-  //     .collection("PAPER")
-  //     .doc(`PAPER${Number(mockpaperno)}`)
-  //     .get()
-  //     .then((snap) => {
-  //       if (snap.exists) {
-  //         console.log(snap.data().sections);
-  //         setSection(snap.data().sections);
-  //         console.log(section);
-  //       }
-  //     });
-  //   console.log(section);
-  // }
 
   async function fetchAllQuestions() {
     const db = firebase.firestore();
     await db
-        .collection("SUBJECTWISE")
-        .doc(Class)
-        .collection(Subject)
-        .doc(Chapter)
-        .collection(`Level 0${Level}`).orderBy("number").onSnapshot(
-      function (querySnapshot) {
-        console.log(querySnapshot.docs);
-        var array = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          year: doc.data().year,
-          questions: doc.data().question,
-          quesno: doc.data().number,
-        }));
-        array.sort((a, b) => {
-          return a.quesno - b.quesno;
-        });
-        console.log(array);
-        setAllQuestions(array);
-      },
-      function (error) {
-        console.log(error);
-      }
-    );
+      .collection("SUBJECTWISE")
+      .doc(Class)
+      .collection(Subject)
+      .doc(Chapter)
+      .collection(`Level 0${Level}`)
+      .orderBy("number")
+      .onSnapshot(
+        function (querySnapshot) {
+          // console.log(querySnapshot.docs);
+          var array = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            year: doc.data().year,
+            questions: doc.data().question,
+            quesno: doc.data().number,
+          }));
+          array.sort((a, b) => {
+            return a.quesno - b.quesno;
+          });
+          // console.log(array);
+          setAllQuestions(array);
+        },
+        function (error) {
+          console.log(error);
+        }
+      );
     console.log(allQuestions);
   }
 
   useEffect(() => {
-    // console.log("inside editpaper but not complete inside");
     if (editPaper !== "" && count == 0) {
-      console.log("inside editpaper", editPaper, count);
-      if(editPaper.option1==undefined){
-        console.log("option1 undefined",editPaper.option1)
+      console.log(editPaper);
+      if (editPaper.option1 == undefined) {
         setOption1([editPaper.option[0]]);
-      setOption2([editPaper.option[1]]);
-      setOption3([editPaper.option[2]]);
-      setOption4([editPaper.option[3]]);
-      setCorrect(questionType=="4"?[editPaper.answer]:editPaper.answer);
-      }else{
+        setOption2([editPaper.option[1]]);
+        setOption3([editPaper.option[2]]);
+        setOption4([editPaper.option[3]]);
+
+        setCorrect(editPaper.answerType == "4" ? [editPaper.answer] : editPaper.answer);
+        // setCorrect(editPaper.answer);
+      } else {
         setOption1(editPaper.option1);
         setOption2(editPaper.option2);
         setOption3(editPaper.option3);
         setOption4(editPaper.option4);
-        setCorrect(editPaper.answer)
+        setCorrect(editPaper.answer);
       }
       setQuestionDetail(editPaper.question);
-      
       setQuestionType(editPaper.answerType);
-      console.log(questionType=="4"?[editPaper.answer]:editPaper.answer)
-      setYear(editPaper.year?editPaper.year:"");
-      setCollege(editPaper.college?editPaper.college:"");
+      setYear(editPaper.year ? editPaper.year : "");
+      setCollege(editPaper.college ? editPaper.college : "");
       setHint(editPaper.hint);
       setSolution(editPaper.solution);
-        setValue(editPaper.rating?editPaper.rating:3)
+      setValue(editPaper.rating ? editPaper.rating : 3);
+      setDate(editPaper.date)
+      setShift(editPaper.shift)
 
-      // console.log(count);
       setCount(1);
-      // render();
     }
   }, [correct, editPaper, count]);
 
-  console.log(questionDetail,solution,hint,option1,option2,option3,option4)
-
   function Handle(index) {
-    console.log(index);
-    console.log(editable.includes(index));
+    // console.log(editable.includes(index));
     if (editable.includes(index)) {
       let arr = [];
       for (let i = 0; i <= editable.length; i++) {
@@ -540,24 +794,20 @@ const SetQuestionsubjectwise = (props) => {
       }
       setEditable(arr);
     } else {
-      console.log([...editable, index]);
       setEditable([...editable, index]);
-      console.log("editable", editable);
     }
-    console.log("editable", editable);
+    // console.log("editable", editable);
   }
-
-  // async function Save(droptype, field, index, value=data2) {
 
   async function Save(droptype, field, index, value) {
     // if(dropType==="question"){
-    console.log("inside save droptype");
-    console.log(droptype, index, field, value);
+    // console.log("inside save droptype");
+    // console.log(droptype, index, field, value);
     const temp = [];
     for (let i = 0; i < field.length; i++) {
       if (i === index) {
         var { data, type } = field[i];
-        console.log(data, type, field[i]);
+        // console.log(data, type, field[i]);
         // data = value;
         data = value;
         temp.push({ data, type });
@@ -587,22 +837,21 @@ const SetQuestionsubjectwise = (props) => {
     if (droptype === "hint") {
       setHint(temp);
     }
-    console.log(temp);
+    // console.log(temp);
     setOpen(false);
-    console.log("outside save droptype");
+    // console.log("outside save droptype");
     // return temp;
   }
   //
-
 
   const SubjectwiseDragContain = React.useCallback(
     (props) => {
       var t = 0;
       // console.log(props)
-      props.filed &&
-        props.filed.map((e, index) => {
-          props.filed[index].id = "part " + index;
-        });
+      // props.filed &&
+      //   props.filed.map((e, index) => {
+      //     props.filed[index].id = "part " + index;
+      //   });
       // console.log(props)
       return (
         <Container>
@@ -629,7 +878,7 @@ const SetQuestionsubjectwise = (props) => {
                       return (
                         <Draggable
                           key={index}
-                          draggableId={props.filed[index].id}
+                          draggableId={keyBla}
                           index={index}
                         >
                           {(provided) => (
@@ -655,14 +904,14 @@ const SetQuestionsubjectwise = (props) => {
                                     style={{ width: "100%" }}
                                   ></input>
                                 ) : (
-                                  data
-                                )}
+                                    data
+                                  )}
                                 <button
                                   className="dragButton"
                                   type="submit"
                                   onClick={() => {
                                     Handle(props.dropType + index);
-                                    console.log(editable);
+                                    // console.log(editable);
                                   }}
                                   style={{ margin: "5px" }}
                                 >
@@ -692,8 +941,8 @@ const SetQuestionsubjectwise = (props) => {
                       );
                     })
                   ) : (
-                    <></>
-                  )}
+                      <></>
+                    )}
                   {provided.placeholder}
                 </ul>
               )}
@@ -705,18 +954,58 @@ const SetQuestionsubjectwise = (props) => {
     [editable]
   );
 
-  // const notify = () => toast("SUBMITTED");
-  useEffect(() => {
-    console.log(subj);
-  }, [subj]);
+  // const [image, setImage] = useState(null);
+
+  // const onImageChange = (event) => {
+  //   if (event.target.files && event.target.files[0]) {
+  //     setImage(URL.createObjectURL(event.target.files[0]));
+  //     console.log(URL.createObjectURL(event.target.files[0]));
+  //   }
+  // };
 
   return (
-    <div>
-      <h1 style={{ textAlign: "center" }}>
-        {" "}
-        Question No. - {QuestionNo}{" "}
-      </h1>
-      <br />
+    <>
+    {/* div for reference */}
+    <div
+          ref={ref}
+          style={{
+            // position:"absolute",
+            top: "10px",
+            left: "70%",
+            overflowWrap: "anywhere",
+            width: "295px",
+          }}
+        >
+
+        </div>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          transition={Flip}
+          toastStyle={{ backgroundColor: "black", color: "white" }}
+        />
+    {loading ?
+      <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", height: "1000px" }}>
+        <CircularProgress />
+        <div style={{postion:"absolute",bottom:"430px",marginLeft:"30px"}}>Please Wait for Few Seconds</div>
+      </Box> :
+      <div style={{ position: "relative" }}>
+        <h1 style={{ textAlign: "center" }}> Question No. - {QuestionNo} </h1>
+
+        {/* <img ref={ref2} src={""}></img> */}
+        {/* <div className="summary" dangerouslySetInnerHTML={{ __html: "<h1>a</h1>" }} /> */}
+        {/* <div>
+      <input type="file" onChange={onImageChange} className="filetype" />
+      <img src={image} alt="preview image" />
+    </div> */}
+        <br />
         <div
           style={{
             display: "flex",
@@ -751,323 +1040,495 @@ const SetQuestionsubjectwise = (props) => {
           </Box>
         </div>
 
-      <SubjectwiseTyper
-        info={questionDetail}
-        setInfo={setQuestionDetail}
-        title="question"
-      />
+        
 
-      <SubjectwiseDragContain filed={questionDetail} dropType="question" />
+        <SubjectwiseTyper
+          info={questionDetail}
+          setInfo={setQuestionDetail}
+          title="question"
+        />
 
-      {/* ---------------------------------------Question End------------------------------------- */}
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        transition={Flip}
-        toastStyle={{ backgroundColor: "black", color: "white" }}
-      />
+        <SubjectwiseDragContain filed={questionDetail} dropType="question" />
 
-      <Container>
-        {!(Subject === "mocktest" || Subject === "mocktestadvance") && (
-          <div>
-            <h4>Select Question type</h4>
-            <div
-              style={{
-                display: "inline-flex",
-                justifyContent: "space-evenly",
-                width: "100%",
-              }}
-              onChange={(e) => {
-                setQuestionType(e.target.value);
-                setCorrect([]);
-              }}
-            >
-              <RadioGroup
-                name="radio-buttons-group"
-                row
+        {/* ---------------------------------------Question End------------------------------------- */}
+        
+
+        <Container>
+          {!(Subject === "mocktest" || Subject === "mocktestadvance") && (
+            <div>
+              <h4>Select Question type</h4>
+              <div
                 style={{
-                  display: "flex",
-                  justifyContent: "space-around",
+                  display: "inline-flex",
+                  justifyContent: "space-evenly",
                   width: "100%",
                 }}
-              >
-                <FormControlLabel
-                  value="4"
-                  // onChange={() => handleCheck(0)}
-                  control={<Radio />}
-                  label="Single Correct"
-                  checked={"4" == questionType}
-                  defaultChecked="true"
-                />
-                <FormControlLabel
-                  value="5"
-                  // onChange={() => handleCheck(1)}
-                  control={<Radio />}
-                  label="Multiple Correct"
-                  checked={"5" == questionType}
-                />
-                <FormControlLabel
-                  value="1"
-                  // onChange={() => handleCheck(2)}
-                  control={<Radio />}
-                  label="Integers"
-                  checked={"1" == questionType}
-                />
-                <FormControlLabel
-                  value="2"
-                  // onChange={() => handleCheck(3)}
-                  control={<Radio />}
-                  label="Numerical"
-                  checked={"2" == questionType}
-                />
-              </RadioGroup>
-            </div>
-          </div>
-        )}
-        {console.log(questionType)}
-
-        <div>
-          {questionType == "2" ? (
-            <div>
-              <h4>Enter Answer</h4>
-              {/* <input
-                placeholder="Answer"
-                value={correct}
-                onChange={(e) => setCorrect(e.target.value)}
-              ></input> */}
-              <TextField
-                label="Answer"
-                value={correct}
-                type="number"
                 onChange={(e) => {
-                  // setCorrect(Math.trunc(e.target.value * 100) / 100);
-                  let t = e.target.value;
-                  setCorrect(
-                    Number(
-                      t.indexOf(".") >= 0
-                        ? t.substr(0, t.indexOf(".")) +
-                            t.substr(t.indexOf("."), 3)
-                        : t
-                    )
-                  );
+                  setQuestionType(e.target.value);
+                  setCorrect([]);
                 }}
               >
-                {correct}
-              </TextField>
+                <RadioGroup
+                  name="radio-buttons-group"
+                  row
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                    width: "100%",
+                  }}
+                >
+                  <FormControlLabel
+                    value="4"
+                    // onChange={() => handleCheck(0)}
+                    control={<Radio />}
+                    label="Single Correct"
+                    checked={"4" == questionType}
+                    defaultChecked="true"
+                  />
+                  <FormControlLabel
+                    value="5"
+                    // onChange={() => handleCheck(1)}
+                    control={<Radio />}
+                    label="Multiple Correct"
+                    checked={"5" == questionType}
+                  />
+                  <FormControlLabel
+                    value="1"
+                    // onChange={() => handleCheck(2)}
+                    control={<Radio />}
+                    label="Integers"
+                    checked={"1" == questionType}
+                  />
+                  <FormControlLabel
+                    value="2"
+                    // onChange={() => handleCheck(3)}
+                    control={<Radio />}
+                    label="Numerical"
+                    checked={"2" == questionType}
+                  />
+                </RadioGroup>
+              </div>
             </div>
-          ) : questionType == "1" ? (
-            <div>
-              <h4>Enter Answer</h4>
-              <TextField
-                label="Answer"
+          )}
+          {/* {console.log(questionType)} */}
+
+          <div>
+            {questionType == "2" ? (
+              <div>
+                <h4>Enter Answer</h4>
+                {/* <input
+              placeholder="Answer"
+              value={correct}
+              onChange={(e) => setCorrect(e.target.value)}
+            ></input> */}
+                <TextField
+                  label="Answer"
+                  value={correct}
+                  type="number"
+                  onChange={(e) => {
+                    // setCorrect(Math.trunc(e.target.value * 100) / 100);
+                    let t = e.target.value;
+                    setCorrect(
+                      Number(
+                        t.indexOf(".") >= 0
+                          ? t.substr(0, t.indexOf(".")) +
+                          t.substr(t.indexOf("."), 3)
+                          : t
+                      )
+                    );
+                  }}
+                >
+                  {correct}
+                </TextField>
+              </div>
+            ) : questionType == "1" ? (
+              <div>
+                <h4>Enter Answer</h4>
+                <TextField
+                  label="Answer"
+                  select
+                  value={correct}
+                  onChange={(e) => setCorrect(e.target.value)}
+                  style={{ width: "100px", marginRight: "20px" }}
+                >
+                  {numarr.map((a, index) => {
+                    return (
+                      <MenuItem value={a} key={index}>
+                        {a}
+                      </MenuItem>
+                    );
+                  })}
+                </TextField>
+                <br />
+              </div>
+            ) : questionType == "4" || questionType == "5" ? (
+              <div>
+                <div>
+                  <h4>Correct Answer</h4>
+                  <FormLabel component="legend" style={{ color: "black" }}>
+                    Select Options
+              </FormLabel>
+                  {questionType == "4" ? (
+                    <RadioGroup name="radio-buttons-group" row>
+                      {/* {console.log(correct)} */}
+                      <FormControlLabel
+                        value="1"
+                        checked={correct.includes(0) || correct.includes("0")}
+                        onChange={() => handleCheck(0)}
+                        control={<Radio />}
+                        label="1"
+                      />
+                      <FormControlLabel
+                        value="2"
+                        checked={correct.includes(1) || correct.includes("1")}
+                        onChange={() => handleCheck(1)}
+                        control={<Radio />}
+                        label="2"
+                      />
+                      <FormControlLabel
+                        value="3"
+                        checked={correct.includes(2) || correct.includes("2")}
+                        onChange={() => handleCheck(2)}
+                        control={<Radio />}
+                        label="3"
+                      />
+                      <FormControlLabel
+                        value="4"
+                        checked={correct.includes(3) || correct.includes("3")}
+                        onChange={() => handleCheck(3)}
+                        control={<Radio />}
+                        label="4"
+                      />
+                    </RadioGroup>
+                  ) : questionType == "5" ? (
+                    <FormGroup row>
+                      <FormControlLabel
+                        // checked={multiOption[0]}
+                        checked={correct.includes(0) || correct.includes("0")}
+                        onChange={() => handleCheck(0)}
+                        control={<Checkbox />}
+                        label="1"
+                      />
+                      <FormControlLabel
+                        // checked={multiOption[1]}
+                        checked={correct.includes(1) || correct.includes("1")}
+                        onChange={() => handleCheck(1)}
+                        control={<Checkbox />}
+                        label="2"
+                      />
+                      <FormControlLabel
+                        // checked={multiOption[2]}
+                        checked={correct.includes(2) || correct.includes("2")}
+                        onChange={() => handleCheck(2)}
+                        control={<Checkbox />}
+                        label="3"
+                      />
+                      <FormControlLabel
+                        // checked={multiOption[3]}
+                        checked={correct.includes(3) || correct.includes("3")}
+                        onChange={() => handleCheck(3)}
+                        control={<Checkbox />}
+                        label="4"
+                      />
+                    </FormGroup>
+                  ) : null}
+                </div>
+                <hr />
+                <Row>
+                  <Col>
+                    <SubjectwiseTyper
+                      info={option1}
+                      setInfo={setOption1}
+                      title="option 1"
+                    />
+                  </Col>
+                  <Col>
+                    <SubjectwiseDragContain filed={option1} dropType="option1" />
+                  </Col>
+                </Row>
+                <hr />
+                <Row>
+                  <Col>
+                    <SubjectwiseTyper
+                      info={option2}
+                      setInfo={setOption2}
+                      title="option 2"
+                    />
+                  </Col>
+                  <Col>
+                    <SubjectwiseDragContain filed={option2} dropType="option2" />
+                  </Col>
+                </Row>
+                <hr />
+                <Row>
+                  <Col>
+                    <SubjectwiseTyper
+                      info={option3}
+                      setInfo={setOption3}
+                      title="option 3"
+                    />
+                  </Col>
+                  <Col>
+                    <SubjectwiseDragContain filed={option3} dropType="option3" />
+                  </Col>
+                </Row>
+                <hr />
+                <Row>
+                  <Col>
+                    <SubjectwiseTyper
+                      info={option4}
+                      setInfo={setOption4}
+                      title="option 4"
+                    />
+                  </Col>
+                  <Col>
+                    <SubjectwiseDragContain filed={option4} dropType="option4" />
+                  </Col>
+                </Row>
+              </div>
+            ) : (
+                    <></>
+                  )}
+          </div>
+        </Container>
+
+        <Container>
+          <hr />
+          <Row>
+            <Col>
+              <SubjectwiseTyper
+                info={solution}
+                setInfo={setSolution}
+                title="Solution"
+              />
+            </Col>
+            <Col>
+              <SubjectwiseDragContain filed={solution} dropType="solution" />
+            </Col>
+          </Row>
+          <hr />
+          <Row>
+            <Col>
+              <SubjectwiseTyper info={hint} setInfo={setHint} title="Hint" />
+            </Col>
+            <Col>
+              <SubjectwiseDragContain filed={hint} dropType="hint" />
+            </Col>
+          </Row>
+          <hr />
+          <Row>
+            <Col>
+              <h4>Year Of Paper</h4>
+              {/* <TextField
+                label="Year"
                 select
-                value={correct}
-                onChange={(e) => setCorrect(e.target.value)}
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
                 style={{ width: "100px", marginRight: "20px" }}
               >
-                {numarr.map((a, index) => {
+                {yeardata.map((a, index) => {
                   return (
                     <MenuItem value={a} key={index}>
                       {a}
                     </MenuItem>
                   );
                 })}
+              </TextField> */}
+              <TextField
+                            id="datetime-local"
+                            // label="Date and time"
+                            style={{marginTop:"16px"}}
+                            type="date"
+                            // sx={{
+                            //   width: "50%",
+                            //   height: "50%",
+                            //   fontSize: "14px",
+                            // }}
+                            // InputProps={{ style: { fontSize: 12, height: 18 } }}
+                            // InputLabelProps={{
+                            //   style: { fontSize: 12 },
+                            // }}
+                            // style={{ width: "110px", marginRight: "10px" }}
+                            value={date}
+                            onChange={(e) => {
+                              setDate(e.target.value);
+                              console.log(e.target.value);
+                            }}
+                          />
+                          <TextField
+                            id="standard-number"
+                            // InputProps={{ style: { fontSize: 12, height: 18 } }}
+                            // InputLabelProps={{ style: { fontSize: 12 } }}
+                            select
+                            label="slot"
+                            value={shift}
+                            style={{ width: "90px",marginLeft:"40px" }}
+                            onChange={(event) => {
+                              setShift(event.target.value);
+                            }}
+                            // onClick={(e) => {
+                            //   e.stopPropagation();
+                            // }}
+                          >
+                            <MenuItem value={"shift1"}>shift 1(9-12)</MenuItem>
+                            <MenuItem value={"shift2"}>shift 2(1-4)</MenuItem>
+                          </TextField>
+            </Col>
+            <Col>
+              <h4>College</h4>
+              <TextField
+                label="College"
+                value={college}
+                onChangeCapture={(e) => setCollege(e.target.value)}
+              >
+                {college}
               </TextField>
-              <br />
-            </div>
-          ) : questionType == "4" || questionType == "5" ? (
-            <div>
-              <div>
-                  <h4>Correct Answer</h4>
-                <FormLabel component="legend" style={{ color: "black" }}>
-                  Select Options
-                </FormLabel>
-                {questionType == "4" ? (
-                  <RadioGroup name="radio-buttons-group" row>
-                    {console.log(correct)}
-                    <FormControlLabel
-                      value="1"
-                      checked={correct.includes(0) || correct.includes("0")}
-                      onChange={() => handleCheck(0)}
-                      control={<Radio />}
-                      label="1"
-                    />
-                    <FormControlLabel
-                      value="2"
-                      checked={correct.includes(1) || correct.includes("1")}
-                      onChange={() => handleCheck(1)}
-                      control={<Radio />}
-                      label="2"
-                    />
-                    <FormControlLabel
-                      value="3"
-                      checked={correct.includes(2) || correct.includes("2")}
-                      onChange={() => handleCheck(2)}
-                      control={<Radio />}
-                      label="3"
-                    />
-                    <FormControlLabel
-                      value="4"
-                      checked={correct.includes(3) || correct.includes("3")}
-                      onChange={() => handleCheck(3)}
-                      control={<Radio />}
-                      label="4"
-                    />
-                  </RadioGroup>
-                ) : questionType == "5" ? (
-                  <FormGroup row>
-                    <FormControlLabel
-                      // checked={multiOption[0]}
-                      checked={correct.includes(0) || correct.includes("0")}
-                      onChange={() => handleCheck(0)}
-                      control={<Checkbox />}
-                      label="1"
-                    />
-                    <FormControlLabel
-                      // checked={multiOption[1]}
-                      checked={correct.includes(1) || correct.includes("1")}
-                      onChange={() => handleCheck(1)}
-                      control={<Checkbox />}
-                      label="2"
-                    />
-                    <FormControlLabel
-                      // checked={multiOption[2]}
-                      checked={correct.includes(2) || correct.includes("2")}
-                      onChange={() => handleCheck(2)}
-                      control={<Checkbox />}
-                      label="3"
-                    />
-                    <FormControlLabel
-                      // checked={multiOption[3]}
-                      checked={correct.includes(3) || correct.includes("3")}
-                      onChange={() => handleCheck(3)}
-                      control={<Checkbox />}
-                      label="4"
-                    />
-                  </FormGroup>
-                ) : null}
-              </div>
-              <hr />
-              <Row>
+            </Col>
+          </Row>
+        </Container>
+        {allQuestions && visible && (
+          <Container>
+            <Row>
+              {allQuestions && allQuestions[QuestionNo - 2] !== undefined && (
                 <Col>
-                  <SubjectwiseTyper info={option1} setInfo={setOption1} title="option 1" />
+                  {allQuestions[QuestionNo - 2] !== undefined ? (
+                    <Button
+                      className="shadow-btn"
+                      component={Link}
+                      to={{
+                        pathname: "/Subjectwise/setQuestionsubjectwise",
+                        state: {
+                          id: allQuestions[QuestionNo - 2].id,
+                          Class: Class,
+                          Subject: Subject,
+                          Chapter: Chapter,
+                          QuestionNo: QuestionNo - 1,
+                          mockpaperno: mockpaperno,
+                          mainpapertype: mainpapertype,
+                          Level: Level,
+                          // allQuestions: allQuestions,
+                        },
+                      }}
+                      style={{
+                        margin: "30px",
+                        width: "30%",
+                        background:
+                          "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+                      }}
+                      onClick={async (e) => {
+                        if (
+                          correct.length == 0 ||
+                          // correct == [] ||
+                          correct == null ||
+                          correct == undefined
+                        ) {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          toast.warn("fill the correct answer!");
+                          return;
+                        }
+                        if (submitted && Id == undefined) {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          return;
+                        }
+                        setVisible(false);
+                        setLoading(true)
+                        if (Id !== undefined) {
+                          await updatePaper();
+                        } else {
+                          // await submitPaper()
+                          !submitted ? await submitPaper() : await updatePaper();
+                        }
+                        window.location.reload();
+                      }}
+                    >
+                      back
+                </Button>
+                  ) : null}
                 </Col>
-                <Col>
-                  <SubjectwiseDragContain filed={option1} dropType="option1" />
-                </Col>
-              </Row>
-              <hr />
-              <Row>
-                <Col>
-                  <SubjectwiseTyper info={option2} setInfo={setOption2} title="option 2" />
-                </Col>
-                <Col>
-                  <SubjectwiseDragContain filed={option2} dropType="option2" />
-                </Col>
-              </Row>
-              <hr />
-              <Row>
-                <Col>
-                  <SubjectwiseTyper info={option3} setInfo={setOption3} title="option 3" />
-                </Col>
-                <Col>
-                  <SubjectwiseDragContain filed={option3} dropType="option3" />
-                </Col>
-              </Row>
-              <hr />
-              <Row>
-                <Col>
-                  <SubjectwiseTyper info={option4} setInfo={setOption4} title="option 4" />
-                </Col>
-                <Col>
-                  <SubjectwiseDragContain filed={option4} dropType="option4" />
-                </Col>
-              </Row>
-            </div>
-          ) : (
-            <></>
-          )}
-        </div>
-      </Container>
+              )}
 
-      <Container>
-        <hr />
-        <Row>
-          <Col>
-            <SubjectwiseTyper info={solution} setInfo={setSolution} title="Solution" />
-          </Col>
-          <Col>
-            <SubjectwiseDragContain filed={solution} dropType="solution" />
-          </Col>
-        </Row>
-        <hr />
-        <Row>
-          <Col>
-            <SubjectwiseTyper info={hint} setInfo={setHint} title="Hint" />
-          </Col>
-          <Col>
-            <SubjectwiseDragContain filed={hint} dropType="hint" />
-          </Col>
-        </Row>
-        <hr />
-        <Row>
-          <Col>
-            <h4>Year Of Paper</h4>
-            <TextField
-              label="Year"
-              select
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-              style={{ width: "100px", marginRight: "20px" }}
-            >
-              {yeardata.map((a, index) => {
-                return (
-                  <MenuItem value={a} key={index}>
-                    {a}
-                  </MenuItem>
-                );
-              })}
-            </TextField>
-          </Col>
-          <Col>
-            <h4>College</h4>
-            <TextField
-              label="College"
-              value={college}
-              onChangeCapture={(e) => setCollege(e.target.value)}
-            >
-              {college}
-            </TextField>
-          </Col>
-        </Row>
-      </Container>
-      {allQuestions && visible && (
-        <Container>
-          <Row>
-            {allQuestions && allQuestions[QuestionNo - 2] !== undefined && (
               <Col>
-                {allQuestions[QuestionNo - 2] !== undefined ? (
+                {Id ? (
+                  <Button
+                    className="shadow-btn"
+                    onClick={async() => {
+                      console.log(correct,correct.length,correct.length==0,correct==[],correct==null,correct==undefined);
+                      if (
+                        correct.length == 0 ||
+                        correct == null ||
+                        correct == undefined
+                      ) {
+                        toast.warn("fill the correct answer!");
+                        return;
+                      }
+                      setLoading(true)
+                      await updatePaper();
+                      setLoading(false)
+                    }}
+                    style={{
+                      margin: "30px",
+                      width: "40%",
+                      background:
+                        "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+                    }}
+                  >
+                    Update this Question
+              </Button>
+                ) : (
+                    <Button
+                      className="shadow-btn"
+                      onClick={async() => {
+                        // await submitPaper()
+                        // console.log(correct);
+                        if (
+                          correct.length == 0 ||
+                          // correct == [] ||
+                          correct == null ||
+                          correct == undefined
+                        ) {
+                          toast.warn("fill the correct answer!");
+                          return;
+                        }
+                        setLoading(true)
+                        !submitted ? await submitPaper() : await updatePaper();
+                        setLoading(false)
+                      }}
+                      style={{
+                        margin: "30px",
+                        width: "40%",
+                        background:
+                          "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+                      }}
+                    >
+                      {/* in actual it is submit this question */}
+                      Update this Question
+              </Button>
+                  )}
+              </Col>
+              {allQuestions && (
+                <Col>
                   <Button
                     className="shadow-btn"
                     component={Link}
                     to={{
                       pathname: "/Subjectwise/setQuestionsubjectwise",
                       state: {
-                        id: allQuestions[QuestionNo - 2].id,
+                        id:
+                          allQuestions[QuestionNo] !== undefined
+                            ? allQuestions[QuestionNo].id
+                            : undefined,
                         Class: Class,
                         Subject: Subject,
                         Chapter: Chapter,
-                        QuestionNo: QuestionNo - 1,
+                        QuestionNo: QuestionNo + 1,
                         mockpaperno: mockpaperno,
                         mainpapertype: mainpapertype,
-                        Level:Level
+                        Level: Level,
+                        // allQuestions[QuestionNo] !== undefined
+                        //   ? QuestionNo + 1
+                        //   : allQuestions.length + 2,
                         // allQuestions: allQuestions,
                       },
                     }}
@@ -1078,9 +1539,10 @@ const SetQuestionsubjectwise = (props) => {
                         "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
                     }}
                     onClick={async (e) => {
+                      // console.log(correct);
                       if (
                         correct.length == 0 ||
-                        correct == [] ||
+                        // correct == [] ||
                         correct == null ||
                         correct == undefined
                       ) {
@@ -1089,155 +1551,39 @@ const SetQuestionsubjectwise = (props) => {
                         toast.warn("fill the correct answer!");
                         return;
                       }
-                      if(submitted && Id==undefined){
+                      // console.log(Id);
+                      if (submitted && Id == undefined) {
                         e.stopPropagation();
                         e.preventDefault();
                         return;
                       }
+                      setLoading(true)
                       setVisible(false);
                       if (Id !== undefined) {
                         await updatePaper();
                       } else {
-                        // await submitPaper()
+                        // await submitPaper();
                         !submitted ? await submitPaper() : await updatePaper();
                       }
+                      // props.setQuestionNo(allQuestions.length + 1);
+                      // setQuestionNo(allQuestions.length + 1);
                       window.location.reload();
                     }}
                   >
-                    back
+                    {allQuestions[QuestionNo] !== undefined
+                      ? "next"
+                      : "Add New Question"}
                   </Button>
-                ) : null}
-              </Col>
-            )}
-
-            <Col>
-              {Id ? (
-                <Button
-                  className="shadow-btn"
-                  onClick={() => {
-                    console.log(correct);
-                    if (
-                      correct.length == 0 ||
-                      correct == [] ||
-                      correct == null ||
-                      correct == undefined
-                    ) {
-                      toast.warn("fill the correct answer!");
-                      return;
-                    }
-                    updatePaper();
-                  }}
-                  style={{
-                    margin: "30px",
-                    width: "40%",
-                    background:
-                      "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-                  }}
-                >
-                  Update this Question
-                </Button>
-              ) : (
-                <Button
-                  className="shadow-btn"
-                  onClick={() => {
-                    // await submitPaper()
-                    console.log(correct);
-                    if (
-                      correct.length == 0 ||
-                      correct == [] ||
-                      correct == null ||
-                      correct == undefined
-                    ) {
-                      toast.warn("fill the correct answer!");
-                      return;
-                    }
-                    !submitted ? submitPaper() : updatePaper();
-                  }}
-                  style={{
-                    margin: "30px",
-                    width: "40%",
-                    background:
-                      "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-                  }}
-                >
-                  {/* in actual it is submit this question */}
-                  Update this Question
-                </Button>
+                  {/* {console.log(section)} */}
+                </Col>
               )}
-            </Col>
-            {allQuestions && (
-              <Col>
-                <Button
-                  className="shadow-btn"
-                  component={Link}
-                  to={{
-                    pathname: "/Subjectwise/setQuestionsubjectwise",
-                    state: {
-                      id:
-                        allQuestions[QuestionNo] !== undefined
-                          ? allQuestions[QuestionNo].id
-                          : undefined,
-                      Class: Class,
-                      Subject: Subject,
-                      Chapter: Chapter,
-                      QuestionNo: QuestionNo + 1,
-                      mockpaperno: mockpaperno,
-                      mainpapertype: mainpapertype,
-                      Level:Level
-                      // allQuestions[QuestionNo] !== undefined
-                      //   ? QuestionNo + 1
-                      //   : allQuestions.length + 2,
-                      // allQuestions: allQuestions,
-                    },
-                  }}
-                  style={{
-                    margin: "30px",
-                    width: "30%",
-                    background:
-                      "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-                  }}
-                  onClick={async (e) => {
-                    console.log(correct);
-                    if (
-                      correct.length == 0 ||
-                      correct == [] ||
-                      correct == null ||
-                      correct == undefined
-                    ) {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      toast.warn("fill the correct answer!");
-                      return;
-                    }
-                    console.log(Id);
-                    if(submitted && Id==undefined){
-                      e.stopPropagation();
-                      e.preventDefault();
-                      return;
-                    }
-                    setVisible(false);
-                    if (Id !== undefined) {
-                      await updatePaper();
-                    } else {
-                      // await submitPaper();
-                      !submitted ? await submitPaper() : await updatePaper();
-                    }
-                    // props.setQuestionNo(allQuestions.length + 1);
-                    // setQuestionNo(allQuestions.length + 1);
-                    window.location.reload();
-                  }}
-                >
-                  {allQuestions[QuestionNo] !== undefined
-                    ? "next"
-                    : "Add New Question"}
-                </Button>
-                {console.log(section)}
-              </Col>
-            )}
-          </Row>
-        </Container>
-      )}
-    </div>
+            </Row>
+          </Container>
+        )}
+      </div>
+    }
+    </>
+
   );
 };
 

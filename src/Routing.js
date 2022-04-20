@@ -29,6 +29,11 @@ import Cart from './components/Payments/Cart'
 import Plans from './components/Payments/Plans'
 import { PaytmButton } from './components/Payments/PaytmButton'
 import PaymentStatus from './components/Payments/PaymentStatus'
+// import PayUButton from './components/Payments/PayUButton'
+// import PayUButton3 from './components/Payments/PayUButton3'
+// import PayUPaymentStatus from './components/Payments/PayUPaymentStatus'
+// import CashfreeButton from './components/Payments/CashfreeButton'
+import RazorpayButton2 from './components/Payments/RazorpayButton2'
 
 
 export function Routing(props) {
@@ -43,7 +48,7 @@ export function Routing(props) {
     return (
         isChecking ? <Loading /> :
             (!props.isAuthenticated) ?
-                <Redirect to='/mjki@123U' /> :
+                <Redirect to='/' /> :
                 <>
 
                     <Switch>
@@ -111,8 +116,11 @@ export function Routing(props) {
                             <LeftMenu /><Plans /><Footer />
                         </Route>
                         <Route exact path="/Payment">
-                            <LeftMenu /><PaytmButton /><Footer />
+                            <LeftMenu /><RazorpayButton2 /><Footer />
                         </Route>
+                        {/* <Route exact path="/Payment/:status">
+                            <LeftMenu /><PayUButton /><Footer />
+                        </Route> */}
                         <Route exact path="/Paymentstatus">
                             <LeftMenu /><PaymentStatus /><Footer />
                         </Route>

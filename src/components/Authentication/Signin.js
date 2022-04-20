@@ -221,6 +221,7 @@ export function Signin(props) {
           backgroundColor: "transparent",
           width: "700px",
           margin: "0px !important",
+          background:"rgba( 234, 234, 234) !important"
         }}
         disableBackdropClick={showOTPInput || disableExit ? true : false}
         disableEscapeKeyDown={showOTPInput || disableExit ? true : false}
@@ -229,6 +230,7 @@ export function Signin(props) {
           id="alert-dialog-title"
           disableTypography
           className="dialog-content-signin signin-title"
+          style={{width:"100%"}}
         >
           {
             // (showOTPInput || disableExit)?null
@@ -241,7 +243,8 @@ export function Signin(props) {
             </IconButton>
           }
           {props.login ? (
-            "Please enter your mobile number"
+            `${!showOTPInput ?"Please enter your mobile number":!(alreadyUser||notalreadyuser)?"Please enter OTP":""}`
+            
           ) : (
             <div>
               Free Trial for 10 Days!
@@ -256,10 +259,9 @@ export function Signin(props) {
             </div>
           )}
         </DialogTitle>
-        <DialogContent className="dialog-content-signin">
+        <DialogContent className="dialog-content-signin" style={{width:"100%"}}>
           <DialogContentText id="alert-dialog-description">
-            {props.login ? null : (
-              <>
+            {props.login ? null :  (<>
                 <div>Please enter your mobile number</div>
                 <br />
               </>

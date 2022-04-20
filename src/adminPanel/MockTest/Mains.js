@@ -48,7 +48,7 @@ const Mains = () => {
             number: doc.data().number,
             syllabusCreated: doc.data().syllabusCreated,
             noofques: doc.data().noofques,
-            date: doc.data().date,
+            date: doc.data().date2,
             shift: doc.data().shift,
           }))
         );
@@ -70,7 +70,7 @@ const Mains = () => {
   },[])
 
   function CreateNewPaper() {
-    console.log(paper);
+    console.log(paper,indexofpapers);
     const db = firebase.firestore();
     db.collection(mainpapertype.toUpperCase())
       .doc("MAINS")
@@ -81,6 +81,11 @@ const Mains = () => {
         number: indexofpapers + 1,
         syllabusSelected: false,
         syllabusCreated: false,
+        name:`PAPER${indexofpapers + 1}`,
+        paperType:1,
+        totalDuration:180,
+        totalMarks:360,
+        toBeAttempted:75
       })
       .then(() => { 
         console.log("saved");
@@ -99,8 +104,9 @@ const Mains = () => {
     temp[index] = !temp[index];
     setEditable(temp);
   }
+
   const savetodatabase = (index) => {
-    console.log(index)
+    console.log(index,date,shift)
     if(date==undefined || shift==undefined){
       return
     }
@@ -110,8 +116,9 @@ const Mains = () => {
       .collection("PAPER")
       .doc(`PAPER${index}`)
       .update({
-        date: date,
+        date2: date,
         shift: shift,
+        date:shift=="shift1"?new Date(date+"T09:00:00+05:30"):new Date(date+"T13:00:00+05:30")
       });
   };
 

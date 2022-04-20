@@ -7,6 +7,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Question from "../../QuestionAnswer/Question";
+import '../../../../styles/subjectwisepaperyearwiseselect.css'
 import {
   Box,
   MenuItem,
@@ -35,13 +36,17 @@ export function Paper(props) {
   const [questions, setQuestions] = React.useState([]);
   const [answers, setAnswers] = React.useState([]);
   const [index, setIndex] = React.useState(0);
-  const [filter, setFilter] = React.useState("");
+  const [filter, setFilter] = React.useState("asc");
   const selfref = React.useRef();
+  const selfref2 = React.useRef();
   const [loading, setLoading] = React.useState(false);
   const [value, setValue] = React.useState(0);
   const [hover, setHover] = React.useState(-1);
   // const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [year, setYear] = React.useState();
+
+  const yeardata = [...Array(43).keys()].map((x) => x + 1980);
 
   // window.onpopstate = function (e) {
   //   console.log("paper.js called");
@@ -65,6 +70,7 @@ export function Paper(props) {
 
   console.log(props);
   React.useEffect(() => {
+    console.log(yeardata);
     //if user is not navigating through MockTestCard then redirect to home
     //new code
     // localStorage.setItem("fromPaper",true);
@@ -164,9 +170,33 @@ export function Paper(props) {
           return;
         }
       }, 100);
+    } else if (filter == "year" && year != undefined) {
+      setLoading(true);
+      let arr = props.paper.questions;
+      const year2 = year;
+      console.log(year, year2);
+      let arr2 = arr.filter(function (a) {
+        console.log(a.date, year2, year);
+        return a.date.substr(0, 4) == year2;
+      });
+      console.log(year, arr2);
+      let arr3 = [];
+      for (let i = 0; i < arr2.length; i++) {
+        arr3.push(0);
+      }
+      setPalleteArray(arr3);
+      setQuestions(arr2);
+      let count = 0;
+      setInterval(() => {
+        count++;
+        if (count == 2) {
+          setLoading(false);
+          return;
+        }
+      }, 100);
     }
     console.log(selfref.current);
-  }, [filter, value]);
+  }, [filter, value, year]);
 
   const navigateQuestion = (ind) => {
     //new code
@@ -186,6 +216,10 @@ export function Paper(props) {
     setAnchorEl(selfref.current);
   };
 
+  const handleClick2 = (event) => {
+    setAnchorEl(selfref2.current);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -198,46 +232,65 @@ export function Paper(props) {
       <div
         className="timer-bar subjectwise-title-bar"
         onload={checkFirstVisit()}
-        style={{position:"relative"}}
+        style={{ position: "relative" }}
       >
         <div>{props.paper.name} </div>
-        {localStorage.getItem("PaperName")=="previousyearSubjectwise" && 
-        <div style={{position:"absolute",left:"41%"}}>
-          
-        Filter&nbsp;&nbsp;
-        <TextField
-          id="standard-number"
-          select
-          InputProps={{
-            disableUnderline: true,
-            //   onClick:(e)=>{
-            //     e.stopPropagation()
+        {localStorage.getItem("PaperName") == "previousyearSubjectwise" && (
+          <div style={{ position: "absolute", left: "41%" }}>
+            Filter&nbsp;&nbsp;
+            <TextField
+              id="standard-number"
+              select
+              InputProps={{
+                disableUnderline: true,
+                //   onClick:(e)=>{
+                //     e.stopPropagation()
 
-            //   // e.preventDefault()
-            // }
-            color: "#006497"
-          }}
-          // label="Select filter"
-          InputLabelProps={{
-            style: { fontSize: 12,color: "#006497" },
-          }}
-          value={filter}
-          style={{ width: "160px", marginRight: "20px",color:"#006497 !important" }}
-          onChange={(event) => {
-            setFilter(event.target.value);
-            if (event.target.value != "star") {
-              setValue(0);
-            }
-          }}
-        >
-          <MenuItem value={"asc"} key={"0"} style={{color: "#006497",fontSize:"14px"}}>
-            Rating: Low to High
-          </MenuItem>
-          <MenuItem value={"dsc"} key={"1"} style={{color: "#006497",fontSize:"14px"}}>
-            Rating: High to Low
-          </MenuItem>
-          <MenuItem value={"star"} key={"2"} onClick={handleClick} style={{color: "#006497",fontSize:"14px"}}>
-            {/* <Box
+                //   // e.preventDefault()
+                // }
+                color: "#006497",
+              }}
+              // label="Select filter"
+              InputLabelProps={{
+                style: { fontSize: 12, color: "#006497" },
+              }}
+              value={filter}
+              style={{
+                width: "180px",
+                marginRight: "20px",
+                color: "#006497 !important",
+              }}
+              onChange={(event) => {
+                setFilter(event.target.value);
+                if (
+                  event.target.value != "star" &&
+                  event.target.value != "year"
+                ) {
+                  setValue(0);
+                }
+              }}
+            >
+              <MenuItem
+                value={"asc"}
+                key={"0"}
+                style={{ color: "#006497", fontSize: "14px" }}
+              >
+                Hardness: Low to High
+              </MenuItem>
+              <MenuItem
+                value={"dsc"}
+                key={"1"}
+                style={{ color: "#006497", fontSize: "14px" }}
+              >
+                Hardness: High to Low
+              </MenuItem>
+              <MenuItem
+                value={"star"}
+                key={"2"}
+                onClick={handleClick}
+                style={{ color: "#006497", fontSize: "14px" }}
+              >
+                {/* <Box
               sx={{
                 width: 220,
                 display: "flex",
@@ -267,66 +320,100 @@ export function Paper(props) {
                 }
               />
             </Box> */}
-            Rating
-          </MenuItem>
-        </TextField>
-        {filter == "star" && (
-          <>
-            <Box
-              sx={{
-                width: 220,
-                display: "flex",
-                alignItems: "center",
-                position: "relative"
-              }}
-              className="rating-box"
-            >
-              <Rating
-                ref={selfref}
-                aria-describedby={id}
-                variant="contained"
-                name="hover-feedback"
-                value={value}
-                disableFocusRipple={true}
-                // style={{pointerEvents:`${filter=="star"?"none":"auto"}`}}
+                Select Hardness
+              </MenuItem>
+              <MenuItem
+                value={"year"}
+                key={"3"}
+                onClick={handleClick2}
+                style={{ color: "#006497", fontSize: "14px" }}
+              >
+                Select Yearwise
+              </MenuItem>
+            </TextField>
+            {filter == "star" && (
+              <>
+                <Box
+                  sx={{
+                    width: 220,
+                    display: "flex",
+                    alignItems: "center",
+                    position: "relative",
+                  }}
+                  className="rating-box"
+                >
+                  <Rating
+                    ref={selfref}
+                    aria-describedby={id}
+                    variant="contained"
+                    name="hover-feedback"
+                    value={value}
+                    disableFocusRipple={true}
+                    // style={{pointerEvents:`${filter=="star"?"none":"auto"}`}}
 
-                precision={1}
-                onChange={(event, newValue) => {
-                  setValue(newValue);
-                }}
-                onChangeActive={(event, newHover) => {
-                  setHover(-1);
-                }}
-                emptyIcon={
-                  <StarIcon
-                    style={{ opacity: 0.55 }}
-                    fontSize="inherit"
-                    // sx={{
-                    //   color:"grey !important"
-                    // }}
+                    precision={1}
+                    onChange={(event, newValue) => {
+                      setValue(newValue);
+                    }}
+                    onChangeActive={(event, newHover) => {
+                      setHover(-1);
+                    }}
+                    emptyIcon={
+                      <StarIcon
+                        style={{ opacity: 0.55 }}
+                        fontSize="inherit"
+                        // sx={{
+                        //   color:"grey !important"
+                        // }}
+                      />
+                    }
                   />
-                }
-              />
-              <div style={{position:"absolute",fontSize:"10px",bottom:"-4px"}}>SELECT RATING</div>
-            </Box>
-            <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-            >
-              <Typography sx={{ p: 2 }}>Select rating</Typography>
-            </Popover>
-          </>
+                  <div
+                    style={{
+                      position: "absolute",
+                      fontSize: "10px",
+                      bottom: "-4px",
+                    }}
+                  >
+                    SELECT RATING
+                  </div>
+                </Box>
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
+                  <Typography sx={{ p: 2 }}>Select rating</Typography>
+                </Popover>
+              </>
+            )}
+            {filter == "year" && (
+              <TextField
+              style={{ width: "100px", marginRight: "20px", height: "400px !important" }}
+              className="Yearwise-list"
+                size="small"
+                ref={selfref2}
+                select
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+              >
+                {yeardata.map((a, index) => {
+                  return (
+                    <MenuItem value={a} key={index}>
+                      {a}
+                    </MenuItem>
+                  );
+                })}
+              </TextField>
+            )}
+          </div>
         )}
-        
-      </div>
-        }
-        
+
         <div>Level {props.paper.level} </div>
       </div>
       {!loading ? (

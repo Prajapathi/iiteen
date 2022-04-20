@@ -215,9 +215,9 @@ export function AITStestCard(props) {
             >
               <div style={{ fontSize: "14px", color: "#448698" }}>Date: </div>
               <div style={{ fontSize: "14px", color: "#448698" }}>
-                {props.paper.date ? props.paper.date.substring(8, 10) : 0}{" "}
-                {props.paper.date
-                  ? getMonth(props.paper.date.substring(5, 7))
+                {props.paper.date2 ? props.paper.date2.substring(8, 10) : 0}{" "}
+                {props.paper.date2
+                  ? getMonth(props.paper.date2.substring(5, 7))
                   : 0}{" "}
               </div>
             </div>
@@ -269,7 +269,7 @@ export function AITStestCard(props) {
           <div className="card-button-mock">
             {props.heading == "Upcoming Test" ? (
               <div>
-                {datecalculation(new Date(),props.paper.date,props.paper.shift) ? <button
+                {datecalculation(new Date(),props.paper.date2,props.paper.shift) ? <button
                   onClick={
                     // props.isAttempted
                     //   ? () => setOpenReattempt(true)

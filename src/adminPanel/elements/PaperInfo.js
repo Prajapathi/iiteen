@@ -99,7 +99,9 @@ export default function PaperInfo(props) {
                                       shrink: true,
                                     }}
                                     value={date}
-                                    onChange={(e)=>setDate(e.target.value)}
+                                    onChange={(e)=>{setDate(e.target.value)
+                                    console.log(e.target.value)
+                                    }}
                                   />
                                   <FormLabel component="legend" style={{marginRight:'15px'}}>Paper Type</FormLabel>
                                   <RadioGroup aria-label="gender" name="gender1" value={typeValue} onChange={handleChange}>
