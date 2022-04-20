@@ -44,8 +44,8 @@ const SelectSyllabus = (props) => {
   const [che, setChe] = React.useState([]);
   const [math, setMath] = React.useState([]);
   const [syllabustype, setSyllabustype] = React.useState("");
-  const [date, setDate] = React.useState("");
-  const [shift, setShift] = React.useState("");
+  const [date, setDate] = React.useState("2022-03-25");
+  const [shift, setShift] = React.useState("shift1");
   const params = useParams();
   const [mainpapertype, setMainpapertype] = React.useState("");
   const { type } = useParams();

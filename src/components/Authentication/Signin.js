@@ -243,7 +243,8 @@ export function Signin(props) {
             </IconButton>
           }
           {props.login ? (
-            "Please enter your mobile number"
+            `${!showOTPInput ?"Please enter your mobile number":!(alreadyUser||notalreadyuser)?"Please enter OTP":""}`
+            
           ) : (
             <div>
               Free Trial for 10 Days!
@@ -260,8 +261,7 @@ export function Signin(props) {
         </DialogTitle>
         <DialogContent className="dialog-content-signin" style={{width:"100%"}}>
           <DialogContentText id="alert-dialog-description">
-            {props.login ? null : (
-              <>
+            {props.login ? null :  (<>
                 <div>Please enter your mobile number</div>
                 <br />
               </>

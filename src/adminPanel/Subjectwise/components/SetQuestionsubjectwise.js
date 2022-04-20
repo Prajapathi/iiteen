@@ -86,6 +86,9 @@ const SetQuestionsubjectwise = (props) => {
 
   const ref = useRef();
   const [loading, setLoading] = useState(false)
+
+  const [date,setDate]=useState(null)
+  const [shift, setShift] = useState(null);
   // const [h, setH] = useState(0);
   // const [imgsrc,setImgsrc]=useState("");
 
@@ -317,6 +320,11 @@ const SetQuestionsubjectwise = (props) => {
 
   async function imgdata(option) {
     console.log(option);
+
+    if(option.length==1){
+      return option[0];
+    }
+    
     let finalimage;
     let url = [];
     let heightofimg = 0;
@@ -504,13 +512,15 @@ const SetQuestionsubjectwise = (props) => {
         answer: correct,
         hint: hint,
         solution: solution,
-        year: year,
+        // year: year,
         college: college,
         number: QuestionNo,
         subject: subj,
         class: Class,
         chapter: Chapter,
         rating: value,
+        date:date?date:"",
+          shift:shift?shift:""
       })
       .then((docref) => {
         console.log(
@@ -560,12 +570,14 @@ const SetQuestionsubjectwise = (props) => {
           answer: correct,
           hint: hint,
           solution: solution,
-          year: year,
+          // year: year,
           college: college,
           number: QuestionNo,
           class: Class,
           chapter: Chapter,
           rating: value,
+          date:date?date:"",
+          shift:shift?shift:""
         })
         .then(() => {
           console.log(
@@ -764,6 +776,8 @@ const SetQuestionsubjectwise = (props) => {
       setHint(editPaper.hint);
       setSolution(editPaper.solution);
       setValue(editPaper.rating ? editPaper.rating : 3);
+      setDate(editPaper.date)
+      setShift(editPaper.shift)
 
       setCount(1);
     }
@@ -1305,7 +1319,7 @@ const SetQuestionsubjectwise = (props) => {
           <Row>
             <Col>
               <h4>Year Of Paper</h4>
-              <TextField
+              {/* <TextField
                 label="Year"
                 select
                 value={year}
@@ -1319,7 +1333,46 @@ const SetQuestionsubjectwise = (props) => {
                     </MenuItem>
                   );
                 })}
-              </TextField>
+              </TextField> */}
+              <TextField
+                            id="datetime-local"
+                            // label="Date and time"
+                            style={{marginTop:"16px"}}
+                            type="date"
+                            // sx={{
+                            //   width: "50%",
+                            //   height: "50%",
+                            //   fontSize: "14px",
+                            // }}
+                            // InputProps={{ style: { fontSize: 12, height: 18 } }}
+                            // InputLabelProps={{
+                            //   style: { fontSize: 12 },
+                            // }}
+                            // style={{ width: "110px", marginRight: "10px" }}
+                            value={date}
+                            onChange={(e) => {
+                              setDate(e.target.value);
+                              console.log(e.target.value);
+                            }}
+                          />
+                          <TextField
+                            id="standard-number"
+                            // InputProps={{ style: { fontSize: 12, height: 18 } }}
+                            // InputLabelProps={{ style: { fontSize: 12 } }}
+                            select
+                            label="slot"
+                            value={shift}
+                            style={{ width: "90px",marginLeft:"40px" }}
+                            onChange={(event) => {
+                              setShift(event.target.value);
+                            }}
+                            // onClick={(e) => {
+                            //   e.stopPropagation();
+                            // }}
+                          >
+                            <MenuItem value={"shift1"}>shift 1(9-12)</MenuItem>
+                            <MenuItem value={"shift2"}>shift 2(1-4)</MenuItem>
+                          </TextField>
             </Col>
             <Col>
               <h4>College</h4>
@@ -1365,7 +1418,7 @@ const SetQuestionsubjectwise = (props) => {
                       onClick={async (e) => {
                         if (
                           correct.length == 0 ||
-                          correct == [] ||
+                          // correct == [] ||
                           correct == null ||
                           correct == undefined
                         ) {
@@ -1401,10 +1454,9 @@ const SetQuestionsubjectwise = (props) => {
                   <Button
                     className="shadow-btn"
                     onClick={async() => {
-                      // console.log(correct);
+                      console.log(correct,correct.length,correct.length==0,correct==[],correct==null,correct==undefined);
                       if (
                         correct.length == 0 ||
-                        correct == [] ||
                         correct == null ||
                         correct == undefined
                       ) {
@@ -1432,7 +1484,7 @@ const SetQuestionsubjectwise = (props) => {
                         // console.log(correct);
                         if (
                           correct.length == 0 ||
-                          correct == [] ||
+                          // correct == [] ||
                           correct == null ||
                           correct == undefined
                         ) {
@@ -1490,7 +1542,7 @@ const SetQuestionsubjectwise = (props) => {
                       // console.log(correct);
                       if (
                         correct.length == 0 ||
-                        correct == [] ||
+                        // correct == [] ||
                         correct == null ||
                         correct == undefined
                       ) {

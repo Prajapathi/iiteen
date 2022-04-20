@@ -281,7 +281,7 @@ export function LeftMenu(props) {
                         {
                             props.isAuthenticated?
                             <>
-                                <Link to="/mjki@123U" className="menu-link">
+                                <Link to="/" className="menu-link">
                                 <Typography className = { clsx(classes.tabs) } >Home </Typography>
                                 </Link>
                                 <Link to="/Report" className="menu-link">
@@ -323,7 +323,7 @@ export function LeftMenu(props) {
                             </>
                             :
                             <>
-                                <Link href="/mjki@123U" hash="#section3" className="menu-link">
+                                <Link href="/" hash="#section3" className="menu-link">
                                 <Typography className = { clsx(classes.tabs) } >Home </Typography>
                                 </Link>
                             </>

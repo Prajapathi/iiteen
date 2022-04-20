@@ -70,7 +70,7 @@ const Mains = () => {
   },[])
 
   function CreateNewPaper() {
-    console.log(paper);
+    console.log(paper,indexofpapers);
     const db = firebase.firestore();
     db.collection(mainpapertype.toUpperCase())
       .doc("MAINS")
@@ -106,7 +106,7 @@ const Mains = () => {
   }
 
   const savetodatabase = (index) => {
-    console.log(index)
+    console.log(index,date,shift)
     if(date==undefined || shift==undefined){
       return
     }
