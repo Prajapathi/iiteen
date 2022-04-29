@@ -35,7 +35,7 @@ export default function Contact(props) {
                        <div className="contact-list">Email</div>
                        iiteens.in@gmail.com
                        <div className="contact-list">Customer Support</div>
-                       +91 6265188325
+                       +91 9425565037
                     </DialogContentText>
                 </DialogContent>
             </Dialog>  
