@@ -34,6 +34,7 @@ import PaymentStatus from './components/Payments/PaymentStatus'
 // import PayUPaymentStatus from './components/Payments/PayUPaymentStatus'
 // import CashfreeButton from './components/Payments/CashfreeButton'
 import RazorpayButton2 from './components/Payments/RazorpayButton2'
+import ComingSoon from './components/screens/ComingSoon/ComingSoon'
 
 
 export function Routing(props) {
@@ -60,6 +61,9 @@ export function Routing(props) {
                         </Route> */}
                         <Route exact path="/MockTest/:papertype">
                             <LeftMenu /><MockTest /><Footer />
+                        </Route>
+                        <Route exact path={"/comingSoon"}>
+                            <LeftMenu /><ComingSoon /><Footer />
                         </Route>
                         <Route exact path="/MockTest">
                             <LeftMenu /><MockTestMain /><Footer />
